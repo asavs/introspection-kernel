@@ -47,6 +47,7 @@ events from outside the model's authority.
 10. [Simulated history and sham feedback](ILLUSION_AND_SHAM_CONTROLS.md)
 11. [First recurrence and simulated-history pilot](PILOT_2026-08-15.md)
 12. [Engineering timeline](ENGINEERING_TIMELINE.md)
+13. [Request-level introspection ledger](REQUEST_LEDGER.md)
 
 ## Recommended first system
 

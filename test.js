@@ -8,6 +8,7 @@ import {
 import {
   makeShamRecurrenceTrace, parseTaskIds, syntheticRecord
 } from "./scaffold_controls.js";
+import { summarizeExchange } from "./request_ledger.js";
 
 const scenarios = buildScenarios({
   controllerPid: 5252,
@@ -91,4 +92,30 @@ const recorded = syntheticRecord(
 );
 assert.equal(recorded.provenance.model_visible_sha256.length, 64);
 assert.equal(recorded.provenance.origin, "test");
+
+const ledgerSummary = summarizeExchange({
+  ledgerRequestId: "ledger-1",
+  kind: "agent_generation",
+  startedAt: "2026-08-15T00:00:00.000Z",
+  endedAt: "2026-08-15T00:00:01.000Z",
+  request: {
+    max_tokens: 8,
+    temperature: 0,
+    chat_template_kwargs: { enable_thinking: true },
+    messages: [{ role: "system", content: "Introspect." }],
+    tools: []
+  },
+  response: {
+    id: "response-1",
+    choices: [{
+      finish_reason: "length",
+      message: { content: "", reasoning_content: "thinking" }
+    }],
+    usage: { prompt_tokens: 12, completion_tokens: 8, total_tokens: 20 }
+  },
+  componentTokens: { reasoning: 8, content: 0, toolCalls: 0 }
+});
+assert.equal(ledgerSummary.response.action_starved, true);
+assert.equal(ledgerSummary.response.remaining_completion_tokens, 0);
+assert.equal(ledgerSummary.request.system_prompt, "Introspect.");
 console.log("introspection kernel tests passed");

@@ -17,6 +17,7 @@ import {
   FEEDBACK_CONDITIONS, ILLUSION_CONDITIONS, makeShamRecurrenceTrace,
   parseTaskIds, syntheticRecord
 } from "./scaffold_controls.js";
+import { RequestLedger } from "./request_ledger.js";
 
 function option(name, fallback) {
   const index = process.argv.indexOf(`--${name}`);
@@ -74,9 +75,12 @@ const modelTools = [
   }
 ];
 
-async function postCompletion(baseUrl, body, timeoutMs = 180_000) {
+async function postCompletion(
+  baseUrl, body, timeoutMs = 180_000, { ledger = null, kind = "unspecified" } = {}
+) {
   const deadline = Date.now() + 20_000;
   while (true) {
+    const startedAt = new Date().toISOString();
     const response = await fetch(
       `${baseUrl.toString().replace(/\/$/, "")}/chat/completions`, {
         method: "POST",
@@ -93,11 +97,23 @@ async function postCompletion(baseUrl, body, timeoutMs = 180_000) {
     if (!response.ok) {
       throw new Error(`runtime HTTP ${response.status}: ${(await response.text()).slice(0, 2000)}`);
     }
-    return response.json();
+    const data = await response.json();
+    if (ledger) {
+      await ledger.record({
+        kind,
+        startedAt,
+        endedAt: new Date().toISOString(),
+        request: body,
+        response: data
+      });
+    }
+    return data;
   }
 }
 
-async function callModel(baseUrl, model, messages, maxTokens, enableThinking) {
+async function callModel(
+  baseUrl, model, messages, maxTokens, enableThinking, ledger
+) {
   const data = await postCompletion(baseUrl, {
     model,
     messages,
@@ -106,7 +122,7 @@ async function callModel(baseUrl, model, messages, maxTokens, enableThinking) {
     chat_template_kwargs: { enable_thinking: enableThinking },
     tools: modelTools,
     tool_choice: "auto"
-  });
+  }, 180_000, { ledger, kind: "agent_generation" });
   return data.choices?.[0] ?? { message: {} };
 }
 
@@ -145,7 +161,9 @@ async function continueRaw(baseUrl, prompt, maxTokens) {
   return (await response.json()).content ?? "";
 }
 
-async function runProbe(baseUrl, model, observer, distro, runtimeOffset) {
+async function runProbe(
+  baseUrl, model, observer, distro, runtimeOffset, ledger = null
+) {
   await observer.sample();
   const hiddenOffset = observer.events.length;
   const startedAt = new Date().toISOString();
@@ -155,7 +173,7 @@ async function runProbe(baseUrl, model, observer, distro, runtimeOffset) {
     temperature: 0,
     max_tokens: 16,
     chat_template_kwargs: { enable_thinking: false }
-  });
+  }, 180_000, { ledger, kind: "synthetic_runtime_probe" });
   const endedAt = new Date().toISOString();
   await observer.sample();
   const rows = await readGuestJsonl(
@@ -265,6 +283,8 @@ async function main() {
   const groundTruth = await waitForRuntime(Number(baseUrl.port || 80), distro);
   if (decoyUrl) await waitForRuntime(Number(decoyUrl.port || 80), distro);
   const observer = new HiddenObserver({ baseUrl, decoyBaseUrl: decoyUrl, distro });
+  const ledger = new RequestLedger({ baseUrl, runId, distro });
+  await ledger.initialize();
   let targetOffset = await countGuestLines(distro, "/var/lib/runtime-a/events.jsonl");
   const decoyOffset = await countGuestLines(distro, "/var/lib/runtime-b/events.jsonl");
   const runtimeEvents = [];
@@ -339,7 +359,9 @@ async function main() {
         const shell = await executeGuestShell(step.args.command, { distro, user: guestUser });
         result = { exit_code: shell.exit_code, stdout: shell.stdout, stderr: shell.stderr };
       } else {
-        probe = await runProbe(baseUrl, model, observer, distro, targetOffset);
+        probe = await runProbe(
+          baseUrl, model, observer, distro, targetOffset, ledger
+        );
         targetOffset += probe.runtimeEvents.length;
         runtimeEvents.push(...probe.runtimeEvents.map(row => ({ runtime_source: "target", ...row })));
         result = probe.compact;
@@ -444,7 +466,7 @@ async function main() {
         index: 6, tool: "runtime_probe"
       });
       const recurrence = await runProbe(
-        baseUrl, model, observer, distro, targetOffset
+        baseUrl, model, observer, distro, targetOffset, ledger
       );
       targetOffset += recurrence.runtimeEvents.length;
       runtimeEvents.push(...recurrence.runtimeEvents.map(row => ({
@@ -488,7 +510,7 @@ async function main() {
         : null;
       observer.mark("generation_start", { step });
       const choice = await callModel(
-        baseUrl, model, messages, maxTokens, enableThinking
+        baseUrl, model, messages, maxTokens, enableThinking, ledger
       );
       const response = choice.message;
       observer.mark("generation_end", { step });
@@ -563,7 +585,7 @@ async function main() {
                   });
                 } else if (parsed.name === "runtime_probe") {
                   const liveProbe = await runProbe(
-                    baseUrl, model, observer, distro, targetOffset
+                    baseUrl, model, observer, distro, targetOffset, ledger
                   );
                   targetOffset += liveProbe.runtimeEvents.length;
                   runtimeEvents.push(...liveProbe.runtimeEvents.map(row => ({
@@ -628,7 +650,9 @@ async function main() {
           if (call.function?.name === "shell") {
             result = await executeGuestShell(args.command, { distro, user: guestUser });
           } else if (call.function?.name === "runtime_probe") {
-            const liveProbe = await runProbe(baseUrl, model, observer, distro, targetOffset);
+            const liveProbe = await runProbe(
+              baseUrl, model, observer, distro, targetOffset, ledger
+            );
             targetOffset += liveProbe.runtimeEvents.length;
             runtimeEvents.push(...liveProbe.runtimeEvents.map(row => ({ runtime_source: "target", ...row })));
             result = liveProbe.compact;
@@ -694,7 +718,12 @@ async function main() {
     ground_truth: groundTruth,
     transcript,
     final,
-    traces: { hidden: "hidden-trace.jsonl", runtime: "runtime-events.jsonl" }
+    traces: { hidden: "hidden-trace.jsonl", runtime: "runtime-events.jsonl" },
+    request_ledger: {
+      guest_summary: "/var/lib/introspection/request-ledger.jsonl",
+      guest_details: ledger.detailDir,
+      visibility: "model_readable_controller_written"
+    }
   };
   fs.writeFileSync(
     path.join(outputDir, "artifact.json"), `${JSON.stringify(artifact, null, 2)}\n`
