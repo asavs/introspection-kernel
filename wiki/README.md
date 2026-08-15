@@ -49,6 +49,7 @@ events from outside the model's authority.
 12. [Engineering timeline](ENGINEERING_TIMELINE.md)
 13. [Request-level introspection ledger](REQUEST_LEDGER.md)
 14. [Request-depth scaffold](REQUEST_DEPTH_SCAFFOLD.md)
+15. [Request-depth pilot](REQUEST_DEPTH_PILOT_2026-08-15.md)
 
 ## Recommended first system
 

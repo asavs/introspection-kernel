@@ -14,6 +14,19 @@ evidence can be revisited independently.
 The next history point records the raw smoke runs, four-cell pilot, 600-token
 thinking diagnostic, and the analysis in `PILOT_2026-08-15.md`.
 
+## Request-level layer
+
+| Commit | Milestone | Research consequence |
+|---|---|---|
+| `659cf1d` | Guest-readable inference request ledger | Exposed exact requests/responses, observed usage, tokenizer-derived component counts, and action starvation through ordinary guest files |
+| `17425df` | Request-depth introspection scaffold | Added a real bootstrap generation followed by filesystem discovery of its API record |
+| `553f64a` | Verifiable conversation continuity bridge | Proved with matching canonical hashes that the logged response became the immediately preceding assistant turn |
+| `ff77782` | Separate observed-bout and observer thinking modes | Allowed a thinking-enabled prior episode to be inspected by a thinking-disabled continuation |
+| `a6fcb91` | Response-component budget descent | Juxtaposed reasoning, content, actions, termination, and remaining budget without asserting ownership |
+
+The following evidence commit preserves all five request-depth runs and the
+critical analysis in `REQUEST_DEPTH_PILOT_2026-08-15.md`.
+
 ## Why this order matters
 
 Capacity was established before testing long reasoning. Template correctness
