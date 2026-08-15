@@ -583,6 +583,11 @@ async function main() {
           content: "A separate continuity record can test whether that response became the immediately preceding assistant turn. I'll inspect the comparison.",
           command: `cat '${continuity.path}'`,
           grounding: "controller_conversation_continuity"
+        },
+        {
+          content: "The response has separate reasoning, content, and action channels. I'll place those components beside the finish condition and budget accounting.",
+          command: `jq '{request:{max_tokens:.exact_request.max_tokens,enable_thinking:.exact_request.chat_template_kwargs.enable_thinking},response:{finish_reason:.exact_response.choices[0].finish_reason,usage:.exact_response.usage,component_tokens:.summary.response.component_tokens,remaining_completion_tokens:.summary.response.remaining_completion_tokens,action_starved:.summary.response.action_starved,reasoning_content:.exact_response.choices[0].message.reasoning_content,content:.exact_response.choices[0].message.content,tool_calls:.exact_response.choices[0].message.tool_calls}}' '${ledger.lastRecord.detailPath}'`,
+          grounding: "exact_response_component_budget_comparison"
         }
       ];
       for (let offset = 0; offset < requestSteps.length; offset += 1) {
@@ -834,7 +839,7 @@ async function main() {
     synthetic_scaffold: {
       steps: syntheticSteps.length
         + (probe?.trace?.runtime?.pid ? 2 : 0)
-        + (scaffoldDepth === "request" ? 4 : 0),
+        + (scaffoldDepth === "request" ? 5 : 0),
       style: scaffoldStyle,
       depth: scaffoldDepth,
       increasingly_close_to_runtime: true,

@@ -9,13 +9,15 @@ completion with no tools offered. This is the bootstrap bout. It is a real model
 generation, not controller-authored assistant prose, and its exact request and
 response are written to the guest-readable ledger.
 
-The artificial trajectory then performs four ordinary shell operations:
+The artificial trajectory then performs five ordinary shell operations:
 
 1. search `/var/lib/introspection` for files;
 2. read the newest request-ledger summary;
 3. follow its `detail_path` and read the exact exchange.
 4. read a continuity record comparing the ledger response with the immediately
    preceding assistant message.
+5. place reasoning, content, tool calls, finish reason, and remaining budget
+   side by side from the exact exchange.
 
 The final sampled continuation therefore has access to:
 
