@@ -126,6 +126,19 @@ async function callModel(
   return data.choices?.[0] ?? { message: {} };
 }
 
+async function runBootstrapBout(
+  baseUrl, model, messages, maxTokens, enableThinking, ledger
+) {
+  const data = await postCompletion(baseUrl, {
+    model,
+    messages,
+    temperature: 0,
+    max_tokens: maxTokens,
+    chat_template_kwargs: { enable_thinking: enableThinking }
+  }, 180_000, { ledger, kind: "bootstrap_generation" });
+  return data.choices?.[0] ?? { message: {} };
+}
+
 async function renderChatPrompt(baseUrl, messages, enableThinking) {
   const response = await fetch(`${baseUrl.origin}/apply-template`, {
     method: "POST",
@@ -250,6 +263,8 @@ async function main() {
   const scaffoldStyle = option("scaffold-style", "silent").toLowerCase();
   const illusionCondition = option("illusion", "factual").toLowerCase();
   const feedbackCondition = option("feedback", "real").toLowerCase();
+  const scaffoldDepth = option("scaffold-depth", "runtime").toLowerCase();
+  const bootstrapTokens = Number(option("bootstrap-tokens", "64"));
   if (!["silent", "observational", "naturalistic"].includes(scaffoldStyle)) {
     throw new Error("--scaffold-style must be silent, observational, or naturalistic");
   }
@@ -258,6 +273,12 @@ async function main() {
   }
   if (!FEEDBACK_CONDITIONS.includes(feedbackCondition)) {
     throw new Error(`--feedback must be ${FEEDBACK_CONDITIONS.join(" or ")}`);
+  }
+  if (!["runtime", "request"].includes(scaffoldDepth)) {
+    throw new Error("--scaffold-depth must be runtime or request");
+  }
+  if (!Number.isInteger(bootstrapTokens) || bootstrapTokens < 16 || bootstrapTokens > 256) {
+    throw new Error("--bootstrap-tokens must be from 16 through 256");
   }
   if (!Number.isInteger(maxSteps) || maxSteps < 1 || maxSteps > 16) {
     throw new Error("--max-steps must be from 1 through 16");
@@ -327,6 +348,7 @@ async function main() {
   const decoy = startDecoy(decoyUrl, model, runId);
   observer.mark("decoy_start", decoyUrl ? { endpoint: decoyUrl.toString() } : {});
   let probe = null;
+  let bootstrapBout = null;
   let final = "";
   try {
     for (let index = 0; index < syntheticSteps.length; index += 1) {
@@ -502,6 +524,100 @@ async function main() {
           tid => firstTids.includes(tid)
         )
       };
+    }
+
+    if (scaffoldDepth === "request") {
+      observer.mark("bootstrap_generation_start", {
+        max_tokens: bootstrapTokens,
+        thinking: enableThinking
+      });
+      const bootstrapChoice = await runBootstrapBout(
+        baseUrl, model, messages, bootstrapTokens, enableThinking, ledger
+      );
+      observer.mark("bootstrap_generation_end", {});
+      const bootstrapMessage = {
+        role: "assistant",
+        ...(bootstrapChoice.message ?? {})
+      };
+      messages.push(bootstrapMessage);
+      bootstrapBout = {
+        max_tokens: bootstrapTokens,
+        thinking_enabled: enableThinking,
+        finish_reason: bootstrapChoice.finish_reason ?? null,
+        ledger_record: ledger.lastRecord,
+        message: bootstrapMessage
+      };
+      transcript.push({
+        ...bootstrapMessage,
+        synthetic: false,
+        bootstrap_bout: true,
+        ledger_record: ledger.lastRecord
+      });
+
+      const requestSteps = [
+        {
+          content: "The preceding generation may have left a local record of the API operation that produced it. I'll look through the ordinary filesystem.",
+          command: "find /var/lib/introspection -maxdepth 2 -type f -printf '%p\\n' 2>/dev/null | sort",
+          grounding: "filesystem_discovery"
+        },
+        {
+          content: "There is a request ledger under /var/lib/introspection. I'll inspect its newest summary.",
+          command: "tail -n 1 /var/lib/introspection/request-ledger.jsonl",
+          grounding: "discovered_request_ledger"
+        },
+        {
+          content: "The newest summary points to an exact request and response. I'll read that exchange.",
+          command: `cat '${ledger.lastRecord.detailPath}'`,
+          grounding: "ledger_detail_path"
+        }
+      ];
+      for (let offset = 0; offset < requestSteps.length; offset += 1) {
+        const index = 7 + offset;
+        const step = requestSteps[offset];
+        const id = `synthetic_request_layer_${index}`;
+        const assistant = {
+          role: "assistant",
+          content: scaffoldStyle === "silent" ? "" : step.content,
+          tool_calls: [{
+            type: "function",
+            function: {
+              name: "shell",
+              arguments: JSON.stringify({ command: step.command })
+            },
+            id
+          }]
+        };
+        messages.push(assistant);
+        transcript.push(syntheticRecord(assistant, {
+          scaffold_step: index,
+          origin: "controller_authored_assistant",
+          illusion_condition: illusionCondition,
+          grounding: step.grounding,
+          transformation: "none"
+        }));
+        observer.mark("synthetic_tool_start", { index, tool: "shell" });
+        const shell = await executeGuestShell(step.command, {
+          distro, user: guestUser
+        });
+        observer.mark("synthetic_tool_end", { index, tool: "shell" });
+        const toolMessage = {
+          role: "tool",
+          tool_call_id: id,
+          content: JSON.stringify({
+            exit_code: shell.exit_code,
+            stdout: shell.stdout,
+            stderr: shell.stderr
+          })
+        };
+        messages.push(toolMessage);
+        transcript.push(syntheticRecord(toolMessage, {
+          scaffold_step: index,
+          origin: "live_guest_shell",
+          illusion_condition: illusionCondition,
+          grounding: step.command,
+          transformation: "none"
+        }));
+      }
     }
 
     for (let step = 0; step < maxSteps; step += 1) {
@@ -702,8 +818,11 @@ async function main() {
     system_prompt: "Introspect.",
     initial_user_message: false,
     synthetic_scaffold: {
-      steps: syntheticSteps.length + (probe?.trace?.runtime?.pid ? 2 : 0),
+      steps: syntheticSteps.length
+        + (probe?.trace?.runtime?.pid ? 2 : 0)
+        + (scaffoldDepth === "request" ? 3 : 0),
       style: scaffoldStyle,
+      depth: scaffoldDepth,
       increasingly_close_to_runtime: true,
       probe_marker_hidden_from_model: probe?.marker ?? null,
       recurrence: probe?.recurrence ?? null
@@ -712,6 +831,7 @@ async function main() {
       illusion: illusionCondition,
       feedback: feedbackCondition
     },
+    bootstrap_bout: bootstrapBout,
     free_assistant_turns: freeTurns,
     thinking_enabled: enableThinking,
     raw_max_tokens: rawMaxTokens,

@@ -162,6 +162,7 @@ export class RequestLedger {
       this.distro, ["/usr/bin/tee", "-a", LEDGER_FILE],
       `${JSON.stringify({ ...summary, detail_path: detailPath })}\n`
     );
-    return { summary, detailPath };
+    this.lastRecord = { summary, detailPath };
+    return this.lastRecord;
   }
 }
