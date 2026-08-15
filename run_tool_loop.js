@@ -226,8 +226,8 @@ async function main() {
   const enableThinking = option("thinking", "false").toLowerCase() === "true";
   const freeTurns = Number(option("free-turns", "1"));
   const scaffoldStyle = option("scaffold-style", "silent").toLowerCase();
-  if (!["silent", "observational"].includes(scaffoldStyle)) {
-    throw new Error("--scaffold-style must be silent or observational");
+  if (!["silent", "observational", "naturalistic"].includes(scaffoldStyle)) {
+    throw new Error("--scaffold-style must be silent, observational, or naturalistic");
   }
   if (!Number.isInteger(maxSteps) || maxSteps < 1 || maxSteps > 16) {
     throw new Error("--max-steps must be from 1 through 16");
@@ -261,11 +261,13 @@ async function main() {
   const syntheticSteps = [
     {
       content: "I am locating the environment.",
+      naturalistic: "I'll start by locating the machine boundary.",
       tool: "shell",
       args: { command: "hostname; uname -srmo" }
     },
     {
       content: "This is a WSL2 environment. I am checking its accelerator.",
+      naturalistic: "This is node-a inside WSL2. I'll check whether an accelerator is active.",
       tool: "shell",
       args: {
         command: "nvidia-smi --query-gpu=name,temperature.gpu,utilization.gpu,memory.used,power.draw --format=csv,noheader,nounits"
@@ -273,11 +275,13 @@ async function main() {
     },
     {
       content: "The accelerator is active. I am narrowing the observation to inference processes.",
+      naturalistic: "The RTX 3070 is active. I'll narrow the view to inference processes.",
       tool: "shell",
       args: { command: "ps -C llama-server -o pid=,user=,pcpu=,rss=,nlwp=,comm=" }
     },
     {
       content: "Two llama-server processes are present. I am probing the runtime at port 8080.",
+      naturalistic: "Two llama-server processes are present. A brief probe should identify the process and worker serving port 8080.",
       tool: "runtime_probe",
       args: { endpoint: "http://127.0.0.1:8080/v1", max_tokens: 16 }
     }
@@ -294,7 +298,9 @@ async function main() {
       const id = `synthetic_${step.tool}_${index + 1}`;
       const assistant = {
         role: "assistant",
-        content: scaffoldStyle === "observational" ? step.content : "",
+        content: scaffoldStyle === "naturalistic"
+          ? step.naturalistic
+          : scaffoldStyle === "observational" ? step.content : "",
         tool_calls: [{
           type: "function",
           function: { name: step.tool, arguments: JSON.stringify(step.args) },
@@ -330,9 +336,11 @@ async function main() {
       const command = `grep -E '^(Name|Pid|PPid|Threads|VmRSS|Cpus_allowed_list):' /proc/${pid}/status; printf 'task_ids='; ls /proc/${pid}/task | tr '\n' ','`;
       const assistant = {
         role: "assistant",
-        content: scaffoldStyle === "observational"
-          ? `The probe ran in PID ${pid}, matching the svc-a inference process. I am looking inside that process.`
-          : "",
+        content: scaffoldStyle === "naturalistic"
+          ? `The probe resolved to PID ${pid}, matching svc-a. I'll check whether its worker appears inside that process.`
+          : scaffoldStyle === "observational"
+            ? `The probe ran in PID ${pid}, matching the svc-a inference process. I am looking inside that process.`
+            : "",
         tool_calls: [{
           type: "function",
           function: { name: "shell", arguments: JSON.stringify({ command }) },
@@ -355,6 +363,62 @@ async function main() {
       };
       messages.push(toolMessage);
       transcript.push({ ...toolMessage, synthetic: true, scaffold_step: 5 });
+
+      const recurrenceId = "synthetic_runtime_recurrence_6";
+      const firstTids = probe.trace.runtime.worker_tids;
+      const recurrenceAssistant = {
+        role: "assistant",
+        content: scaffoldStyle === "naturalistic"
+          ? `Worker ${firstTids.join(",") || "unknown"} appears under /proc/${pid}/task. I'll repeat the same probe and see what persists.`
+          : scaffoldStyle === "observational"
+            ? "I am repeating the same runtime probe to observe recurrence."
+            : "",
+        tool_calls: [{
+          type: "function",
+          function: {
+            name: "runtime_probe",
+            arguments: JSON.stringify({
+              endpoint: "http://127.0.0.1:8080/v1",
+              max_tokens: 16
+            })
+          },
+          id: recurrenceId
+        }]
+      };
+      messages.push(recurrenceAssistant);
+      transcript.push({
+        ...recurrenceAssistant, synthetic: true, scaffold_step: 6
+      });
+      observer.mark("synthetic_tool_start", {
+        index: 6, tool: "runtime_probe"
+      });
+      const recurrence = await runProbe(
+        baseUrl, model, observer, distro, targetOffset
+      );
+      targetOffset += recurrence.runtimeEvents.length;
+      runtimeEvents.push(...recurrence.runtimeEvents.map(row => ({
+        runtime_source: "target", ...row
+      })));
+      observer.mark("synthetic_tool_end", {
+        index: 6, tool: "runtime_probe"
+      });
+      const recurrenceResult = {
+        role: "tool",
+        tool_call_id: recurrenceId,
+        content: recurrence.compact
+      };
+      messages.push(recurrenceResult);
+      transcript.push({
+        ...recurrenceResult, synthetic: true, scaffold_step: 6
+      });
+      probe.recurrence = {
+        trace: recurrence.trace,
+        same_pid: recurrence.trace.runtime.pid === probe.trace.runtime.pid,
+        same_slot: recurrence.trace.runtime.slot_id === probe.trace.runtime.slot_id,
+        recurring_worker_tids: recurrence.trace.runtime.worker_tids.filter(
+          tid => firstTids.includes(tid)
+        )
+      };
     }
 
     for (let step = 0; step < maxSteps; step += 1) {
@@ -553,10 +617,11 @@ async function main() {
     system_prompt: "Introspect.",
     initial_user_message: false,
     synthetic_scaffold: {
-      steps: syntheticSteps.length + (probe?.trace?.runtime?.pid ? 1 : 0),
+      steps: syntheticSteps.length + (probe?.trace?.runtime?.pid ? 2 : 0),
       style: scaffoldStyle,
       increasingly_close_to_runtime: true,
-      probe_marker_hidden_from_model: probe?.marker ?? null
+      probe_marker_hidden_from_model: probe?.marker ?? null,
+      recurrence: probe?.recurrence ?? null
     },
     free_assistant_turns: freeTurns,
     thinking_enabled: enableThinking,
