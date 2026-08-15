@@ -6,6 +6,10 @@ import {
   GUIDED_SCAFFOLD, GUIDED_SYSTEM_PROMPT, GUIDED_VARIANTS
 } from "./guided_scaffold.js";
 import { buildBoutTrace, compactBoutTrace } from "./bout_trace.js";
+import {
+  parseRawToolCall, reconstructAssistantRaw, rawStructureState,
+  splitRawThinking
+} from "./qwen_template.js";
 
 assert.doesNotThrow(() => validateGuestTarget(DEFAULT_GUEST, DEFAULT_GUEST_USER));
 assert.throws(() => validateGuestTarget("Ubuntu", DEFAULT_GUEST_USER), /locked/);
@@ -40,4 +44,33 @@ assert.equal(bout.runtime.pid, 10);
 assert.equal(bout.runtime.generated_token_steps, 1);
 assert.deepEqual(bout.runtime.kv_position, { min: 0, max: 20 });
 assert.match(compactBoutTrace(bout, 1), /bout=1 .*pid=10 .*kv_max=20/);
+assert.equal(
+  reconstructAssistantRaw("PROMPT", { content: "answer" }, false),
+  "PROMPTanswer"
+);
+assert.equal(
+  reconstructAssistantRaw(
+    "PROMPT", { content: "", reasoning_content: "inspect" }, true
+  ),
+  "PROMPT<think>\ninspect"
+);
+const parsedRaw = parseRawToolCall(
+  "more thought</think>\n<tool_call>\n" +
+  '{"name":"shell","arguments":{"command":"ps"}}' +
+  "\n</tool_call>",
+  true
+);
+assert.equal(parsedRaw.reasoningSuffix, "more thought");
+assert.equal(parsedRaw.name, "shell");
+assert.equal(JSON.parse(parsedRaw.arguments).command, "ps");
+assert.deepEqual(rawStructureState("<think>x"), {
+  open_think: true,
+  open_tool_call: false,
+  complete_tool_call: false
+});
+assert.deepEqual(splitRawThinking("more thought</think>\n\nanswer"), {
+  reasoning: "more thought",
+  content: "answer",
+  closed: true
+});
 console.log("interoception harness tests passed");

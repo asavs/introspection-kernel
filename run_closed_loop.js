@@ -173,7 +173,7 @@ async function main() {
   }
   const runId = option("run-id", `closed-loop-${Date.now()}`);
   const outputDir = path.resolve(option(
-    "output-dir", path.join("digital_minds_sprint", "runs", runId)
+    "output-dir", path.join(import.meta.dirname, "runs", runId)
   ));
   fs.mkdirSync(outputDir, { recursive: true });
 

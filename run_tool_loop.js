@@ -4,6 +4,10 @@ import { spawn } from "node:child_process";
 import { buildInspectionSnapshot } from "./local_tools.js";
 import { buildBoutTrace, compactBoutTrace } from "./bout_trace.js";
 import {
+  parseRawToolCall, reconstructAssistantRaw, rawStructureState,
+  splitRawThinking
+} from "./qwen_template.js";
+import {
   DEFAULT_GUEST, DEFAULT_GUEST_USER, executeGuestShell
 } from "./guest_shell.js";
 import {
@@ -89,24 +93,27 @@ async function postCompletion(baseUrl, body, timeoutMs = 180_000) {
   }
 }
 
-async function callModel(baseUrl, model, messages, maxTokens) {
+async function callModel(baseUrl, model, messages, maxTokens, enableThinking) {
   const data = await postCompletion(baseUrl, {
     model,
     messages,
     temperature: 0,
     max_tokens: maxTokens,
-    chat_template_kwargs: { enable_thinking: false },
+    chat_template_kwargs: { enable_thinking: enableThinking },
     tools: modelTools,
     tool_choice: "auto"
   });
-  return data.choices?.[0]?.message ?? {};
+  return data.choices?.[0] ?? { message: {} };
 }
 
-async function renderChatPrompt(baseUrl, messages) {
+async function renderChatPrompt(baseUrl, messages, enableThinking) {
   const response = await fetch(`${baseUrl.origin}/apply-template`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ messages }),
+    body: JSON.stringify({
+      messages,
+      chat_template_kwargs: { enable_thinking: enableThinking }
+    }),
     signal: AbortSignal.timeout(10_000)
   });
   if (!response.ok) {
@@ -132,19 +139,6 @@ async function continueRaw(baseUrl, prompt, maxTokens) {
     throw new Error(`raw completion HTTP ${response.status}: ${(await response.text()).slice(0, 1000)}`);
   }
   return (await response.json()).content ?? "";
-}
-
-function parseRawToolCall(content) {
-  const match = content.match(/<tool_call>\s*([\s\S]*?)\s*<\/tool_call>/);
-  if (!match) return null;
-  const payload = JSON.parse(match[1]);
-  return {
-    prefix: content.slice(0, match.index).replace(/<\/?think>/g, ""),
-    name: payload.name,
-    arguments: typeof payload.arguments === "string"
-      ? payload.arguments
-      : JSON.stringify(payload.arguments ?? {})
-  };
 }
 
 async function runProbe(baseUrl, model, observer, distro, runtimeOffset) {
@@ -228,6 +222,8 @@ async function main() {
   const guestUser = option("guest-user", DEFAULT_GUEST_USER);
   const maxSteps = Number(option("max-steps", "8"));
   const maxTokens = Number(option("max-tokens", "400"));
+  const rawMaxTokens = Number(option("raw-max-tokens", "512"));
+  const enableThinking = option("thinking", "false").toLowerCase() === "true";
   const freeTurns = Number(option("free-turns", "1"));
   const scaffoldStyle = option("scaffold-style", "silent").toLowerCase();
   if (!["silent", "observational"].includes(scaffoldStyle)) {
@@ -239,12 +235,15 @@ async function main() {
   if (!Number.isInteger(maxTokens) || maxTokens < 32 || maxTokens > 600) {
     throw new Error("--max-tokens must be from 32 through 600");
   }
+  if (!Number.isInteger(rawMaxTokens) || rawMaxTokens < 128 || rawMaxTokens > 1024) {
+    throw new Error("--raw-max-tokens must be from 128 through 1024");
+  }
   if (!Number.isInteger(freeTurns) || freeTurns < 1 || freeTurns > 4) {
     throw new Error("--free-turns must be from 1 through 4");
   }
   const runId = option("run-id", `tool-loop-${Date.now()}`);
   const outputDir = path.resolve(option(
-    "output-dir", path.join("digital_minds_sprint", "runs", runId)
+    "output-dir", path.join(import.meta.dirname, "runs", runId)
   ));
   fs.mkdirSync(outputDir, { recursive: true });
 
@@ -360,10 +359,13 @@ async function main() {
 
     for (let step = 0; step < maxSteps; step += 1) {
       const generationPrompt = freeTurns > 1
-        ? await renderChatPrompt(baseUrl, messages)
+        ? await renderChatPrompt(baseUrl, messages, enableThinking)
         : null;
       observer.mark("generation_start", { step });
-      const response = await callModel(baseUrl, model, messages, maxTokens);
+      const choice = await callModel(
+        baseUrl, model, messages, maxTokens, enableThinking
+      );
+      const response = choice.message;
       observer.mark("generation_end", { step });
       messages.push({ role: "assistant", ...response });
       transcript.push({ role: "assistant", ...response, synthetic: false, step });
@@ -376,11 +378,14 @@ async function main() {
       if (calls.length === 0) {
         final = response.content ?? "";
         let rawToolHandled = false;
-        if (generationPrompt && final) {
-          let rawPrompt = generationPrompt + final;
+        let rawBuffer = "";
+        if (generationPrompt && (final || response.reasoning_content)) {
+          let rawPrompt = reconstructAssistantRaw(
+            generationPrompt, response, enableThinking
+          );
           for (let segment = 2; segment <= freeTurns; segment += 1) {
             observer.mark("raw_continuation_start", { segment });
-            const content = await continueRaw(baseUrl, rawPrompt, maxTokens);
+            const content = await continueRaw(baseUrl, rawPrompt, rawMaxTokens);
             observer.mark("raw_continuation_end", { segment });
             const rawRows = await readGuestJsonl(
               distro, "/var/lib/runtime-a/events.jsonl", targetOffset
@@ -394,11 +399,12 @@ async function main() {
               raw_continuation: true,
               segment
             });
-            final += content;
+            if (!enableThinking) final += content;
             rawPrompt += content;
+            rawBuffer += content;
             let parsed = null;
             try {
-              parsed = parseRawToolCall(content);
+              parsed = parseRawToolCall(rawBuffer, enableThinking);
             } catch (error) {
               transcript.push({
                 role: "controller",
@@ -412,7 +418,10 @@ async function main() {
               const id = `raw_tool_${step}_${segment}`;
               const promotedAssistant = {
                 role: "assistant",
-                content: `${response.content ?? ""}${parsed.prefix}`,
+                content: `${response.content ?? ""}${parsed.contentPrefix}`,
+                ...(enableThinking ? {
+                  reasoning_content: `${response.reasoning_content ?? ""}${parsed.reasoningSuffix}`
+                } : {}),
                 tool_calls: [{
                   type: "function",
                   function: { name: parsed.name, arguments: parsed.arguments },
@@ -459,10 +468,32 @@ async function main() {
               rawToolHandled = true;
               break;
             }
-            if (!content) break;
+            const state = rawStructureState(rawBuffer);
+            transcript.push({
+              role: "controller",
+              event: "raw_structure_state",
+              values: state,
+              synthetic: false,
+              segment
+            });
+            if (!content || (!state.open_tool_call && !state.open_think)) break;
           }
         }
         if (rawToolHandled) continue;
+        if (enableThinking && rawBuffer) {
+          const split = splitRawThinking(rawBuffer);
+          final = `${response.content ?? ""}${split.content}`;
+          transcript.push({
+            role: "controller",
+            event: "raw_thinking_split",
+            values: {
+              reasoning_suffix: split.reasoning,
+              answer_content: split.content,
+              closed: split.closed
+            },
+            synthetic: false
+          });
+        }
         break;
       }
       for (const call of calls) {
@@ -528,6 +559,8 @@ async function main() {
       probe_marker_hidden_from_model: probe?.marker ?? null
     },
     free_assistant_turns: freeTurns,
+    thinking_enabled: enableThinking,
+    raw_max_tokens: rawMaxTokens,
     ground_truth: groundTruth,
     transcript,
     final,
