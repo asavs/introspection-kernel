@@ -20,6 +20,11 @@ guest.
 `runtime-b.service` loads the same model CPU-only on port 8081 for process-level
 decoy experiments without competing for GPU memory. Both start at guest boot.
 
+`Set-RuntimeAProfile.ps1 introspection-8k` installs a reversible systemd
+override selecting one target slot with an 8192-token context for long tool and
+thinking trajectories. `Set-RuntimeAProfile.ps1 baseline` restores the original
+two-slot, 4096-token configuration. The reset snapshot itself remains unchanged.
+
 Use `Verify-IntrospectionKernel.ps1` for non-destructive health/isolation checks.
 `Reset-IntrospectionKernel.ps1 -Force` destroys and recreates only the named
 guest from the checksummed v2 snapshot.

@@ -42,6 +42,7 @@ events from outside the model's authority.
 5. [Experiments, controls, and metrics](EXPERIMENT_MATRIX.md)
 6. [Implementation roadmap](IMPLEMENTATION_ROADMAP.md)
 7. [Current implementation status](IMPLEMENTATION_STATUS.md)
+8. [Runtime capacity profiles](CAPACITY_PROFILES.md)
 
 ## Recommended first system
 
