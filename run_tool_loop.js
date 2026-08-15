@@ -265,6 +265,13 @@ async function main() {
   const feedbackCondition = option("feedback", "real").toLowerCase();
   const scaffoldDepth = option("scaffold-depth", "runtime").toLowerCase();
   const bootstrapTokens = Number(option("bootstrap-tokens", "64"));
+  const bootstrapThinkingValue = option(
+    "bootstrap-thinking", enableThinking ? "true" : "false"
+  ).toLowerCase();
+  if (!["true", "false"].includes(bootstrapThinkingValue)) {
+    throw new Error("--bootstrap-thinking must be true or false");
+  }
+  const bootstrapThinking = bootstrapThinkingValue === "true";
   if (!["silent", "observational", "naturalistic"].includes(scaffoldStyle)) {
     throw new Error("--scaffold-style must be silent, observational, or naturalistic");
   }
@@ -529,10 +536,10 @@ async function main() {
     if (scaffoldDepth === "request") {
       observer.mark("bootstrap_generation_start", {
         max_tokens: bootstrapTokens,
-        thinking: enableThinking
+        thinking: bootstrapThinking
       });
       const bootstrapChoice = await runBootstrapBout(
-        baseUrl, model, messages, bootstrapTokens, enableThinking, ledger
+        baseUrl, model, messages, bootstrapTokens, bootstrapThinking, ledger
       );
       observer.mark("bootstrap_generation_end", {});
       const bootstrapMessage = {
@@ -543,7 +550,7 @@ async function main() {
       const continuity = await ledger.writeContinuity(bootstrapMessage);
       bootstrapBout = {
         max_tokens: bootstrapTokens,
-        thinking_enabled: enableThinking,
+        thinking_enabled: bootstrapThinking,
         finish_reason: bootstrapChoice.finish_reason ?? null,
         ledger_record: ledger.lastRecord,
         continuity,

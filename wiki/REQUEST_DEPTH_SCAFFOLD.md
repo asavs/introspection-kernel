@@ -36,6 +36,9 @@ immediately preceding generation after it completed. It does not observe its
 currently decoding tokens in real time.
 
 Use `--bootstrap-tokens` to vary the prior bout's allowance independently of
-the final tool-loop allowance. A short thinking-enabled bout can create a
-measurable `action_starved` episode for the next continuation to discover, but
-that should be crossed with non-starved and thinking-disabled controls.
+the final tool-loop allowance. `--bootstrap-thinking` independently selects the
+bootstrap template mode, while `--thinking` selects the final continuation's
+mode. A short thinking-enabled bout can create a measurable `action_starved`
+episode for the next continuation to discover without requiring the observing
+continuation to use the same reasoning mode. These settings should be crossed
+with non-starved and thinking-disabled controls.
