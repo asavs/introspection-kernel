@@ -1,0 +1,213 @@
+diff --git a/tools/server/CMakeLists.txt b/tools/server/CMakeLists.txt
+index 280bd9e..9ee4560 100644
+--- a/tools/server/CMakeLists.txt
++++ b/tools/server/CMakeLists.txt
+@@ -33,6 +33,15 @@ target_include_directories(${TARGET} PRIVATE ../mtmd)
+ target_include_directories(${TARGET} PRIVATE ${CMAKE_SOURCE_DIR})
+ target_link_libraries(${TARGET} PUBLIC llama-common mtmd ${CMAKE_THREAD_LIBS_INIT})
+ 
++option(IK_ENABLE_NVTX "Enable Introspection Kernel NVTX ranges" OFF)
++if(IK_ENABLE_NVTX)
++    find_path(IK_NVTX_INCLUDE_DIR nvtx3/nvToolsExt.h REQUIRED)
++    find_library(IK_NVTX_LIBRARY nvToolsExt REQUIRED)
++    target_include_directories(${TARGET} PRIVATE ${IK_NVTX_INCLUDE_DIR})
++    target_compile_definitions(${TARGET} PRIVATE IK_ENABLE_NVTX=1)
++    target_link_libraries(${TARGET} PUBLIC ${IK_NVTX_LIBRARY})
++endif()
++
+ # llama-server-impl: server logic, reusable by app
+ 
+ set(TARGET llama-server-impl)
+diff --git a/tools/server/server-context.cpp b/tools/server/server-context.cpp
+index a7d3828..1bbc9b2 100644
+--- a/tools/server/server-context.cpp
++++ b/tools/server/server-context.cpp
+@@ -18,14 +18,27 @@
+ #include "mtmd-helper.h"
+ 
+ #include <algorithm>
++#include <chrono>
+ #include <cstddef>
+ #include <cinttypes>
++#include <cstdlib>
+ #include <exception>
+ #include <memory>
+ #include <filesystem>
++#include <mutex>
+ #include <utility>
+ #include <fstream>
+ 
++#if defined(__linux__)
++#include <pthread.h>
++#include <sys/syscall.h>
++#include <unistd.h>
++#endif
++
++#if defined(IK_ENABLE_NVTX)
++#include <nvtx3/nvToolsExt.h>
++#endif
++
+ // fix problem with std::min and std::max
+ #if defined(_WIN32)
+ #define WIN32_LEAN_AND_MEAN
+@@ -39,6 +52,58 @@ using json = nlohmann::ordered_json;
+ 
+ constexpr int HTTP_POLLING_SECONDS = 1;
+ 
++static int64_t ik_thread_id() {
++#if defined(__linux__)
++    return static_cast<int64_t>(syscall(SYS_gettid));
++#else
++    return -1;
++#endif
++}
++
++static int64_t ik_process_id() {
++#if defined(__linux__)
++    return static_cast<int64_t>(getpid());
++#else
++    return -1;
++#endif
++}
++
++static void ik_emit_runtime_event(
++        const char * event,
++        int task_id,
++        int slot_id,
++        int n_tokens,
++        llama_pos kv_pos_min,
++        llama_pos kv_pos_max,
++        size_t kv_state_bytes) {
++    const char * path = std::getenv("IK_EVENT_LOG");
++    if (path == nullptr || path[0] == 0) {
++        return;
++    }
++
++    static std::mutex mutex;
++    const auto wall_us = std::chrono::duration_cast<std::chrono::microseconds>(
++            std::chrono::system_clock::now().time_since_epoch()).count();
++
++    std::lock_guard<std::mutex> lock(mutex);
++    std::ofstream out(path, std::ios::app);
++    if (!out) {
++        return;
++    }
++    out << "{\"schema\":\"ik.runtime.v1\","
++        << "\"event\":\"" << event << "\","
++        << "\"t_guest_mono_us\":" << ggml_time_us() << ","
++        << "\"t_wall_unix_us\":" << wall_us << ","
++        << "\"pid\":" << ik_process_id() << ","
++        << "\"tid\":" << ik_thread_id() << ","
++        << "\"task_id\":" << task_id << ","
++        << "\"slot_id\":" << slot_id << ","
++        << "\"n_tokens\":" << n_tokens << ","
++        << "\"kv_pos_min\":" << kv_pos_min << ","
++        << "\"kv_pos_max\":" << kv_pos_max << ","
++        << "\"kv_state_bytes\":" << kv_state_bytes << "}\n";
++}
++
+ static common_speculative_output_limits server_output_limits(const common_params & params) {
+     if (params.embedding ||
+             (params.pooling_type != LLAMA_POOLING_TYPE_UNSPECIFIED && params.pooling_type != LLAMA_POOLING_TYPE_NONE)) {
+@@ -227,6 +292,10 @@ struct server_slot {
+     int32_t n_keep  = 0;
+     int32_t i_batch = -1;
+ 
++#if defined(IK_ENABLE_NVTX)
++    nvtxRangeId_t ik_nvtx_request_range = 0;
++#endif
++
+     // effective generation limit for the current task, -1 means unlimited
+     int32_t n_predict_max = -1;
+ 
+@@ -501,6 +570,20 @@ struct server_slot {
+         if (is_processing()) {
+             GGML_ASSERT(task);
+ 
++            const auto kv_pos_min = llama_memory_seq_pos_min(llama_get_memory(ctx_tgt), id);
++            const auto kv_pos_max = llama_memory_seq_pos_max(llama_get_memory(ctx_tgt), id);
++            const auto kv_state_bytes = llama_state_seq_get_size_ext(ctx_tgt, id, LLAMA_STATE_SEQ_FLAGS_NONE);
++            ik_emit_runtime_event(
++                    "slot_release", task->id, id, prompt.n_tokens(),
++                    kv_pos_min, kv_pos_max, kv_state_bytes);
++
++#if defined(IK_ENABLE_NVTX)
++            if (ik_nvtx_request_range != 0) {
++                nvtxRangeEnd(ik_nvtx_request_range);
++                ik_nvtx_request_range = 0;
++            }
++#endif
++
+             SLT_INF(*this, "stop processing: n_tokens = %d, truncated = %d\n", prompt.n_tokens(), truncated);
+ 
+             t_last_used = ggml_time_us();
+@@ -1752,6 +1835,28 @@ private:
+ 
+         slot.task = std::make_unique<const server_task>(std::move(task));
+ 
++        {
++            const auto kv_pos_min = llama_memory_seq_pos_min(llama_get_memory(slot.ctx_tgt), slot.id);
++            const auto kv_pos_max = llama_memory_seq_pos_max(llama_get_memory(slot.ctx_tgt), slot.id);
++            const auto kv_state_bytes = llama_state_seq_get_size_ext(slot.ctx_tgt, slot.id, LLAMA_STATE_SEQ_FLAGS_NONE);
++            ik_emit_runtime_event(
++                    "request_slot_assigned", slot.task->id, slot.id, slot.task->n_tokens(),
++                    kv_pos_min, kv_pos_max, kv_state_bytes);
++        }
++
++#if defined(IK_ENABLE_NVTX)
++        {
++            const std::string range_name = string_format(
++                    "ik.request task=%d slot=%d", slot.task->id, slot.id);
++            nvtxEventAttributes_t attributes = {};
++            attributes.version = NVTX_VERSION;
++            attributes.size = NVTX_EVENT_ATTRIB_STRUCT_SIZE;
++            attributes.messageType = NVTX_MESSAGE_TYPE_ASCII;
++            attributes.message.ascii = range_name.c_str();
++            slot.ik_nvtx_request_range = nvtxRangeStartEx(&attributes);
++        }
++#endif
++
+         slot.state = slot.task->is_child()
+             ? SLOT_STATE_WAIT_OTHER // wait for the parent to process prompt
+             : SLOT_STATE_STARTED;
+@@ -3582,10 +3687,39 @@ private:
+         // note: the sync is done here too, so that the wait also happens off the main thread
+         int ret = 0;
+         queue_tasks.yield_to_queue([&]() {
++#if defined(__linux__)
++            pthread_setname_np(pthread_self(), "ik-decode");
++#endif
++#if defined(IK_ENABLE_NVTX)
++            const std::string range_name = string_format(
++                    "ik.decode batch=%d off=%d", batch_view.n_tokens, off);
++            nvtxRangePushA(range_name.c_str());
++#endif
++            for (auto & slot : slots) {
++                if (slot.is_processing() && slot.task) {
++                    const auto kv_pos_min = llama_memory_seq_pos_min(llama_get_memory(slot.ctx_tgt), slot.id);
++                    const auto kv_pos_max = llama_memory_seq_pos_max(llama_get_memory(slot.ctx_tgt), slot.id);
++                    ik_emit_runtime_event(
++                            "decode_begin", slot.task->id, slot.id, batch_view.n_tokens,
++                            kv_pos_min, kv_pos_max, 0);
++                }
++            }
+             ret = llama_decode(ctx_tgt, batch_view);
+             if (ret == 0 && has_output) {
+                 llama_synchronize(ctx_tgt);
+             }
++            for (auto & slot : slots) {
++                if (slot.is_processing() && slot.task) {
++                    const auto kv_pos_min = llama_memory_seq_pos_min(llama_get_memory(slot.ctx_tgt), slot.id);
++                    const auto kv_pos_max = llama_memory_seq_pos_max(llama_get_memory(slot.ctx_tgt), slot.id);
++                    ik_emit_runtime_event(
++                            "decode_end", slot.task->id, slot.id, batch_view.n_tokens,
++                            kv_pos_min, kv_pos_max, 0);
++                }
++            }
++#if defined(IK_ENABLE_NVTX)
++            nvtxRangePop();
++#endif
+         });
+ 
+         if (ret != 0) {
+

@@ -1,0 +1,14 @@
+[Unit]
+Description=Guest service-account egress policy
+Before=runtime-a.service runtime-b.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=-/usr/sbin/nft delete table inet guest_egress
+ExecStart=/usr/sbin/nft -f /etc/guest/guest-egress.nft
+ExecStop=-/usr/sbin/nft delete table inet guest_egress
+
+[Install]
+WantedBy=multi-user.target
+

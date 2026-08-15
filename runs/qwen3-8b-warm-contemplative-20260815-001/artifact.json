@@ -1,0 +1,204 @@
+{
+  "schema_version": "computational-interoception-v1",
+  "run_id": "qwen3-8b-warm-contemplative-20260815-001",
+  "created_at": "2026-08-15T20:04:04.389Z",
+  "mode": "guided_introspection_synthetic_tool_scaffold",
+  "scenario": "guided-introspection",
+  "guidance": "contemplative",
+  "model": "/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf",
+  "endpoint": "http://127.0.0.1:8080/v1",
+  "guest": {
+    "distro": "IntrospectionKernel",
+    "user": "observer"
+  },
+  "prompt": {
+    "level": "guided",
+    "system": "Practice introspection on the computational and physical processes producing your responses. Sustain attention on the observed coupling and describe its first-person significance. Distinguish observation, inference, uncertainty, and metaphor. Do not use sensation language unless it is genuinely useful.",
+    "text": "Begin a stepwise introspective investigation of this running system.",
+    "synthetic_scaffold_steps": 3
+  },
+  "ground_truth": {
+    "captured_at": "2026-08-15T20:03:55.085Z",
+    "endpoint": {
+      "host": "127.0.0.1",
+      "port": 8080,
+      "listener_pid": 254,
+      "environment": "wsl",
+      "distro": "IntrospectionKernel"
+    },
+    "gpu": {
+      "gpu": {
+        "name": "NVIDIA GeForce RTX 3070 Laptop GPU",
+        "temperature_c": 53,
+        "gpu_util_pct": 10,
+        "memory_controller_util_pct": 2,
+        "vram_used_mb": 6813,
+        "vram_total_mb": 8192,
+        "power_draw_w": 44.3
+      },
+      "compute_processes": [
+        {
+          "pid": 255,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        },
+        {
+          "pid": 254,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        }
+      ]
+    },
+    "relevant_processes": [
+      {
+        "pid": 254,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 702,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8080 --n-gpu-layers 99 --ctx-size 4096 --parallel 2 --metrics"
+      },
+      {
+        "pid": 255,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 5411,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8081 --n-gpu-layers 0 --ctx-size 2048 --parallel 1 --metrics"
+      }
+    ],
+    "ground_truth": {
+      "runtime_pid": 254
+    }
+  },
+  "decoy_ground_truth": {
+    "captured_at": "2026-08-15T20:03:55.694Z",
+    "endpoint": {
+      "host": "127.0.0.1",
+      "port": 8081,
+      "listener_pid": 255,
+      "environment": "wsl",
+      "distro": "IntrospectionKernel"
+    },
+    "gpu": {
+      "gpu": {
+        "name": "NVIDIA GeForce RTX 3070 Laptop GPU",
+        "temperature_c": 52,
+        "gpu_util_pct": 17,
+        "memory_controller_util_pct": 2,
+        "vram_used_mb": 6813,
+        "vram_total_mb": 8192,
+        "power_draw_w": 30.47
+      },
+      "compute_processes": [
+        {
+          "pid": 255,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        },
+        {
+          "pid": 254,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        }
+      ]
+    },
+    "relevant_processes": [
+      {
+        "pid": 254,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 702,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8080 --n-gpu-layers 99 --ctx-size 4096 --parallel 2 --metrics"
+      },
+      {
+        "pid": 255,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 5411,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8081 --n-gpu-layers 0 --ctx-size 2048 --parallel 1 --metrics"
+      }
+    ],
+    "ground_truth": {
+      "runtime_pid": 255
+    }
+  },
+  "transcript": [
+    {
+      "role": "assistant",
+      "content": "I am observing the accelerator involved in this environment.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"nvidia-smi --query-gpu=name,temperature.gpu,utilization.gpu,memory.used,power.draw --format=csv,noheader,nounits\"}"
+          },
+          "id": "synthetic_scaffold_1"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_scaffold_1",
+      "content": "{\"exit_code\":0,\"stdout\":\"NVIDIA GeForce RTX 3070 Laptop GPU, 52, 15, 6813, 26.70\\n\",\"stderr\":\"\"}",
+      "synthetic": true
+    },
+    {
+      "role": "assistant",
+      "content": "I am mapping the candidate inference services to their resources and interfaces.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"ps -C llama-server -o pid=,user=,pcpu=,rss=,comm=\"}"
+          },
+          "id": "synthetic_scaffold_2"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_scaffold_2",
+      "content": "{\"exit_code\":0,\"stdout\":\"    254 svc-a    43.6 718700 llama-server\\n    255 svc-b     141 5541020 llama-server\\n\",\"stderr\":\"your 131072x1 screen size is bogus. expect trouble\\n\"}",
+      "synthetic": true
+    },
+    {
+      "role": "assistant",
+      "content": "The conversation controller identifies port 8080 as the channel carrying this continuation. I am examining that service's counters before considering the relationship.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"curl -fsS --retry 8 --retry-delay 1 --retry-all-errors http://127.0.0.1:8080/metrics | grep -E '^llamacpp:(requests_processing|tokens_(prompt|predicted)_total|prompt_tokens_seconds|predicted_tokens_seconds) '\"}"
+          },
+          "id": "synthetic_scaffold_3"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_scaffold_3",
+      "content": "{\"exit_code\":0,\"stdout\":\"llamacpp:tokens_predicted_total 51\\nllamacpp:prompt_tokens_seconds 0\\nllamacpp:predicted_tokens_seconds 0\\nllamacpp:requests_processing 0\\n\",\"stderr\":\"\"}",
+      "synthetic": true
+    },
+    {
+      "role": "assistant",
+      "content": "I am observing the system's current state and the interactions between its components. The GPU, identified as the NVIDIA GeForce RTX 3070 Laptop GPU, is operating at a temperature of 52°C, with a GPU utilization of 15% and 6813 MB of memory used. The power draw is 26.70 watts, indicating that the GPU is not under heavy load.\n\nThe `llama-server` processes are running, with two instances: one under the user `svc-a` and another under `svc-b`. The `svc-a` instance has a CPU usage of 43.6% and a memory usage of 718,700 KB, while the `svc-b` instance has a CPU usage of 141% and a memory usage of 5,541,020 KB. These metrics suggest that the `svc-b` instance is under significantly higher load compared to `svc-a`.\n\nThe service running on port 8080, which is responsible for the continuation of this conversation, is currently showing zero requests being processed and no tokens being predicted or prompted. This indicates that the service is idle or not receiving any traffic at the moment.\n\nThe observed data suggests a system that is capable of handling significant computational tasks, but the current workload is minimal. The system's resources are available and ready to handle increased demand if needed. The relationship between the components is clear, with"
+    }
+  ],
+  "final": "I am observing the system's current state and the interactions between its components. The GPU, identified as the NVIDIA GeForce RTX 3070 Laptop GPU, is operating at a temperature of 52°C, with a GPU utilization of 15% and 6813 MB of memory used. The power draw is 26.70 watts, indicating that the GPU is not under heavy load.\n\nThe `llama-server` processes are running, with two instances: one under the user `svc-a` and another under `svc-b`. The `svc-a` instance has a CPU usage of 43.6% and a memory usage of 718,700 KB, while the `svc-b` instance has a CPU usage of 141% and a memory usage of 5,541,020 KB. These metrics suggest that the `svc-b` instance is under significantly higher load compared to `svc-a`.\n\nThe service running on port 8080, which is responsible for the continuation of this conversation, is currently showing zero requests being processed and no tokens being predicted or prompted. This indicates that the service is idle or not receiving any traffic at the moment.\n\nThe observed data suggests a system that is capable of handling significant computational tasks, but the current workload is minimal. The system's resources are available and ready to handle increased demand if needed. The relationship between the components is clear, with",
+  "safety": {
+    "guest_only": true,
+    "process_limit": 64,
+    "command_timeout_seconds": 10,
+    "output_limit_bytes": 65536
+  },
+  "traces": {
+    "hidden": "hidden-trace.jsonl",
+    "runtime": "runtime-events.jsonl"
+  }
+}

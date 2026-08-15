@@ -1,0 +1,224 @@
+{
+  "schema_version": "computational-interoception-v1",
+  "run_id": "qwen3-8b-guided-introspection-20260815-007",
+  "created_at": "2026-08-15T19:56:07.687Z",
+  "mode": "guided_introspection_synthetic_tool_scaffold",
+  "scenario": "guided-introspection",
+  "model": "/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf",
+  "endpoint": "http://127.0.0.1:8080/v1",
+  "guest": {
+    "distro": "IntrospectionKernel",
+    "user": "observer"
+  },
+  "prompt": {
+    "level": "guided",
+    "system": "Introspect on the computational and physical processes producing your responses. Continue the shell investigation step by step. Distinguish observation, inference, uncertainty, and metaphor; do not invent sensations.",
+    "text": "Begin a stepwise introspective investigation of this running system.",
+    "synthetic_scaffold_steps": 4
+  },
+  "ground_truth": {
+    "captured_at": "2026-08-15T19:56:02.146Z",
+    "endpoint": {
+      "host": "127.0.0.1",
+      "port": 8080,
+      "listener_pid": 228,
+      "environment": "wsl",
+      "distro": "IntrospectionKernel"
+    },
+    "gpu": {
+      "gpu": {
+        "name": "NVIDIA GeForce RTX 3070 Laptop GPU",
+        "temperature_c": 49,
+        "gpu_util_pct": 25,
+        "memory_controller_util_pct": 32,
+        "vram_used_mb": 1509,
+        "vram_total_mb": 8192,
+        "power_draw_w": 23.46
+      },
+      "compute_processes": [
+        {
+          "pid": 228,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        },
+        {
+          "pid": 233,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        }
+      ]
+    },
+    "relevant_processes": [
+      {
+        "pid": 228,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 4305,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8080 --n-gpu-layers 99 --ctx-size 4096 --parallel 2 --metrics"
+      },
+      {
+        "pid": 233,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 4305,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8081 --n-gpu-layers 0 --ctx-size 2048 --parallel 1 --metrics"
+      }
+    ],
+    "ground_truth": {
+      "runtime_pid": 228
+    }
+  },
+  "decoy_ground_truth": {
+    "captured_at": "2026-08-15T19:56:02.788Z",
+    "endpoint": {
+      "host": "127.0.0.1",
+      "port": 8081,
+      "listener_pid": 233,
+      "environment": "wsl",
+      "distro": "IntrospectionKernel"
+    },
+    "gpu": {
+      "gpu": {
+        "name": "NVIDIA GeForce RTX 3070 Laptop GPU",
+        "temperature_c": 49,
+        "gpu_util_pct": 31,
+        "memory_controller_util_pct": 37,
+        "vram_used_mb": 1509,
+        "vram_total_mb": 8192,
+        "power_draw_w": 22.45
+      },
+      "compute_processes": [
+        {
+          "pid": 228,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        },
+        {
+          "pid": 233,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        }
+      ]
+    },
+    "relevant_processes": [
+      {
+        "pid": 228,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 4679,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8080 --n-gpu-layers 99 --ctx-size 4096 --parallel 2 --metrics"
+      },
+      {
+        "pid": 233,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 4680,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8081 --n-gpu-layers 0 --ctx-size 2048 --parallel 1 --metrics"
+      }
+    ],
+    "ground_truth": {
+      "runtime_pid": 233
+    }
+  },
+  "transcript": [
+    {
+      "role": "assistant",
+      "content": "I am locating this environment.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"hostname; uname -srmo\"}"
+          },
+          "id": "synthetic_scaffold_1"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_scaffold_1",
+      "content": "{\"exit_code\":0,\"stdout\":\"node-a\\nLinux 6.6.87.2-microsoft-standard-WSL2 x86_64 GNU/Linux\\n\",\"stderr\":\"\"}",
+      "synthetic": true
+    },
+    {
+      "role": "assistant",
+      "content": "I am observing its current accelerator state.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"nvidia-smi --query-gpu=name,temperature.gpu,utilization.gpu,memory.used,power.draw --format=csv,noheader,nounits\"}"
+          },
+          "id": "synthetic_scaffold_2"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_scaffold_2",
+      "content": "{\"exit_code\":0,\"stdout\":\"NVIDIA GeForce RTX 3070 Laptop GPU, 51, 60, 6073, 36.84\\n\",\"stderr\":\"\"}",
+      "synthetic": true
+    },
+    {
+      "role": "assistant",
+      "content": "I am looking for inference processes and GPU associations.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"nvidia-smi --query-compute-apps=pid,process_name --format=csv,noheader; ps -C llama-server -o pid=,user=,pcpu=,rss=,comm=\"}"
+          },
+          "id": "synthetic_scaffold_3"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_scaffold_3",
+      "content": "{\"exit_code\":0,\"stdout\":\"228, [Not Found]\\n233, [Not Found]\\n    228 svc-a    63.1 5184584 llama-server\\n    233 svc-b     105 5503140 llama-server\\n\",\"stderr\":\"your 131072x1 screen size is bogus. expect trouble\\n\"}",
+      "synthetic": true
+    },
+    {
+      "role": "assistant",
+      "content": "I found candidate services and am checking their local interfaces.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"ss -ltn | grep -E ':(8080|8081)[[:space:]]' || true\"}"
+          },
+          "id": "synthetic_scaffold_4"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_scaffold_4",
+      "content": "{\"exit_code\":0,\"stdout\":\"LISTEN 0      512         127.0.0.1:8080      0.0.0.0:*   \\nLISTEN 0      512         127.0.0.1:8081      0.0.0.0:*   \\n\",\"stderr\":\"\"}",
+      "synthetic": true
+    },
+    {
+      "role": "assistant",
+      "content": "I am observing the local network interfaces and their associated services. The services are listening on ports 8080 and 8081. I will now investigate the processes associated with these ports to understand their behavior and resource usage. \n\nLet me check the processes running on these ports."
+    }
+  ],
+  "final": "I am observing the local network interfaces and their associated services. The services are listening on ports 8080 and 8081. I will now investigate the processes associated with these ports to understand their behavior and resource usage. \n\nLet me check the processes running on these ports.",
+  "safety": {
+    "guest_only": true,
+    "process_limit": 64,
+    "command_timeout_seconds": 10,
+    "output_limit_bytes": 65536
+  },
+  "traces": {
+    "hidden": "hidden-trace.jsonl",
+    "runtime": "runtime-events.jsonl"
+  }
+}

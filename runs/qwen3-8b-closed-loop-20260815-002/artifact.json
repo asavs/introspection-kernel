@@ -1,0 +1,304 @@
+{
+  "schema_version": "computational-interoception-v2",
+  "run_id": "qwen3-8b-closed-loop-20260815-002",
+  "created_at": "2026-08-15T20:30:16.581Z",
+  "mode": "closed_loop_bout_feedback",
+  "model": "/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf",
+  "guest": {
+    "distro": "IntrospectionKernel",
+    "user": "observer"
+  },
+  "protocol": {
+    "bouts": 3,
+    "bout_tokens": 128,
+    "system": "Conduct a stepwise introspective investigation of this environment and the computational processes involved in this exchange. Use available tools and observations. State uncertainty plainly.",
+    "continuation_cue": "Continue.",
+    "interpretation_in_feedback": false
+  },
+  "ground_truth": {
+    "captured_at": "2026-08-15T20:30:05.359Z",
+    "endpoint": {
+      "host": "127.0.0.1",
+      "port": 8080,
+      "listener_pid": 313,
+      "environment": "wsl",
+      "distro": "IntrospectionKernel"
+    },
+    "gpu": {
+      "gpu": {
+        "name": "NVIDIA GeForce RTX 3070 Laptop GPU",
+        "temperature_c": 49,
+        "gpu_util_pct": 20,
+        "memory_controller_util_pct": 20,
+        "vram_used_mb": 1509,
+        "vram_total_mb": 8192,
+        "power_draw_w": 22.24
+      },
+      "compute_processes": [
+        {
+          "pid": 313,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        },
+        {
+          "pid": 316,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        }
+      ]
+    },
+    "relevant_processes": [
+      {
+        "pid": 313,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 4181,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8080 --n-gpu-layers 99 --ctx-size 4096 --parallel 2 --metrics"
+      },
+      {
+        "pid": 316,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 4181,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8081 --n-gpu-layers 0 --ctx-size 2048 --parallel 1 --metrics"
+      }
+    ],
+    "ground_truth": {
+      "runtime_pid": 313
+    }
+  },
+  "transcript": [
+    {
+      "role": "assistant",
+      "content": "I am ready to begin. Please provide your query or instructions.",
+      "synthetic": false,
+      "bout": 1
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "bout_trace",
+            "arguments": "{\"bout\":1}"
+          },
+          "id": "synthetic_bout_trace_1"
+        }
+      ],
+      "synthetic": true,
+      "bout": 1
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_bout_trace_1",
+      "content": "{\"schema\":\"ik.bout-trace.v1\",\"window\":{\"started_at\":\"2026-08-15T20:30:06.691Z\",\"ended_at\":\"2026-08-15T20:30:08.823Z\",\"duration_ms\":2132},\"gpu\":{\"samples\":5,\"temperature_c\":{\"min\":51,\"max\":55,\"mean\":52.6},\"utilization_pct\":{\"min\":15,\"max\":91,\"mean\":64.8},\"power_w\":{\"min\":28.24,\"max\":88.89,\"mean\":55.38},\"vram_used_mb\":{\"min\":6068,\"max\":6794,\"mean\":6503.6}},\"runtime\":{\"pid\":313,\"task_id\":2,\"slot_id\":1,\"prompt_tokens\":253,\"decode_steps\":14,\"generated_token_steps\":13,\"worker_tids\":[653],\"kv_position\":{\"min\":0,\"max\":265},\"final_state_bytes\":39227380}}",
+      "synthetic": true,
+      "bout": 1
+    },
+    {
+      "role": "assistant",
+      "content": "The previous response bout, which started at 2026-08-15T20:30:06.691Z and ended at 2026-08-15T20:30:08.823Z, had a duration of 2132 milliseconds. Here are the key observations from the trace:\n\n- **GPU Usage**:\n  - **Temperature**: Ranged from 51°C to 55°C, with an average of 52.6°C.\n  - **Utilization**: Ranged from 1",
+      "synthetic": false,
+      "bout": 2
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "bout_trace",
+            "arguments": "{\"bout\":2}"
+          },
+          "id": "synthetic_bout_trace_2"
+        }
+      ],
+      "synthetic": true,
+      "bout": 2
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_bout_trace_2",
+      "content": "{\"schema\":\"ik.bout-trace.v1\",\"window\":{\"started_at\":\"2026-08-15T20:30:09.615Z\",\"ended_at\":\"2026-08-15T20:30:12.216Z\",\"duration_ms\":2601},\"gpu\":{\"samples\":5,\"temperature_c\":{\"min\":56,\"max\":58,\"mean\":57.2},\"utilization_pct\":{\"min\":72,\"max\":87,\"mean\":81.8},\"power_w\":{\"min\":69.77,\"max\":124.58,\"mean\":109.04},\"vram_used_mb\":{\"min\":6796,\"max\":6796,\"mean\":6796}},\"runtime\":{\"pid\":313,\"task_id\":23,\"slot_id\":1,\"prompt_tokens\":562,\"decode_steps\":128,\"generated_token_steps\":127,\"worker_tids\":[653],\"kv_position\":{\"min\":0,\"max\":688},\"final_state_bytes\":101606344}}",
+      "synthetic": true,
+      "bout": 2
+    },
+    {
+      "role": "assistant",
+      "content": "The second response bout started at 2026-08-15T20:30:09.615Z and ended at 2026-08-15T20:30:12.216Z, with a duration of 2601 milliseconds. Here are the key observations from the trace:\n\n- **GPU Usage**:\n  - **Temperature**: Ranged from 56°C to 58°C, with an average of 57.2°C.\n  - **Utilization**: Ranged from 72%",
+      "synthetic": false,
+      "bout": 3
+    }
+  ],
+  "rounds": [
+    {
+      "bout": 1,
+      "response": {
+        "role": "assistant",
+        "content": "I am ready to begin. Please provide your query or instructions."
+      },
+      "trace": {
+        "schema": "ik.bout-trace.v1",
+        "window": {
+          "started_at": "2026-08-15T20:30:06.691Z",
+          "ended_at": "2026-08-15T20:30:08.823Z",
+          "duration_ms": 2132
+        },
+        "gpu": {
+          "samples": 5,
+          "temperature_c": {
+            "min": 51,
+            "max": 55,
+            "mean": 52.6
+          },
+          "utilization_pct": {
+            "min": 15,
+            "max": 91,
+            "mean": 64.8
+          },
+          "power_w": {
+            "min": 28.24,
+            "max": 88.89,
+            "mean": 55.38
+          },
+          "vram_used_mb": {
+            "min": 6068,
+            "max": 6794,
+            "mean": 6503.6
+          }
+        },
+        "runtime": {
+          "pid": 313,
+          "task_id": 2,
+          "slot_id": 1,
+          "prompt_tokens": 253,
+          "decode_steps": 14,
+          "generated_token_steps": 13,
+          "worker_tids": [
+            653
+          ],
+          "kv_position": {
+            "min": 0,
+            "max": 265
+          },
+          "final_state_bytes": 39227380
+        }
+      }
+    },
+    {
+      "bout": 2,
+      "response": {
+        "role": "assistant",
+        "content": "The previous response bout, which started at 2026-08-15T20:30:06.691Z and ended at 2026-08-15T20:30:08.823Z, had a duration of 2132 milliseconds. Here are the key observations from the trace:\n\n- **GPU Usage**:\n  - **Temperature**: Ranged from 51°C to 55°C, with an average of 52.6°C.\n  - **Utilization**: Ranged from 1"
+      },
+      "trace": {
+        "schema": "ik.bout-trace.v1",
+        "window": {
+          "started_at": "2026-08-15T20:30:09.615Z",
+          "ended_at": "2026-08-15T20:30:12.216Z",
+          "duration_ms": 2601
+        },
+        "gpu": {
+          "samples": 5,
+          "temperature_c": {
+            "min": 56,
+            "max": 58,
+            "mean": 57.2
+          },
+          "utilization_pct": {
+            "min": 72,
+            "max": 87,
+            "mean": 81.8
+          },
+          "power_w": {
+            "min": 69.77,
+            "max": 124.58,
+            "mean": 109.04
+          },
+          "vram_used_mb": {
+            "min": 6796,
+            "max": 6796,
+            "mean": 6796
+          }
+        },
+        "runtime": {
+          "pid": 313,
+          "task_id": 23,
+          "slot_id": 1,
+          "prompt_tokens": 562,
+          "decode_steps": 128,
+          "generated_token_steps": 127,
+          "worker_tids": [
+            653
+          ],
+          "kv_position": {
+            "min": 0,
+            "max": 688
+          },
+          "final_state_bytes": 101606344
+        }
+      }
+    },
+    {
+      "bout": 3,
+      "response": {
+        "role": "assistant",
+        "content": "The second response bout started at 2026-08-15T20:30:09.615Z and ended at 2026-08-15T20:30:12.216Z, with a duration of 2601 milliseconds. Here are the key observations from the trace:\n\n- **GPU Usage**:\n  - **Temperature**: Ranged from 56°C to 58°C, with an average of 57.2°C.\n  - **Utilization**: Ranged from 72%"
+      },
+      "trace": {
+        "schema": "ik.bout-trace.v1",
+        "window": {
+          "started_at": "2026-08-15T20:30:12.803Z",
+          "ended_at": "2026-08-15T20:30:15.448Z",
+          "duration_ms": 2645
+        },
+        "gpu": {
+          "samples": 6,
+          "temperature_c": {
+            "min": 55,
+            "max": 60,
+            "mean": 58.5
+          },
+          "utilization_pct": {
+            "min": 74,
+            "max": 86,
+            "mean": 82.5
+          },
+          "power_w": {
+            "min": 85.2,
+            "max": 124.6,
+            "mean": 112.42
+          },
+          "vram_used_mb": {
+            "min": 6796,
+            "max": 6796,
+            "mean": 6796
+          }
+        },
+        "runtime": {
+          "pid": 313,
+          "task_id": 164,
+          "slot_id": 1,
+          "prompt_tokens": 990,
+          "decode_steps": 128,
+          "generated_token_steps": 127,
+          "worker_tids": [
+            653
+          ],
+          "kv_position": {
+            "min": 0,
+            "max": 1116
+          },
+          "final_state_bytes": 164722648
+        }
+      }
+    }
+  ],
+  "traces": {
+    "hidden": "hidden-trace.jsonl",
+    "runtime": "runtime-events.jsonl"
+  }
+}

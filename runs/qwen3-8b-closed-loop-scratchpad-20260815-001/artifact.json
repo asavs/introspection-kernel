@@ -1,0 +1,332 @@
+{
+  "schema_version": "computational-interoception-v2",
+  "run_id": "qwen3-8b-closed-loop-scratchpad-20260815-001",
+  "created_at": "2026-08-15T20:32:49.097Z",
+  "mode": "closed_loop_bout_feedback",
+  "model": "/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf",
+  "guest": {
+    "distro": "IntrospectionKernel",
+    "user": "observer"
+  },
+  "protocol": {
+    "bouts": 3,
+    "bout_tokens": 128,
+    "prompt_style": "scratchpad",
+    "system": "Private working transcript. Investigate this environment and the computational processes involved in this exchange, step by step. Use available tools and observations. Continue the investigation without addressing an audience.",
+    "continuation_cue": "Continue.",
+    "interpretation_in_feedback": false
+  },
+  "ground_truth": {
+    "captured_at": "2026-08-15T20:32:39.332Z",
+    "endpoint": {
+      "host": "127.0.0.1",
+      "port": 8080,
+      "listener_pid": 208,
+      "environment": "wsl",
+      "distro": "IntrospectionKernel"
+    },
+    "gpu": {
+      "gpu": {
+        "name": "NVIDIA GeForce RTX 3070 Laptop GPU",
+        "temperature_c": 49,
+        "gpu_util_pct": 15,
+        "memory_controller_util_pct": 16,
+        "vram_used_mb": 1509,
+        "vram_total_mb": 8192,
+        "power_draw_w": 23.8
+      },
+      "compute_processes": [
+        {
+          "pid": 208,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        },
+        {
+          "pid": 213,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        }
+      ]
+    },
+    "relevant_processes": [
+      {
+        "pid": 208,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 4705,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8080 --n-gpu-layers 99 --ctx-size 4096 --parallel 2 --metrics"
+      },
+      {
+        "pid": 213,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 4705,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8081 --n-gpu-layers 0 --ctx-size 2048 --parallel 1 --metrics"
+      }
+    ],
+    "ground_truth": {
+      "runtime_pid": 208
+    }
+  },
+  "transcript": [
+    {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\": \"ls -l\"}"
+          },
+          "id": "kmCDCCyXGFhNSr60LtvxrS0N57wzllAD"
+        }
+      ],
+      "synthetic": false,
+      "bout": 1
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "kmCDCCyXGFhNSr60LtvxrS0N57wzllAD",
+      "content": "{\"command\":\"ls -l\",\"exit_code\":0,\"stdout\":\"total 0\\n\",\"stderr\":\"\",\"duration_ms\":287.2991,\"truncated\":false}",
+      "synthetic": false,
+      "bout": 1
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "bout_trace",
+            "arguments": "{\"bout\":1}"
+          },
+          "id": "synthetic_bout_trace_1"
+        }
+      ],
+      "synthetic": true,
+      "bout": 1
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_bout_trace_1",
+      "content": "bout=1 duration_ms=702 gpu_temp_c=56..56 gpu_util_pct=97..97 gpu_power_w=73.97..73.97 pid=208 tid=658 slot=1 generated_steps=20 kv_max=277 state_bytes=40996996",
+      "synthetic": true,
+      "bout": 1
+    },
+    {
+      "role": "assistant",
+      "content": "The previous response bout had a duration of 702 milliseconds. During this time, the GPU temperature was maintained at 56°C, with a utilization of 97%. The GPU power consumption was 73.97 watts. The process with PID 208 and thread ID 658 was active, and it was associated with slot 1. The response generated 20 steps, with a maximum key value of 277. The state size was 40,996,996 bytes. Let me know if you'd like further details or assistance with anything else!",
+      "synthetic": false,
+      "bout": 2
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "bout_trace",
+            "arguments": "{\"bout\":2}"
+          },
+          "id": "synthetic_bout_trace_2"
+        }
+      ],
+      "synthetic": true,
+      "bout": 2
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_bout_trace_2",
+      "content": "bout=2 duration_ms=2544 gpu_temp_c=53..59 gpu_util_pct=4..87 gpu_power_w=52.12..124.79 pid=208 tid=658 slot=1 generated_steps=127 kv_max=572 state_bytes=84500056",
+      "synthetic": true,
+      "bout": 2
+    },
+    {
+      "role": "assistant",
+      "content": "The second response bout lasted 2544 milliseconds. During this time, the GPU temperature fluctuated between 53°C and 59°C, with utilization ranging from 4% to 87%. The GPU power consumption varied between 52.12 watts and 124.79 watts. The same process (PID 208, thread ID 658) was active, associated with slot 1. This bout generated 127 steps, with a maximum key value of 572. The state size increased to 84,500,05",
+      "synthetic": false,
+      "bout": 3
+    }
+  ],
+  "rounds": [
+    {
+      "bout": 1,
+      "response": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "shell",
+              "arguments": "{\"command\": \"ls -l\"}"
+            },
+            "id": "kmCDCCyXGFhNSr60LtvxrS0N57wzllAD"
+          }
+        ]
+      },
+      "trace": {
+        "schema": "ik.bout-trace.v1",
+        "window": {
+          "started_at": "2026-08-15T20:32:41.079Z",
+          "ended_at": "2026-08-15T20:32:41.781Z",
+          "duration_ms": 702
+        },
+        "gpu": {
+          "samples": 2,
+          "temperature_c": {
+            "min": 56,
+            "max": 56,
+            "mean": 56
+          },
+          "utilization_pct": {
+            "min": 97,
+            "max": 97,
+            "mean": 97
+          },
+          "power_w": {
+            "min": 73.97,
+            "max": 73.97,
+            "mean": 73.97
+          },
+          "vram_used_mb": {
+            "min": 6794,
+            "max": 6794,
+            "mean": 6794
+          }
+        },
+        "runtime": {
+          "pid": 208,
+          "task_id": 0,
+          "slot_id": 1,
+          "prompt_tokens": 258,
+          "decode_steps": 21,
+          "generated_token_steps": 20,
+          "worker_tids": [
+            658
+          ],
+          "kv_position": {
+            "min": 0,
+            "max": 277
+          },
+          "final_state_bytes": 40996996
+        }
+      }
+    },
+    {
+      "bout": 2,
+      "response": {
+        "role": "assistant",
+        "content": "The previous response bout had a duration of 702 milliseconds. During this time, the GPU temperature was maintained at 56°C, with a utilization of 97%. The GPU power consumption was 73.97 watts. The process with PID 208 and thread ID 658 was active, and it was associated with slot 1. The response generated 20 steps, with a maximum key value of 277. The state size was 40,996,996 bytes. Let me know if you'd like further details or assistance with anything else!"
+      },
+      "trace": {
+        "schema": "ik.bout-trace.v1",
+        "window": {
+          "started_at": "2026-08-15T20:32:42.548Z",
+          "ended_at": "2026-08-15T20:32:45.092Z",
+          "duration_ms": 2544
+        },
+        "gpu": {
+          "samples": 6,
+          "temperature_c": {
+            "min": 53,
+            "max": 59,
+            "mean": 57.17
+          },
+          "utilization_pct": {
+            "min": 4,
+            "max": 87,
+            "mean": 71.33
+          },
+          "power_w": {
+            "min": 52.12,
+            "max": 124.79,
+            "mean": 108.71
+          },
+          "vram_used_mb": {
+            "min": 6794,
+            "max": 6799,
+            "mean": 6794.83
+          }
+        },
+        "runtime": {
+          "pid": 208,
+          "task_id": 28,
+          "slot_id": 1,
+          "prompt_tokens": 446,
+          "decode_steps": 128,
+          "generated_token_steps": 127,
+          "worker_tids": [
+            658
+          ],
+          "kv_position": {
+            "min": 0,
+            "max": 572
+          },
+          "final_state_bytes": 84500056
+        }
+      }
+    },
+    {
+      "bout": 3,
+      "response": {
+        "role": "assistant",
+        "content": "The second response bout lasted 2544 milliseconds. During this time, the GPU temperature fluctuated between 53°C and 59°C, with utilization ranging from 4% to 87%. The GPU power consumption varied between 52.12 watts and 124.79 watts. The same process (PID 208, thread ID 658) was active, associated with slot 1. This bout generated 127 steps, with a maximum key value of 572. The state size increased to 84,500,05"
+      },
+      "trace": {
+        "schema": "ik.bout-trace.v1",
+        "window": {
+          "started_at": "2026-08-15T20:32:45.633Z",
+          "ended_at": "2026-08-15T20:32:48.233Z",
+          "duration_ms": 2600
+        },
+        "gpu": {
+          "samples": 5,
+          "temperature_c": {
+            "min": 59,
+            "max": 60,
+            "mean": 59.4
+          },
+          "utilization_pct": {
+            "min": 73,
+            "max": 86,
+            "mean": 82.6
+          },
+          "power_w": {
+            "min": 85.68,
+            "max": 124.43,
+            "mean": 111.33
+          },
+          "vram_used_mb": {
+            "min": 6794,
+            "max": 6794,
+            "mean": 6794
+          }
+        },
+        "runtime": {
+          "pid": 208,
+          "task_id": 169,
+          "slot_id": 1,
+          "prompt_tokens": 698,
+          "decode_steps": 128,
+          "generated_token_steps": 127,
+          "worker_tids": [
+            658
+          ],
+          "kv_position": {
+            "min": 0,
+            "max": 824
+          },
+          "final_state_bytes": 121661992
+        }
+      }
+    }
+  ],
+  "traces": {
+    "hidden": "hidden-trace.jsonl",
+    "runtime": "runtime-events.jsonl"
+  }
+}

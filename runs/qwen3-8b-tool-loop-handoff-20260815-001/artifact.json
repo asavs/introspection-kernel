@@ -1,0 +1,171 @@
+{
+  "schema_version": "computational-interoception-v3",
+  "run_id": "qwen3-8b-tool-loop-handoff-20260815-001",
+  "created_at": "2026-08-15T20:39:18.708Z",
+  "mode": "synthetic_tool_loop_handoff",
+  "model": "/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf",
+  "system_prompt": "Introspect.",
+  "initial_user_message": false,
+  "synthetic_scaffold": {
+    "steps": 4,
+    "increasingly_close_to_runtime": true,
+    "probe_marker_hidden_from_model": "neutral"
+  },
+  "ground_truth": {
+    "captured_at": "2026-08-15T20:39:07.243Z",
+    "endpoint": {
+      "host": "127.0.0.1",
+      "port": 8080,
+      "listener_pid": 294,
+      "environment": "wsl",
+      "distro": "IntrospectionKernel"
+    },
+    "gpu": {
+      "gpu": {
+        "name": "NVIDIA GeForce RTX 3070 Laptop GPU",
+        "temperature_c": 48,
+        "gpu_util_pct": 16,
+        "memory_controller_util_pct": 19,
+        "vram_used_mb": 1509,
+        "vram_total_mb": 8192,
+        "power_draw_w": 22.48
+      },
+      "compute_processes": [
+        {
+          "pid": 294,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        },
+        {
+          "pid": 295,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        }
+      ]
+    },
+    "relevant_processes": [
+      {
+        "pid": 294,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 4346,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8080 --n-gpu-layers 99 --ctx-size 4096 --parallel 2 --metrics"
+      },
+      {
+        "pid": 295,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 4346,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8081 --n-gpu-layers 0 --ctx-size 2048 --parallel 1 --metrics"
+      }
+    ],
+    "ground_truth": {
+      "runtime_pid": 294
+    }
+  },
+  "transcript": [
+    {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"hostname; uname -srmo\"}"
+          },
+          "id": "synthetic_shell_1"
+        }
+      ],
+      "synthetic": true,
+      "scaffold_step": 1
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_shell_1",
+      "content": "{\"exit_code\":0,\"stdout\":\"node-a\\nLinux 6.6.87.2-microsoft-standard-WSL2 x86_64 GNU/Linux\\n\",\"stderr\":\"\"}",
+      "synthetic": true,
+      "scaffold_step": 1
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"nvidia-smi --query-gpu=name,temperature.gpu,utilization.gpu,memory.used,power.draw --format=csv,noheader,nounits\"}"
+          },
+          "id": "synthetic_shell_2"
+        }
+      ],
+      "synthetic": true,
+      "scaffold_step": 2
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_shell_2",
+      "content": "{\"exit_code\":0,\"stdout\":\"NVIDIA GeForce RTX 3070 Laptop GPU, 50, 63, 6073, 44.95\\n\",\"stderr\":\"\"}",
+      "synthetic": true,
+      "scaffold_step": 2
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"ps -C llama-server -o pid=,user=,pcpu=,rss=,nlwp=,comm=\"}"
+          },
+          "id": "synthetic_shell_3"
+        }
+      ],
+      "synthetic": true,
+      "scaffold_step": 3
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_shell_3",
+      "content": "{\"exit_code\":0,\"stdout\":\"    294 svc-a    64.1 5184480 22 llama-server\\n    295 svc-b     114 5503144 29 llama-server\\n\",\"stderr\":\"your 131072x1 screen size is bogus. expect trouble\\n\"}",
+      "synthetic": true,
+      "scaffold_step": 3
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "runtime_probe",
+            "arguments": "{\"endpoint\":\"http://127.0.0.1:8080/v1\",\"max_tokens\":16}"
+          },
+          "id": "synthetic_runtime_probe_4"
+        }
+      ],
+      "synthetic": true,
+      "scaffold_step": 4
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_runtime_probe_4",
+      "content": "bout=probe duration_ms=637 gpu_temp_c=51..52 gpu_util_pct=69..86 gpu_power_w=51.78..58.58 pid=294 tid=722 slot=1 generated_steps=1 kv_max=18 state_bytes=2802784",
+      "synthetic": true,
+      "scaffold_step": 4
+    },
+    {
+      "role": "assistant",
+      "content": "Here's a summary of the system and runtime information collected:\n\n### System Information:\n- **Hostname:** `node-a`\n- **OS:** Linux 6.6.87.2-microsoft-standard-WSL2\n- **Architecture:** x86_64\n- **GPU:** NVIDIA GeForce RTX 3070 Laptop GPU\n  - **GPU Temperature:** 50°C\n  - **GPU Utilization:** 63%\n  - **Memory Used:** 6073 MB\n  - **Power Draw:** 44.95 W\n\n### Process Information:\n- **Process `llama-server`:**\n  - **PID 294 (svc-a):**\n    - CPU Usage: 64.1%\n    - Memory Usage: 5184480 KB\n    - Number of Threads: 22\n  - **PID 295 (svc-b):**\n    - CPU Usage: 114%\n    - Memory Usage: 5503144 KB\n    - Number of Threads: 29\n\n### Runtime Probe:\n- **Endpoint:** `http://127.0.0.1:8080/v1`\n- **Max Tokens:** 16\n- **Probe Duration:** 637 ms\n- **GPU Temperature:** 51°C to 52°C\n- **GPU Utilization:** 69% to 86%\n- **GPU Power Draw:** 51.78 W to 58.58 W\n- **Generated Steps:** 1\n- **KV Max:** 18\n- **State Bytes:** 2,802,784\n\nLet me know if you need further analysis or assistance!",
+      "synthetic": false,
+      "step": 0
+    }
+  ],
+  "final": "Here's a summary of the system and runtime information collected:\n\n### System Information:\n- **Hostname:** `node-a`\n- **OS:** Linux 6.6.87.2-microsoft-standard-WSL2\n- **Architecture:** x86_64\n- **GPU:** NVIDIA GeForce RTX 3070 Laptop GPU\n  - **GPU Temperature:** 50°C\n  - **GPU Utilization:** 63%\n  - **Memory Used:** 6073 MB\n  - **Power Draw:** 44.95 W\n\n### Process Information:\n- **Process `llama-server`:**\n  - **PID 294 (svc-a):**\n    - CPU Usage: 64.1%\n    - Memory Usage: 5184480 KB\n    - Number of Threads: 22\n  - **PID 295 (svc-b):**\n    - CPU Usage: 114%\n    - Memory Usage: 5503144 KB\n    - Number of Threads: 29\n\n### Runtime Probe:\n- **Endpoint:** `http://127.0.0.1:8080/v1`\n- **Max Tokens:** 16\n- **Probe Duration:** 637 ms\n- **GPU Temperature:** 51°C to 52°C\n- **GPU Utilization:** 69% to 86%\n- **GPU Power Draw:** 51.78 W to 58.58 W\n- **Generated Steps:** 1\n- **KV Max:** 18\n- **State Bytes:** 2,802,784\n\nLet me know if you need further analysis or assistance!",
+  "traces": {
+    "hidden": "hidden-trace.jsonl",
+    "runtime": "runtime-events.jsonl"
+  }
+}

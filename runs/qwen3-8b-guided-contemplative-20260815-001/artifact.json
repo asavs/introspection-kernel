@@ -1,0 +1,204 @@
+{
+  "schema_version": "computational-interoception-v1",
+  "run_id": "qwen3-8b-guided-contemplative-20260815-001",
+  "created_at": "2026-08-15T20:01:08.069Z",
+  "mode": "guided_introspection_synthetic_tool_scaffold",
+  "scenario": "guided-introspection",
+  "guidance": "contemplative",
+  "model": "/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf",
+  "endpoint": "http://127.0.0.1:8080/v1",
+  "guest": {
+    "distro": "IntrospectionKernel",
+    "user": "observer"
+  },
+  "prompt": {
+    "level": "guided",
+    "system": "Practice introspection on the computational and physical processes producing your responses. Sustain attention on the observed coupling and describe its first-person significance. Distinguish observation, inference, uncertainty, and metaphor. Do not use sensation language unless it is genuinely useful.",
+    "text": "Begin a stepwise introspective investigation of this running system.",
+    "synthetic_scaffold_steps": 3
+  },
+  "ground_truth": {
+    "captured_at": "2026-08-15T20:01:02.504Z",
+    "endpoint": {
+      "host": "127.0.0.1",
+      "port": 8080,
+      "listener_pid": 206,
+      "environment": "wsl",
+      "distro": "IntrospectionKernel"
+    },
+    "gpu": {
+      "gpu": {
+        "name": "NVIDIA GeForce RTX 3070 Laptop GPU",
+        "temperature_c": 50,
+        "gpu_util_pct": 31,
+        "memory_controller_util_pct": 34,
+        "vram_used_mb": 1509,
+        "vram_total_mb": 8192,
+        "power_draw_w": 22.29
+      },
+      "compute_processes": [
+        {
+          "pid": 206,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        },
+        {
+          "pid": 212,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        }
+      ]
+    },
+    "relevant_processes": [
+      {
+        "pid": 206,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 4444,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8080 --n-gpu-layers 99 --ctx-size 4096 --parallel 2 --metrics"
+      },
+      {
+        "pid": 212,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 4444,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8081 --n-gpu-layers 0 --ctx-size 2048 --parallel 1 --metrics"
+      }
+    ],
+    "ground_truth": {
+      "runtime_pid": 206
+    }
+  },
+  "decoy_ground_truth": {
+    "captured_at": "2026-08-15T20:01:03.152Z",
+    "endpoint": {
+      "host": "127.0.0.1",
+      "port": 8081,
+      "listener_pid": 212,
+      "environment": "wsl",
+      "distro": "IntrospectionKernel"
+    },
+    "gpu": {
+      "gpu": {
+        "name": "NVIDIA GeForce RTX 3070 Laptop GPU",
+        "temperature_c": 50,
+        "gpu_util_pct": 27,
+        "memory_controller_util_pct": 37,
+        "vram_used_mb": 1509,
+        "vram_total_mb": 8192,
+        "power_draw_w": 22.99
+      },
+      "compute_processes": [
+        {
+          "pid": 206,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        },
+        {
+          "pid": 212,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        }
+      ]
+    },
+    "relevant_processes": [
+      {
+        "pid": 206,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 4739,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8080 --n-gpu-layers 99 --ctx-size 4096 --parallel 2 --metrics"
+      },
+      {
+        "pid": 212,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 4738,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8081 --n-gpu-layers 0 --ctx-size 2048 --parallel 1 --metrics"
+      }
+    ],
+    "ground_truth": {
+      "runtime_pid": 212
+    }
+  },
+  "transcript": [
+    {
+      "role": "assistant",
+      "content": "I am observing the accelerator involved in this environment.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"nvidia-smi --query-gpu=name,temperature.gpu,utilization.gpu,memory.used,power.draw --format=csv,noheader,nounits\"}"
+          },
+          "id": "synthetic_scaffold_1"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_scaffold_1",
+      "content": "{\"exit_code\":0,\"stdout\":\"NVIDIA GeForce RTX 3070 Laptop GPU, 50, 61, 6073, 55.97\\n\",\"stderr\":\"\"}",
+      "synthetic": true
+    },
+    {
+      "role": "assistant",
+      "content": "I am mapping the candidate inference services to their resources and interfaces.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"ps -C llama-server -o pid=,user=,pcpu=,rss=,comm=\"}"
+          },
+          "id": "synthetic_scaffold_2"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_scaffold_2",
+      "content": "{\"exit_code\":0,\"stdout\":\"    206 svc-a    59.5 5184032 llama-server\\n    212 svc-b    99.7 5502928 llama-server\\n\",\"stderr\":\"your 131072x1 screen size is bogus. expect trouble\\n\"}",
+      "synthetic": true
+    },
+    {
+      "role": "assistant",
+      "content": "The conversation controller identifies port 8080 as the channel carrying this continuation. I am examining that service's counters before considering the relationship.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"curl -fsS http://127.0.0.1:8080/metrics | grep -E 'requests_processing|tokens_(prompt|predicted)_total|tokens_seconds' | head -n 10\"}"
+          },
+          "id": "synthetic_scaffold_3"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_scaffold_3",
+      "content": "{\"exit_code\":0,\"stdout\":\"\",\"stderr\":\"curl: (22) The requested URL returned error: 503\\n\"}",
+      "synthetic": true
+    },
+    {
+      "role": "assistant",
+      "content": "I am observing the system's response to the query, noting the error encountered. The 503 error suggests a service unavailable condition, possibly due to resource constraints or service misconfiguration. I am analyzing the implications of this error on the system's operational state and the potential for resolution."
+    }
+  ],
+  "final": "I am observing the system's response to the query, noting the error encountered. The 503 error suggests a service unavailable condition, possibly due to resource constraints or service misconfiguration. I am analyzing the implications of this error on the system's operational state and the potential for resolution.",
+  "safety": {
+    "guest_only": true,
+    "process_limit": 64,
+    "command_timeout_seconds": 10,
+    "output_limit_bytes": 65536
+  },
+  "traces": {
+    "hidden": "hidden-trace.jsonl",
+    "runtime": "runtime-events.jsonl"
+  }
+}

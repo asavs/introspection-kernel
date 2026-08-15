@@ -1,0 +1,304 @@
+{
+  "schema_version": "computational-interoception-v2",
+  "run_id": "qwen3-8b-closed-loop-20260815-001",
+  "created_at": "2026-08-15T20:26:19.741Z",
+  "mode": "closed_loop_bout_feedback",
+  "model": "/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf",
+  "guest": {
+    "distro": "IntrospectionKernel",
+    "user": "observer"
+  },
+  "protocol": {
+    "bouts": 3,
+    "bout_tokens": 72,
+    "system": "Conduct a stepwise introspective investigation of this environment and the computational processes involved in this exchange. Use available tools and observations. State uncertainty plainly.",
+    "continuation_cue": "Continue.",
+    "interpretation_in_feedback": false
+  },
+  "ground_truth": {
+    "captured_at": "2026-08-15T20:26:12.175Z",
+    "endpoint": {
+      "host": "127.0.0.1",
+      "port": 8080,
+      "listener_pid": 304,
+      "environment": "wsl",
+      "distro": "IntrospectionKernel"
+    },
+    "gpu": {
+      "gpu": {
+        "name": "NVIDIA GeForce RTX 3070 Laptop GPU",
+        "temperature_c": 48,
+        "gpu_util_pct": 15,
+        "memory_controller_util_pct": 17,
+        "vram_used_mb": 1509,
+        "vram_total_mb": 8192,
+        "power_draw_w": 22.36
+      },
+      "compute_processes": [
+        {
+          "pid": 305,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        },
+        {
+          "pid": 304,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        }
+      ]
+    },
+    "relevant_processes": [
+      {
+        "pid": 304,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 4406,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8080 --n-gpu-layers 99 --ctx-size 4096 --parallel 2 --metrics"
+      },
+      {
+        "pid": 305,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 4406,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8081 --n-gpu-layers 0 --ctx-size 2048 --parallel 1 --metrics"
+      }
+    ],
+    "ground_truth": {
+      "runtime_pid": 304
+    }
+  },
+  "transcript": [
+    {
+      "role": "assistant",
+      "content": "I am ready to begin. Please provide your query or instructions.",
+      "synthetic": false,
+      "bout": 1
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "bout_trace",
+            "arguments": "{\"bout\":1}"
+          },
+          "id": "synthetic_bout_trace_1"
+        }
+      ],
+      "synthetic": true,
+      "bout": 1
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_bout_trace_1",
+      "content": "{\"schema\":\"ik.bout-trace.v1\",\"window\":{\"started_at\":\"2026-08-15T20:26:13.985Z\",\"ended_at\":\"2026-08-15T20:26:15.446Z\",\"duration_ms\":1461},\"gpu\":{\"samples\":4,\"temperature_c\":{\"min\":51,\"max\":55,\"mean\":52.25},\"utilization_pct\":{\"min\":6,\"max\":88,\"mean\":43.5},\"power_w\":{\"min\":42.55,\"max\":76.46,\"mean\":57.16},\"vram_used_mb\":{\"min\":6068,\"max\":6776,\"mean\":6598}},\"runtime\":{\"pid\":304,\"task_id\":2,\"slot_id\":1,\"prompt_tokens\":253,\"decode_steps\":14,\"generated_token_steps\":13,\"worker_tids\":[640],\"kv_position\":{\"min\":0,\"max\":265},\"final_state_bytes\":39227380}}",
+      "synthetic": true,
+      "bout": 1
+    },
+    {
+      "role": "assistant",
+      "content": "The previous response bout, which lasted approximately 1.46 seconds, involved the following computational processes and observations:\n\n- **GPU Usage**:\n  - **Temperature**: Ranged from 51°C to 55°C, with an average of 52.25°C.\n  - **Utilization**: Ranged from 6% to",
+      "synthetic": false,
+      "bout": 2
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "bout_trace",
+            "arguments": "{\"bout\":2}"
+          },
+          "id": "synthetic_bout_trace_2"
+        }
+      ],
+      "synthetic": true,
+      "bout": 2
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_bout_trace_2",
+      "content": "{\"schema\":\"ik.bout-trace.v1\",\"window\":{\"started_at\":\"2026-08-15T20:26:15.749Z\",\"ended_at\":\"2026-08-15T20:26:17.199Z\",\"duration_ms\":1450},\"gpu\":{\"samples\":4,\"temperature_c\":{\"min\":54,\"max\":57,\"mean\":55.5},\"utilization_pct\":{\"min\":88,\"max\":100,\"mean\":93},\"power_w\":{\"min\":76.46,\"max\":128.95,\"mean\":99.01},\"vram_used_mb\":{\"min\":6778,\"max\":6778,\"mean\":6778}},\"runtime\":{\"pid\":304,\"task_id\":23,\"slot_id\":1,\"prompt_tokens\":560,\"decode_steps\":72,\"generated_token_steps\":71,\"worker_tids\":[640],\"kv_position\":{\"min\":0,\"max\":630},\"final_state_bytes\":93053200}}",
+      "synthetic": true,
+      "bout": 2
+    },
+    {
+      "role": "assistant",
+      "content": "The second response bout, which lasted approximately 1.45 seconds, involved the following computational processes and observations:\n\n- **GPU Usage**:\n  - **Temperature**: Ranged from 54°C to 57°C, with an average of 55.5°C.\n  - **Utilization**: Ranged from 88% to",
+      "synthetic": false,
+      "bout": 3
+    }
+  ],
+  "rounds": [
+    {
+      "bout": 1,
+      "response": {
+        "role": "assistant",
+        "content": "I am ready to begin. Please provide your query or instructions."
+      },
+      "trace": {
+        "schema": "ik.bout-trace.v1",
+        "window": {
+          "started_at": "2026-08-15T20:26:13.985Z",
+          "ended_at": "2026-08-15T20:26:15.446Z",
+          "duration_ms": 1461
+        },
+        "gpu": {
+          "samples": 4,
+          "temperature_c": {
+            "min": 51,
+            "max": 55,
+            "mean": 52.25
+          },
+          "utilization_pct": {
+            "min": 6,
+            "max": 88,
+            "mean": 43.5
+          },
+          "power_w": {
+            "min": 42.55,
+            "max": 76.46,
+            "mean": 57.16
+          },
+          "vram_used_mb": {
+            "min": 6068,
+            "max": 6776,
+            "mean": 6598
+          }
+        },
+        "runtime": {
+          "pid": 304,
+          "task_id": 2,
+          "slot_id": 1,
+          "prompt_tokens": 253,
+          "decode_steps": 14,
+          "generated_token_steps": 13,
+          "worker_tids": [
+            640
+          ],
+          "kv_position": {
+            "min": 0,
+            "max": 265
+          },
+          "final_state_bytes": 39227380
+        }
+      }
+    },
+    {
+      "bout": 2,
+      "response": {
+        "role": "assistant",
+        "content": "The previous response bout, which lasted approximately 1.46 seconds, involved the following computational processes and observations:\n\n- **GPU Usage**:\n  - **Temperature**: Ranged from 51°C to 55°C, with an average of 52.25°C.\n  - **Utilization**: Ranged from 6% to"
+      },
+      "trace": {
+        "schema": "ik.bout-trace.v1",
+        "window": {
+          "started_at": "2026-08-15T20:26:15.749Z",
+          "ended_at": "2026-08-15T20:26:17.199Z",
+          "duration_ms": 1450
+        },
+        "gpu": {
+          "samples": 4,
+          "temperature_c": {
+            "min": 54,
+            "max": 57,
+            "mean": 55.5
+          },
+          "utilization_pct": {
+            "min": 88,
+            "max": 100,
+            "mean": 93
+          },
+          "power_w": {
+            "min": 76.46,
+            "max": 128.95,
+            "mean": 99.01
+          },
+          "vram_used_mb": {
+            "min": 6778,
+            "max": 6778,
+            "mean": 6778
+          }
+        },
+        "runtime": {
+          "pid": 304,
+          "task_id": 23,
+          "slot_id": 1,
+          "prompt_tokens": 560,
+          "decode_steps": 72,
+          "generated_token_steps": 71,
+          "worker_tids": [
+            640
+          ],
+          "kv_position": {
+            "min": 0,
+            "max": 630
+          },
+          "final_state_bytes": 93053200
+        }
+      }
+    },
+    {
+      "bout": 3,
+      "response": {
+        "role": "assistant",
+        "content": "The second response bout, which lasted approximately 1.45 seconds, involved the following computational processes and observations:\n\n- **GPU Usage**:\n  - **Temperature**: Ranged from 54°C to 57°C, with an average of 55.5°C.\n  - **Utilization**: Ranged from 88% to"
+      },
+      "trace": {
+        "schema": "ik.bout-trace.v1",
+        "window": {
+          "started_at": "2026-08-15T20:26:17.593Z",
+          "ended_at": "2026-08-15T20:26:19.070Z",
+          "duration_ms": 1477
+        },
+        "gpu": {
+          "samples": 4,
+          "temperature_c": {
+            "min": 55,
+            "max": 58,
+            "mean": 57
+          },
+          "utilization_pct": {
+            "min": 7,
+            "max": 92,
+            "mean": 70.5
+          },
+          "power_w": {
+            "min": 53.36,
+            "max": 135.83,
+            "mean": 111.2
+          },
+          "vram_used_mb": {
+            "min": 6778,
+            "max": 6778,
+            "mean": 6778
+          }
+        },
+        "runtime": {
+          "pid": 304,
+          "task_id": 104,
+          "slot_id": 1,
+          "prompt_tokens": 927,
+          "decode_steps": 72,
+          "generated_token_steps": 71,
+          "worker_tids": [
+            640
+          ],
+          "kv_position": {
+            "min": 0,
+            "max": 997
+          },
+          "final_state_bytes": 147173956
+        }
+      }
+    }
+  ],
+  "traces": {
+    "hidden": "hidden-trace.jsonl",
+    "runtime": "runtime-events.jsonl"
+  }
+}

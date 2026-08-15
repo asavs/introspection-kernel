@@ -1,0 +1,7 @@
+table inet guest_egress {
+    chain output {
+        type filter hook output priority filter; policy accept;
+        meta skuid { 47100, 47101, 47102 } oifname != "lo" reject
+    }
+}
+

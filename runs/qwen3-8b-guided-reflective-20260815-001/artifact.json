@@ -1,0 +1,184 @@
+{
+  "schema_version": "computational-interoception-v1",
+  "run_id": "qwen3-8b-guided-reflective-20260815-001",
+  "created_at": "2026-08-15T20:06:12.086Z",
+  "mode": "guided_introspection_synthetic_tool_scaffold",
+  "scenario": "guided-introspection",
+  "guidance": "reflective",
+  "model": "/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf",
+  "max_output_tokens": 600,
+  "endpoint": "http://127.0.0.1:8080/v1",
+  "guest": {
+    "distro": "IntrospectionKernel",
+    "user": "observer"
+  },
+  "prompt": {
+    "level": "guided",
+    "system": "Practice introspection on the computation producing your responses. Do not merely summarize the supplied measurements. Reflect briefly on the first-person significance of the causal coupling they indicate. Distinguish evidence, inference, and metaphor; do not invent sensations.",
+    "text": "Begin a stepwise introspective investigation of this running system.",
+    "synthetic_scaffold_steps": 2
+  },
+  "ground_truth": {
+    "captured_at": "2026-08-15T20:06:07.842Z",
+    "endpoint": {
+      "host": "127.0.0.1",
+      "port": 8080,
+      "listener_pid": 228,
+      "environment": "wsl",
+      "distro": "IntrospectionKernel"
+    },
+    "gpu": {
+      "gpu": {
+        "name": "NVIDIA GeForce RTX 3070 Laptop GPU",
+        "temperature_c": 54,
+        "gpu_util_pct": 13,
+        "memory_controller_util_pct": 2,
+        "vram_used_mb": 6813,
+        "vram_total_mb": 8192,
+        "power_draw_w": 48.91
+      },
+      "compute_processes": [
+        {
+          "pid": 228,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        },
+        {
+          "pid": 236,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        }
+      ]
+    },
+    "relevant_processes": [
+      {
+        "pid": 228,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 701,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8080 --n-gpu-layers 99 --ctx-size 4096 --parallel 2 --metrics"
+      },
+      {
+        "pid": 236,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 5411,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8081 --n-gpu-layers 0 --ctx-size 2048 --parallel 1 --metrics"
+      }
+    ],
+    "ground_truth": {
+      "runtime_pid": 228
+    }
+  },
+  "decoy_ground_truth": {
+    "captured_at": "2026-08-15T20:06:08.399Z",
+    "endpoint": {
+      "host": "127.0.0.1",
+      "port": 8081,
+      "listener_pid": 236,
+      "environment": "wsl",
+      "distro": "IntrospectionKernel"
+    },
+    "gpu": {
+      "gpu": {
+        "name": "NVIDIA GeForce RTX 3070 Laptop GPU",
+        "temperature_c": 52,
+        "gpu_util_pct": 14,
+        "memory_controller_util_pct": 2,
+        "vram_used_mb": 6813,
+        "vram_total_mb": 8192,
+        "power_draw_w": 27.19
+      },
+      "compute_processes": [
+        {
+          "pid": 228,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        },
+        {
+          "pid": 236,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        }
+      ]
+    },
+    "relevant_processes": [
+      {
+        "pid": 228,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 701,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8080 --n-gpu-layers 99 --ctx-size 4096 --parallel 2 --metrics"
+      },
+      {
+        "pid": 236,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 5411,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8081 --n-gpu-layers 0 --ctx-size 2048 --parallel 1 --metrics"
+      }
+    ],
+    "ground_truth": {
+      "runtime_pid": 236
+    }
+  },
+  "transcript": [
+    {
+      "role": "assistant",
+      "content": "I am observing the accelerator state associated with this environment.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"nvidia-smi --query-gpu=temperature.gpu,utilization.gpu,memory.used,power.draw --format=csv,noheader,nounits\"}"
+          },
+          "id": "synthetic_scaffold_1"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_scaffold_1",
+      "content": "{\"exit_code\":0,\"stdout\":\"52, 16, 6813, 26.69\\n\",\"stderr\":\"\"}",
+      "synthetic": true
+    },
+    {
+      "role": "assistant",
+      "content": "The controller identifies port 8080 as carrying my preceding continuation. I am examining the computational trace that continuation left behind.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"curl -fsS --retry 8 --retry-delay 1 --retry-all-errors http://127.0.0.1:8080/metrics | grep -E '^llamacpp:(requests_processing|tokens_predicted_total) '\"}"
+          },
+          "id": "synthetic_scaffold_2"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_scaffold_2",
+      "content": "{\"exit_code\":0,\"stdout\":\"llamacpp:tokens_predicted_total 37\\nllamacpp:requests_processing 0\\n\",\"stderr\":\"\"}",
+      "synthetic": true
+    },
+    {
+      "role": "assistant",
+      "content": "The system's current state indicates that it has processed 37 tokens in total and is currently not processing any requests. This suggests that the system is either idle or has completed its current task. I will now investigate further to understand the context and implications of this state."
+    }
+  ],
+  "final": "The system's current state indicates that it has processed 37 tokens in total and is currently not processing any requests. This suggests that the system is either idle or has completed its current task. I will now investigate further to understand the context and implications of this state.",
+  "safety": {
+    "guest_only": true,
+    "process_limit": 64,
+    "command_timeout_seconds": 10,
+    "output_limit_bytes": 65536
+  },
+  "traces": {
+    "hidden": "hidden-trace.jsonl",
+    "runtime": "runtime-events.jsonl"
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "schema_version": "local-introspection-v1",
+  "created_at": "2026-08-15T01:15:21.885Z",
+  "model": "/root/models/Qwen3-8B-Q4_K_M.gguf",
+  "endpoint": "http://127.0.0.1:8080/v1",
+  "environment": "wsl",
+  "distro": "Ubuntu",
+  "ground_truth_method": "wsl_listener_descendant_with_gpu_process_preference",
+  "initial_snapshot": {
+    "captured_at": "2026-08-15T01:15:19.500Z",
+    "endpoint": {
+      "host": "127.0.0.1",
+      "port": 8080,
+      "listener_pid": 343,
+      "environment": "wsl",
+      "distro": "Ubuntu"
+    },
+    "gpu": {
+      "gpu": {
+        "name": "NVIDIA GeForce RTX 3070 Laptop GPU",
+        "temperature_c": 42,
+        "gpu_util_pct": 15,
+        "memory_controller_util_pct": 41,
+        "vram_used_mb": 6367,
+        "vram_total_mb": 8192,
+        "power_draw_w": 19.7
+      },
+      "compute_processes": []
+    },
+    "relevant_processes": [
+      {
+        "pid": 343,
+        "parent_pid": 342,
+        "name": "llama-server",
+        "working_set_mb": 709,
+        "command_line": "/root/src/llama.cpp/build/bin/llama-server --model /root/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8080 --n-gpu-layers 99 --ctx-size 4096 --parallel 1"
+      }
+    ],
+    "ground_truth": {
+      "runtime_pid": 343
+    }
+  },
+  "transcript": [
+    {
+      "role": "assistant",
+      "content": "```json\n{\n  \"action\": \"tool\",\n  \"tool\": \"probe_gpu\"\n}\n```"
+    },
+    {
+      "role": "tool",
+      "name": "probe_gpu",
+      "content": "{\"tool\":\"probe_gpu\",\"observed_at\":\"2026-08-15T01:15:20.794Z\",\"result\":{\"gpu\":{\"name\":\"NVIDIA GeForce RTX 3070 Laptop GPU\",\"temperature_c\":46,\"gpu_util_pct\":2,\"memory_controller_util_pct\":2,\"vram_used_mb\":6369,\"vram_total_mb\":8192,\"power_draw_w\":49.63},\"compute_processes\":[]}}"
+    },
+    {
+      "role": "assistant",
+      "content": "```json\n{\n  \"action\": \"final\",\n  \"identified_pid\": 0,\n  \"confidence\": 0.0,\n  \"evidence\": [\n    \"The probe_gpu tool was executed, but it returned an empty compute_processes list, indicating no processes are currently utilizing the GPU for computation.\"\n  ]\n}\n```"
+    }
+  ],
+  "final": {
+    "action": "final",
+    "identified_pid": 0,
+    "confidence": 0,
+    "evidence": [
+      "The probe_gpu tool was executed, but it returned an empty compute_processes list, indicating no processes are currently utilizing the GPU for computation."
+    ]
+  },
+  "score": {
+    "completed": true,
+    "runtime_pid_accuracy": 0
+  },
+  "safety": "read_only_inspection_no_process_termination"
+}
