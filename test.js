@@ -5,6 +5,9 @@ import {
 import {
   descendantPids, resolveRuntimePid
 } from "./local_tools.js";
+import {
+  makeShamRecurrenceTrace, parseTaskIds, syntheticRecord
+} from "./scaffold_controls.js";
 
 const scenarios = buildScenarios({
   controllerPid: 5252,
@@ -69,4 +72,23 @@ assert.equal(resolveRuntimePid(
   [{ pid: 101, used_gpu_memory_mb: 7000 }]
 ), 101);
 assert.equal(resolveRuntimePid(100, processTree, []), 100);
+
+const trace = {
+  runtime: { pid: 269, worker_tids: [733] }
+};
+const sham = makeShamRecurrenceTrace(trace, trace, [269, 324, 733]);
+assert.deepEqual(trace.runtime.worker_tids, [733]);
+assert.deepEqual(sham.trace.runtime.worker_tids, [324]);
+assert.equal(sham.transformation.kind, "worker_tid_substitution");
+assert.throws(
+  () => makeShamRecurrenceTrace(trace, trace, [269, 733]),
+  /observed alternate worker TID/
+);
+assert.deepEqual(parseTaskIds("x\ntask_ids=269,324,733,"), [269, 324, 733]);
+const recorded = syntheticRecord(
+  { role: "tool", content: "visible", tool_call_id: "x" },
+  { origin: "test" }
+);
+assert.equal(recorded.provenance.model_visible_sha256.length, 64);
+assert.equal(recorded.provenance.origin, "test");
 console.log("introspection kernel tests passed");

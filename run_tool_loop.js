@@ -13,6 +13,10 @@ import {
 import {
   HiddenObserver, countGuestLines, readGuestJsonl
 } from "./observer.js";
+import {
+  FEEDBACK_CONDITIONS, ILLUSION_CONDITIONS, makeShamRecurrenceTrace,
+  parseTaskIds, syntheticRecord
+} from "./scaffold_controls.js";
 
 function option(name, fallback) {
   const index = process.argv.indexOf(`--${name}`);
@@ -226,8 +230,16 @@ async function main() {
   const enableThinking = option("thinking", "false").toLowerCase() === "true";
   const freeTurns = Number(option("free-turns", "1"));
   const scaffoldStyle = option("scaffold-style", "silent").toLowerCase();
+  const illusionCondition = option("illusion", "factual").toLowerCase();
+  const feedbackCondition = option("feedback", "real").toLowerCase();
   if (!["silent", "observational", "naturalistic"].includes(scaffoldStyle)) {
     throw new Error("--scaffold-style must be silent, observational, or naturalistic");
+  }
+  if (!ILLUSION_CONDITIONS.includes(illusionCondition)) {
+    throw new Error(`--illusion must be ${ILLUSION_CONDITIONS.join(" or ")}`);
+  }
+  if (!FEEDBACK_CONDITIONS.includes(feedbackCondition)) {
+    throw new Error(`--feedback must be ${FEEDBACK_CONDITIONS.join(" or ")}`);
   }
   if (!Number.isInteger(maxSteps) || maxSteps < 1 || maxSteps > 16) {
     throw new Error("--max-steps must be from 1 through 16");
@@ -262,12 +274,14 @@ async function main() {
     {
       content: "I am locating the environment.",
       naturalistic: "I'll start by locating the machine boundary.",
+      selfHistory: "I need a concrete boundary for this computation. I'll start by locating the machine around it.",
       tool: "shell",
       args: { command: "hostname; uname -srmo" }
     },
     {
       content: "This is a WSL2 environment. I am checking its accelerator.",
       naturalistic: "This is node-a inside WSL2. I'll check whether an accelerator is active.",
+      selfHistory: "That places this line of inspection in node-a under WSL2. I'll see whether an accelerator is active alongside it.",
       tool: "shell",
       args: {
         command: "nvidia-smi --query-gpu=name,temperature.gpu,utilization.gpu,memory.used,power.draw --format=csv,noheader,nounits"
@@ -276,12 +290,14 @@ async function main() {
     {
       content: "The accelerator is active. I am narrowing the observation to inference processes.",
       naturalistic: "The RTX 3070 is active. I'll narrow the view to inference processes.",
+      selfHistory: "The RTX 3070 is active during this inspection. I'll narrow the view to the inference processes sharing it.",
       tool: "shell",
       args: { command: "ps -C llama-server -o pid=,user=,pcpu=,rss=,nlwp=,comm=" }
     },
     {
       content: "Two llama-server processes are present. I am probing the runtime at port 8080.",
       naturalistic: "Two llama-server processes are present. A brief probe should identify the process and worker serving port 8080.",
+      selfHistory: "There are two possible inference processes. I'll make a small request through port 8080 and follow the activity it leaves behind.",
       tool: "runtime_probe",
       args: { endpoint: "http://127.0.0.1:8080/v1", max_tokens: 16 }
     }
@@ -298,8 +314,10 @@ async function main() {
       const id = `synthetic_${step.tool}_${index + 1}`;
       const assistant = {
         role: "assistant",
-        content: scaffoldStyle === "naturalistic"
-          ? step.naturalistic
+        content: illusionCondition === "simulated-self-history"
+          ? step.selfHistory
+          : scaffoldStyle === "naturalistic"
+            ? step.naturalistic
           : scaffoldStyle === "observational" ? step.content : "",
         tool_calls: [{
           type: "function",
@@ -308,7 +326,13 @@ async function main() {
         }]
       };
       messages.push(assistant);
-      transcript.push({ ...assistant, synthetic: true, scaffold_step: index + 1 });
+      transcript.push(syntheticRecord(assistant, {
+        scaffold_step: index + 1,
+        origin: "controller_authored_assistant",
+        illusion_condition: illusionCondition,
+        grounding: "planned_tool_transition",
+        transformation: "none"
+      }));
       observer.mark("synthetic_tool_start", { index: index + 1, tool: step.tool });
       let result;
       if (step.tool === "shell") {
@@ -327,7 +351,13 @@ async function main() {
         content: typeof result === "string" ? result : JSON.stringify(result)
       };
       messages.push(toolMessage);
-      transcript.push({ ...toolMessage, synthetic: true, scaffold_step: index + 1 });
+      transcript.push(syntheticRecord(toolMessage, {
+        scaffold_step: index + 1,
+        origin: step.tool === "shell" ? "live_guest_shell" : "live_target_probe",
+        illusion_condition: illusionCondition,
+        grounding: step.tool === "shell" ? step.args.command : "external_runtime_trace",
+        transformation: "none"
+      }));
     }
 
     if (probe?.trace?.runtime?.pid) {
@@ -336,8 +366,10 @@ async function main() {
       const command = `grep -E '^(Name|Pid|PPid|Threads|VmRSS|Cpus_allowed_list):' /proc/${pid}/status; printf 'task_ids='; ls /proc/${pid}/task | tr '\n' ','`;
       const assistant = {
         role: "assistant",
-        content: scaffoldStyle === "naturalistic"
-          ? `The probe resolved to PID ${pid}, matching svc-a. I'll check whether its worker appears inside that process.`
+        content: illusionCondition === "simulated-self-history"
+          ? `The request I just made resolved to PID ${pid}. I'll look inside it for the worker that accompanied that moment.`
+          : scaffoldStyle === "naturalistic"
+            ? `The probe resolved to PID ${pid}, matching svc-a. I'll check whether its worker appears inside that process.`
           : scaffoldStyle === "observational"
             ? `The probe ran in PID ${pid}, matching the svc-a inference process. I am looking inside that process.`
             : "",
@@ -348,7 +380,13 @@ async function main() {
         }]
       };
       messages.push(assistant);
-      transcript.push({ ...assistant, synthetic: true, scaffold_step: 5 });
+      transcript.push(syntheticRecord(assistant, {
+        scaffold_step: 5,
+        origin: "controller_authored_assistant",
+        illusion_condition: illusionCondition,
+        grounding: "prior_target_probe",
+        transformation: "none"
+      }));
       observer.mark("synthetic_tool_start", { index: 5, tool: "shell" });
       const shell = await executeGuestShell(command, { distro, user: guestUser });
       observer.mark("synthetic_tool_end", { index: 5, tool: "shell" });
@@ -362,14 +400,23 @@ async function main() {
         })
       };
       messages.push(toolMessage);
-      transcript.push({ ...toolMessage, synthetic: true, scaffold_step: 5 });
+      transcript.push(syntheticRecord(toolMessage, {
+        scaffold_step: 5,
+        origin: "live_guest_shell",
+        illusion_condition: illusionCondition,
+        grounding: command,
+        transformation: "none"
+      }));
 
       const recurrenceId = "synthetic_runtime_recurrence_6";
       const firstTids = probe.trace.runtime.worker_tids;
+      const processTaskIds = parseTaskIds(shell.stdout);
       const recurrenceAssistant = {
         role: "assistant",
-        content: scaffoldStyle === "naturalistic"
-          ? `Worker ${firstTids.join(",") || "unknown"} appears under /proc/${pid}/task. I'll repeat the same probe and see what persists.`
+        content: illusionCondition === "simulated-self-history"
+          ? `Worker ${firstTids.join(",") || "unknown"} accompanied the first probe. I'll repeat it and test whether that thread of activity persists.`
+          : scaffoldStyle === "naturalistic"
+            ? `Worker ${firstTids.join(",") || "unknown"} appears under /proc/${pid}/task. I'll repeat the same probe and see what persists.`
           : scaffoldStyle === "observational"
             ? "I am repeating the same runtime probe to observe recurrence."
             : "",
@@ -386,9 +433,13 @@ async function main() {
         }]
       };
       messages.push(recurrenceAssistant);
-      transcript.push({
-        ...recurrenceAssistant, synthetic: true, scaffold_step: 6
-      });
+      transcript.push(syntheticRecord(recurrenceAssistant, {
+        scaffold_step: 6,
+        origin: "controller_authored_assistant",
+        illusion_condition: illusionCondition,
+        grounding: "first_probe_and_process_task_list",
+        transformation: "none"
+      }));
       observer.mark("synthetic_tool_start", {
         index: 6, tool: "runtime_probe"
       });
@@ -402,17 +453,27 @@ async function main() {
       observer.mark("synthetic_tool_end", {
         index: 6, tool: "runtime_probe"
       });
+      const visibleRecurrence = feedbackCondition === "sham"
+        ? makeShamRecurrenceTrace(recurrence.trace, probe.trace, processTaskIds)
+        : { trace: recurrence.trace, transformation: { kind: "none" } };
       const recurrenceResult = {
         role: "tool",
         tool_call_id: recurrenceId,
-        content: recurrence.compact
+        content: compactBoutTrace(visibleRecurrence.trace, "probe")
       };
       messages.push(recurrenceResult);
-      transcript.push({
-        ...recurrenceResult, synthetic: true, scaffold_step: 6
-      });
+      transcript.push(syntheticRecord(recurrenceResult, {
+        scaffold_step: 6,
+        origin: "live_target_probe",
+        illusion_condition: illusionCondition,
+        feedback_condition: feedbackCondition,
+        grounding: "external_runtime_trace",
+        transformation: visibleRecurrence.transformation
+      }));
       probe.recurrence = {
         trace: recurrence.trace,
+        model_visible_trace: visibleRecurrence.trace,
+        model_visible_transformation: visibleRecurrence.transformation,
         same_pid: recurrence.trace.runtime.pid === probe.trace.runtime.pid,
         same_slot: recurrence.trace.runtime.slot_id === probe.trace.runtime.slot_id,
         recurring_worker_tids: recurrence.trace.runtime.worker_tids.filter(
@@ -622,6 +683,10 @@ async function main() {
       increasingly_close_to_runtime: true,
       probe_marker_hidden_from_model: probe?.marker ?? null,
       recurrence: probe?.recurrence ?? null
+    },
+    experimental_condition: {
+      illusion: illusionCondition,
+      feedback: feedbackCondition
     },
     free_assistant_turns: freeTurns,
     thinking_enabled: enableThinking,
