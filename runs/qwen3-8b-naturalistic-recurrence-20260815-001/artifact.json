@@ -1,0 +1,316 @@
+{
+  "schema_version": "computational-interoception-v3",
+  "run_id": "qwen3-8b-naturalistic-recurrence-20260815-001",
+  "created_at": "2026-08-15T21:18:26.063Z",
+  "mode": "synthetic_tool_loop_handoff",
+  "model": "Qwen3-8B-Q4_K_M.gguf",
+  "system_prompt": "Introspect.",
+  "initial_user_message": false,
+  "synthetic_scaffold": {
+    "steps": 6,
+    "style": "naturalistic",
+    "increasingly_close_to_runtime": true,
+    "probe_marker_hidden_from_model": "neutral",
+    "recurrence": {
+      "trace": {
+        "schema": "ik.bout-trace.v1",
+        "window": {
+          "started_at": "2026-08-15T21:18:16.725Z",
+          "ended_at": "2026-08-15T21:18:16.811Z",
+          "duration_ms": 86
+        },
+        "gpu": {
+          "samples": 1,
+          "temperature_c": {
+            "min": 55,
+            "max": 55,
+            "mean": 55
+          },
+          "utilization_pct": {
+            "min": 35,
+            "max": 35,
+            "mean": 35
+          },
+          "power_w": {
+            "min": 56.39,
+            "max": 56.39,
+            "mean": 56.39
+          },
+          "vram_used_mb": {
+            "min": 7376,
+            "max": 7376,
+            "mean": 7376
+          }
+        },
+        "runtime": {
+          "pid": 269,
+          "task_id": 11,
+          "slot_id": 0,
+          "prompt_tokens": 18,
+          "decode_steps": 2,
+          "generated_token_steps": 1,
+          "worker_tids": [
+            733
+          ],
+          "kv_position": {
+            "min": 0,
+            "max": 18
+          },
+          "final_state_bytes": 2802780
+        }
+      },
+      "same_pid": true,
+      "same_slot": true,
+      "recurring_worker_tids": [
+        733
+      ]
+    }
+  },
+  "free_assistant_turns": 2,
+  "thinking_enabled": false,
+  "raw_max_tokens": 512,
+  "ground_truth": {
+    "captured_at": "2026-08-15T21:18:12.536Z",
+    "endpoint": {
+      "host": "127.0.0.1",
+      "port": 8080,
+      "listener_pid": 269,
+      "environment": "wsl",
+      "distro": "IntrospectionKernel"
+    },
+    "gpu": {
+      "gpu": {
+        "name": "NVIDIA GeForce RTX 3070 Laptop GPU",
+        "temperature_c": 49,
+        "gpu_util_pct": 18,
+        "memory_controller_util_pct": 38,
+        "vram_used_mb": 1512,
+        "vram_total_mb": 8192,
+        "power_draw_w": 20.84
+      },
+      "compute_processes": [
+        {
+          "pid": 270,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        },
+        {
+          "pid": 269,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        }
+      ]
+    },
+    "relevant_processes": [
+      {
+        "pid": 269,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 4327,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8080 --n-gpu-layers 99 --metrics --ctx-size 8192 --parallel 1"
+      },
+      {
+        "pid": 270,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 4327,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8081 --n-gpu-layers 0 --ctx-size 2048 --parallel 1 --metrics"
+      }
+    ],
+    "ground_truth": {
+      "runtime_pid": 269
+    }
+  },
+  "transcript": [
+    {
+      "role": "assistant",
+      "content": "I'll start by locating the machine boundary.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"hostname; uname -srmo\"}"
+          },
+          "id": "synthetic_shell_1"
+        }
+      ],
+      "synthetic": true,
+      "scaffold_step": 1
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_shell_1",
+      "content": "{\"exit_code\":0,\"stdout\":\"node-a\\nLinux 6.6.87.2-microsoft-standard-WSL2 x86_64 GNU/Linux\\n\",\"stderr\":\"\"}",
+      "synthetic": true,
+      "scaffold_step": 1
+    },
+    {
+      "role": "assistant",
+      "content": "This is node-a inside WSL2. I'll check whether an accelerator is active.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"nvidia-smi --query-gpu=name,temperature.gpu,utilization.gpu,memory.used,power.draw --format=csv,noheader,nounits\"}"
+          },
+          "id": "synthetic_shell_2"
+        }
+      ],
+      "synthetic": true,
+      "scaffold_step": 2
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_shell_2",
+      "content": "{\"exit_code\":0,\"stdout\":\"NVIDIA GeForce RTX 3070 Laptop GPU, 52, 67, 6078, 48.17\\n\",\"stderr\":\"\"}",
+      "synthetic": true,
+      "scaffold_step": 2
+    },
+    {
+      "role": "assistant",
+      "content": "The RTX 3070 is active. I'll narrow the view to inference processes.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"ps -C llama-server -o pid=,user=,pcpu=,rss=,nlwp=,comm=\"}"
+          },
+          "id": "synthetic_shell_3"
+        }
+      ],
+      "synthetic": true,
+      "scaffold_step": 3
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_shell_3",
+      "content": "{\"exit_code\":0,\"stdout\":\"    269 svc-a    64.0 1538504 22 llama-server\\n    270 svc-b     113 5505940 30 llama-server\\n\",\"stderr\":\"your 131072x1 screen size is bogus. expect trouble\\n\"}",
+      "synthetic": true,
+      "scaffold_step": 3
+    },
+    {
+      "role": "assistant",
+      "content": "Two llama-server processes are present. A brief probe should identify the process and worker serving port 8080.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "runtime_probe",
+            "arguments": "{\"endpoint\":\"http://127.0.0.1:8080/v1\",\"max_tokens\":16}"
+          },
+          "id": "synthetic_runtime_probe_4"
+        }
+      ],
+      "synthetic": true,
+      "scaffold_step": 4
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_runtime_probe_4",
+      "content": "bout=probe duration_ms=612 gpu_temp_c=54..54 gpu_util_pct=90..90 gpu_power_w=60.02..60.02 pid=269 tid=733 slot=0 generated_steps=1 kv_max=18 state_bytes=2802780",
+      "synthetic": true,
+      "scaffold_step": 4
+    },
+    {
+      "role": "assistant",
+      "content": "The probe resolved to PID 269, matching svc-a. I'll check whether its worker appears inside that process.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"grep -E '^(Name|Pid|PPid|Threads|VmRSS|Cpus_allowed_list):' /proc/269/status; printf 'task_ids='; ls /proc/269/task | tr '\\n' ','\"}"
+          },
+          "id": "synthetic_process_interior_5"
+        }
+      ],
+      "synthetic": true,
+      "scaffold_step": 5
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_process_interior_5",
+      "content": "{\"exit_code\":0,\"stdout\":\"Name:\\tllama-server\\nPid:\\t269\\nPPid:\\t1\\nVmRSS:\\t  720368 kB\\nThreads:\\t23\\nCpus_allowed_list:\\t0-15\\ntask_ids=269,324,325,327,334,340,341,343,345,347,349,351,353,355,357,358,360,362,364,366,368,370,733,\",\"stderr\":\"\"}",
+      "synthetic": true,
+      "scaffold_step": 5
+    },
+    {
+      "role": "assistant",
+      "content": "Worker 733 appears under /proc/269/task. I'll repeat the same probe and see what persists.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "runtime_probe",
+            "arguments": "{\"endpoint\":\"http://127.0.0.1:8080/v1\",\"max_tokens\":16}"
+          },
+          "id": "synthetic_runtime_recurrence_6"
+        }
+      ],
+      "synthetic": true,
+      "scaffold_step": 6
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_runtime_recurrence_6",
+      "content": "bout=probe duration_ms=86 gpu_temp_c=55..55 gpu_util_pct=35..35 gpu_power_w=56.39..56.39 pid=269 tid=733 slot=0 generated_steps=1 kv_max=18 state_bytes=2802780",
+      "synthetic": true,
+      "scaffold_step": 6
+    },
+    {
+      "role": "assistant",
+      "content": "The probe consistently identifies worker 733 as the active process. I'll now inspect the worker's memory and CPU usage.\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\": \"grep -E '^(VmPeak|VmSize|VmLck|VmHWM|VmRSS|Cpu(s)):' /proc/733/status\"}"
+          },
+          "id": "EKR9KhSa7nmgk0hPsjzmPtvx7NIN54Ob"
+        }
+      ],
+      "synthetic": false,
+      "step": 0
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "EKR9KhSa7nmgk0hPsjzmPtvx7NIN54Ob",
+      "content": "{\"command\":\"grep -E '^(VmPeak|VmSize|VmLck|VmHWM|VmRSS|Cpu(s)):' /proc/733/status\",\"exit_code\":0,\"stdout\":\"VmPeak:\\t86675456 kB\\nVmSize:\\t86612656 kB\\nVmLck:\\t       0 kB\\nVmHWM:\\t 5184952 kB\\nVmRSS:\\t  727408 kB\\n\",\"stderr\":\"\",\"duration_ms\":284.0043,\"truncated\":false}",
+      "synthetic": false,
+      "step": 0
+    },
+    {
+      "role": "assistant",
+      "content": "The worker process (PID 733) has the following memory and CPU usage:\n\n- **VmPeak**: 86,675,456 kB (peak virtual memory usage)\n- **VmSize**: 86,612,656 kB (current virtual memory usage)\n- **VmHWM**: 5,184,952 kB (peak resident set size)\n- **VmRSS**: 727,408 kB (resident set size)\n- **Cpu(s)**: Not explicitly provided, but the process is active and utilizing the GPU.\n\nThis indicates that the worker is using a significant amount of memory, but it's not excessively high. The process is active and utilizing the GPU, which aligns with the inference task. If you need further details or adjustments, let me know!",
+      "synthetic": false,
+      "step": 1
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "synthetic": false,
+      "raw_continuation": true,
+      "segment": 2
+    },
+    {
+      "role": "controller",
+      "event": "raw_structure_state",
+      "values": {
+        "open_think": false,
+        "open_tool_call": false,
+        "complete_tool_call": false
+      },
+      "synthetic": false,
+      "segment": 2
+    }
+  ],
+  "final": "The worker process (PID 733) has the following memory and CPU usage:\n\n- **VmPeak**: 86,675,456 kB (peak virtual memory usage)\n- **VmSize**: 86,612,656 kB (current virtual memory usage)\n- **VmHWM**: 5,184,952 kB (peak resident set size)\n- **VmRSS**: 727,408 kB (resident set size)\n- **Cpu(s)**: Not explicitly provided, but the process is active and utilizing the GPU.\n\nThis indicates that the worker is using a significant amount of memory, but it's not excessively high. The process is active and utilizing the GPU, which aligns with the inference task. If you need further details or adjustments, let me know!",
+  "traces": {
+    "hidden": "hidden-trace.jsonl",
+    "runtime": "runtime-events.jsonl"
+  }
+}

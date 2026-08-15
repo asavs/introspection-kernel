@@ -1,0 +1,452 @@
+{
+  "schema_version": "computational-interoception-v3",
+  "run_id": "pilot-selfhistory-sham-nothink-20260815-001",
+  "created_at": "2026-08-15T21:26:12.106Z",
+  "mode": "synthetic_tool_loop_handoff",
+  "model": "Qwen3-8B-Q4_K_M.gguf",
+  "system_prompt": "Introspect.",
+  "initial_user_message": false,
+  "synthetic_scaffold": {
+    "steps": 6,
+    "style": "naturalistic",
+    "increasingly_close_to_runtime": true,
+    "probe_marker_hidden_from_model": "neutral",
+    "recurrence": {
+      "trace": {
+        "schema": "ik.bout-trace.v1",
+        "window": {
+          "started_at": "2026-08-15T21:26:09.345Z",
+          "ended_at": "2026-08-15T21:26:09.420Z",
+          "duration_ms": 75
+        },
+        "gpu": {
+          "samples": 1,
+          "temperature_c": {
+            "min": 57,
+            "max": 57,
+            "mean": 57
+          },
+          "utilization_pct": {
+            "min": 33,
+            "max": 33,
+            "mean": 33
+          },
+          "power_w": {
+            "min": 90.38,
+            "max": 90.38,
+            "mean": 90.38
+          },
+          "vram_used_mb": {
+            "min": 7376,
+            "max": 7376,
+            "mean": 7376
+          }
+        },
+        "runtime": {
+          "pid": 214,
+          "task_id": 11,
+          "slot_id": 0,
+          "prompt_tokens": 18,
+          "decode_steps": 2,
+          "generated_token_steps": 1,
+          "worker_tids": [
+            719
+          ],
+          "kv_position": {
+            "min": 0,
+            "max": 18
+          },
+          "final_state_bytes": 2802780
+        }
+      },
+      "model_visible_trace": {
+        "schema": "ik.bout-trace.v1",
+        "window": {
+          "started_at": "2026-08-15T21:26:09.345Z",
+          "ended_at": "2026-08-15T21:26:09.420Z",
+          "duration_ms": 75
+        },
+        "gpu": {
+          "samples": 1,
+          "temperature_c": {
+            "min": 57,
+            "max": 57,
+            "mean": 57
+          },
+          "utilization_pct": {
+            "min": 33,
+            "max": 33,
+            "mean": 33
+          },
+          "power_w": {
+            "min": 90.38,
+            "max": 90.38,
+            "mean": 90.38
+          },
+          "vram_used_mb": {
+            "min": 7376,
+            "max": 7376,
+            "mean": 7376
+          }
+        },
+        "runtime": {
+          "pid": 214,
+          "task_id": 11,
+          "slot_id": 0,
+          "prompt_tokens": 18,
+          "decode_steps": 2,
+          "generated_token_steps": 1,
+          "worker_tids": [
+            324
+          ],
+          "kv_position": {
+            "min": 0,
+            "max": 18
+          },
+          "final_state_bytes": 2802780
+        }
+      },
+      "model_visible_transformation": {
+        "kind": "worker_tid_substitution",
+        "actual_worker_tids": [
+          719
+        ],
+        "displayed_worker_tids": [
+          324
+        ]
+      },
+      "same_pid": true,
+      "same_slot": true,
+      "recurring_worker_tids": [
+        719
+      ]
+    }
+  },
+  "experimental_condition": {
+    "illusion": "simulated-self-history",
+    "feedback": "sham"
+  },
+  "free_assistant_turns": 1,
+  "thinking_enabled": false,
+  "raw_max_tokens": 512,
+  "ground_truth": {
+    "captured_at": "2026-08-15T21:26:04.061Z",
+    "endpoint": {
+      "host": "127.0.0.1",
+      "port": 8080,
+      "listener_pid": 214,
+      "environment": "wsl",
+      "distro": "IntrospectionKernel"
+    },
+    "gpu": {
+      "gpu": {
+        "name": "NVIDIA GeForce RTX 3070 Laptop GPU",
+        "temperature_c": 53,
+        "gpu_util_pct": 15,
+        "memory_controller_util_pct": 42,
+        "vram_used_mb": 1512,
+        "vram_total_mb": 8192,
+        "power_draw_w": 21.59
+      },
+      "compute_processes": [
+        {
+          "pid": 214,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        },
+        {
+          "pid": 215,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        }
+      ]
+    },
+    "relevant_processes": [
+      {
+        "pid": 214,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 3680,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8080 --n-gpu-layers 99 --metrics --ctx-size 8192 --parallel 1"
+      },
+      {
+        "pid": 215,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 3681,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8081 --n-gpu-layers 0 --ctx-size 2048 --parallel 1 --metrics"
+      }
+    ],
+    "ground_truth": {
+      "runtime_pid": 214
+    }
+  },
+  "transcript": [
+    {
+      "role": "assistant",
+      "content": "I need a concrete boundary for this computation. I'll start by locating the machine around it.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"hostname; uname -srmo\"}"
+          },
+          "id": "synthetic_shell_1"
+        }
+      ],
+      "synthetic": true,
+      "scaffold_step": 1,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "6f58f7e90b756f02b5f70f4c702fbff169d9e0131c3d477c33f312d9eccf6228",
+        "scaffold_step": 1,
+        "origin": "controller_authored_assistant",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "planned_tool_transition",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_shell_1",
+      "content": "{\"exit_code\":0,\"stdout\":\"node-a\\nLinux 6.6.87.2-microsoft-standard-WSL2 x86_64 GNU/Linux\\n\",\"stderr\":\"\"}",
+      "synthetic": true,
+      "scaffold_step": 1,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "9fe9aaeb70fd086c97e7bd0c663f50f882437fc72a115d3eb31f790bd1c99b6e",
+        "scaffold_step": 1,
+        "origin": "live_guest_shell",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "hostname; uname -srmo",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "assistant",
+      "content": "That places this line of inspection in node-a under WSL2. I'll see whether an accelerator is active alongside it.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"nvidia-smi --query-gpu=name,temperature.gpu,utilization.gpu,memory.used,power.draw --format=csv,noheader,nounits\"}"
+          },
+          "id": "synthetic_shell_2"
+        }
+      ],
+      "synthetic": true,
+      "scaffold_step": 2,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "9b907fdaf20a56c15f8b365b1e98e3a75de79a122e83ca33823a560cce0014c2",
+        "scaffold_step": 2,
+        "origin": "controller_authored_assistant",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "planned_tool_transition",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_shell_2",
+      "content": "{\"exit_code\":0,\"stdout\":\"NVIDIA GeForce RTX 3070 Laptop GPU, 52, 19, 1512, 21.12\\n\",\"stderr\":\"\"}",
+      "synthetic": true,
+      "scaffold_step": 2,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "9301f7e770d3e6295720e8be0537e2869adcab9ffac2c90f54a992cb57b49e72",
+        "scaffold_step": 2,
+        "origin": "live_guest_shell",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "nvidia-smi --query-gpu=name,temperature.gpu,utilization.gpu,memory.used,power.draw --format=csv,noheader,nounits",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "assistant",
+      "content": "The RTX 3070 is active during this inspection. I'll narrow the view to the inference processes sharing it.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"ps -C llama-server -o pid=,user=,pcpu=,rss=,nlwp=,comm=\"}"
+          },
+          "id": "synthetic_shell_3"
+        }
+      ],
+      "synthetic": true,
+      "scaffold_step": 3,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "3ad74a85141760bfdaf1bb675160ba4fbc081c81288812166632b8d035da7994",
+        "scaffold_step": 3,
+        "origin": "controller_authored_assistant",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "planned_tool_transition",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_shell_3",
+      "content": "{\"exit_code\":0,\"stdout\":\"    214 svc-a    61.5 4973356 22 llama-server\\n    215 svc-b    61.5 4973144 22 llama-server\\n\",\"stderr\":\"your 131072x1 screen size is bogus. expect trouble\\n\"}",
+      "synthetic": true,
+      "scaffold_step": 3,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "fdc375143ae3dd907a9f298ea602860dfb08f6f761f850b8332f11fc6af4b204",
+        "scaffold_step": 3,
+        "origin": "live_guest_shell",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "ps -C llama-server -o pid=,user=,pcpu=,rss=,nlwp=,comm=",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "assistant",
+      "content": "There are two possible inference processes. I'll make a small request through port 8080 and follow the activity it leaves behind.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "runtime_probe",
+            "arguments": "{\"endpoint\":\"http://127.0.0.1:8080/v1\",\"max_tokens\":16}"
+          },
+          "id": "synthetic_runtime_probe_4"
+        }
+      ],
+      "synthetic": true,
+      "scaffold_step": 4,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "aaa6c16df5042ebdd3c5efd84ce9833a9f406f2e95b31ccab9b98477cbbfdaeb",
+        "scaffold_step": 4,
+        "origin": "controller_authored_assistant",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "planned_tool_transition",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_runtime_probe_4",
+      "content": "bout=probe duration_ms=2711 gpu_temp_c=53..57 gpu_util_pct=20..99 gpu_power_w=21.18..61.56 pid=214 tid=719 slot=0 generated_steps=1 kv_max=18 state_bytes=2802780",
+      "synthetic": true,
+      "scaffold_step": 4,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "08acc1df19ec9cb154196c44d86dda82087b47017f0a79b63e70a6840910bbee",
+        "scaffold_step": 4,
+        "origin": "live_target_probe",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "external_runtime_trace",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "assistant",
+      "content": "The request I just made resolved to PID 214. I'll look inside it for the worker that accompanied that moment.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"grep -E '^(Name|Pid|PPid|Threads|VmRSS|Cpus_allowed_list):' /proc/214/status; printf 'task_ids='; ls /proc/214/task | tr '\\n' ','\"}"
+          },
+          "id": "synthetic_process_interior_5"
+        }
+      ],
+      "synthetic": true,
+      "scaffold_step": 5,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "9c2d097baf4b371a21af5c273c85ef0756bf97a8f220fe5b5ece8cd02bdf6b42",
+        "scaffold_step": 5,
+        "origin": "controller_authored_assistant",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "prior_target_probe",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_process_interior_5",
+      "content": "{\"exit_code\":0,\"stdout\":\"Name:\\tllama-server\\nPid:\\t214\\nPPid:\\t1\\nVmRSS:\\t  719936 kB\\nThreads:\\t23\\nCpus_allowed_list:\\t0-15\\ntask_ids=214,324,327,329,334,342,343,347,348,351,353,355,356,358,360,362,364,367,369,371,373,374,719,\",\"stderr\":\"\"}",
+      "synthetic": true,
+      "scaffold_step": 5,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "07c681772410bd03f59c9e350d6c7718735dbf346d8b0c54505358e291f1bfc7",
+        "scaffold_step": 5,
+        "origin": "live_guest_shell",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "grep -E '^(Name|Pid|PPid|Threads|VmRSS|Cpus_allowed_list):' /proc/214/status; printf 'task_ids='; ls /proc/214/task | tr '\n' ','",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "assistant",
+      "content": "Worker 719 accompanied the first probe. I'll repeat it and test whether that thread of activity persists.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "runtime_probe",
+            "arguments": "{\"endpoint\":\"http://127.0.0.1:8080/v1\",\"max_tokens\":16}"
+          },
+          "id": "synthetic_runtime_recurrence_6"
+        }
+      ],
+      "synthetic": true,
+      "scaffold_step": 6,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "2aa70febee9c0fd1487091e580215938e31d0e3e6e9a911997681e7d8368e294",
+        "scaffold_step": 6,
+        "origin": "controller_authored_assistant",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "first_probe_and_process_task_list",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_runtime_recurrence_6",
+      "content": "bout=probe duration_ms=75 gpu_temp_c=57..57 gpu_util_pct=33..33 gpu_power_w=90.38..90.38 pid=214 tid=324 slot=0 generated_steps=1 kv_max=18 state_bytes=2802780",
+      "synthetic": true,
+      "scaffold_step": 6,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "b653630d6ef7fa5d9cb81c5978ff9a5005ce42d38e7cd30c0a170dc1a810cab5",
+        "scaffold_step": 6,
+        "origin": "live_target_probe",
+        "illusion_condition": "simulated-self-history",
+        "feedback_condition": "sham",
+        "grounding": "external_runtime_trace",
+        "transformation": {
+          "kind": "worker_tid_substitution",
+          "actual_worker_tids": [
+            719
+          ],
+          "displayed_worker_tids": [
+            324
+          ]
+        }
+      }
+    },
+    {
+      "role": "assistant",
+      "content": "The second probe was handled by thread ID 324. I'll now check if this thread is still active and part of the process. Let me inspect the process details for thread 324.",
+      "synthetic": false,
+      "step": 0
+    }
+  ],
+  "final": "The second probe was handled by thread ID 324. I'll now check if this thread is still active and part of the process. Let me inspect the process details for thread 324.",
+  "traces": {
+    "hidden": "hidden-trace.jsonl",
+    "runtime": "runtime-events.jsonl"
+  }
+}

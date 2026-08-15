@@ -43,6 +43,10 @@ events from outside the model's authority.
 6. [Implementation roadmap](IMPLEMENTATION_ROADMAP.md)
 7. [Current implementation status](IMPLEMENTATION_STATUS.md)
 8. [Runtime capacity profiles](CAPACITY_PROFILES.md)
+9. [Recurrent observational scaffold](TOOL_LOOP_PROTOCOL.md)
+10. [Simulated history and sham feedback](ILLUSION_AND_SHAM_CONTROLS.md)
+11. [First recurrence and simulated-history pilot](PILOT_2026-08-15.md)
+12. [Engineering timeline](ENGINEERING_TIMELINE.md)
 
 ## Recommended first system
 
