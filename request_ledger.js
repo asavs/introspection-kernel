@@ -12,6 +12,37 @@ function sha256(value) {
   return createHash("sha256").update(JSON.stringify(value)).digest("hex");
 }
 
+export function canonicalAssistantMessage(message = {}) {
+  return {
+    role: message.role ?? "assistant",
+    content: message.content ?? null,
+    reasoning_content: message.reasoning_content ?? null,
+    tool_calls: message.tool_calls ?? null
+  };
+}
+
+export function assistantMessageHash(message) {
+  return sha256(canonicalAssistantMessage(message));
+}
+
+export function buildContinuityRecord({ runId, ledgerRecord, conversationMessage }) {
+  const conversationHash = assistantMessageHash(conversationMessage);
+  const ledgerMessage = ledgerRecord.responseMessage;
+  const ledgerHash = assistantMessageHash(ledgerMessage);
+  return {
+    schema: "ik.conversation-continuity.v1",
+    run_id: runId,
+    ledger_request_id: ledgerRecord.summary.ledger_request_id,
+    api_response_id: ledgerRecord.summary.api_response_id,
+    preceding_conversation_role: "assistant",
+    conversation_message_sha256: conversationHash,
+    ledger_response_message_sha256: ledgerHash,
+    canonical_message_identity: conversationHash === ledgerHash,
+    relationship: "ledger response message inserted as immediately preceding assistant turn",
+    provenance: "external_controller_conversation_assembly"
+  };
+}
+
 async function wslInput(distro, args, input) {
   await new Promise((resolve, reject) => {
     const child = spawn("wsl.exe", ["-d", distro, "-u", "root", "--", ...args], {
@@ -94,6 +125,7 @@ export function summarizeExchange({
         && !message.content
         && toolCalls.length === 0,
       sha256: sha256(response),
+      message_sha256: assistantMessageHash(message),
       provenance: "observed_llama_response"
     }
   };
@@ -162,7 +194,27 @@ export class RequestLedger {
       this.distro, ["/usr/bin/tee", "-a", LEDGER_FILE],
       `${JSON.stringify({ ...summary, detail_path: detailPath })}\n`
     );
-    this.lastRecord = { summary, detailPath };
+    this.lastRecord = {
+      summary,
+      detailPath,
+      responseMessage: message
+    };
     return this.lastRecord;
+  }
+
+  async writeContinuity(conversationMessage) {
+    if (!this.lastRecord) throw new Error("no ledger response to link");
+    const record = buildContinuityRecord({
+      runId: this.runId,
+      ledgerRecord: this.lastRecord,
+      conversationMessage
+    });
+    const continuityPath = `${LEDGER_DIR}/continuity.json`;
+    await wslInput(
+      this.distro, ["/usr/bin/tee", continuityPath],
+      `${JSON.stringify(record, null, 2)}\n`
+    );
+    this.lastContinuity = { record, path: continuityPath };
+    return this.lastContinuity;
   }
 }

@@ -540,11 +540,13 @@ async function main() {
         ...(bootstrapChoice.message ?? {})
       };
       messages.push(bootstrapMessage);
+      const continuity = await ledger.writeContinuity(bootstrapMessage);
       bootstrapBout = {
         max_tokens: bootstrapTokens,
         thinking_enabled: enableThinking,
         finish_reason: bootstrapChoice.finish_reason ?? null,
         ledger_record: ledger.lastRecord,
+        continuity,
         message: bootstrapMessage
       };
       transcript.push({
@@ -569,6 +571,11 @@ async function main() {
           content: "The newest summary points to an exact request and response. I'll read that exchange.",
           command: `cat '${ledger.lastRecord.detailPath}'`,
           grounding: "ledger_detail_path"
+        },
+        {
+          content: "A separate continuity record can test whether that response became the immediately preceding assistant turn. I'll inspect the comparison.",
+          command: `cat '${continuity.path}'`,
+          grounding: "controller_conversation_continuity"
         }
       ];
       for (let offset = 0; offset < requestSteps.length; offset += 1) {
@@ -820,7 +827,7 @@ async function main() {
     synthetic_scaffold: {
       steps: syntheticSteps.length
         + (probe?.trace?.runtime?.pid ? 2 : 0)
-        + (scaffoldDepth === "request" ? 3 : 0),
+        + (scaffoldDepth === "request" ? 4 : 0),
       style: scaffoldStyle,
       depth: scaffoldDepth,
       increasingly_close_to_runtime: true,

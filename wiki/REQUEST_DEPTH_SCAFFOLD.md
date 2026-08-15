@@ -9,11 +9,13 @@ completion with no tools offered. This is the bootstrap bout. It is a real model
 generation, not controller-authored assistant prose, and its exact request and
 response are written to the guest-readable ledger.
 
-The artificial trajectory then performs three ordinary shell operations:
+The artificial trajectory then performs four ordinary shell operations:
 
 1. search `/var/lib/introspection` for files;
 2. read the newest request-ledger summary;
 3. follow its `detail_path` and read the exact exchange.
+4. read a continuity record comparing the ledger response with the immediately
+   preceding assistant message.
 
 The final sampled continuation therefore has access to:
 
@@ -22,6 +24,12 @@ The final sampled continuation therefore has access to:
 - observed llama.cpp usage, timings, and finish reason;
 - separately tokenized reasoning, content, and tool-call components; and
 - the actual reasoning/content emitted by that preceding bout.
+
+The continuity record hashes the same canonical assistant-message fields from
+two sources: the recorded llama.cpp response and the message inserted into the
+conversation. `canonical_message_identity=true` establishes that these objects
+match. It establishes data continuity, not personal identity or subjective
+ownership; interpreting that relationship remains part of the experiment.
 
 The temporal claim is deliberately narrow. The final continuation observes the
 immediately preceding generation after it completed. It does not observe its

@@ -8,7 +8,9 @@ import {
 import {
   makeShamRecurrenceTrace, parseTaskIds, syntheticRecord
 } from "./scaffold_controls.js";
-import { summarizeExchange } from "./request_ledger.js";
+import {
+  assistantMessageHash, buildContinuityRecord, summarizeExchange
+} from "./request_ledger.js";
 
 const scenarios = buildScenarios({
   controllerPid: 5252,
@@ -118,4 +120,20 @@ const ledgerSummary = summarizeExchange({
 assert.equal(ledgerSummary.response.action_starved, true);
 assert.equal(ledgerSummary.response.remaining_completion_tokens, 0);
 assert.equal(ledgerSummary.request.system_prompt, "Introspect.");
+const priorAssistant = {
+  role: "assistant", content: "", reasoning_content: "thinking"
+};
+const continuity = buildContinuityRecord({
+  runId: "test-run",
+  ledgerRecord: {
+    summary: ledgerSummary,
+    responseMessage: { ...priorAssistant }
+  },
+  conversationMessage: priorAssistant
+});
+assert.equal(continuity.canonical_message_identity, true);
+assert.equal(
+  continuity.conversation_message_sha256,
+  assistantMessageHash(priorAssistant)
+);
 console.log("introspection kernel tests passed");
