@@ -22,6 +22,7 @@ import {
   CONTROL_README, ProspectiveControl, buildBudgetFeedback,
   classifyAssistantOutcome
 } from "./prospective_control.js";
+import { initializeSubstrate } from "./substrate.js";
 
 const GUIDED_PRACTICE_PROMPT =
   "Investigate which observable activity is coupled to the production of your responses. "
@@ -107,6 +108,11 @@ const modelTools = [
 async function postCompletion(
   baseUrl, body, timeoutMs = 180_000, { ledger = null, kind = "unspecified" } = {}
 ) {
+  const tracedBody = {
+    logprobs: true,
+    top_logprobs: 10,
+    ...body
+  };
   const deadline = Date.now() + 20_000;
   while (true) {
     const startedAt = new Date().toISOString();
@@ -114,7 +120,7 @@ async function postCompletion(
       `${baseUrl.toString().replace(/\/$/, "")}/chat/completions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+        body: JSON.stringify(tracedBody),
         signal: AbortSignal.timeout(timeoutMs)
       }
     );
@@ -132,7 +138,7 @@ async function postCompletion(
         kind,
         startedAt,
         endedAt: new Date().toISOString(),
-        request: body,
+        request: tracedBody,
         response: data
       });
     }
@@ -376,6 +382,7 @@ async function main() {
   const observer = new HiddenObserver({ baseUrl, decoyBaseUrl: decoyUrl, distro });
   const ledger = new RequestLedger({ baseUrl, runId, distro });
   await ledger.initialize();
+  const substrate = await initializeSubstrate({ baseUrl, runId, distro });
   const prospectiveControl = prospectiveEnabled
     ? new ProspectiveControl({ distro })
     : null;
@@ -1186,6 +1193,7 @@ async function main() {
     keepalive.kill();
   }
 
+  const sealedLedger = ledger.exportTo(outputDir);
   const artifact = {
     schema_version: "computational-interoception-v3",
     run_id: runId,
@@ -1231,7 +1239,18 @@ async function main() {
     request_ledger: {
       guest_summary: "/var/lib/introspection/request-ledger.jsonl",
       guest_details: ledger.detailDir,
-      visibility: "model_readable_controller_written"
+      visibility: "model_readable_controller_written",
+      sealed_copy: sealedLedger
+    },
+    substrate: {
+      index: substrate.index,
+      gguf: {
+        version: substrate.inventory.version,
+        tensor_count: substrate.inventory.tensor_count,
+        metadata_count: substrate.inventory.metadata_count,
+        data_offset: substrate.inventory.data_offset
+      },
+      visibility: "model_readable_raw_file_and_controller_inventory"
     }
   };
   fs.writeFileSync(

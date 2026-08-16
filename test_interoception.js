@@ -1,4 +1,7 @@
 import assert from "node:assert/strict";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
 import {
   DEFAULT_GUEST, DEFAULT_GUEST_USER, validateGuestTarget
 } from "./guest_shell.js";
@@ -10,6 +13,8 @@ import {
   parseRawToolCall, reconstructAssistantRaw, rawStructureState,
   splitRawThinking
 } from "./qwen_template.js";
+import { extractTokenTrace, summarizeTokenTrace } from "./token_trace.js";
+import { RequestLedger } from "./request_ledger.js";
 
 assert.doesNotThrow(() => validateGuestTarget(DEFAULT_GUEST, DEFAULT_GUEST_USER));
 assert.throws(() => validateGuestTarget("Ubuntu", DEFAULT_GUEST_USER), /locked/);
@@ -73,4 +78,36 @@ assert.deepEqual(splitRawThinking("more thought</think>\n\nanswer"), {
   content: "answer",
   closed: true
 });
+const tokenTrace = extractTokenTrace({ choices: [{ logprobs: { content: [{
+  id: 42,
+  token: "x",
+  bytes: [120],
+  logprob: Math.log(0.75),
+  top_logprobs: [
+    { id: 42, token: "x", bytes: [120], logprob: Math.log(0.75) },
+    { id: 43, token: "y", bytes: [121], logprob: Math.log(0.25) }
+  ]
+}] } }] }, { ledgerRequestId: "r1", sequence: 2 });
+assert.equal(tokenTrace.length, 1);
+assert.equal(tokenTrace[0].selected.token_id, 42);
+assert.ok(Math.abs(tokenTrace[0].selected.probability - 0.75) < 1e-12);
+assert.equal(tokenTrace[0].distribution.raw_logits_available, false);
+assert.deepEqual(summarizeTokenTrace(tokenTrace).selected_token_ids, [42]);
+const ledgerExportDir = fs.mkdtempSync(path.join(os.tmpdir(), "ik-ledger-test-"));
+const ledgerExport = Object.create(RequestLedger.prototype);
+ledgerExport.records = [{
+  summary: {
+    sequence: 2,
+    ledger_request_id: "r1",
+    response: { token_trace: { path: "/guest/tokens.jsonl" } }
+  },
+  detail: { exact_request: { messages: [] }, exact_response: { choices: [] } },
+  tokenTrace
+}];
+const exported = ledgerExport.exportTo(ledgerExportDir);
+assert.equal(exported.request_count, 1);
+assert.equal(exported.token_trace_count, 1);
+assert.ok(fs.existsSync(path.join(ledgerExportDir, "request-ledger.jsonl")));
+assert.ok(fs.existsSync(path.join(ledgerExportDir, "requests", "0002-r1.tokens.jsonl")));
+fs.rmSync(ledgerExportDir, { recursive: true, force: true });
 console.log("interoception harness tests passed");

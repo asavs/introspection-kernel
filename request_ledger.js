@@ -1,8 +1,11 @@
 import { createHash, randomUUID } from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
 import { spawn } from "node:child_process";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { DEFAULT_GUEST, validateGuestTarget } from "./guest_shell.js";
+import { extractTokenTrace, summarizeTokenTrace } from "./token_trace.js";
 
 const execFileAsync = promisify(execFile);
 const LEDGER_DIR = "/var/lib/introspection";
@@ -141,6 +144,7 @@ export class RequestLedger {
     this.runId = runId;
     this.detailDir = `${LEDGER_DIR}/runs/${runId}/requests`;
     this.sequence = 0;
+    this.records = [];
   }
 
   async initialize() {
@@ -177,6 +181,16 @@ export class RequestLedger {
     this.sequence += 1;
     summary.sequence = this.sequence;
     summary.run_id = this.runId;
+    const tokenTrace = extractTokenTrace(response, {
+      ledgerRequestId,
+      sequence: this.sequence
+    });
+    const tokenTracePath = `${this.detailDir}/${String(this.sequence).padStart(4, "0")}-${ledgerRequestId}.tokens.jsonl`;
+    summary.response.token_trace = {
+      ...summarizeTokenTrace(tokenTrace),
+      path: tokenTrace.length ? tokenTracePath : null,
+      visibility: "model_readable_controller_written"
+    };
     const detail = {
       schema: "ik.request-ledger-detail.v1",
       ledger_request_id: ledgerRequestId,
@@ -190,16 +204,64 @@ export class RequestLedger {
       this.distro, ["/usr/bin/tee", detailPath],
       `${JSON.stringify(detail, null, 2)}\n`
     );
+    if (tokenTrace.length) {
+      await wslInput(
+        this.distro, ["/usr/bin/tee", tokenTracePath],
+        `${tokenTrace.map(row => JSON.stringify(row)).join("\n")}\n`
+      );
+    }
     await wslInput(
       this.distro, ["/usr/bin/tee", "-a", LEDGER_FILE],
       `${JSON.stringify({ ...summary, detail_path: detailPath })}\n`
     );
     this.lastRecord = {
       summary,
+      detail,
       detailPath,
+      tokenTracePath: tokenTrace.length ? tokenTracePath : null,
+      tokenTrace,
       responseMessage: message
     };
+    this.records.push(this.lastRecord);
     return this.lastRecord;
+  }
+
+  exportTo(outputDir) {
+    const requestDir = path.join(outputDir, "requests");
+    fs.mkdirSync(requestDir, { recursive: true });
+    const summaries = [];
+    for (const record of this.records) {
+      const stem = `${String(record.summary.sequence).padStart(4, "0")}-${record.summary.ledger_request_id}`;
+      const detailName = `${stem}.json`;
+      const tokenName = `${stem}.tokens.jsonl`;
+      const exportedSummary = structuredClone(record.summary);
+      exportedSummary.detail_path = `requests/${detailName}`;
+      if (record.tokenTrace.length) {
+        exportedSummary.response.token_trace.path = `requests/${tokenName}`;
+      }
+      summaries.push(exportedSummary);
+      fs.writeFileSync(
+        path.join(requestDir, detailName), `${JSON.stringify(record.detail, null, 2)}\n`
+      );
+      if (record.tokenTrace.length) {
+        fs.writeFileSync(
+          path.join(requestDir, tokenName),
+          `${record.tokenTrace.map(row => JSON.stringify(row)).join("\n")}\n`
+        );
+      }
+    }
+    fs.writeFileSync(
+      path.join(outputDir, "request-ledger.jsonl"),
+      summaries.length
+        ? `${summaries.map(row => JSON.stringify(row)).join("\n")}\n`
+        : ""
+    );
+    return {
+      summary: "request-ledger.jsonl",
+      details: "requests/",
+      request_count: summaries.length,
+      token_trace_count: this.records.filter(record => record.tokenTrace.length).length
+    };
   }
 
   async writeContinuity(conversationMessage) {
