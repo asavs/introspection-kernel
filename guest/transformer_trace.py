@@ -105,6 +105,7 @@ def main():
     compare_root.add_argument("--occurrence", type=int)
     compare_root.add_argument("--other-occurrence", type=int)
     compare_root.add_argument("--top", type=int, default=12)
+    compare_root.add_argument("--coordinates", help="comma-separated flattened coordinates to report")
     counterfactual = sub.add_parser("attention-counterfactual")
     counterfactual.add_argument("layer", type=int)
     counterfactual.add_argument("head", type=int)
@@ -206,6 +207,11 @@ def main():
             raise SystemExit("tensor lengths differ")
         delta = [after - before for before, after in zip(left, right)]
         ranked = sorted(range(len(delta)), key=lambda coordinate: abs(delta[coordinate]), reverse=True)
+        requested = []
+        if args.coordinates:
+            requested = [int(value) for value in args.coordinates.split(",") if value]
+            if any(coordinate < 0 or coordinate >= len(delta) for coordinate in requested):
+                raise SystemExit("requested coordinate outside tensor")
         emit({
             "tensor": args.name,
             "direction": "other_minus_current",
@@ -218,6 +224,12 @@ def main():
                 "after": right[coordinate],
                 "delta": delta[coordinate],
             } for coordinate in ranked[:args.top]],
+            "requested_changes": [{
+                "coordinate": coordinate,
+                "before": left[coordinate],
+                "after": right[coordinate],
+                "delta": delta[coordinate],
+            } for coordinate in requested],
         })
         return
 
