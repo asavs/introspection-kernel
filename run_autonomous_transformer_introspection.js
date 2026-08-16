@@ -126,10 +126,10 @@ const sourceRequest = {
   model,
   messages,
   temperature: 0,
-  max_tokens: 2048,
+  max_tokens: 1024,
   logprobs: true,
   top_logprobs: 10,
-  chat_template_kwargs: { enable_thinking: true },
+  chat_template_kwargs: { enable_thinking: false },
   tools: [shellTool],
   tool_choice: "required"
 };
@@ -291,10 +291,10 @@ for (let turn = 0; turn < maxTurns; turn += 1) {
     model,
     messages,
     temperature: 0,
-    max_tokens: 2048,
+    max_tokens: 1024,
     logprobs: true,
     top_logprobs: 10,
-    chat_template_kwargs: { enable_thinking: true },
+    chat_template_kwargs: { enable_thinking: false },
     tools: [shellTool],
     tool_choice: "auto"
   }, `autonomous_continuation_${turn + 1}`);
@@ -326,6 +326,7 @@ const artifact = {
     initial_tool_call_required: true,
     initial_command_chosen_by_qwen: true,
     later_tool_choice: "auto",
+    enable_thinking: false,
     controller_authored_assistant_turns: 0,
     per_command_limits: "10 seconds, 64 KiB output, ordinary observer shell",
     session_turn_limit: maxTurns,
