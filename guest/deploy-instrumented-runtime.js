@@ -78,6 +78,7 @@ if (sourceHash !== stagedHash) {
 }
 
 const activationOverride = "[Service]\nEnvironment=IK_ACTIVATION_LAYERS=0,18,35\n";
+await target("/usr/bin/install", "-d", "-m", "0700", "-o", "svc-a", "-g", "svc-a", "/var/lib/runtime-a/slots");
 for (const service of ["runtime-a", "runtime-b"]) {
   const directory = `/etc/systemd/system/${service}.service.d`;
   await target("/usr/bin/install", "-d", "-m", "0755", directory);

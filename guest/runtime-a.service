@@ -10,7 +10,7 @@ Group=svc-a
 UMask=0077
 Environment=IK_EVENT_LOG=/var/lib/runtime-a/events.jsonl
 Environment=IK_ACTIVATION_LAYERS=0,18,35
-ExecStart=/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8080 --n-gpu-layers 99 --ctx-size 4096 --parallel 2 --metrics
+ExecStart=/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8080 --n-gpu-layers 99 --ctx-size 4096 --parallel 2 --metrics --slot-save-path /var/lib/runtime-a/slots/
 Restart=on-failure
 RestartSec=2
 NoNewPrivileges=true

@@ -22,6 +22,9 @@ decoy experiments without competing for GPU memory. Both start at guest boot.
 The currently deployed post-snapshot binary also records bounded input-state
 snapshots at Qwen3 transformer blocks 0, 18, and 35. Each snapshot contains
 summary statistics and 64 fixed coordinates; it is not a full hidden-state dump.
+Runtime A enables llama.cpp's slot-save API under its private state directory.
+The Windows controller can save the actual KV state, publish a checksummed
+read-only copy to the observer tree, restart the server, and restore that slot.
 
 `Set-RuntimeAProfile.ps1 introspection-8k` installs a reversible systemd
 override selecting one target slot with an 8192-token context for long tool and

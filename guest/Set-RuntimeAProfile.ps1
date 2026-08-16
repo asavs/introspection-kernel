@@ -5,7 +5,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $distro = "IntrospectionKernel"
-$common = "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8080 --n-gpu-layers 99 --metrics"
+$common = "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8080 --n-gpu-layers 99 --metrics --slot-save-path /var/lib/runtime-a/slots/"
 $arguments = switch ($Profile) {
     "baseline" { "$common --ctx-size 4096 --parallel 2" }
     "introspection-8k" { "$common --ctx-size 8192 --parallel 1" }
