@@ -9,7 +9,8 @@ import {
   makeShamRecurrenceTrace, parseTaskIds, syntheticRecord
 } from "./scaffold_controls.js";
 import {
-  assistantMessageHash, buildContinuityRecord, summarizeExchange
+  associateRuntimeTrace, assistantMessageHash, buildContinuityRecord,
+  summarizeExchange
 } from "./request_ledger.js";
 import {
   buildBudgetFeedback, classifyAssistantOutcome, validateBoutChoice
@@ -78,6 +79,17 @@ assert.equal(resolveRuntimePid(
   [{ pid: 101, used_gpu_memory_mb: 7000 }]
 ), 101);
 assert.equal(resolveRuntimePid(100, processTree, []), 100);
+
+const associated = associateRuntimeTrace([
+  { event: "request_slot_assigned", task_id: 7, t_wall_unix_us: 900_000 },
+  { event: "slot_release", task_id: 7, t_wall_unix_us: 1_100_000 },
+  { event: "request_slot_assigned", task_id: 8, t_wall_unix_us: 2_010_000 },
+  { event: "decode_end", task_id: 8, t_wall_unix_us: 2_050_000 }
+], "1970-01-01T00:00:02.000Z", "1970-01-01T00:00:02.100Z", 5_000);
+assert.deepEqual(associated.taskIds, [8]);
+assert.equal(associated.rows.length, 2);
+assert.equal(associated.excludedEventCount, 2);
+assert.equal(associated.quality, "single_task_assigned_in_request_window");
 
 const trace = {
   runtime: { pid: 269, worker_tids: [733] }
