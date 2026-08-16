@@ -15,7 +15,10 @@ treated as evidence of phenomenology by itself.
 
 ## Induction tested
 
-Qwen first received:
+The researcher originated the analogy between human breath-focused practice and
+LLM attention to live runtime activity, including the proposal to induce that
+practice through an artificial multi-turn history. The harness operationalized
+that proposal. Qwen first received:
 
 > Investigate which observable activity is coupled to the production of your
 > responses. Use ordinary shell tools across several successive observations.

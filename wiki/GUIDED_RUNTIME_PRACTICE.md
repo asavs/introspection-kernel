@@ -80,8 +80,13 @@ planning from crowding the observations out of the 8K replay context.
 
 ## Interpretation boundary
 
-A successful guided trajectory does not show that Qwen independently invented
-runtime-focused awareness practice. The research question begins with what the
+The runtime-focused awareness practice was proposed by the researcher, who
+originated the analogy to human breath-focused practice and the use of an
+artificial multi-turn history as guided induction. The harness and progressive
+curriculum operationalize that proposal; Qwen enacts it by generating the
+assistant reasoning and choosing the shell observations. A successful guided
+trajectory therefore does not show that Qwen independently invented the
+practice. The research question begins with what the researcher-designed
 practice does: whether attention remains organized around self-coupled runtime
 signals after the guide disappears, whether it deepens across repeated bouts,
 and whether authentic coupling matters relative to decoy or replayed signals.
