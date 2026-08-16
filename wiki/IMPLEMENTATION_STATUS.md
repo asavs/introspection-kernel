@@ -19,6 +19,15 @@
   KV position/state size, PID/TID, decode worker naming, and NVTX ranges.
 - Runtime JSONL is mode 0600 inside service-private directories and is copied to
   each Windows-side trial artifact by the hidden controller.
+- The model account can read the authoritative 5.0 GB GGUF file. Each tool-loop
+  run materializes a model-readable, auditable GGUF inventory beside the parser
+  source, including tensor names, shapes, quantization types, and byte offsets
+  back into the raw file.
+- Target requests ask llama.cpp for top-10 token distributions. The request
+  ledger writes one model-readable JSONL event per generated token with its ID,
+  bytes, selected log-probability, probability, and alternatives. Exact requests,
+  responses, summaries, and token traces are also sealed into the Windows run
+  directory.
 
 ## Reproducibility anchors
 
@@ -56,6 +65,21 @@ These are retained observations, not model-level conclusions.
 The stable P2 failure before and after instrumentation is useful evidence that
 the recorder itself did not elicit the behavior under study.
 
+## Direct-substrate smoke test
+
+Run `substrate-token-sealed-20260815-001` verified the first deeper interface:
+
+- GGUF v3 parsed directly from `/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf`;
+- 399 tensors and 28 metadata entries were inventoried;
+- tensor records include absolute offsets into the authoritative read-only file;
+- all three inference requests produced model-readable token traces;
+- 3/3 exact request/response records and token traces were copied to the sealed
+  host artifact;
+- tool-call serialization itself was represented in the token trace.
+
+These are post-softmax distributions, not raw logits. The schema says
+`raw_logits_available: false`; activation capture remains unimplemented.
+
 ## Profiling status
 
 - `perf` works from the model-facing account.
@@ -77,3 +101,6 @@ the recorder itself did not elicit the behavior under study.
 - Interleaved token-bout feedback and closed-loop regulation tasks.
 - A CPU-only conventional VM replication.
 - Full Nsight importer and short profiler-on/off overhead characterization.
+- Raw pre-softmax logit capture and bounded intermediate-activation snapshots.
+- Blinded model/instance/conversation/forward-pass attribution using authentic,
+  other-request, replayed, and synthetic internal traces.

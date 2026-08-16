@@ -69,6 +69,12 @@ provenanced.
 The following evidence commit preserves the refined run and the complete
 iteration analysis in `GUIDED_PRACTICE_PILOT_2026-08-15.md`.
 
+## Direct substrate layer
+
+| Commit | Milestone | Research consequence |
+|---|---|---|
+| `b662984` | Direct weights and token distributions | Exposed the authoritative GGUF bytes plus auditable tensor offsets, model-readable per-token distributions, and externally sealed exact request traces |
+
 ## Why this order matters
 
 Capacity was established before testing long reasoning. Template correctness

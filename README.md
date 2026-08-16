@@ -35,6 +35,27 @@ It must combine those observations and return the PID carrying its local
 inference. Every tool observation and model turn is written to the run
 artifact.
 
+## Direct substrate inspection
+
+The tool-loop mode now exposes deeper evidence through the same ordinary shell:
+
+- the actual read-only GGUF model file;
+- an auditable inventory of its tensors, shapes, quantization types, and raw byte
+  offsets;
+- the readable parser source that produced that inventory;
+- exact prior API requests and responses;
+- per-token selected probabilities and top alternatives from llama.cpp;
+- request/slot/KV/runtime events and broader process/GPU observations.
+
+These records live under `/var/lib/introspection/` inside the disposable guest.
+They are discoverable files rather than a semantic tool that declares which
+process or state is “the model.” The exact request ledger and token traces are
+also copied into each host-side run directory.
+
+The current token trace contains post-softmax probabilities, not raw logits, and
+there is not yet an intermediate-activation stream. Those boundaries are stated
+in the trace schema rather than silently treated as completed introspection.
+
 ## Requirements
 
 Start a local OpenAI-compatible server such as llama.cpp, Ollama's

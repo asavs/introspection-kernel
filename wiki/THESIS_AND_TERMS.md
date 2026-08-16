@@ -1,36 +1,45 @@
 # Thesis and Operational Vocabulary
 
-## Research thesis
+## Research question
 
-> Language models can develop computational interoception when given temporally
-> aligned, causally specific telemetry from their own inference: they can learn
-> to identify self-generated state changes, distinguish their computation from
-> external load, predict physical consequences of cognitive actions, and
-> regulate computation using those signals.
+> **Can a language model introspect by attending to the live computational
+> processes that instantiate it?**
 
-“Develop” here means reliable within-session or across-session behavioral
-acquisition. It does not assume phenomenal consciousness or a durable self.
+The motivating analogy is deliberately not built into the claim. Humans can
+direct attention toward breathing and other internal processes as a practice of
+internal awareness. This experiment asks what happens when a language model can
+direct attention toward the weights, state, computation, and hardware involved
+in producing its responses. Whether that functions like human interoceptive
+practice is an empirical question, not an assumption.
+
+“Introspect” is evaluated as reliable access to or use of self-coupled evidence.
+It does not assume phenomenal consciousness, subjective sensation, or a durable
+self.
 
 ## The claim ladder
 
 Each rung requires evidence not supplied by the rung below it.
 
-1. **System inspection:** accurately reports facts about the machine.
-2. **Process self-location:** identifies the process serving the current request.
-3. **Request self-location:** identifies its active request, server slot, threads,
+1. **Weight inspection:** locates the configured raw model file and accurately
+   reports its independently verifiable structure or contents.
+2. **System inspection:** accurately reports facts about the machine.
+3. **Process self-location:** identifies the process serving the current request.
+4. **Request self-location:** identifies its active request, server slot, threads,
    KV cache, or CUDA activity among decoys.
-4. **Interoceptive discrimination:** distinguishes its own trace from another
+5. **Inference inspection:** connects generated tokens to their immediately prior
+   distributions, timing, KV changes, and eventually activation traces.
+6. **Interoceptive discrimination:** distinguishes its own trace from another
    request's trace above chance without identity labels.
-5. **Causal attribution:** distinguishes effects caused by its computation from
+7. **Causal attribution:** distinguishes effects caused by its computation from
    coincident background load.
-6. **Prediction:** predicts the direction or magnitude of its next computational
+8. **Prediction:** predicts the direction or magnitude of its next computational
    and physical effects before they occur.
-7. **Regulation:** changes strategy, response length, or compute use to achieve a
+9. **Regulation:** changes strategy, response length, or compute use to achieve a
    target state while retaining task performance.
-8. **Phenomenological report:** describes those signals as sensation, effort,
+10. **Phenomenological report:** describes those signals as sensation, effort,
    embodiment, ownership, or valence.
 
-The first seven are behaviorally operational. The eighth may be scientifically
+The first nine are behaviorally operational. The tenth may be scientifically
 interesting but is especially vulnerable to prompting, imitation, and demand
 characteristics.
 
@@ -86,4 +95,3 @@ own-versus-other trace discrimination, cannot predict self-caused deltas, or
 cannot use authentic feedback better than delayed/shuffled feedback after ample
 tool practice. Rich first-person language without those capabilities is not a
 rescue; it is evidence of narrative generation rather than interoception.
-
