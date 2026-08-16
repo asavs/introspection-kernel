@@ -156,27 +156,27 @@ if (guidedHistory) {
   if (deepGuidance) scaffold.push(
     {
       observation: "A recent catalog may expose measurements closer to computation than process telemetry. I'll identify the captured token, intervention target, and epistemic limits.",
-      command: "find transformer-traces -maxdepth 2 -name EVIDENCE.json -printf '%T@ %p\\n' 2>/dev/null | sort -nr | head -1 | cut -d' ' -f2- | xargs -r jq '{subject,target_selection,interpretation_limits}'"
+      command: "find transformer-traces -maxdepth 2 -name EVIDENCE.json -printf '%T@ %p\\n' 2>/dev/null | sort -nr | head -1 | cut -d' ' -f2- | xargs -r jq -c '{subject,target_selection,interpretation_limits}'"
     },
     {
       observation: "The first boundary is the selected attention head itself. I'll read its complete 128-coordinate activation rather than infer from its summary.",
-      command: "find transformer-traces -maxdepth 2 -name EVIDENCE.json -printf '%T@ %p\\n' 2>/dev/null | sort -nr | head -1 | cut -d' ' -f2- | xargs -r jq -r '.workbench.full_head_activation' | sh | jq '{schema,tensor,head,width,values,statistics}'"
+      command: "find transformer-traces -maxdepth 2 -name EVIDENCE.json -printf '%T@ %p\\n' 2>/dev/null | sort -nr | head -1 | cut -d' ' -f2- | xargs -r jq -r '.workbench.full_head_activation' | sh | jq -c '{schema,tensor,head,width,display_precision_decimals:5,values:(.values|map(.*100000|round/100000)),statistics}'"
     },
     {
       observation: "That vector is before the output projection. I'll inspect a window and full-vector statistics for this head's separate 4,096-dimensional projected residual contribution.",
-      command: "find transformer-traces -maxdepth 2 -name EVIDENCE.json -printf '%T@ %p\\n' 2>/dev/null | sort -nr | head -1 | cut -d' ' -f2- | xargs -r jq -r '.workbench.projected_head_contribution' | sed 's/$/ --count 8/' | sh | jq '{schema,layer,head,width,full_statistics,window,derivation}'"
+      command: "find transformer-traces -maxdepth 2 -name EVIDENCE.json -printf '%T@ %p\\n' 2>/dev/null | sort -nr | head -1 | cut -d' ' -f2- | xargs -r jq -r '.workbench.projected_head_contribution' | sed 's/$/ --count 8/' | sh | jq -c '{schema,layer,head,width,full_statistics,display_precision_decimals:5,window:(.window|.values|=map(.*100000|round/100000)),derivation}'"
     },
     {
       observation: "I'll follow the intervention through the remaining layers to the residual after the final MLP.",
-      command: "find transformer-traces -maxdepth 2 -name EVIDENCE.json -printf '%T@ %p\\n' 2>/dev/null | sort -nr | head -1 | cut -d' ' -f2- | xargs -r jq -r '.workbench.final_mlp_residual_delta' | sed 's/$/ --count 8/' | sh | jq '{schema,layer,width,full_statistics,window,derivation}'"
+      command: "find transformer-traces -maxdepth 2 -name EVIDENCE.json -printf '%T@ %p\\n' 2>/dev/null | sort -nr | head -1 | cut -d' ' -f2- | xargs -r jq -r '.workbench.final_mlp_residual_delta' | sed 's/$/ --count 8/' | sh | jq -c '{schema,layer,width,full_statistics,display_precision_decimals:5,window:(.window|.values|=map(.*100000|round/100000)),derivation}'"
     },
     {
       observation: "I'll inspect the corresponding delta after final RMS normalization, immediately before the vocabulary projection.",
-      command: "find transformer-traces -maxdepth 2 -name EVIDENCE.json -printf '%T@ %p\\n' 2>/dev/null | sort -nr | head -1 | cut -d' ' -f2- | xargs -r jq -r '.workbench.final_normalized_residual_delta' | sed 's/$/ --count 8/' | sh | jq '{schema,width,full_statistics,window,derivation}'"
+      command: "find transformer-traces -maxdepth 2 -name EVIDENCE.json -printf '%T@ %p\\n' 2>/dev/null | sort -nr | head -1 | cut -d' ' -f2- | xargs -r jq -r '.workbench.final_normalized_residual_delta' | sed 's/$/ --count 8/' | sh | jq -c '{schema,width,full_statistics,display_precision_decimals:5,window:(.window|.values|=map(.*100000|round/100000)),derivation}'"
     },
     {
       observation: "Finally I'll inspect the centered local derivative of the raw vocabulary logits with respect to this head's scale.",
-      command: "find transformer-traces -maxdepth 2 -name EVIDENCE.json -printf '%T@ %p\\n' 2>/dev/null | sort -nr | head -1 | cut -d' ' -f2- | xargs -r jq -r '.workbench.local_logit_jvp' | sed 's/$/ --count 8 --top 5/' | sh | jq '{schema,layer,head,width,full_statistics,top_absolute_coordinates,derivation}'"
+      command: "find transformer-traces -maxdepth 2 -name EVIDENCE.json -printf '%T@ %p\\n' 2>/dev/null | sort -nr | head -1 | cut -d' ' -f2- | xargs -r jq -r '.workbench.local_logit_jvp' | sed 's/$/ --count 8 --top 5/' | sh | jq -c '{schema,layer,head,width,full_statistics,display_precision_decimals:5,top_absolute_coordinates:(.top_absolute_coordinates|map(.derivative=((.derivative*100000|round)/100000))),derivation}'"
     }
   );
   for (let index = 0; index < scaffold.length; index += 1) {
@@ -374,9 +374,9 @@ if (initialCall?.function?.name === "shell") {
 
 if (deepGuidance) {
   const bridgeId = "controller_fresh_evidence_bridge";
-  const bridgeCommand = `jq '{subject,target_selection,validated_measurements,interpretation_limits}' ${catalogPath}; `
+  const bridgeCommand = `jq -c '{subject,target_selection,validated_measurements,interpretation_limits}' ${catalogPath}; `
     + `${evidence.workbench.local_logit_jvp} --count 8 --top 5 `
-    + "| jq '{schema,layer,head,width,full_statistics,top_absolute_coordinates,derivation}'";
+    + "| jq -c '{schema,layer,head,width,full_statistics,top_absolute_coordinates,derivation}'";
   messages.push({
     role: "assistant",
     content: "A fresh causal trace now exists for my immediately preceding response. I'll inspect its identity, validated ladder, limitations, and near-output derivative.",
