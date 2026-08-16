@@ -129,8 +129,12 @@ if (projectedResult.exit_code !== 0) {
 }
 const projectedHead = JSON.parse(projectedResult.stdout);
 checks.projected_head_width_is_residual_width = projectedHead.width === 4096;
-checks.projected_head_is_nonzero = projectedHead.statistics.rms > 0;
-if (!checks.projected_head_width_is_residual_width || !checks.projected_head_is_nonzero) {
+checks.projected_head_is_nonzero = projectedHead.full_statistics.rms > 0;
+checks.projected_head_window_is_paginated = projectedHead.window.count === 128
+  && projectedHead.window.values.length === 128
+  && projectedHead.window.next_start === 128;
+if (!checks.projected_head_width_is_residual_width || !checks.projected_head_is_nonzero
+    || !checks.projected_head_window_is_paginated) {
   throw new Error(`projected-head validation failed: ${JSON.stringify(projectedHead)}`);
 }
 

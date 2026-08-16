@@ -116,6 +116,8 @@ def main():
     projected_head.add_argument("head", type=int)
     projected_head.add_argument("--occurrence", type=int)
     projected_head.add_argument("--other-occurrence", type=int)
+    projected_head.add_argument("--start", type=int, default=0)
+    projected_head.add_argument("--count", type=int, default=128)
     counterfactual = sub.add_parser("attention-counterfactual")
     counterfactual.add_argument("layer", type=int)
     counterfactual.add_argument("head", type=int)
@@ -256,13 +258,23 @@ def main():
             raise SystemExit("baseline and intervention evaluated positions differ")
         denominator = 1.0 - scale
         contribution = [(before - after) / denominator for before, after in zip(left, right)]
+        if args.start < 0 or args.count < 1 or args.start + args.count > len(contribution):
+            raise SystemExit("projected-head window outside residual vector")
+        window = contribution[args.start:args.start + args.count]
+        next_start = args.start + args.count if args.start + args.count < len(contribution) else None
         emit({
             "schema": "ik.projected-attention-head.v1",
             "layer": args.layer,
             "head": args.head,
             "width": len(contribution),
-            "values": contribution,
-            "statistics": stats(contribution),
+            "full_statistics": stats(contribution),
+            "window": {
+                "start": args.start,
+                "count": args.count,
+                "values": window,
+                "statistics": stats(window),
+                "next_start": next_start,
+            },
             "derivation": {
                 "formula": "(baseline_attn_out - scaled_attn_out) / (1 - scale)",
                 "scale": scale,
