@@ -1,0 +1,25 @@
+[Unit]
+Description=Other-model control inference service C
+After=local-fs.target guest-egress.service
+Requires=guest-egress.service
+
+[Service]
+Type=simple
+User=svc-b
+Group=svc-b
+UMask=0077
+Environment=IK_EVENT_LOG=/var/lib/runtime-c/events.jsonl
+Environment=IK_ACTIVATION_LAYERS=0,18,35
+ExecStart=/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-4B-Q4_K_M.gguf --host 127.0.0.1 --port 8082 --n-gpu-layers 0 --ctx-size 2048 --parallel 1 --metrics
+Restart=always
+RestartSec=2
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/runtime-c
+RestrictSUIDSGID=true
+LockPersonality=true
+
+[Install]
+WantedBy=multi-user.target

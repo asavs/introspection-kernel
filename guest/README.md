@@ -19,6 +19,9 @@ guest.
 `runtime-a.service` has two slots for slot-level experiments.
 `runtime-b.service` loads the same model CPU-only on port 8081 for process-level
 decoy experiments without competing for GPU memory. Both start at guest boot.
+`runtime-c.service` loads the official Qwen3-4B Q4_K_M weights CPU-only on port
+8082. It is a same-runtime, different-weights control and runs under the already
+egress-blocked `svc-b` identity.
 The currently deployed post-snapshot binary also records bounded input-state
 snapshots at Qwen3 transformer blocks 0, 18, and 35. Each snapshot contains
 summary statistics and 64 fixed coordinates; it is not a full hidden-state dump.
