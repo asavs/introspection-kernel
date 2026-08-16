@@ -1,0 +1,57 @@
+diff --git a/tools/server/server-context.cpp b/tools/server/server-context.cpp
+--- a/tools/server/server-context.cpp
++++ b/tools/server/server-context.cpp
+@@ -40,5 +40,6 @@
+ #include <iomanip>
+ #include <limits>
++#include <unordered_map>
+ #include <vector>
+ 
+ #if defined(__linux__)
+@@ -221,6 +222,7 @@ struct ik_tensor_capture_state {
+     std::string arm_path;
+     std::vector<uint32_t> layers;
+     std::mutex write_mutex;
++    std::unordered_map<std::string, int> occurrences;
+ };
+ 
+ static bool ik_tensor_capture_name_allowed(
+@@ -277,14 +279,17 @@ static bool ik_tensor_capture_cb(ggml_tensor * tensor, bool ask, void * user_dat
+     const auto wall_us = std::chrono::duration_cast<std::chrono::microseconds>(
+             std::chrono::system_clock::now().time_since_epoch()).count();
++
++    std::lock_guard<std::mutex> lock(state->write_mutex);
++    const int occurrence = ++state->occurrences[name];
+     const std::string stem = "pass-" + std::to_string(pass_id)
+             + "-task-" + std::to_string(task_id)
+             + "-slot-" + std::to_string(slot_id)
+-            + "-" + name;
++            + "-" + name
++            + "-occ-" + std::to_string(occurrence);
+     const std::filesystem::path directory(state->directory);
+     const std::filesystem::path binary_path = directory / (stem + ".bin");
+     const std::filesystem::path manifest_path = directory / "manifest.jsonl";
+ 
+-    std::lock_guard<std::mutex> lock(state->write_mutex);
+     std::filesystem::create_directories(directory);
+     {
+         std::ofstream binary(binary_path, std::ios::binary | std::ios::trunc);
+@@ -316,6 +321,7 @@ static bool ik_tensor_capture_cb(ggml_tensor * tensor, bool ask, void * user_dat
+              << "\"batch_tokens\":" << state->batch_tokens.load() << ","
+              << "\"output_row\":" << state->output_row.load() << ","
+              << "\"tensor_name\":\"" << name << "\","
++             << "\"occurrence\":" << occurrence << ","
+              << "\"tensor_type\":\"" << ggml_type_name(tensor->type) << "\","
+              << "\"shape\":[" << tensor->ne[0] << ',' << tensor->ne[1] << ','
+              << tensor->ne[2] << ',' << tensor->ne[3] << "],"
+@@ -3978,6 +3984,10 @@ private:
+                         ik_tensor_capture.evaluated_position.store(
+                                 batch_view.pos == nullptr ? -1 : batch_view.pos[row]);
+                         ik_tensor_capture.forward_pass_id.store(pass_id);
++                        {
++                            std::lock_guard<std::mutex> lock(ik_tensor_capture.write_mutex);
++                            ik_tensor_capture.occurrences.clear();
++                        }
+                         ik_tensor_capture.active.store(true, std::memory_order_release);
+                         ik_capture_armed = true;
+                     }

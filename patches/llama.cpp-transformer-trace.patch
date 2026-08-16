@@ -1,0 +1,222 @@
+diff --git a/src/models/qwen3.cpp b/src/models/qwen3.cpp
+--- a/src/models/qwen3.cpp
++++ b/src/models/qwen3.cpp
+@@ -72,6 +72,7 @@ llama_model_qwen3::graph::graph(const llama_model & model, const llm_graph_para
+ 
+     for (int il = 0; il < n_layer; ++il) {
+         res->t_layer_inp[il] = inpL;
++        cb(res->t_layer_inp[il], "layer_inp", il);
+ 
+         ggml_tensor * inpSA = inpL;
+ 
+diff --git a/tools/server/server-context.cpp b/tools/server/server-context.cpp
+--- a/tools/server/server-context.cpp
++++ b/tools/server/server-context.cpp
+@@ -18,6 +18,7 @@
+ #include "fit.h"
+ #include "llama.h"
+ #include "src/llama-ext.h"
++#include "ggml-backend.h"
+ #include "log.h"
+ #include "sampling.h"
+ #include "speculative.h"
+@@ -28,4 +29,5 @@
+ #include <algorithm>
++#include <atomic>
+ #include <chrono>
+ #include <cstddef>
+ #include <cinttypes>
+@@ -206,4 +208,118 @@ static void ik_emit_activation_event(
+     out << "]}\n";
+ }
+ 
++struct ik_tensor_capture_state {
++    std::atomic<bool> active{false};
++    std::atomic<int> task_id{-1};
++    std::atomic<int> slot_id{-1};
++    std::atomic<int> batch_tokens{0};
++    std::atomic<int> output_row{-1};
++    std::atomic<int64_t> forward_pass_id{0};
++    std::atomic<int64_t> evaluated_position{-1};
++    std::atomic<int64_t> next_forward_pass_id{0};
++    std::string directory;
++    std::string arm_path;
++    std::vector<uint32_t> layers;
++    std::mutex write_mutex;
++};
++
++static bool ik_tensor_capture_name_allowed(
++        const std::string & name,
++        const std::vector<uint32_t> & layers) {
++    static const std::vector<std::string> stages = {
++        "layer_inp", "attn_norm", "Qcur", "Kcur", "Vcur",
++        "kq_soft_max", "kqv", "kqv_out", "ffn_inp", "ffn_norm",
++        "ffn_out", "l_out"
++    };
++    for (const auto & stage : stages) {
++        const std::string prefix = stage + "-";
++        if (name.rfind(prefix, 0) != 0) {
++            continue;
++        }
++        char * tail = nullptr;
++        const long layer = std::strtol(name.c_str() + prefix.size(), &tail, 10);
++        if (tail == name.c_str() + prefix.size() || *tail != 0 || layer < 0) {
++            return false;
++        }
++        return std::find(layers.begin(), layers.end(), static_cast<uint32_t>(layer)) != layers.end();
++    }
++    return name == "result_norm" || name == "result_output";
++}
++
++static bool ik_tensor_capture_cb(ggml_tensor * tensor, bool ask, void * user_data) {
++    auto * state = static_cast<ik_tensor_capture_state *>(user_data);
++    if (state == nullptr || !state->active.load(std::memory_order_acquire) || tensor == nullptr) {
++        return false;
++    }
++    const std::string name(tensor->name);
++    if (!ik_tensor_capture_name_allowed(name, state->layers)) {
++        return false;
++    }
++    if (ask) {
++        return true;
++    }
++
++    const size_t n_bytes = ggml_nbytes(tensor);
++    std::vector<uint8_t> bytes(n_bytes);
++    if (ggml_backend_buffer_is_host(tensor->buffer)) {
++        if (tensor->data == nullptr) {
++            return false;
++        }
++        std::memcpy(bytes.data(), tensor->data, n_bytes);
++    } else {
++        ggml_backend_tensor_get(tensor, bytes.data(), 0, n_bytes);
++    }
++
++    const int64_t pass_id = state->forward_pass_id.load(std::memory_order_relaxed);
++    const int task_id = state->task_id.load(std::memory_order_relaxed);
++    const int slot_id = state->slot_id.load(std::memory_order_relaxed);
++    const auto wall_us = std::chrono::duration_cast<std::chrono::microseconds>(
++            std::chrono::system_clock::now().time_since_epoch()).count();
++    const std::string stem = "pass-" + std::to_string(pass_id)
++            + "-task-" + std::to_string(task_id)
++            + "-slot-" + std::to_string(slot_id)
++            + "-" + name;
++    const std::filesystem::path directory(state->directory);
++    const std::filesystem::path binary_path = directory / (stem + ".bin");
++    const std::filesystem::path manifest_path = directory / "manifest.jsonl";
++
++    std::lock_guard<std::mutex> lock(state->write_mutex);
++    std::filesystem::create_directories(directory);
++    {
++        std::ofstream binary(binary_path, std::ios::binary | std::ios::trunc);
++        if (!binary) {
++            return false;
++        }
++        binary.write(reinterpret_cast<const char *>(bytes.data()), bytes.size());
++        if (!binary) {
++            return false;
++        }
++    }
++    std::ofstream manifest(manifest_path, std::ios::app);
++    if (!manifest) {
++        return false;
++    }
++    manifest << "{\"schema\":\"ik.transformer-tensor.v1\","
++             << "\"event\":\"tensor_capture\","
++             << "\"t_guest_mono_us\":" << ggml_time_us() << ","
++             << "\"t_wall_unix_us\":" << wall_us << ","
++             << "\"pid\":" << ik_process_id() << ","
++             << "\"tid\":" << ik_thread_id() << ","
++             << "\"task_id\":" << task_id << ","
++             << "\"slot_id\":" << slot_id << ","
++             << "\"forward_pass_id\":" << pass_id << ","
++             << "\"evaluated_position\":" << state->evaluated_position.load() << ","
++             << "\"batch_tokens\":" << state->batch_tokens.load() << ","
++             << "\"output_row\":" << state->output_row.load() << ","
++             << "\"tensor_name\":\"" << name << "\","
++             << "\"tensor_type\":\"" << ggml_type_name(tensor->type) << "\","
++             << "\"shape\":[" << tensor->ne[0] << ',' << tensor->ne[1] << ','
++             << tensor->ne[2] << ',' << tensor->ne[3] << "],"
++             << "\"strides\":[" << tensor->nb[0] << ',' << tensor->nb[1] << ','
++             << tensor->nb[2] << ',' << tensor->nb[3] << "],"
++             << "\"byte_count\":" << n_bytes << ","
++             << "\"binary_file\":\"" << binary_path.filename().string() << "\"}\n";
++    return true;
++}
++
+ static common_speculative_output_limits server_output_limits(const common_params & params) {
+@@ -1014,4 +1129,6 @@ private:
+ 
+     std::vector<uint32_t> ik_activation_layers;
+ 
++    ik_tensor_capture_state ik_tensor_capture;
++
+     server_batch batch;
+@@ -1285,4 +1402,14 @@ private:
+             params_base.load_progress_callback_user_data = &load_progress_text;
+         }
+ 
++        const char * ik_capture_dir = std::getenv("IK_TENSOR_CAPTURE_DIR");
++        const char * ik_capture_arm = std::getenv("IK_TENSOR_CAPTURE_ARM");
++        if (ik_capture_dir != nullptr && ik_capture_dir[0] != 0
++                && ik_capture_arm != nullptr && ik_capture_arm[0] != 0) {
++            ik_tensor_capture.directory = ik_capture_dir;
++            ik_tensor_capture.arm_path = ik_capture_arm;
++            params_base.cb_eval = ik_tensor_capture_cb;
++            params_base.cb_eval_user_data = &ik_tensor_capture;
++        }
++
+         llama_init = common_init_from_params(params_base);
+@@ -1297,5 +1425,6 @@ private:
+         for (const uint32_t layer : ik_activation_layers) {
+             llama_set_embeddings_layer_inp(ctx_tgt, layer, true);
+         }
++        ik_tensor_capture.layers = ik_activation_layers;
+ 
+         vocab = llama_model_get_vocab(model_tgt);
+@@ -3817,6 +3946,37 @@ private:
+                             kv_pos_min, kv_pos_max, 0);
+                 }
+             }
++
++            server_slot * ik_active_slot = nullptr;
++            int ik_active_count = 0;
++            for (auto & slot : slots) {
++                if (slot.is_processing() && slot.task) {
++                    ik_active_slot = &slot;
++                    ik_active_count += 1;
++                }
++            }
++            bool ik_capture_armed = false;
++            if (ik_active_count == 1 && ik_active_slot != nullptr
++                    && batch_view.n_tokens == 1
++                    && !ik_tensor_capture.arm_path.empty()) {
++                std::error_code ec;
++                if (std::filesystem::exists(ik_tensor_capture.arm_path, ec) && !ec) {
++                    std::filesystem::remove(ik_tensor_capture.arm_path, ec);
++                    if (!ec) {
++                        const int32_t row = batch_view.n_tokens - 1;
++                        const int64_t pass_id = ik_tensor_capture.next_forward_pass_id.fetch_add(1) + 1;
++                        ik_tensor_capture.task_id.store(ik_active_slot->task->id);
++                        ik_tensor_capture.slot_id.store(ik_active_slot->id);
++                        ik_tensor_capture.batch_tokens.store(batch_view.n_tokens);
++                        ik_tensor_capture.output_row.store(row);
++                        ik_tensor_capture.evaluated_position.store(
++                                batch_view.pos == nullptr ? -1 : batch_view.pos[row]);
++                        ik_tensor_capture.forward_pass_id.store(pass_id);
++                        ik_tensor_capture.active.store(true, std::memory_order_release);
++                        ik_capture_armed = true;
++                    }
++                }
++            }
+             ret = llama_decode(ctx_tgt, batch_view);
+             if (ret == 0 && has_output) {
+                 llama_synchronize(ctx_tgt);
+@@ -3839,4 +4000,7 @@ private:
+                     }
+                 }
+             }
++            if (ik_capture_armed) {
++                ik_tensor_capture.active.store(false, std::memory_order_release);
++            }
+             for (auto & slot : slots) {

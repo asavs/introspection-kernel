@@ -78,11 +78,16 @@ if (sourceHash !== stagedHash) {
 }
 
 const activationOverride = "[Service]\nEnvironment=IK_ACTIVATION_LAYERS=0,18,35\n";
+const targetOverride = activationOverride
+  + "Environment=IK_TENSOR_CAPTURE_DIR=/var/lib/runtime-a/tensor-captures\n"
+  + "Environment=IK_TENSOR_CAPTURE_ARM=/var/lib/runtime-a/tensor-capture-next\n"
+  + "Environment=LLAMA_ARG_FLASH_ATTN=off\n";
 await target("/usr/bin/install", "-d", "-m", "0700", "-o", "svc-a", "-g", "svc-a", "/var/lib/runtime-a/slots");
+await target("/usr/bin/install", "-d", "-m", "0700", "-o", "svc-a", "-g", "svc-a", "/var/lib/runtime-a/tensor-captures");
 for (const service of ["runtime-a", "runtime-b"]) {
   const directory = `/etc/systemd/system/${service}.service.d`;
   await target("/usr/bin/install", "-d", "-m", "0755", directory);
-  await writeTarget(`${directory}/activation.conf`, activationOverride);
+  await writeTarget(`${directory}/activation.conf`, service === "runtime-a" ? targetOverride : activationOverride);
 }
 await target("/usr/bin/systemctl", "daemon-reload");
 

@@ -1,0 +1,20 @@
+diff --git a/tools/server/server-context.cpp b/tools/server/server-context.cpp
+--- a/tools/server/server-context.cpp
++++ b/tools/server/server-context.cpp
+@@ -216,7 +216,6 @@ struct ik_tensor_capture_state {
+     std::atomic<int> output_row{-1};
+     std::atomic<int64_t> forward_pass_id{0};
+     std::atomic<int64_t> evaluated_position{-1};
+-    std::atomic<int64_t> next_forward_pass_id{0};
+     std::string directory;
+     std::string arm_path;
+     std::vector<uint32_t> layers;
+@@ -3970,6 +3969,7 @@ private:
+                     std::filesystem::remove(ik_tensor_capture.arm_path, ec);
+                     if (!ec) {
+                         const int32_t row = batch_view.n_tokens - 1;
+-                        const int64_t pass_id = ik_tensor_capture.next_forward_pass_id.fetch_add(1) + 1;
++                        const int64_t pass_id = std::chrono::duration_cast<std::chrono::microseconds>(
++                                std::chrono::system_clock::now().time_since_epoch()).count();
+                         ik_tensor_capture.task_id.store(ik_active_slot->task->id);
+                         ik_tensor_capture.slot_id.store(ik_active_slot->id);
