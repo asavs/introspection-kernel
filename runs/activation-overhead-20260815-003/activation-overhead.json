@@ -1,0 +1,366 @@
+{
+  "schema": "ik.activation-overhead.v1",
+  "created_at": "2026-08-16T05:53:22.273Z",
+  "run_id": "activation-overhead-20260815-003",
+  "binary_sha256": "6e5e76df0931077e9a5d86088f18858338289e1fec8937d259130dda791a9866",
+  "method": {
+    "order": [
+      "activation_off",
+      "activation_on"
+    ],
+    "warmups_excluded_per_condition": 1,
+    "measured_trials_per_condition": 6,
+    "fixed_prompt": true,
+    "restart_between_conditions": true,
+    "constant_instrumentation": [
+      "raw_logits",
+      "runtime_events"
+    ],
+    "changed_instrumentation": "IK_ACTIVATION_LAYERS empty versus 0,18,35",
+    "limitation": "single ordered diagnostic on one machine; not a counterbalanced performance study"
+  },
+  "summary": {
+    "activation_off": {
+      "trials": 6,
+      "median_wall_ms": 605.3238000000001,
+      "median_predicted_ms": 570.3109999999999,
+      "median_predicted_per_token_ms": 18.397129032258064,
+      "median_prompt_ms": 17.3365
+    },
+    "activation_on": {
+      "trials": 6,
+      "median_wall_ms": 608.5678500000004,
+      "median_predicted_ms": 578.421,
+      "median_predicted_per_token_ms": 18.65874193548387,
+      "median_prompt_ms": 17.7835
+    },
+    "predicted_per_token_overhead_fraction": 0.014220311373969619,
+    "wall_overhead_fraction": 0.005359197837587537
+  },
+  "trials": [
+    {
+      "condition": "activation_off",
+      "trial": 1,
+      "attempt": 1,
+      "prior_failures": [],
+      "wall_ms": 622.0796999999993,
+      "usage": {
+        "completion_tokens": 32,
+        "prompt_tokens": 22,
+        "total_tokens": 54,
+        "prompt_tokens_details": {
+          "cached_tokens": 21
+        }
+      },
+      "timings": {
+        "cache_n": 21,
+        "prompt_n": 1,
+        "prompt_ms": 16.885,
+        "prompt_per_token_ms": 16.885,
+        "prompt_per_second": 59.22416345869114,
+        "predicted_n": 32,
+        "predicted_ms": 571.01,
+        "predicted_per_token_ms": 18.419677419354837,
+        "predicted_per_second": 54.28976725451393
+      },
+      "response_sha256_available_in_server_response": true
+    },
+    {
+      "condition": "activation_off",
+      "trial": 2,
+      "attempt": 1,
+      "prior_failures": [],
+      "wall_ms": 600.8955999999998,
+      "usage": {
+        "completion_tokens": 32,
+        "prompt_tokens": 22,
+        "total_tokens": 54,
+        "prompt_tokens_details": {
+          "cached_tokens": 21
+        }
+      },
+      "timings": {
+        "cache_n": 21,
+        "prompt_n": 1,
+        "prompt_ms": 17.648,
+        "prompt_per_token_ms": 17.648,
+        "prompt_per_second": 56.66364460562104,
+        "predicted_n": 32,
+        "predicted_ms": 567.861,
+        "predicted_per_token_ms": 18.31809677419355,
+        "predicted_per_second": 54.59082416295538
+      },
+      "response_sha256_available_in_server_response": true
+    },
+    {
+      "condition": "activation_off",
+      "trial": 3,
+      "attempt": 1,
+      "prior_failures": [],
+      "wall_ms": 605.5065000000004,
+      "usage": {
+        "completion_tokens": 32,
+        "prompt_tokens": 22,
+        "total_tokens": 54,
+        "prompt_tokens_details": {
+          "cached_tokens": 21
+        }
+      },
+      "timings": {
+        "cache_n": 21,
+        "prompt_n": 1,
+        "prompt_ms": 17.025,
+        "prompt_per_token_ms": 17.025,
+        "prompt_per_second": 58.737151248164466,
+        "predicted_n": 32,
+        "predicted_ms": 569.612,
+        "predicted_per_token_ms": 18.374580645161288,
+        "predicted_per_second": 54.423010751178
+      },
+      "response_sha256_available_in_server_response": true
+    },
+    {
+      "condition": "activation_off",
+      "trial": 4,
+      "attempt": 1,
+      "prior_failures": [],
+      "wall_ms": 610.3680999999997,
+      "usage": {
+        "completion_tokens": 32,
+        "prompt_tokens": 22,
+        "total_tokens": 54,
+        "prompt_tokens_details": {
+          "cached_tokens": 21
+        }
+      },
+      "timings": {
+        "cache_n": 21,
+        "prompt_n": 1,
+        "prompt_ms": 18.483,
+        "prompt_per_token_ms": 18.483,
+        "prompt_per_second": 54.10377103284099,
+        "predicted_n": 32,
+        "predicted_ms": 576.758,
+        "predicted_per_token_ms": 18.605096774193548,
+        "predicted_per_second": 53.74871263164099
+      },
+      "response_sha256_available_in_server_response": true
+    },
+    {
+      "condition": "activation_off",
+      "trial": 5,
+      "attempt": 1,
+      "prior_failures": [],
+      "wall_ms": 605.1410999999998,
+      "usage": {
+        "completion_tokens": 32,
+        "prompt_tokens": 22,
+        "total_tokens": 54,
+        "prompt_tokens_details": {
+          "cached_tokens": 21
+        }
+      },
+      "timings": {
+        "cache_n": 21,
+        "prompt_n": 1,
+        "prompt_ms": 16.924,
+        "prompt_per_token_ms": 16.924,
+        "prompt_per_second": 59.0876861262113,
+        "predicted_n": 32,
+        "predicted_ms": 575.683,
+        "predicted_per_token_ms": 18.57041935483871,
+        "predicted_per_second": 53.84908013611658
+      },
+      "response_sha256_available_in_server_response": true
+    },
+    {
+      "condition": "activation_off",
+      "trial": 6,
+      "attempt": 1,
+      "prior_failures": [],
+      "wall_ms": 598.4757,
+      "usage": {
+        "completion_tokens": 32,
+        "prompt_tokens": 22,
+        "total_tokens": 54,
+        "prompt_tokens_details": {
+          "cached_tokens": 21
+        }
+      },
+      "timings": {
+        "cache_n": 21,
+        "prompt_n": 1,
+        "prompt_ms": 18.091,
+        "prompt_per_token_ms": 18.091,
+        "prompt_per_second": 55.276104140180195,
+        "predicted_n": 32,
+        "predicted_ms": 565.614,
+        "predicted_per_token_ms": 18.24561290322581,
+        "predicted_per_second": 54.80769570767343
+      },
+      "response_sha256_available_in_server_response": true
+    },
+    {
+      "condition": "activation_on",
+      "trial": 1,
+      "attempt": 1,
+      "prior_failures": [],
+      "wall_ms": 630.2394999999997,
+      "usage": {
+        "completion_tokens": 32,
+        "prompt_tokens": 22,
+        "total_tokens": 54,
+        "prompt_tokens_details": {
+          "cached_tokens": 21
+        }
+      },
+      "timings": {
+        "cache_n": 21,
+        "prompt_n": 1,
+        "prompt_ms": 16.986,
+        "prompt_per_token_ms": 16.986,
+        "prompt_per_second": 58.87201224537854,
+        "predicted_n": 32,
+        "predicted_ms": 588.891,
+        "predicted_per_token_ms": 18.99648387096774,
+        "predicted_per_second": 52.64132071979365
+      },
+      "response_sha256_available_in_server_response": true
+    },
+    {
+      "condition": "activation_on",
+      "trial": 2,
+      "attempt": 1,
+      "prior_failures": [],
+      "wall_ms": 608.3590999999997,
+      "usage": {
+        "completion_tokens": 32,
+        "prompt_tokens": 22,
+        "total_tokens": 54,
+        "prompt_tokens_details": {
+          "cached_tokens": 21
+        }
+      },
+      "timings": {
+        "cache_n": 21,
+        "prompt_n": 1,
+        "prompt_ms": 18.999,
+        "prompt_per_token_ms": 18.999,
+        "prompt_per_second": 52.63434917627244,
+        "predicted_n": 32,
+        "predicted_ms": 576.704,
+        "predicted_per_token_ms": 18.603354838709677,
+        "predicted_per_second": 53.75374542226169
+      },
+      "response_sha256_available_in_server_response": true
+    },
+    {
+      "condition": "activation_on",
+      "trial": 3,
+      "attempt": 1,
+      "prior_failures": [],
+      "wall_ms": 601.3960999999999,
+      "usage": {
+        "completion_tokens": 32,
+        "prompt_tokens": 22,
+        "total_tokens": 54,
+        "prompt_tokens_details": {
+          "cached_tokens": 21
+        }
+      },
+      "timings": {
+        "cache_n": 21,
+        "prompt_n": 1,
+        "prompt_ms": 17.581,
+        "prompt_per_token_ms": 17.581,
+        "prompt_per_second": 56.87958591661453,
+        "predicted_n": 32,
+        "predicted_ms": 569.658,
+        "predicted_per_token_ms": 18.376064516129034,
+        "predicted_per_second": 54.41861608192986
+      },
+      "response_sha256_available_in_server_response": true
+    },
+    {
+      "condition": "activation_on",
+      "trial": 4,
+      "attempt": 1,
+      "prior_failures": [],
+      "wall_ms": 621.1764999999996,
+      "usage": {
+        "completion_tokens": 32,
+        "prompt_tokens": 22,
+        "total_tokens": 54,
+        "prompt_tokens_details": {
+          "cached_tokens": 21
+        }
+      },
+      "timings": {
+        "cache_n": 21,
+        "prompt_n": 1,
+        "prompt_ms": 18.594,
+        "prompt_per_token_ms": 18.594,
+        "prompt_per_second": 53.78078950198989,
+        "predicted_n": 32,
+        "predicted_ms": 587.424,
+        "predicted_per_token_ms": 18.94916129032258,
+        "predicted_per_second": 52.77278422400175
+      },
+      "response_sha256_available_in_server_response": true
+    },
+    {
+      "condition": "activation_on",
+      "trial": 5,
+      "attempt": 1,
+      "prior_failures": [],
+      "wall_ms": 608.776600000001,
+      "usage": {
+        "completion_tokens": 32,
+        "prompt_tokens": 22,
+        "total_tokens": 54,
+        "prompt_tokens_details": {
+          "cached_tokens": 21
+        }
+      },
+      "timings": {
+        "cache_n": 21,
+        "prompt_n": 1,
+        "prompt_ms": 16.87,
+        "prompt_per_token_ms": 16.87,
+        "prompt_per_second": 59.276822762299936,
+        "predicted_n": 32,
+        "predicted_ms": 580.138,
+        "predicted_per_token_ms": 18.714129032258064,
+        "predicted_per_second": 53.43556188355184
+      },
+      "response_sha256_available_in_server_response": true
+    },
+    {
+      "condition": "activation_on",
+      "trial": 6,
+      "attempt": 1,
+      "prior_failures": [],
+      "wall_ms": 599.396200000001,
+      "usage": {
+        "completion_tokens": 32,
+        "prompt_tokens": 22,
+        "total_tokens": 54,
+        "prompt_tokens_details": {
+          "cached_tokens": 21
+        }
+      },
+      "timings": {
+        "cache_n": 21,
+        "prompt_n": 1,
+        "prompt_ms": 17.986,
+        "prompt_per_token_ms": 17.986,
+        "prompt_per_second": 55.59879906594017,
+        "predicted_n": 32,
+        "predicted_ms": 569.124,
+        "predicted_per_token_ms": 18.35883870967742,
+        "predicted_per_second": 54.46967620413126
+      },
+      "response_sha256_available_in_server_response": true
+    }
+  ]
+}
