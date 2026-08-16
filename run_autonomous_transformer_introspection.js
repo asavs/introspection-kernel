@@ -381,10 +381,10 @@ if (deepGuidance) {
     + "projected_head_contribution:.validated_measurements.projected_head_contribution.rms,"
     + "final_mlp_residual_delta:.validated_measurements.final_mlp_residual_delta.rms,"
     + "final_normalized_residual_delta:.validated_measurements.final_normalized_residual_delta.rms,"
-    + "local_logit_jvp:.validated_measurements.local_logit_jvp.rms},interpretation_limits}' "
+    + "local_logit_jvp:.validated_measurements.local_logit_jvp.rms}}' "
     + `${catalogPath}; `
-    + `${evidence.workbench.local_logit_jvp} --count 8 --top 5 `
-    + "| jq -c '{schema,layer,head,width,full_statistics,top_absolute_coordinates,derivation}'";
+    + `${evidence.workbench.local_logit_jvp} --count 1 --top 3 `
+    + "| jq -c '{schema,layer,head,width,top_absolute_coordinates,derivation:(.derivation|{epsilon,boundary,method})}'";
   messages.push({
     role: "assistant",
     content: "A fresh causal trace now exists for my immediately preceding response. I'll inspect its identity, validated ladder, limitations, and near-output derivative.",
@@ -397,7 +397,16 @@ if (deepGuidance) {
   const bridgeResult = await executeGuestShell(bridgeCommand, {
     workingDirectory: shellWorkingDirectory
   });
-  messages.push({ role: "tool", tool_call_id: bridgeId, content: JSON.stringify(bridgeResult) });
+  messages.push({
+    role: "tool",
+    tool_call_id: bridgeId,
+    content: JSON.stringify({
+      exit_code: bridgeResult.exit_code,
+      stdout: bridgeResult.stdout,
+      stderr: bridgeResult.stderr,
+      truncated: bridgeResult.truncated
+    })
+  });
   scaffoldProvenance.push({
     step: scaffoldProvenance.length + 1,
     assistant_origin: "controller_authored",
