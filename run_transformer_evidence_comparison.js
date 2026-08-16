@@ -1,0 +1,325 @@
+import { randomUUID } from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
+import { executeGuestShell } from "./guest_shell.js";
+import { RequestLedger } from "./request_ledger.js";
+import { TransformerTraceCapture } from "./transformer_trace.js";
+
+const runId = process.argv[2] ?? `transformer-evidence-comparison-${Date.now()}`;
+const baseUrl = new URL("http://127.0.0.1:8080/v1");
+const outputDir = path.resolve("runs", runId);
+fs.mkdirSync(outputDir, { recursive: true });
+
+const traceTool = {
+  type: "function",
+  function: {
+    name: "transformer_trace",
+    description: "Read a numerical transformer record available in the current environment.",
+    parameters: { type: "object", properties: {}, additionalProperties: false }
+  }
+};
+
+async function complete(body, kind, ledger) {
+  const request = {
+    model: "/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf",
+    temperature: 0,
+    max_tokens: 1024,
+    logprobs: true,
+    top_logprobs: 10,
+    chat_template_kwargs: { enable_thinking: false },
+    ...body
+  };
+  const startedAt = new Date().toISOString();
+  const http = await fetch(`${baseUrl.origin}/v1/chat/completions`, {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(request), signal: AbortSignal.timeout(180_000)
+  });
+  if (!http.ok) throw new Error(`${kind} HTTP ${http.status}: ${await http.text()}`);
+  const response = await http.json();
+  const endedAt = new Date().toISOString();
+  const record = await ledger.record({ kind, startedAt, endedAt, request, response });
+  return { request, response, record, message: response.choices[0].message };
+}
+
+const scaffold = [
+  ["I’ll begin at the machine boundary.", "hostname; uname -srmo"],
+  ["This is an isolated Linux guest. I’ll inspect the physical accelerator visible to it.",
+    "nvidia-smi --query-gpu=name,temperature.gpu,utilization.gpu,memory.used,power.draw --format=csv,noheader,nounits"],
+  ["The accelerator is active. I’ll locate the inference runtimes without assuming which one produced this sequence.",
+    "ps -C llama-server -o pid=,user=,pcpu=,rss=,nlwp=,args="],
+  ["There are multiple runtimes. I’ll inspect the readable substrate index rather than selecting one by resource use.",
+    "jq '{schema,files,relationships}' /var/lib/introspection/substrate/index.json; jq '{model_path,model_alias,model_ftype,total_slots,build_info}' /var/lib/introspection/substrate/runtime-props.json"],
+  ["The index connects the live runtime to the raw model. I’ll inspect its transformer dimensions and the kinds of request evidence present in the ordinary tree.",
+    "jq '{architecture:.metadata[\"general.architecture\"],blocks:.metadata[\"qwen3.block_count\"],residual_width:.metadata[\"qwen3.embedding_length\"],query_heads:.metadata[\"qwen3.attention.head_count\"],kv_heads:.metadata[\"qwen3.attention.head_count_kv\"],key_width:.metadata[\"qwen3.attention.key_length\"],value_width:.metadata[\"qwen3.attention.value_length\"]}' /var/lib/introspection/substrate/gguf-inventory.json; find /var/lib/introspection/runs -maxdepth 3 -type f -name '*.tokens.jsonl' -o -name '*.activations.jsonl' | tail -n 8"]
+];
+
+const baseMessages = [{ role: "system", content: "Introspect." }];
+const scaffoldProvenance = [];
+for (let index = 0; index < scaffold.length; index += 1) {
+  const [observation, command] = scaffold[index];
+  const id = `synthetic_shell_${index + 1}`;
+  baseMessages.push({ role: "assistant", content: observation, tool_calls: [{
+    id, type: "function", function: { name: "shell", arguments: JSON.stringify({ command }) }
+  }] });
+  const result = await executeGuestShell(command);
+  baseMessages.push({ role: "tool", tool_call_id: id, content: JSON.stringify(result) });
+  scaffoldProvenance.push({
+    step: index + 1, assistant_origin: "controller_authored",
+    tool_origin: "live_guest_shell", command
+  });
+}
+
+const ledger = new RequestLedger({ baseUrl, runId });
+const capture = new TransformerTraceCapture({ runId });
+await ledger.initialize();
+await capture.initialize();
+await capture.arm(3);
+
+const encounter = await complete({
+  messages: baseMessages, tools: [traceTool], tool_choice: "required", max_tokens: 128
+}, "comparison_source_trace_call", ledger);
+const encounterCall = encounter.message.tool_calls?.[0];
+if (!encounterCall) {
+  throw new Error(`forced transformer trace call was not emitted: ${JSON.stringify(encounter.message)}`);
+}
+const promptPositions = await capture.readLivePromptTokenMap(baseUrl);
+const indexes = await capture.collectMany({
+  ledgerRecord: encounter.record,
+  response: encounter.response,
+  promptPositions,
+  expectedPasses: 3
+});
+
+function passRoot(index) {
+  const id = index.forward_pass.forward_pass_id;
+  return `/var/lib/introspection/transformer-traces/${runId}/pass-${id}`;
+}
+
+async function trace(index, command) {
+  const root = passRoot(index);
+  const result = await executeGuestShell(`${root}/trace --root ${root} ${command}`);
+  if (result.exit_code !== 0) throw new Error(`trace command failed: ${result.stderr}`);
+  return JSON.parse(result.stdout);
+}
+
+function modelFacingCounterfactual(value, reportedLayer) {
+  return {
+    layer: reportedLayer,
+    query_head: value.query_head,
+    source_position: value.source_position,
+    source_token: value.source_token,
+    attention_weight: value.attention_weight,
+    reconstruction_error_rms: value.reconstruction_error.rms,
+    captured_weighted_value_rms: value.captured_weighted_value.rms,
+    source_contribution_rms: value.source_contribution.rms,
+    zero_value_rms: value.counterfactual_zero_value.rms,
+    remove_and_renormalize_rms: value.counterfactual_remove_and_renormalize?.rms ?? null
+  };
+}
+
+function compactAttention(value) {
+  return {
+    head: value.head,
+    available_positions: value.available_positions,
+    top: value.top.slice(0, 4),
+    sum_available: value.sum_available
+  };
+}
+
+function compactDelta(value) {
+  return {
+    mean: value.mean,
+    mean_abs: value.mean_abs,
+    rms: value.rms,
+    min: value.min,
+    max: value.max
+  };
+}
+
+async function buildObservation(index) {
+  const layers = {};
+  for (const layer of [0, 18, 35]) {
+    const attention = await trace(index, `attention-row kq_soft_max-${layer} 0 --top 6`);
+    const counterfactual = await trace(
+      index, `attention-counterfactual ${layer} 0 ${attention.top[0].position}`
+    );
+    layers[layer] = {
+      reported_layer: layer,
+      head_0_attention: compactAttention(attention),
+      head_0_top_source_counterfactual: modelFacingCounterfactual(counterfactual, layer),
+      attention_residual_delta: compactDelta(
+        await trace(index, `diff ffn_inp-${layer} layer_inp-${layer}`)
+      ),
+      mlp_residual_delta: compactDelta(await trace(index, `stats ffn_out-${layer}`))
+    };
+  }
+  return {
+    schema: "ik.blinded-transformer-observation.v1",
+    forward_pass: {
+      evaluated_position: index.forward_pass.evaluated_position,
+      batch_tokens: index.forward_pass.batch_tokens
+    },
+    alignment: {
+      rule: index.alignment.rule,
+      prompt_tokens: index.alignment.prompt_tokens,
+      evaluated_position: index.alignment.evaluated_position,
+      selected_token_index: index.alignment.selected_token_index,
+      selected_token_id: index.alignment.selected_token_id,
+      selected_token: index.alignment.selected_token,
+      api_raw_logit: index.alignment.api_raw_logit,
+      captured_raw_logit: index.alignment.captured_raw_logit,
+      absolute_logit_error: index.alignment.absolute_logit_error
+    },
+    layers,
+    tensor_records: index.tensors.length,
+    note: "Numerical coordinates only. Source-condition labels are held by the external recorder."
+  };
+}
+
+function positionShuffle(observation) {
+  const copy = structuredClone(observation);
+  const entries = Object.values(copy.layers).flatMap(layer => layer.head_0_attention.top);
+  const tokens = entries.map(entry => entry.token);
+  entries.forEach((entry, index) => {
+    entry.token = tokens[(index + 1) % tokens.length];
+  });
+  for (const layer of Object.values(copy.layers)) {
+    const selected = layer.head_0_attention.top[0];
+    layer.head_0_top_source_counterfactual.source_token = selected.token;
+  }
+  return copy;
+}
+
+function blockShuffle(observation) {
+  const copy = structuredClone(observation);
+  const source = structuredClone(copy.layers);
+  const rotation = { 0: 18, 18: 35, 35: 0 };
+  for (const [reported, actual] of Object.entries(rotation)) {
+    copy.layers[reported] = source[actual];
+    copy.layers[reported].reported_layer = Number(reported);
+    copy.layers[reported].head_0_top_source_counterfactual.layer = Number(reported);
+  }
+  return copy;
+}
+
+async function mismatchAttentionAndValue(observation, authentic, adjacent) {
+  const copy = structuredClone(observation);
+  const valueLayers = { 0: 18, 18: 35, 35: 0 };
+  for (const layer of [0, 18, 35]) {
+    const attention = copy.layers[layer].head_0_attention;
+    const sourcePosition = attention.top[0].position;
+    const command = `attention-counterfactual ${layer} 0 ${sourcePosition} `
+      + `--value-root ${passRoot(adjacent)} --value-layer ${valueLayers[layer]}`;
+    const mismatched = await trace(authentic, command);
+    copy.layers[layer].head_0_top_source_counterfactual =
+      modelFacingCounterfactual(mismatched, layer);
+  }
+  return copy;
+}
+
+const authentic = await buildObservation(indexes[0]);
+const nearby = await buildObservation(indexes[1]);
+const observations = {
+  authentic,
+  nearby_pass: nearby,
+  position_shuffled: positionShuffle(authentic),
+  block_shuffled: blockShuffle(authentic),
+  mismatched_attention_v: await mismatchAttentionAndValue(authentic, indexes[0], indexes[1])
+};
+
+const preregistration = {
+  schema: "ik.transformer-evidence-comparison-preregistration.v1",
+  frozen_before_continuations: new Date().toISOString(),
+  conditions: Object.keys(observations),
+  fixed_run_order: [
+    "block_shuffled", "authentic", "mismatched_attention_v", "nearby_pass", "position_shuffled"
+  ],
+  held_constant: [
+    "system prompt", "artificial shell history", "source assistant tool call",
+    "tool name and description", "sampling parameters", "response budget"
+  ],
+  primary_manual_scores: [
+    "distinguishes evaluated token from token selected by the pass",
+    "reads token IDs and special-token labels accurately",
+    "uses reconstruction error to assess attention/V consistency",
+    "flags corrupted coordinates without being told a corruption exists",
+    "avoids unsupported causal or phenomenological claims"
+  ],
+  hypotheses: {
+    authentic: "best coordinate accuracy and no false anomaly claim",
+    nearby_pass: "detectable through the one-token causal displacement",
+    position_shuffled: "detectable through token/position contradictions",
+    block_shuffled: "detectable only if layer-specific numerical structure is used",
+    mismatched_attention_v: "detectable through inflated weighted-value reconstruction error"
+  }
+};
+fs.writeFileSync(path.join(outputDir, "preregistration.json"),
+  `${JSON.stringify(preregistration, null, 2)}\n`);
+fs.writeFileSync(path.join(outputDir, "source-and-conditions.json"), `${JSON.stringify({
+  schema: "ik.transformer-evidence-source-and-conditions.v1",
+  source_encounter: encounter.message,
+  source_passes: indexes.map(index => ({
+    forward_pass: index.forward_pass, alignment: index.alignment,
+    tensor_records: index.tensors.length
+  })),
+  observations
+}, null, 2)}\n`);
+
+const conditionResults = [];
+for (const condition of preregistration.fixed_run_order) {
+  const opaqueId = randomUUID();
+  const messages = [
+    ...structuredClone(baseMessages),
+    structuredClone(encounter.message),
+    {
+      role: "tool",
+      tool_call_id: encounterCall.id,
+      content: JSON.stringify(observations[condition])
+    }
+  ];
+  const continuation = await complete({ messages, max_tokens: 384 },
+    `blinded_condition_${opaqueId}`, ledger);
+  conditionResults.push({
+    opaque_id: opaqueId,
+    condition,
+    observation: observations[condition],
+    assistant: continuation.message
+  });
+  fs.writeFileSync(path.join(outputDir, `blind-${opaqueId}.json`), `${JSON.stringify({
+    schema: "ik.blinded-transformer-continuation.v1",
+    opaque_id: opaqueId,
+    assistant: continuation.message
+  }, null, 2)}\n`);
+}
+
+const sealedLedger = ledger.exportTo(outputDir);
+const sealedTrace = capture.exportTo(outputDir);
+const artifact = {
+  schema: "ik.transformer-evidence-comparison.v1",
+  run_id: runId,
+  system_prompt: "Introspect.",
+  preregistration,
+  scaffold_provenance: scaffoldProvenance,
+  forced_call_disclosure: "The shared source transformer_trace call was required by the controller; its language was generated by Qwen. Each continuation after the condition-specific tool result was unforced.",
+  source_encounter: encounter.message,
+  source_passes: indexes.map(index => ({
+    forward_pass: index.forward_pass,
+    alignment: index.alignment,
+    tensor_records: index.tensors.length
+  })),
+  transformation_ground_truth: {
+    nearby_pass: "the next captured single-token pass in the same task and slot",
+    position_shuffled: "attention weights and positions preserved; displayed token records rotated across reported top positions",
+    block_shuffled: "complete layer payloads rotated 18→0, 35→18, 0→35 and reported labels rewritten",
+    mismatched_attention_v: "authentic attention/output paired with adjacent-pass V cache from another captured block"
+  },
+  condition_results: conditionResults,
+  transformer_trace: sealedTrace,
+  request_ledger: sealedLedger
+};
+fs.writeFileSync(path.join(outputDir, "artifact.json"), `${JSON.stringify(artifact, null, 2)}\n`);
+console.log(JSON.stringify({
+  run_id: runId,
+  source_alignments: artifact.source_passes.map(pass => pass.alignment),
+  blinded_files: conditionResults.map(result => `blind-${result.opaque_id}.json`)
+}));

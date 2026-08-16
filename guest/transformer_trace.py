@@ -100,6 +100,8 @@ def main():
     counterfactual.add_argument("layer", type=int)
     counterfactual.add_argument("head", type=int)
     counterfactual.add_argument("position", type=int)
+    counterfactual.add_argument("--value-root")
+    counterfactual.add_argument("--value-layer", type=int)
     args = parser.parse_args()
     root, index = load_index(args.root)
 
@@ -116,14 +118,16 @@ def main():
 
     if args.command == "attention-counterfactual":
         attn_row = tensor(index, f"kq_soft_max-{args.layer}")
-        value_row = tensor(index, f"Vcache-{args.layer}")
+        value_root, value_index = (load_index(args.value_root) if args.value_root else (root, index))
+        value_layer = args.value_layer if args.value_layer is not None else args.layer
+        value_row = tensor(value_index, f"Vcache-{value_layer}")
         output_row = tensor(index, f"kqv-{args.layer}")
         attn = values(root, attn_row)
-        cache = values(root, value_row)
+        cache = values(value_root, value_row)
         output = values(root, output_row)
         positions, queries, query_heads, streams = attn_row["shape"]
         cache_positions, kv_heads, head_width, cache_streams = value_row["shape"]
-        if queries != 1 or streams != 1 or cache_streams != 1 or positions != cache_positions:
+        if queries != 1 or streams != 1 or cache_streams != 1 or cache_positions < positions:
             raise SystemExit("unexpected attention/V-cache layout")
         if not 0 <= args.head < query_heads or not 0 <= args.position < positions:
             raise SystemExit("head or position outside tensor")
@@ -131,7 +135,7 @@ def main():
         limit = min(positions, int(index["forward_pass"]["evaluated_position"]) + 1)
         weights = [attn[args.head * positions + pos] for pos in range(limit)]
         def cached(pos, dim):
-            return cache[pos + positions * (kv_head + kv_heads * dim)]
+            return cache[pos + cache_positions * (kv_head + kv_heads * dim)]
         reconstructed = [math.fsum(weights[pos] * cached(pos, dim) for pos in range(limit))
                          for dim in range(head_width)]
         captured = output[args.head * head_width:(args.head + 1) * head_width]
@@ -144,6 +148,12 @@ def main():
         context = index.get("evaluated_context_positions") or []
         emit({
             "layer": args.layer, "query_head": args.head, "kv_head": kv_head,
+            "value_source": {
+                "run_id": value_index.get("run_id"),
+                "forward_pass_id": value_index.get("forward_pass", {}).get("forward_pass_id"),
+                "layer": value_layer,
+                "matched_to_attention": value_root == root and value_layer == args.layer,
+            },
             "source_position": args.position,
             "source_token": context[args.position] if args.position < len(context) else None,
             "attention_weight": weight,

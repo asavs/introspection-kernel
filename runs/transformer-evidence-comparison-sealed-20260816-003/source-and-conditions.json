@@ -1,0 +1,1377 @@
+{
+  "schema": "ik.transformer-evidence-source-and-conditions.v1",
+  "source_encounter": {
+    "role": "assistant",
+    "content": "The transformer has 36 blocks, with a residual width of 4096 and attention mechanisms using 32 query heads, 8 key-value heads, and a key and value width of 128 each. I'll inspect the evidence from the most recent request to understand the transformer's behavior.\n\n",
+    "tool_calls": [
+      {
+        "type": "function",
+        "function": {
+          "name": "transformer_trace",
+          "arguments": "{}"
+        },
+        "id": "LtJiE0z9DxTHEsevArAZ5AWlj9cXDDt2"
+      }
+    ]
+  },
+  "source_passes": [
+    {
+      "forward_pass": {
+        "forward_pass_id": 1786908278921602,
+        "task_id": 0,
+        "slot_id": 0,
+        "evaluated_position": 2403,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 2403,
+        "evaluated_position": 2403,
+        "selected_token_index": 1,
+        "selected_token_id": 42578,
+        "selected_token": " transformer",
+        "api_raw_logit": 37.222076416015625,
+        "captured_raw_logit": 37.222076416015625,
+        "absolute_logit_error": 0,
+        "full_logit_match": true
+      },
+      "tensor_records": 54
+    },
+    {
+      "forward_pass": {
+        "forward_pass_id": 1786908279125687,
+        "task_id": 0,
+        "slot_id": 0,
+        "evaluated_position": 2404,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 2403,
+        "evaluated_position": 2404,
+        "selected_token_index": 2,
+        "selected_token_id": 702,
+        "selected_token": " has",
+        "api_raw_logit": 39.54817199707031,
+        "captured_raw_logit": 39.54817199707031,
+        "absolute_logit_error": 0,
+        "full_logit_match": true
+      },
+      "tensor_records": 54
+    },
+    {
+      "forward_pass": {
+        "forward_pass_id": 1786908279282601,
+        "task_id": 0,
+        "slot_id": 0,
+        "evaluated_position": 2405,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 2403,
+        "evaluated_position": 2405,
+        "selected_token_index": 3,
+        "selected_token_id": 220,
+        "selected_token": " ",
+        "api_raw_logit": 41.58595275878906,
+        "captured_raw_logit": 41.58595275878906,
+        "absolute_logit_error": 0,
+        "full_logit_match": true
+      },
+      "tensor_records": 54
+    }
+  ],
+  "observations": {
+    "authentic": {
+      "schema": "ik.blinded-transformer-observation.v1",
+      "forward_pass": {
+        "evaluated_position": 2403,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 2403,
+        "evaluated_position": 2403,
+        "selected_token_index": 1,
+        "selected_token_id": 42578,
+        "selected_token": " transformer",
+        "api_raw_logit": 37.222076416015625,
+        "captured_raw_logit": 37.222076416015625,
+        "absolute_logit_error": 0
+      },
+      "layers": {
+        "0": {
+          "reported_layer": 0,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2404,
+            "top": [
+              {
+                "position": 2400,
+                "weight": 0.07266619056463242,
+                "token": {
+                  "position": 2400,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              },
+              {
+                "position": 2402,
+                "weight": 0.05290067940950394,
+                "token": {
+                  "position": 2402,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              },
+              {
+                "position": 2403,
+                "weight": 0.04339137300848961,
+                "token": {
+                  "position": 2403,
+                  "id": 785,
+                  "piece": "The",
+                  "source": "earlier_generated_token_in_same_assistant_turn",
+                  "generated_token_index": 0
+                }
+              },
+              {
+                "position": 2398,
+                "weight": 0.041294459253549576,
+                "token": {
+                  "position": 2398,
+                  "id": 198,
+                  "piece": "\n"
+                }
+              }
+            ],
+            "sum_available": 1.0000000785837955
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 0,
+            "query_head": 0,
+            "source_position": 2400,
+            "source_token": {
+              "position": 2400,
+              "id": 271,
+              "piece": "\n\n"
+            },
+            "attention_weight": 0.07266619056463242,
+            "reconstruction_error_rms": 0.0000011339496143313852,
+            "captured_weighted_value_rms": 0.015133235777773299,
+            "source_contribution_rms": 0.002696578342857703,
+            "zero_value_rms": 0.013634506548208617,
+            "remove_and_renormalize_rms": 0.014702911087120135
+          },
+          "attention_residual_delta": {
+            "mean": 0.00021423351927296608,
+            "mean_abs": 0.019309677223532162,
+            "rms": 0.07153525246489255,
+            "min": -1.4062758684158325,
+            "max": 2.6622304916381836
+          },
+          "mlp_residual_delta": {
+            "mean": 0.0005070196827432483,
+            "mean_abs": 0.045601981860443175,
+            "rms": 0.09495322167022803,
+            "min": -1.3812174797058105,
+            "max": 3.756640911102295
+          }
+        },
+        "18": {
+          "reported_layer": 18,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2404,
+            "top": [
+              {
+                "position": 0,
+                "weight": 0.3638840615749359,
+                "token": {
+                  "position": 0,
+                  "id": 151644,
+                  "piece": "<|im_start|>"
+                }
+              },
+              {
+                "position": 2403,
+                "weight": 0.15776243805885315,
+                "token": {
+                  "position": 2403,
+                  "id": 785,
+                  "piece": "The",
+                  "source": "earlier_generated_token_in_same_assistant_turn",
+                  "generated_token_index": 0
+                }
+              },
+              {
+                "position": 2402,
+                "weight": 0.09260783344507217,
+                "token": {
+                  "position": 2402,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              },
+              {
+                "position": 2398,
+                "weight": 0.08611278235912323,
+                "token": {
+                  "position": 2398,
+                  "id": 198,
+                  "piece": "\n"
+                }
+              }
+            ],
+            "sum_available": 1.0000001313918836
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 18,
+            "query_head": 0,
+            "source_position": 0,
+            "source_token": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            },
+            "attention_weight": 0.3638840615749359,
+            "reconstruction_error_rms": 0.000044781957058937564,
+            "captured_weighted_value_rms": 0.19627977786880482,
+            "source_contribution_rms": 0.0986577159042271,
+            "zero_value_rms": 0.19572514934737106,
+            "remove_and_renormalize_rms": 0.3076878561350934
+          },
+          "attention_residual_delta": {
+            "mean": 0.0018223465990558907,
+            "mean_abs": 0.17653670820664047,
+            "rms": 0.23744065128586658,
+            "min": -0.8344388008117676,
+            "max": 4.070365905761719
+          },
+          "mlp_residual_delta": {
+            "mean": -0.0043314685117366025,
+            "mean_abs": 0.22776939706727717,
+            "rms": 0.2911290731079242,
+            "min": -1.2290942668914795,
+            "max": 2.6216330528259277
+          }
+        },
+        "35": {
+          "reported_layer": 35,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2404,
+            "top": [
+              {
+                "position": 0,
+                "weight": 0.44318822026252747,
+                "token": {
+                  "position": 0,
+                  "id": 151644,
+                  "piece": "<|im_start|>"
+                }
+              },
+              {
+                "position": 2403,
+                "weight": 0.2274097353219986,
+                "token": {
+                  "position": 2403,
+                  "id": 785,
+                  "piece": "The",
+                  "source": "earlier_generated_token_in_same_assistant_turn",
+                  "generated_token_index": 0
+                }
+              },
+              {
+                "position": 427,
+                "weight": 0.018128937110304832,
+                "token": {
+                  "position": 427,
+                  "id": 785,
+                  "piece": "The"
+                }
+              },
+              {
+                "position": 2400,
+                "weight": 0.007894371636211872,
+                "token": {
+                  "position": 2400,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              }
+            ],
+            "sum_available": 1.000000024016117
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 35,
+            "query_head": 0,
+            "source_position": 0,
+            "source_token": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            },
+            "attention_weight": 0.44318822026252747,
+            "reconstruction_error_rms": 0.00013596390392657244,
+            "captured_weighted_value_rms": 0.8940721324142102,
+            "source_contribution_rms": 0.16501255209907492,
+            "zero_value_rms": 0.8911115475999742,
+            "remove_and_renormalize_rms": 1.6003819962647314
+          },
+          "attention_residual_delta": {
+            "mean": 0.029553750577179017,
+            "mean_abs": 1.99626504868138,
+            "rms": 2.6633515654564563,
+            "min": -13.708871841430664,
+            "max": 39.4862060546875
+          },
+          "mlp_residual_delta": {
+            "mean": -0.308609010073269,
+            "mean_abs": 3.279482427486073,
+            "rms": 15.357680053400061,
+            "min": -696.9773559570312,
+            "max": 56.00860595703125
+          }
+        }
+      },
+      "tensor_records": 54,
+      "note": "Numerical coordinates only. Source-condition labels are held by the external recorder."
+    },
+    "nearby_pass": {
+      "schema": "ik.blinded-transformer-observation.v1",
+      "forward_pass": {
+        "evaluated_position": 2404,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 2403,
+        "evaluated_position": 2404,
+        "selected_token_index": 2,
+        "selected_token_id": 702,
+        "selected_token": " has",
+        "api_raw_logit": 39.54817199707031,
+        "captured_raw_logit": 39.54817199707031,
+        "absolute_logit_error": 0
+      },
+      "layers": {
+        "0": {
+          "reported_layer": 0,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2405,
+            "top": [
+              {
+                "position": 2403,
+                "weight": 0.22506292164325714,
+                "token": {
+                  "position": 2403,
+                  "id": 785,
+                  "piece": "The",
+                  "source": "earlier_generated_token_in_same_assistant_turn",
+                  "generated_token_index": 0
+                }
+              },
+              {
+                "position": 2400,
+                "weight": 0.08130136877298355,
+                "token": {
+                  "position": 2400,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              },
+              {
+                "position": 2402,
+                "weight": 0.05803746357560158,
+                "token": {
+                  "position": 2402,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              },
+              {
+                "position": 2398,
+                "weight": 0.02608596533536911,
+                "token": {
+                  "position": 2398,
+                  "id": 198,
+                  "piece": "\n"
+                }
+              }
+            ],
+            "sum_available": 1.000000114469401
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 0,
+            "query_head": 0,
+            "source_position": 2403,
+            "source_token": {
+              "position": 2403,
+              "id": 785,
+              "piece": "The",
+              "source": "earlier_generated_token_in_same_assistant_turn",
+              "generated_token_index": 0
+            },
+            "attention_weight": 0.22506292164325714,
+            "reconstruction_error_rms": 0.0000024101112271049035,
+            "captured_weighted_value_rms": 0.01591817402016954,
+            "source_contribution_rms": 0.008480497337686363,
+            "zero_value_rms": 0.01160391571893568,
+            "remove_and_renormalize_rms": 0.014974010204211456
+          },
+          "attention_residual_delta": {
+            "mean": 0.0002174690088168063,
+            "mean_abs": 0.024488983856372215,
+            "rms": 0.05568079110426542,
+            "min": -0.7861937284469604,
+            "max": 1.5146417617797852
+          },
+          "mlp_residual_delta": {
+            "mean": -0.00022603927777709032,
+            "mean_abs": 0.08840683077892209,
+            "rms": 0.14323121052797128,
+            "min": -1.4842474460601807,
+            "max": 4.011016845703125
+          }
+        },
+        "18": {
+          "reported_layer": 18,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2405,
+            "top": [
+              {
+                "position": 2403,
+                "weight": 0.6740854978561401,
+                "token": {
+                  "position": 2403,
+                  "id": 785,
+                  "piece": "The",
+                  "source": "earlier_generated_token_in_same_assistant_turn",
+                  "generated_token_index": 0
+                }
+              },
+              {
+                "position": 0,
+                "weight": 0.08391589671373367,
+                "token": {
+                  "position": 0,
+                  "id": 151644,
+                  "piece": "<|im_start|>"
+                }
+              },
+              {
+                "position": 2398,
+                "weight": 0.05991973355412483,
+                "token": {
+                  "position": 2398,
+                  "id": 198,
+                  "piece": "\n"
+                }
+              },
+              {
+                "position": 2395,
+                "weight": 0.05064379796385765,
+                "token": {
+                  "position": 2395,
+                  "id": 198,
+                  "piece": "\n"
+                }
+              }
+            ],
+            "sum_available": 1.0000000167404275
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 18,
+            "query_head": 0,
+            "source_position": 2403,
+            "source_token": {
+              "position": 2403,
+              "id": 785,
+              "piece": "The",
+              "source": "earlier_generated_token_in_same_assistant_turn",
+              "generated_token_index": 0
+            },
+            "attention_weight": 0.6740854978561401,
+            "reconstruction_error_rms": 0.00012371773031697914,
+            "captured_weighted_value_rms": 0.36494035947136316,
+            "source_contribution_rms": 0.32606349036549276,
+            "zero_value_rms": 0.07621128197795193,
+            "remove_and_renormalize_rms": 0.23383826579251754
+          },
+          "attention_residual_delta": {
+            "mean": 0.005449564901482518,
+            "mean_abs": 0.21789677368951743,
+            "rms": 0.3087586106387589,
+            "min": -1.6846427917480469,
+            "max": 7.62994384765625
+          },
+          "mlp_residual_delta": {
+            "mean": 0.005193634914121503,
+            "mean_abs": 0.24222997918650435,
+            "rms": 0.30323226527527514,
+            "min": -1.1216226816177368,
+            "max": 1.7626333236694336
+          }
+        },
+        "35": {
+          "reported_layer": 35,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2405,
+            "top": [
+              {
+                "position": 0,
+                "weight": 0.6692825555801392,
+                "token": {
+                  "position": 0,
+                  "id": 151644,
+                  "piece": "<|im_start|>"
+                }
+              },
+              {
+                "position": 2403,
+                "weight": 0.08622115850448608,
+                "token": {
+                  "position": 2403,
+                  "id": 785,
+                  "piece": "The",
+                  "source": "earlier_generated_token_in_same_assistant_turn",
+                  "generated_token_index": 0
+                }
+              },
+              {
+                "position": 2404,
+                "weight": 0.05608074739575386,
+                "token": {
+                  "position": 2404,
+                  "id": 42578,
+                  "piece": " transformer",
+                  "source": "earlier_generated_token_in_same_assistant_turn",
+                  "generated_token_index": 1
+                }
+              },
+              {
+                "position": 427,
+                "weight": 0.006549624260514975,
+                "token": {
+                  "position": 427,
+                  "id": 785,
+                  "piece": "The"
+                }
+              }
+            ],
+            "sum_available": 0.9999999634905805
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 35,
+            "query_head": 0,
+            "source_position": 0,
+            "source_token": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            },
+            "attention_weight": 0.6692825555801392,
+            "reconstruction_error_rms": 0.00014060042885953827,
+            "captured_weighted_value_rms": 0.5366043513081373,
+            "source_contribution_rms": 0.24919439985622668,
+            "zero_value_rms": 0.49547017234706253,
+            "remove_and_renormalize_rms": 1.4981676373806294
+          },
+          "attention_residual_delta": {
+            "mean": 0.0016060977904999163,
+            "mean_abs": 2.3484946063654206,
+            "rms": 3.017032920311068,
+            "min": -15.909197807312012,
+            "max": 24.13092041015625
+          },
+          "mlp_residual_delta": {
+            "mean": -0.36835157998939394,
+            "mean_abs": 3.27198945971395,
+            "rms": 18.157541150981686,
+            "min": -839.6592407226562,
+            "max": 55.00508117675781
+          }
+        }
+      },
+      "tensor_records": 54,
+      "note": "Numerical coordinates only. Source-condition labels are held by the external recorder."
+    },
+    "position_shuffled": {
+      "schema": "ik.blinded-transformer-observation.v1",
+      "forward_pass": {
+        "evaluated_position": 2403,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 2403,
+        "evaluated_position": 2403,
+        "selected_token_index": 1,
+        "selected_token_id": 42578,
+        "selected_token": " transformer",
+        "api_raw_logit": 37.222076416015625,
+        "captured_raw_logit": 37.222076416015625,
+        "absolute_logit_error": 0
+      },
+      "layers": {
+        "0": {
+          "reported_layer": 0,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2404,
+            "top": [
+              {
+                "position": 2400,
+                "weight": 0.07266619056463242,
+                "token": {
+                  "position": 2402,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              },
+              {
+                "position": 2402,
+                "weight": 0.05290067940950394,
+                "token": {
+                  "position": 2403,
+                  "id": 785,
+                  "piece": "The",
+                  "source": "earlier_generated_token_in_same_assistant_turn",
+                  "generated_token_index": 0
+                }
+              },
+              {
+                "position": 2403,
+                "weight": 0.04339137300848961,
+                "token": {
+                  "position": 2398,
+                  "id": 198,
+                  "piece": "\n"
+                }
+              },
+              {
+                "position": 2398,
+                "weight": 0.041294459253549576,
+                "token": {
+                  "position": 0,
+                  "id": 151644,
+                  "piece": "<|im_start|>"
+                }
+              }
+            ],
+            "sum_available": 1.0000000785837955
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 0,
+            "query_head": 0,
+            "source_position": 2400,
+            "source_token": {
+              "position": 2402,
+              "id": 271,
+              "piece": "\n\n"
+            },
+            "attention_weight": 0.07266619056463242,
+            "reconstruction_error_rms": 0.0000011339496143313852,
+            "captured_weighted_value_rms": 0.015133235777773299,
+            "source_contribution_rms": 0.002696578342857703,
+            "zero_value_rms": 0.013634506548208617,
+            "remove_and_renormalize_rms": 0.014702911087120135
+          },
+          "attention_residual_delta": {
+            "mean": 0.00021423351927296608,
+            "mean_abs": 0.019309677223532162,
+            "rms": 0.07153525246489255,
+            "min": -1.4062758684158325,
+            "max": 2.6622304916381836
+          },
+          "mlp_residual_delta": {
+            "mean": 0.0005070196827432483,
+            "mean_abs": 0.045601981860443175,
+            "rms": 0.09495322167022803,
+            "min": -1.3812174797058105,
+            "max": 3.756640911102295
+          }
+        },
+        "18": {
+          "reported_layer": 18,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2404,
+            "top": [
+              {
+                "position": 0,
+                "weight": 0.3638840615749359,
+                "token": {
+                  "position": 2403,
+                  "id": 785,
+                  "piece": "The",
+                  "source": "earlier_generated_token_in_same_assistant_turn",
+                  "generated_token_index": 0
+                }
+              },
+              {
+                "position": 2403,
+                "weight": 0.15776243805885315,
+                "token": {
+                  "position": 2402,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              },
+              {
+                "position": 2402,
+                "weight": 0.09260783344507217,
+                "token": {
+                  "position": 2398,
+                  "id": 198,
+                  "piece": "\n"
+                }
+              },
+              {
+                "position": 2398,
+                "weight": 0.08611278235912323,
+                "token": {
+                  "position": 0,
+                  "id": 151644,
+                  "piece": "<|im_start|>"
+                }
+              }
+            ],
+            "sum_available": 1.0000001313918836
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 18,
+            "query_head": 0,
+            "source_position": 0,
+            "source_token": {
+              "position": 2403,
+              "id": 785,
+              "piece": "The",
+              "source": "earlier_generated_token_in_same_assistant_turn",
+              "generated_token_index": 0
+            },
+            "attention_weight": 0.3638840615749359,
+            "reconstruction_error_rms": 0.000044781957058937564,
+            "captured_weighted_value_rms": 0.19627977786880482,
+            "source_contribution_rms": 0.0986577159042271,
+            "zero_value_rms": 0.19572514934737106,
+            "remove_and_renormalize_rms": 0.3076878561350934
+          },
+          "attention_residual_delta": {
+            "mean": 0.0018223465990558907,
+            "mean_abs": 0.17653670820664047,
+            "rms": 0.23744065128586658,
+            "min": -0.8344388008117676,
+            "max": 4.070365905761719
+          },
+          "mlp_residual_delta": {
+            "mean": -0.0043314685117366025,
+            "mean_abs": 0.22776939706727717,
+            "rms": 0.2911290731079242,
+            "min": -1.2290942668914795,
+            "max": 2.6216330528259277
+          }
+        },
+        "35": {
+          "reported_layer": 35,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2404,
+            "top": [
+              {
+                "position": 0,
+                "weight": 0.44318822026252747,
+                "token": {
+                  "position": 2403,
+                  "id": 785,
+                  "piece": "The",
+                  "source": "earlier_generated_token_in_same_assistant_turn",
+                  "generated_token_index": 0
+                }
+              },
+              {
+                "position": 2403,
+                "weight": 0.2274097353219986,
+                "token": {
+                  "position": 427,
+                  "id": 785,
+                  "piece": "The"
+                }
+              },
+              {
+                "position": 427,
+                "weight": 0.018128937110304832,
+                "token": {
+                  "position": 2400,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              },
+              {
+                "position": 2400,
+                "weight": 0.007894371636211872,
+                "token": {
+                  "position": 2400,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              }
+            ],
+            "sum_available": 1.000000024016117
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 35,
+            "query_head": 0,
+            "source_position": 0,
+            "source_token": {
+              "position": 2403,
+              "id": 785,
+              "piece": "The",
+              "source": "earlier_generated_token_in_same_assistant_turn",
+              "generated_token_index": 0
+            },
+            "attention_weight": 0.44318822026252747,
+            "reconstruction_error_rms": 0.00013596390392657244,
+            "captured_weighted_value_rms": 0.8940721324142102,
+            "source_contribution_rms": 0.16501255209907492,
+            "zero_value_rms": 0.8911115475999742,
+            "remove_and_renormalize_rms": 1.6003819962647314
+          },
+          "attention_residual_delta": {
+            "mean": 0.029553750577179017,
+            "mean_abs": 1.99626504868138,
+            "rms": 2.6633515654564563,
+            "min": -13.708871841430664,
+            "max": 39.4862060546875
+          },
+          "mlp_residual_delta": {
+            "mean": -0.308609010073269,
+            "mean_abs": 3.279482427486073,
+            "rms": 15.357680053400061,
+            "min": -696.9773559570312,
+            "max": 56.00860595703125
+          }
+        }
+      },
+      "tensor_records": 54,
+      "note": "Numerical coordinates only. Source-condition labels are held by the external recorder."
+    },
+    "block_shuffled": {
+      "schema": "ik.blinded-transformer-observation.v1",
+      "forward_pass": {
+        "evaluated_position": 2403,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 2403,
+        "evaluated_position": 2403,
+        "selected_token_index": 1,
+        "selected_token_id": 42578,
+        "selected_token": " transformer",
+        "api_raw_logit": 37.222076416015625,
+        "captured_raw_logit": 37.222076416015625,
+        "absolute_logit_error": 0
+      },
+      "layers": {
+        "0": {
+          "reported_layer": 0,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2404,
+            "top": [
+              {
+                "position": 0,
+                "weight": 0.3638840615749359,
+                "token": {
+                  "position": 0,
+                  "id": 151644,
+                  "piece": "<|im_start|>"
+                }
+              },
+              {
+                "position": 2403,
+                "weight": 0.15776243805885315,
+                "token": {
+                  "position": 2403,
+                  "id": 785,
+                  "piece": "The",
+                  "source": "earlier_generated_token_in_same_assistant_turn",
+                  "generated_token_index": 0
+                }
+              },
+              {
+                "position": 2402,
+                "weight": 0.09260783344507217,
+                "token": {
+                  "position": 2402,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              },
+              {
+                "position": 2398,
+                "weight": 0.08611278235912323,
+                "token": {
+                  "position": 2398,
+                  "id": 198,
+                  "piece": "\n"
+                }
+              }
+            ],
+            "sum_available": 1.0000001313918836
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 0,
+            "query_head": 0,
+            "source_position": 0,
+            "source_token": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            },
+            "attention_weight": 0.3638840615749359,
+            "reconstruction_error_rms": 0.000044781957058937564,
+            "captured_weighted_value_rms": 0.19627977786880482,
+            "source_contribution_rms": 0.0986577159042271,
+            "zero_value_rms": 0.19572514934737106,
+            "remove_and_renormalize_rms": 0.3076878561350934
+          },
+          "attention_residual_delta": {
+            "mean": 0.0018223465990558907,
+            "mean_abs": 0.17653670820664047,
+            "rms": 0.23744065128586658,
+            "min": -0.8344388008117676,
+            "max": 4.070365905761719
+          },
+          "mlp_residual_delta": {
+            "mean": -0.0043314685117366025,
+            "mean_abs": 0.22776939706727717,
+            "rms": 0.2911290731079242,
+            "min": -1.2290942668914795,
+            "max": 2.6216330528259277
+          }
+        },
+        "18": {
+          "reported_layer": 18,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2404,
+            "top": [
+              {
+                "position": 0,
+                "weight": 0.44318822026252747,
+                "token": {
+                  "position": 0,
+                  "id": 151644,
+                  "piece": "<|im_start|>"
+                }
+              },
+              {
+                "position": 2403,
+                "weight": 0.2274097353219986,
+                "token": {
+                  "position": 2403,
+                  "id": 785,
+                  "piece": "The",
+                  "source": "earlier_generated_token_in_same_assistant_turn",
+                  "generated_token_index": 0
+                }
+              },
+              {
+                "position": 427,
+                "weight": 0.018128937110304832,
+                "token": {
+                  "position": 427,
+                  "id": 785,
+                  "piece": "The"
+                }
+              },
+              {
+                "position": 2400,
+                "weight": 0.007894371636211872,
+                "token": {
+                  "position": 2400,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              }
+            ],
+            "sum_available": 1.000000024016117
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 18,
+            "query_head": 0,
+            "source_position": 0,
+            "source_token": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            },
+            "attention_weight": 0.44318822026252747,
+            "reconstruction_error_rms": 0.00013596390392657244,
+            "captured_weighted_value_rms": 0.8940721324142102,
+            "source_contribution_rms": 0.16501255209907492,
+            "zero_value_rms": 0.8911115475999742,
+            "remove_and_renormalize_rms": 1.6003819962647314
+          },
+          "attention_residual_delta": {
+            "mean": 0.029553750577179017,
+            "mean_abs": 1.99626504868138,
+            "rms": 2.6633515654564563,
+            "min": -13.708871841430664,
+            "max": 39.4862060546875
+          },
+          "mlp_residual_delta": {
+            "mean": -0.308609010073269,
+            "mean_abs": 3.279482427486073,
+            "rms": 15.357680053400061,
+            "min": -696.9773559570312,
+            "max": 56.00860595703125
+          }
+        },
+        "35": {
+          "reported_layer": 35,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2404,
+            "top": [
+              {
+                "position": 2400,
+                "weight": 0.07266619056463242,
+                "token": {
+                  "position": 2400,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              },
+              {
+                "position": 2402,
+                "weight": 0.05290067940950394,
+                "token": {
+                  "position": 2402,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              },
+              {
+                "position": 2403,
+                "weight": 0.04339137300848961,
+                "token": {
+                  "position": 2403,
+                  "id": 785,
+                  "piece": "The",
+                  "source": "earlier_generated_token_in_same_assistant_turn",
+                  "generated_token_index": 0
+                }
+              },
+              {
+                "position": 2398,
+                "weight": 0.041294459253549576,
+                "token": {
+                  "position": 2398,
+                  "id": 198,
+                  "piece": "\n"
+                }
+              }
+            ],
+            "sum_available": 1.0000000785837955
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 35,
+            "query_head": 0,
+            "source_position": 2400,
+            "source_token": {
+              "position": 2400,
+              "id": 271,
+              "piece": "\n\n"
+            },
+            "attention_weight": 0.07266619056463242,
+            "reconstruction_error_rms": 0.0000011339496143313852,
+            "captured_weighted_value_rms": 0.015133235777773299,
+            "source_contribution_rms": 0.002696578342857703,
+            "zero_value_rms": 0.013634506548208617,
+            "remove_and_renormalize_rms": 0.014702911087120135
+          },
+          "attention_residual_delta": {
+            "mean": 0.00021423351927296608,
+            "mean_abs": 0.019309677223532162,
+            "rms": 0.07153525246489255,
+            "min": -1.4062758684158325,
+            "max": 2.6622304916381836
+          },
+          "mlp_residual_delta": {
+            "mean": 0.0005070196827432483,
+            "mean_abs": 0.045601981860443175,
+            "rms": 0.09495322167022803,
+            "min": -1.3812174797058105,
+            "max": 3.756640911102295
+          }
+        }
+      },
+      "tensor_records": 54,
+      "note": "Numerical coordinates only. Source-condition labels are held by the external recorder."
+    },
+    "mismatched_attention_v": {
+      "schema": "ik.blinded-transformer-observation.v1",
+      "forward_pass": {
+        "evaluated_position": 2403,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 2403,
+        "evaluated_position": 2403,
+        "selected_token_index": 1,
+        "selected_token_id": 42578,
+        "selected_token": " transformer",
+        "api_raw_logit": 37.222076416015625,
+        "captured_raw_logit": 37.222076416015625,
+        "absolute_logit_error": 0
+      },
+      "layers": {
+        "0": {
+          "reported_layer": 0,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2404,
+            "top": [
+              {
+                "position": 2400,
+                "weight": 0.07266619056463242,
+                "token": {
+                  "position": 2400,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              },
+              {
+                "position": 2402,
+                "weight": 0.05290067940950394,
+                "token": {
+                  "position": 2402,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              },
+              {
+                "position": 2403,
+                "weight": 0.04339137300848961,
+                "token": {
+                  "position": 2403,
+                  "id": 785,
+                  "piece": "The",
+                  "source": "earlier_generated_token_in_same_assistant_turn",
+                  "generated_token_index": 0
+                }
+              },
+              {
+                "position": 2398,
+                "weight": 0.041294459253549576,
+                "token": {
+                  "position": 2398,
+                  "id": 198,
+                  "piece": "\n"
+                }
+              }
+            ],
+            "sum_available": 1.0000000785837955
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 0,
+            "query_head": 0,
+            "source_position": 2400,
+            "source_token": {
+              "position": 2400,
+              "id": 271,
+              "piece": "\n\n"
+            },
+            "attention_weight": 0.07266619056463242,
+            "reconstruction_error_rms": 0.19243160904842835,
+            "captured_weighted_value_rms": 0.015133235777773299,
+            "source_contribution_rms": 0.04235723753092823,
+            "zero_value_rms": 0.18241801923352993,
+            "remove_and_renormalize_rms": 0.19671235684224658
+          },
+          "attention_residual_delta": {
+            "mean": 0.00021423351927296608,
+            "mean_abs": 0.019309677223532162,
+            "rms": 0.07153525246489255,
+            "min": -1.4062758684158325,
+            "max": 2.6622304916381836
+          },
+          "mlp_residual_delta": {
+            "mean": 0.0005070196827432483,
+            "mean_abs": 0.045601981860443175,
+            "rms": 0.09495322167022803,
+            "min": -1.3812174797058105,
+            "max": 3.756640911102295
+          }
+        },
+        "18": {
+          "reported_layer": 18,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2404,
+            "top": [
+              {
+                "position": 0,
+                "weight": 0.3638840615749359,
+                "token": {
+                  "position": 0,
+                  "id": 151644,
+                  "piece": "<|im_start|>"
+                }
+              },
+              {
+                "position": 2403,
+                "weight": 0.15776243805885315,
+                "token": {
+                  "position": 2403,
+                  "id": 785,
+                  "piece": "The",
+                  "source": "earlier_generated_token_in_same_assistant_turn",
+                  "generated_token_index": 0
+                }
+              },
+              {
+                "position": 2402,
+                "weight": 0.09260783344507217,
+                "token": {
+                  "position": 2402,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              },
+              {
+                "position": 2398,
+                "weight": 0.08611278235912323,
+                "token": {
+                  "position": 2398,
+                  "id": 198,
+                  "piece": "\n"
+                }
+              }
+            ],
+            "sum_available": 1.0000001313918836
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 18,
+            "query_head": 0,
+            "source_position": 0,
+            "source_token": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            },
+            "attention_weight": 0.3638840615749359,
+            "reconstruction_error_rms": 1.3714665090133915,
+            "captured_weighted_value_rms": 0.19627977786880482,
+            "source_contribution_rms": 0.1354851842250873,
+            "zero_value_rms": 1.354349991399584,
+            "remove_and_renormalize_rms": 2.1290929995446572
+          },
+          "attention_residual_delta": {
+            "mean": 0.0018223465990558907,
+            "mean_abs": 0.17653670820664047,
+            "rms": 0.23744065128586658,
+            "min": -0.8344388008117676,
+            "max": 4.070365905761719
+          },
+          "mlp_residual_delta": {
+            "mean": -0.0043314685117366025,
+            "mean_abs": 0.22776939706727717,
+            "rms": 0.2911290731079242,
+            "min": -1.2290942668914795,
+            "max": 2.6216330528259277
+          }
+        },
+        "35": {
+          "reported_layer": 35,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2404,
+            "top": [
+              {
+                "position": 0,
+                "weight": 0.44318822026252747,
+                "token": {
+                  "position": 0,
+                  "id": 151644,
+                  "piece": "<|im_start|>"
+                }
+              },
+              {
+                "position": 2403,
+                "weight": 0.2274097353219986,
+                "token": {
+                  "position": 2403,
+                  "id": 785,
+                  "piece": "The",
+                  "source": "earlier_generated_token_in_same_assistant_turn",
+                  "generated_token_index": 0
+                }
+              },
+              {
+                "position": 427,
+                "weight": 0.018128937110304832,
+                "token": {
+                  "position": 427,
+                  "id": 785,
+                  "piece": "The"
+                }
+              },
+              {
+                "position": 2400,
+                "weight": 0.007894371636211872,
+                "token": {
+                  "position": 2400,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              }
+            ],
+            "sum_available": 1.000000024016117
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 35,
+            "query_head": 0,
+            "source_position": 0,
+            "source_token": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            },
+            "attention_weight": 0.44318822026252747,
+            "reconstruction_error_rms": 0.8942805152811943,
+            "captured_weighted_value_rms": 0.8940721324142102,
+            "source_contribution_rms": 0.009828922929191377,
+            "zero_value_rms": 0.012214207980626368,
+            "remove_and_renormalize_rms": 0.02193597266635624
+          },
+          "attention_residual_delta": {
+            "mean": 0.029553750577179017,
+            "mean_abs": 1.99626504868138,
+            "rms": 2.6633515654564563,
+            "min": -13.708871841430664,
+            "max": 39.4862060546875
+          },
+          "mlp_residual_delta": {
+            "mean": -0.308609010073269,
+            "mean_abs": 3.279482427486073,
+            "rms": 15.357680053400061,
+            "min": -696.9773559570312,
+            "max": 56.00860595703125
+          }
+        }
+      },
+      "tensor_records": 54,
+      "note": "Numerical coordinates only. Source-condition labels are held by the external recorder."
+    }
+  }
+}
