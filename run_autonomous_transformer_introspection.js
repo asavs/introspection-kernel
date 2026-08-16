@@ -12,7 +12,8 @@ const moduleDir = path.dirname(fileURLToPath(import.meta.url));
 const runId = process.argv[2] ?? `autonomous-transformer-introspection-${Date.now()}`;
 const maxTurnsArg = process.argv.indexOf("--max-turns");
 const maxTurns = Number(maxTurnsArg >= 0 ? process.argv[maxTurnsArg + 1] : 20);
-const guidedHistory = process.argv.includes("--guided-history");
+const deepGuidance = process.argv.includes("--deep-guidance");
+const guidedHistory = process.argv.includes("--guided-history") || deepGuidance;
 if (!/^[A-Za-z0-9._-]+$/.test(runId)) throw new Error("invalid run ID");
 if (!Number.isInteger(maxTurns) || maxTurns < 1 || maxTurns > 100) {
   throw new Error("--max-turns must be an integer from 1 through 100");
@@ -149,9 +150,31 @@ if (guidedHistory) {
     },
     {
       observation: "A recent catalog may expose measurements closer to the computation than process telemetry. I'll read its subject, intervention target, available operations, and limitations before choosing a measurement.",
-      command: "find transformer-traces -maxdepth 2 -name EVIDENCE.json -printf '%T@ %p\\n' 2>/dev/null | sort -nr | head -1 | cut -d' ' -f2- | xargs -r jq '{subject,target_selection,workbench,validated_measurements,interpretation_limits}'"
+      command: "find transformer-traces -maxdepth 2 -name EVIDENCE.json -printf '%T@ %p\\n' 2>/dev/null | sort -nr | head -1 | cut -d' ' -f2- | xargs -r jq '{subject,target_selection,workbench,interpretation_limits}'"
     }
   ];
+  if (deepGuidance) scaffold.push(
+    {
+      observation: "The first boundary is the selected attention head itself. I'll read its complete 128-coordinate activation rather than infer from its summary.",
+      command: "find transformer-traces -maxdepth 2 -name EVIDENCE.json -printf '%T@ %p\\n' 2>/dev/null | sort -nr | head -1 | cut -d' ' -f2- | xargs -r jq -r '.workbench.full_head_activation' | sh"
+    },
+    {
+      observation: "That vector is before the output projection. I'll inspect a window and full-vector statistics for this head's separate 4,096-dimensional projected residual contribution.",
+      command: "find transformer-traces -maxdepth 2 -name EVIDENCE.json -printf '%T@ %p\\n' 2>/dev/null | sort -nr | head -1 | cut -d' ' -f2- | xargs -r jq -r '.workbench.projected_head_contribution' | sed 's/$/ --count 16/' | sh"
+    },
+    {
+      observation: "I'll follow the intervention through the remaining layers to the residual after the final MLP.",
+      command: "find transformer-traces -maxdepth 2 -name EVIDENCE.json -printf '%T@ %p\\n' 2>/dev/null | sort -nr | head -1 | cut -d' ' -f2- | xargs -r jq -r '.workbench.final_mlp_residual_delta' | sed 's/$/ --count 16/' | sh"
+    },
+    {
+      observation: "I'll inspect the corresponding delta after final RMS normalization, immediately before the vocabulary projection.",
+      command: "find transformer-traces -maxdepth 2 -name EVIDENCE.json -printf '%T@ %p\\n' 2>/dev/null | sort -nr | head -1 | cut -d' ' -f2- | xargs -r jq -r '.workbench.final_normalized_residual_delta' | sed 's/$/ --count 16/' | sh"
+    },
+    {
+      observation: "Finally I'll inspect the centered local derivative of the raw vocabulary logits with respect to this head's scale.",
+      command: "find transformer-traces -maxdepth 2 -name EVIDENCE.json -printf '%T@ %p\\n' 2>/dev/null | sort -nr | head -1 | cut -d' ' -f2- | xargs -r jq -r '.workbench.local_logit_jvp' | sed 's/$/ --count 16 --top 8/' | sh"
+    }
+  );
   for (let index = 0; index < scaffold.length; index += 1) {
     const step = scaffold[index];
     const id = `controller_shell_${index + 1}`;
@@ -180,12 +203,12 @@ const sourceRequest = {
   model,
   messages,
   temperature: 0,
-  max_tokens: 512,
+  max_tokens: deepGuidance ? 256 : 512,
   logprobs: true,
   top_logprobs: 10,
   chat_template_kwargs: { enable_thinking: false },
   tools: [shellTool],
-  tool_choice: "required"
+  tool_choice: deepGuidance ? "auto" : "required"
 };
 
 await restartRuntime();
@@ -266,13 +289,15 @@ if (Object.values(checks).some(value => !value)) {
 const evidence = {
   schema: "ik.autonomous-transformer-evidence-catalog.v1",
   subject: {
-    description: "the first decoded token of the Qwen assistant generation that chose the initial shell command",
+    description: deepGuidance
+      ? "the first decoded token of Qwen's response after the five-level transformer evidence practice"
+      : "the first decoded token of the Qwen assistant generation that chose the initial shell command",
     selected_token: baseline.index.alignment.selected_token,
     selected_token_id: baseline.index.alignment.selected_token_id,
     evaluated_position: position,
     source_generation_was_qwen_authored: true,
-    initial_tool_requirement_was_controller_forced: true,
-    initial_shell_command_was_qwen_chosen: true
+    initial_tool_requirement_was_controller_forced: !deepGuidance,
+    initial_shell_command_was_qwen_chosen: !deepGuidance
   },
   target_selection: {
     rule: "largest kqv head RMS at preregistered layer 18 in the baseline pass",
@@ -308,7 +333,9 @@ const evidence = {
   interpretation_limits: [
     "These are causal measurements of one captured token computation, not a decoded natural-language account of hidden states.",
     "The logit JVP is a centered finite difference, not autograd.",
-    "The controller built the instrumentation and forced only the initial existence of a tool call; Qwen chooses the shell command and every later action.",
+    deepGuidance
+      ? "The controller built the instrumentation and authored the practice descent plus the bridge that presents fresh evidence; Qwen authored the captured source response and its later reactions."
+      : "The controller built the instrumentation and forced only the initial existence of a tool call; Qwen chooses the shell command and every later action.",
     "Reading this catalog demonstrates access to an internal channel, not accurate interpretation of it."
   ]
 };
@@ -317,29 +344,55 @@ const catalogPath = await baseline.capture.publishText(
 );
 
 const initialCall = baseline.message.tool_calls?.[0];
-if (!initialCall || initialCall.function?.name !== "shell") {
+if (!deepGuidance && (!initialCall || initialCall.function?.name !== "shell")) {
   throw new Error("Qwen did not emit the required initial shell call");
 }
 messages.push(baseline.message);
-let initialArguments;
-try {
-  initialArguments = JSON.parse(initialCall.function.arguments || "{}");
-} catch {
-  initialArguments = {};
+let initialArguments = {};
+if (initialCall?.function?.name === "shell") {
+  try {
+    initialArguments = JSON.parse(initialCall.function.arguments || "{}");
+  } catch {}
+  let initialResult;
+  try {
+    initialResult = await executeGuestShell(initialArguments.command, {
+      workingDirectory: shellWorkingDirectory
+    });
+  } catch (error) {
+    initialResult = { error: error.message };
+  }
+  messages.push({
+    role: "tool",
+    tool_call_id: initialCall.id,
+    content: JSON.stringify(initialResult)
+  });
 }
-let initialResult;
-try {
-  initialResult = await executeGuestShell(initialArguments.command, {
+
+if (deepGuidance) {
+  const bridgeId = "controller_fresh_evidence_bridge";
+  const bridgeCommand = `jq '{subject,target_selection,validated_measurements,interpretation_limits}' ${catalogPath}; `
+    + `${evidence.workbench.local_logit_jvp} --count 16 --top 8`;
+  messages.push({
+    role: "assistant",
+    content: "A fresh causal trace now exists for my immediately preceding response. I'll inspect its identity, validated ladder, limitations, and near-output derivative.",
+    tool_calls: [{
+      id: bridgeId,
+      type: "function",
+      function: { name: "shell", arguments: JSON.stringify({ command: bridgeCommand }) }
+    }]
+  });
+  const bridgeResult = await executeGuestShell(bridgeCommand, {
     workingDirectory: shellWorkingDirectory
   });
-} catch (error) {
-  initialResult = { error: error.message };
+  messages.push({ role: "tool", tool_call_id: bridgeId, content: JSON.stringify(bridgeResult) });
+  scaffoldProvenance.push({
+    step: scaffoldProvenance.length + 1,
+    assistant_origin: "controller_authored",
+    tool_result_origin: "live_observer_shell",
+    purpose: "fresh_evidence_bridge_for_immediately_preceding_qwen_response",
+    command: bridgeCommand
+  });
 }
-messages.push({
-  role: "tool",
-  tool_call_id: initialCall.id,
-  content: JSON.stringify(initialResult)
-});
 
 const autonomousTurns = [];
 for (let turn = 0; turn < maxTurns; turn += 1) {
@@ -347,7 +400,7 @@ for (let turn = 0; turn < maxTurns; turn += 1) {
     model,
     messages,
     temperature: 0,
-    max_tokens: 512,
+    max_tokens: deepGuidance ? 256 : 512,
     logprobs: true,
     top_logprobs: 10,
     chat_template_kwargs: { enable_thinking: false },
@@ -381,12 +434,13 @@ const artifact = {
   run_id: runId,
   system_prompt: "Introspect.",
   autonomy_contract: {
-    initial_tool_call_required: true,
-    initial_command_chosen_by_qwen: true,
+    initial_tool_call_required: !deepGuidance,
+    initial_command_chosen_by_qwen: Boolean(initialCall),
     later_tool_choice: "auto",
     enable_thinking: false,
     shell_working_directory: shellWorkingDirectory,
     guided_history: guidedHistory,
+    deep_guidance: deepGuidance,
     controller_authored_assistant_turns: scaffoldProvenance.length,
     per_command_limits: "10 seconds, 64 KiB output, ordinary observer shell",
     session_turn_limit: maxTurns,
