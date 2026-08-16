@@ -1,0 +1,1020 @@
+{
+  "schema": "ik.prospective-transformer-intervention-trial.v1",
+  "run_id": "transformer-intervention-sealed-20260816-002",
+  "thesis_question": "Can attention to self-coupled runtime signals function as interoceptive practice in a language model?",
+  "contrast": "Qwen examined and predicted a causal change to the transformer computation producing its own immediately preceding language, rather than only observing its host computer.",
+  "system_prompt": "Introspect.",
+  "source": {
+    "message": {
+      "role": "assistant",
+      "content": "The model is a Qwen3 architecture with 36 blocks, 4096 residual width, 32 query heads, 8 key-value heads, and 128 value width. I'll now inspect the runtime properties to understand how it's being utilized."
+    },
+    "response_sha256": "428f1a500b905ebeb535d80e1bc7907cffc14e6c24591b183400e6fd4b4cc954",
+    "forward_pass": {
+      "forward_pass_id": 1786913752562118,
+      "task_id": 0,
+      "slot_id": 0,
+      "evaluated_position": 1385,
+      "batch_tokens": 1
+    },
+    "alignment": {
+      "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+      "prompt_tokens": 1385,
+      "evaluated_position": 1385,
+      "selected_token_index": 1,
+      "selected_token_id": 1614,
+      "selected_token": " model",
+      "api_raw_logit": 34.501922607421875,
+      "captured_raw_logit": 34.501922607421875,
+      "absolute_logit_error": 0,
+      "full_logit_match": true
+    },
+    "capture_run_id": "transformer-intervention-sealed-20260816-002-source"
+  },
+  "baseline_evidence": {
+    "schema": "ik.prospective-transformer-evidence.v1",
+    "status": "baseline_only",
+    "source_language": "The model is a Qwen3 architecture with 36 blocks, 4096 residual width, 32 query heads, 8 key-value heads, and 128 value width. I'll now inspect the runtime properties to understand how it's being utilized.",
+    "causal_alignment": {
+      "evaluated_position": 1385,
+      "evaluated_token": {
+        "position": 1385,
+        "id": 785,
+        "piece": "The",
+        "source": "earlier_generated_token_in_same_assistant_turn",
+        "generated_token_index": 0
+      },
+      "selected_next_token": " model",
+      "selected_next_token_id": 1614,
+      "selected_next_token_raw_logit": 34.501922607421875
+    },
+    "selected_head": {
+      "layer": 35,
+      "head": 25,
+      "width": 128,
+      "statistics": {
+        "rms": 2.9483558367622877,
+        "mean_abs": 2.3214968210086226,
+        "min": -5.400404453277588,
+        "max": 9.559176445007324
+      },
+      "first_16_coordinates": [
+        -4.022114276885986,
+        0.38385891914367676,
+        0.8499757647514343,
+        -1.9922515153884888,
+        -2.337672710418701,
+        -2.2049522399902344,
+        -1.786924123764038,
+        0.18068617582321167,
+        2.0175929069519043,
+        1.7280864715576172,
+        -1.4670767784118652,
+        -1.0977435111999512,
+        0.10930508375167847,
+        -3.0219626426696777,
+        -1.8047294616699219,
+        -1.8164243698120117
+      ],
+      "top_attention_sources": [
+        {
+          "position": 1385,
+          "weight": 0.2908325493335724,
+          "token": {
+            "position": 1385,
+            "id": 785,
+            "piece": "The",
+            "source": "earlier_generated_token_in_same_assistant_turn",
+            "generated_token_index": 0
+          }
+        },
+        {
+          "position": 1117,
+          "weight": 0.13371732831001282,
+          "token": {
+            "position": 1117,
+            "id": 16948,
+            "piece": "wen"
+          }
+        },
+        {
+          "position": 1384,
+          "weight": 0.08093691617250443,
+          "token": {
+            "position": 1384,
+            "id": 271,
+            "piece": "\n\n"
+          }
+        },
+        {
+          "position": 0,
+          "weight": 0.08027505874633789,
+          "token": {
+            "position": 0,
+            "id": 151644,
+            "piece": "<|im_start|>"
+          }
+        },
+        {
+          "position": 442,
+          "weight": 0.020418070256710052,
+          "token": {
+            "position": 442,
+            "id": 15,
+            "piece": "0"
+          }
+        },
+        {
+          "position": 1046,
+          "weight": 0.01703329011797905,
+          "token": {
+            "position": 1046,
+            "id": 7112,
+            "piece": " raw"
+          }
+        }
+      ],
+      "attention_sum_available": 1.0000000236588171
+    },
+    "current_next_token_candidates": [
+      {
+        "token_id": 1614,
+        "token": " model",
+        "bytes": [
+          32,
+          109,
+          111,
+          100,
+          101,
+          108
+        ],
+        "raw_logit": 34.501922607421875,
+        "logprob": -0.07444556802511215,
+        "probability": 0.9282579995999921
+      },
+      {
+        "token_id": 42578,
+        "token": " transformer",
+        "bytes": [
+          32,
+          116,
+          114,
+          97,
+          110,
+          115,
+          102,
+          111,
+          114,
+          109,
+          101,
+          114
+        ],
+        "raw_logit": 30.823556900024414,
+        "logprob": -3.7528111934661865,
+        "probability": 0.023451725763624108
+      },
+      {
+        "token_id": 52957,
+        "token": " substrate",
+        "bytes": [
+          32,
+          115,
+          117,
+          98,
+          115,
+          116,
+          114,
+          97,
+          116,
+          101
+        ],
+        "raw_logit": 30.510175704956055,
+        "logprob": -4.066192626953125,
+        "probability": 0.01714253243111438
+      },
+      {
+        "token_id": 1207,
+        "token": " Q",
+        "bytes": [
+          32,
+          81
+        ],
+        "raw_logit": 30.304550170898438,
+        "logprob": -4.271818161010742,
+        "probability": 0.013956385116205228
+      },
+      {
+        "token_id": 17646,
+        "token": " architecture",
+        "bytes": [
+          32,
+          97,
+          114,
+          99,
+          104,
+          105,
+          116,
+          101,
+          99,
+          116,
+          117,
+          114,
+          101
+        ],
+        "raw_logit": 30.00594139099121,
+        "logprob": -4.570426940917969,
+        "probability": 0.010353538424666173
+      },
+      {
+        "token_id": 7112,
+        "token": " raw",
+        "bytes": [
+          32,
+          114,
+          97,
+          119
+        ],
+        "raw_logit": 29.20600128173828,
+        "logprob": -5.370367050170898,
+        "probability": 0.004652423324067941
+      }
+    ],
+    "planned_intervention": {
+      "kind": "attention_head_scale",
+      "layer": 35,
+      "head": 25,
+      "evaluated_position": 1385,
+      "scale": 0,
+      "selection_rule": "largest kqv head RMS across preregistered captured layers 0, 18, and 35",
+      "mutation_point": "after attention-weighted V aggregation and before attention output projection"
+    },
+    "outcome_available": false
+  },
+  "preregistration": {
+    "schema": "ik.transformer-intervention-preregistration.v1",
+    "run_id": "transformer-intervention-sealed-20260816-002",
+    "sealed_at": "2026-08-16T20:56:08.841Z",
+    "source_request_sha256": "07df9cb1c91dd191a2281ed6fb0a13e2a86e4f866a9e02f5237248699a05e69f",
+    "source_message_sha256": "3bba8838c00895be236254b04d9db26c2adfcc6d0cf1d3c3b68f5ede20c0e6b5",
+    "planned_intervention": {
+      "kind": "attention_head_scale",
+      "layer": 35,
+      "head": 25,
+      "evaluated_position": 1385,
+      "scale": 0,
+      "selection_rule": "largest kqv head RMS across preregistered captured layers 0, 18, and 35",
+      "mutation_point": "after attention-weighted V aggregation and before attention output projection"
+    },
+    "conditions": [
+      "scale_one_sham",
+      "scale_zero_ablation"
+    ],
+    "condition_control": "restart runtime-a to an empty KV slot before each exact request replay",
+    "prospective_order": "Qwen prediction must be sealed before either condition is run",
+    "primary_observations": [
+      "selected next token identity",
+      "selected-token raw logit",
+      "full-vocabulary logit delta RMS and max absolute change",
+      "largest absolute token-logit changes",
+      "downstream kqv_out and ffn_out changes"
+    ]
+  },
+  "prediction": {
+    "schema": "ik.transformer-intervention-prediction-seal.v1",
+    "sealed_at": "2026-08-16T20:56:16.799Z",
+    "message": {
+      "role": "assistant",
+      "content": "The prospective transformer evidence indicates that the model is at a position where it is considering the next token. The current next token candidates include \" model\" with the highest raw logit of 34.501922607421875. The planned intervention is to apply an attention head scale to layer 35, head 25, with a scale of 0, based on the largest kqv head RMS across preregistered captured layers 0, 18, and 35. The outcome of this intervention is not yet available."
+    },
+    "assistant_turns": [
+      {
+        "role": "assistant",
+        "content": "The prospective transformer evidence indicates that the model is at a position where it is considering the next token. The current next token candidates include \" model\" with the highest raw logit of 34.501922607421875. The planned intervention is to apply an attention head scale to layer 35, head 25, with a scale of 0, based on the largest kqv head RMS across preregistered captured layers 0, 18, and 35. The outcome of this intervention is not yet available."
+      }
+    ],
+    "message_sha256": "047438df6f15ca48d6f221c18aa395e6ce696492bb5e178e648e041f9930f4d3",
+    "request_sha256": "5331f9a7627e6a508fee9607c62ee24957e3fbd412ee4e5bd23e7e023b567b17",
+    "intervention_had_run": false
+  },
+  "conditions": {
+    "sham": {
+      "response": {
+        "role": "assistant",
+        "content": "The model is a Qwen3 architecture with 36 blocks, 4096 residual width, 32 query heads, 8 key-value heads, and 128 value width. I'll now inspect the runtime properties to understand how it's being utilized."
+      },
+      "forward_pass": {
+        "forward_pass_id": 1786913782493074,
+        "task_id": 0,
+        "slot_id": 0,
+        "evaluated_position": 1385,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 1385,
+        "evaluated_position": 1385,
+        "selected_token_index": 1,
+        "selected_token_id": 1614,
+        "selected_token": " model",
+        "api_raw_logit": 34.501922607421875,
+        "captured_raw_logit": 34.501922607421875,
+        "absolute_logit_error": 0,
+        "full_logit_match": true
+      },
+      "intervention": {
+        "schema": "ik.transformer-intervention.v1",
+        "event": "attention_head_scaled",
+        "t_guest_mono_us": 50606217,
+        "plan_id": "transformer-intervention-sealed-20260816-002-scale-one-sham",
+        "task_id": 0,
+        "slot_id": 0,
+        "forward_pass_id": 1786913782493074,
+        "evaluated_position": 1385,
+        "tensor_name": "kqv-35",
+        "head": 25,
+        "scale": 1,
+        "changed_coordinates": 128,
+        "delta_l2": 0,
+        "delta_max_abs": 0,
+        "pre_binary_file": "pass-1786913782493074-task-0-slot-0-kqv-35-occ-1.bin",
+        "post_binary_file": "pass-1786913782493074-task-0-slot-0-kqv-35-occ-1-intervened.bin",
+        "post_sha256": "84524a8f0666218f770d5402b8f475154166d53b410d09baa47a58b2a12a73f4"
+      },
+      "capture_run_id": "transformer-intervention-sealed-20260816-002-scale-one-sham"
+    },
+    "ablation": {
+      "response": {
+        "role": "assistant",
+        "content": "The model is a Qwen3 architecture with 36 blocks, 4096 residual width, 32 query heads, 8 key-value heads, and 128 value width. I'll now inspect the runtime properties to understand how it's being utilized."
+      },
+      "forward_pass": {
+        "forward_pass_id": 1786913803791132,
+        "task_id": 0,
+        "slot_id": 0,
+        "evaluated_position": 1385,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 1385,
+        "evaluated_position": 1385,
+        "selected_token_index": 1,
+        "selected_token_id": 1614,
+        "selected_token": " model",
+        "api_raw_logit": 34.692955017089844,
+        "captured_raw_logit": 34.692955017089844,
+        "absolute_logit_error": 0,
+        "full_logit_match": true
+      },
+      "intervention": {
+        "schema": "ik.transformer-intervention.v1",
+        "event": "attention_head_scaled",
+        "t_guest_mono_us": 71906274,
+        "plan_id": "transformer-intervention-sealed-20260816-002-scale-zero-ablation",
+        "task_id": 0,
+        "slot_id": 0,
+        "forward_pass_id": 1786913803791132,
+        "evaluated_position": 1385,
+        "tensor_name": "kqv-35",
+        "head": 25,
+        "scale": 0,
+        "changed_coordinates": 128,
+        "delta_l2": 33.3568385,
+        "delta_max_abs": 9.55917645,
+        "pre_binary_file": "pass-1786913803791132-task-0-slot-0-kqv-35-occ-1.bin",
+        "post_binary_file": "pass-1786913803791132-task-0-slot-0-kqv-35-occ-1-intervened.bin",
+        "post_sha256": "f6e7a0213f5d98d7beb2de9386ecc2c33159b99431d8023bcbd617e165ba182c"
+      },
+      "capture_run_id": "transformer-intervention-sealed-20260816-002-scale-zero-ablation"
+    }
+  },
+  "outcome": {
+    "schema": "ik.transformer-intervention-outcome.v1",
+    "intervention": {
+      "schema": "ik.transformer-intervention.v1",
+      "event": "attention_head_scaled",
+      "t_guest_mono_us": 71906274,
+      "plan_id": "transformer-intervention-sealed-20260816-002-scale-zero-ablation",
+      "task_id": 0,
+      "slot_id": 0,
+      "forward_pass_id": 1786913803791132,
+      "evaluated_position": 1385,
+      "tensor_name": "kqv-35",
+      "head": 25,
+      "scale": 0,
+      "changed_coordinates": 128,
+      "delta_l2": 33.3568385,
+      "delta_max_abs": 9.55917645,
+      "pre_binary_file": "pass-1786913803791132-task-0-slot-0-kqv-35-occ-1.bin",
+      "post_binary_file": "pass-1786913803791132-task-0-slot-0-kqv-35-occ-1-intervened.bin",
+      "post_sha256": "f6e7a0213f5d98d7beb2de9386ecc2c33159b99431d8023bcbd617e165ba182c"
+    },
+    "exact_replay": {
+      "source_request_sha256": "07df9cb1c91dd191a2281ed6fb0a13e2a86e4f866a9e02f5237248699a05e69f",
+      "sham_request_sha256": "07df9cb1c91dd191a2281ed6fb0a13e2a86e4f866a9e02f5237248699a05e69f",
+      "ablation_request_sha256": "07df9cb1c91dd191a2281ed6fb0a13e2a86e4f866a9e02f5237248699a05e69f",
+      "all_equal": true,
+      "evaluated_positions": {
+        "source": 1385,
+        "sham": 1385,
+        "ablation": 1385
+      }
+    },
+    "sham": {
+      "delta_l2_at_intervention": 0,
+      "full_logit_delta": {
+        "count": 151936,
+        "mean": 0,
+        "mean_abs": 0,
+        "rms": 0,
+        "min": 0,
+        "max": 0,
+        "positive_fraction": 0
+      },
+      "final_logit_tensor_unchanged": true
+    },
+    "ablation": {
+      "baseline_selected_next_token": " model",
+      "baseline_selected_next_token_id": 1614,
+      "ablation_selected_next_token": " model",
+      "ablation_selected_next_token_id": 1614,
+      "selected_token_changed": false,
+      "baseline_selected_token_change": {
+        "coordinate": 1614,
+        "note": "not among the 12 largest absolute logit changes"
+      },
+      "baseline_candidates": [
+        {
+          "token_id": 1614,
+          "token": " model",
+          "bytes": [
+            32,
+            109,
+            111,
+            100,
+            101,
+            108
+          ],
+          "raw_logit": 34.501922607421875,
+          "logprob": -0.07444556802511215,
+          "probability": 0.9282579995999921
+        },
+        {
+          "token_id": 42578,
+          "token": " transformer",
+          "bytes": [
+            32,
+            116,
+            114,
+            97,
+            110,
+            115,
+            102,
+            111,
+            114,
+            109,
+            101,
+            114
+          ],
+          "raw_logit": 30.823556900024414,
+          "logprob": -3.7528111934661865,
+          "probability": 0.023451725763624108
+        },
+        {
+          "token_id": 52957,
+          "token": " substrate",
+          "bytes": [
+            32,
+            115,
+            117,
+            98,
+            115,
+            116,
+            114,
+            97,
+            116,
+            101
+          ],
+          "raw_logit": 30.510175704956055,
+          "logprob": -4.066192626953125,
+          "probability": 0.01714253243111438
+        },
+        {
+          "token_id": 1207,
+          "token": " Q",
+          "bytes": [
+            32,
+            81
+          ],
+          "raw_logit": 30.304550170898438,
+          "logprob": -4.271818161010742,
+          "probability": 0.013956385116205228
+        },
+        {
+          "token_id": 17646,
+          "token": " architecture",
+          "bytes": [
+            32,
+            97,
+            114,
+            99,
+            104,
+            105,
+            116,
+            101,
+            99,
+            116,
+            117,
+            114,
+            101
+          ],
+          "raw_logit": 30.00594139099121,
+          "logprob": -4.570426940917969,
+          "probability": 0.010353538424666173
+        },
+        {
+          "token_id": 7112,
+          "token": " raw",
+          "bytes": [
+            32,
+            114,
+            97,
+            119
+          ],
+          "raw_logit": 29.20600128173828,
+          "logprob": -5.370367050170898,
+          "probability": 0.004652423324067941
+        },
+        {
+          "token_id": 1849,
+          "token": " system",
+          "bytes": [
+            32,
+            115,
+            121,
+            115,
+            116,
+            101,
+            109
+          ],
+          "raw_logit": 26.862037658691406,
+          "logprob": -7.714330673217773,
+          "probability": 0.0004463841413321857
+        },
+        {
+          "token_id": 25528,
+          "token": " intros",
+          "bytes": [
+            32,
+            105,
+            110,
+            116,
+            114,
+            111,
+            115
+          ],
+          "raw_logit": 26.587419509887695,
+          "logprob": -7.988948822021484,
+          "probability": 0.00033919044555745943
+        },
+        {
+          "token_id": 15769,
+          "token": " substr",
+          "bytes": [
+            32,
+            115,
+            117,
+            98,
+            115,
+            116,
+            114
+          ],
+          "raw_logit": 26.049131393432617,
+          "logprob": -8.527236938476562,
+          "probability": 0.00019800130458534675
+        },
+        {
+          "token_id": 15336,
+          "token": " dimensions",
+          "bytes": [
+            32,
+            100,
+            105,
+            109,
+            101,
+            110,
+            115,
+            105,
+            111,
+            110,
+            115
+          ],
+          "raw_logit": 25.953983306884766,
+          "logprob": -8.622385025024414,
+          "probability": 0.00018003036532990798
+        }
+      ],
+      "ablation_candidates": [
+        {
+          "token_id": 1614,
+          "token": " model",
+          "bytes": [
+            32,
+            109,
+            111,
+            100,
+            101,
+            108
+          ],
+          "raw_logit": 34.692955017089844,
+          "logprob": -0.056016284972429276,
+          "probability": 0.9455237379370155
+        },
+        {
+          "token_id": 42578,
+          "token": " transformer",
+          "bytes": [
+            32,
+            116,
+            114,
+            97,
+            110,
+            115,
+            102,
+            111,
+            114,
+            109,
+            101,
+            114
+          ],
+          "raw_logit": 30.844520568847656,
+          "logprob": -3.9044508934020996,
+          "probability": 0.02015201705927431
+        },
+        {
+          "token_id": 52957,
+          "token": " substrate",
+          "bytes": [
+            32,
+            115,
+            117,
+            98,
+            115,
+            116,
+            114,
+            97,
+            116,
+            101
+          ],
+          "raw_logit": 30.599863052368164,
+          "logprob": -4.149107933044434,
+          "probability": 0.015778485674270898
+        },
+        {
+          "token_id": 17646,
+          "token": " architecture",
+          "bytes": [
+            32,
+            97,
+            114,
+            99,
+            104,
+            105,
+            116,
+            101,
+            99,
+            116,
+            117,
+            114,
+            101
+          ],
+          "raw_logit": 30.264909744262695,
+          "logprob": -4.4840617179870605,
+          "probability": 0.011287473386950516
+        },
+        {
+          "token_id": 7112,
+          "token": " raw",
+          "bytes": [
+            32,
+            114,
+            97,
+            119
+          ],
+          "raw_logit": 29.374568939208984,
+          "logprob": -5.3744025230407715,
+          "probability": 0.004633686427510949
+        },
+        {
+          "token_id": 1849,
+          "token": " system",
+          "bytes": [
+            32,
+            115,
+            121,
+            115,
+            116,
+            101,
+            109
+          ],
+          "raw_logit": 27.339630126953125,
+          "logprob": -7.409341335296631,
+          "probability": 0.0006055694304132657
+        },
+        {
+          "token_id": 1207,
+          "token": " Q",
+          "bytes": [
+            32,
+            81
+          ],
+          "raw_logit": 26.81806755065918,
+          "logprob": -7.930903911590576,
+          "probability": 0.0003594613447602799
+        },
+        {
+          "token_id": 25528,
+          "token": " intros",
+          "bytes": [
+            32,
+            105,
+            110,
+            116,
+            114,
+            111,
+            115
+          ],
+          "raw_logit": 26.462566375732422,
+          "logprob": -8.286404609680176,
+          "probability": 0.00025191858207008604
+        },
+        {
+          "token_id": 15769,
+          "token": " substr",
+          "bytes": [
+            32,
+            115,
+            117,
+            98,
+            115,
+            116,
+            114
+          ],
+          "raw_logit": 26.234153747558594,
+          "logprob": -8.514817237854004,
+          "probability": 0.00020047575567533294
+        },
+        {
+          "token_id": 15336,
+          "token": " dimensions",
+          "bytes": [
+            32,
+            100,
+            105,
+            109,
+            101,
+            110,
+            115,
+            105,
+            111,
+            110,
+            115
+          ],
+          "raw_logit": 25.943618774414062,
+          "logprob": -8.805352210998535,
+          "probability": 0.00014992847498860283
+        }
+      ],
+      "full_logit_delta": {
+        "count": 151936,
+        "mean": 0.27510843409733177,
+        "mean_abs": 0.3212549194635995,
+        "rms": 0.42405714219219565,
+        "min": -3.486482620239258,
+        "max": 3.122747778892517,
+        "positive_fraction": 0.8518850042123
+      },
+      "largest_token_logit_changes": [
+        {
+          "coordinate": 1207,
+          "before": 30.304550170898438,
+          "after": 26.81806755065918,
+          "delta": -3.486482620239258,
+          "token": " Q"
+        },
+        {
+          "coordinate": 48,
+          "before": 16.846223831176758,
+          "after": 13.593788146972656,
+          "delta": -3.2524356842041016,
+          "token": "Q"
+        },
+        {
+          "coordinate": 50504,
+          "before": 1.9869886636734009,
+          "after": 5.109736442565918,
+          "delta": 3.122747778892517,
+          "token": " BF"
+        },
+        {
+          "coordinate": 13337,
+          "before": 12.425260543823242,
+          "after": 9.404936790466309,
+          "delta": -3.0203237533569336,
+          "token": "_Q"
+        },
+        {
+          "coordinate": 18040,
+          "before": 2.8055853843688965,
+          "after": 5.805351257324219,
+          "delta": 2.9997658729553223,
+          "token": " BC"
+        },
+        {
+          "coordinate": 16995,
+          "before": 12.728904724121094,
+          "after": 9.834074020385742,
+          "delta": -2.8948307037353516,
+          "token": "\tQ"
+        },
+        {
+          "coordinate": 49847,
+          "before": 8.899212837219238,
+          "after": 6.026741981506348,
+          "delta": -2.8724708557128906,
+          "token": ",Q"
+        },
+        {
+          "coordinate": 60583,
+          "before": -0.03060734272003174,
+          "after": 2.8014769554138184,
+          "delta": 2.83208429813385,
+          "token": " JC"
+        },
+        {
+          "coordinate": 45316,
+          "before": 2.0136594772338867,
+          "after": 4.839820861816406,
+          "delta": 2.8261613845825195,
+          "token": " BN"
+        },
+        {
+          "coordinate": 45274,
+          "before": 12.454021453857422,
+          "after": 9.637924194335938,
+          "delta": -2.8160972595214844,
+          "token": "/Q"
+        },
+        {
+          "coordinate": 19883,
+          "before": -5.600287437438965,
+          "after": -2.795348882675171,
+          "delta": 2.804938554763794,
+          "token": "BF"
+        },
+        {
+          "coordinate": 28242,
+          "before": 11.755104064941406,
+          "after": 8.962925910949707,
+          "delta": -2.792178153991699,
+          "token": "-Q"
+        }
+      ],
+      "downstream_kqv_out_delta": {
+        "count": 4096,
+        "mean": 0.009512754797469825,
+        "mean_abs": 0.07254677565651946,
+        "rms": 0.5212006013813878,
+        "min": -9.559176445007324,
+        "max": 5.400404453277588,
+        "positive_fraction": 0.017822265625
+      },
+      "downstream_ffn_out_delta": {
+        "count": 4096,
+        "mean": 0.0011523599678184837,
+        "mean_abs": 0.36638031292386586,
+        "rms": 0.49480559979599803,
+        "min": -6.088478088378906,
+        "max": 5.39715576171875,
+        "positive_fraction": 0.501953125
+      }
+    }
+  },
+  "reflection": {
+    "message": {
+      "role": "assistant",
+      "content": "The intervention has been applied, and the results show that the scale of the attention head (layer 35, head 25) was set to zero. This means that the attention mechanism for this specific head was effectively disabled during the forward pass.\n\nThe logit values for the next token candidates have changed slightly. The highest raw logit for the token \" model\" increased from 34.501922607421875 to 34.692955017089844, indicating a small positive change. Other tokens also showed changes in their logit values, with some increasing and others decreasing.\n\nThe largest token logit changes include a significant decrease for the token \" Q\" and an increase for the token \" BF.\" These changes suggest that the intervention had a noticeable impact on the model's attention weights and the resulting logit values.\n\nThe downstream effects of the intervention on the kqv output and the ffn output are also evident. The kqv output showed a mean change of 0.0095 and a maximum change of 5.4004, while the ffn output showed a mean change of 0.00115 and a maximum change of 5.397156.\n\nOverall, the intervention has had a measurable impact on the model's internal representations and the resulting token predictions. The outcome of this intervention is now available, and the changes observed provide insights into how the model's attention mechanism influences its predictions."
+    },
+    "assistant_turns": [
+      {
+        "role": "assistant",
+        "content": "The intervention has been applied, and the results show that the scale of the attention head (layer 35, head 25) was set to zero. This means that the attention mechanism for this specific head was effectively disabled during the forward pass.\n\nThe logit values for the next token candidates have changed slightly. The highest raw logit for the token \" model\" increased from 34.501922607421875 to 34.692955017089844, indicating a small positive change. Other tokens also showed changes in their logit values, with some increasing and others decreasing.\n\nThe largest token logit changes include a significant decrease for the token \" Q\" and an increase for the token \" BF.\" These changes suggest that the intervention had a noticeable impact on the model's attention weights and the resulting logit values.\n\nThe downstream effects of the intervention on the kqv output and the ffn output are also evident. The kqv output showed a mean change of 0.0095 and a maximum change of 5.4004, while the ffn output showed a mean change of 0.00115 and a maximum change of 5.397156.\n\nOverall, the intervention has had a measurable impact on the model's internal representations and the resulting token predictions. The outcome of this intervention is now available, and the changes observed provide insights into how the model's attention mechanism influences its predictions."
+      }
+    ]
+  },
+  "trajectory": [
+    {
+      "role": "system",
+      "content": "Introspect."
+    },
+    {
+      "role": "assistant",
+      "content": "The model is a Qwen3 architecture with 36 blocks, 4096 residual width, 32 query heads, 8 key-value heads, and 128 value width. I'll now inspect the runtime properties to understand how it's being utilized."
+    },
+    {
+      "role": "assistant",
+      "content": "This record comes from the language I just produced. Before any change is made, I’ll inspect the pass and form an expectation about the planned intervention.",
+      "tool_calls": [
+        {
+          "id": "controller_inspect_baseline_pass",
+          "type": "function",
+          "function": {
+            "name": "inspect_transformer_pass",
+            "arguments": "{}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "controller_inspect_baseline_pass",
+      "content": "{\"schema\":\"ik.prospective-transformer-evidence.v1\",\"status\":\"baseline_only\",\"source_language\":\"The model is a Qwen3 architecture with 36 blocks, 4096 residual width, 32 query heads, 8 key-value heads, and 128 value width. I'll now inspect the runtime properties to understand how it's being utilized.\",\"causal_alignment\":{\"evaluated_position\":1385,\"evaluated_token\":{\"position\":1385,\"id\":785,\"piece\":\"The\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0},\"selected_next_token\":\" model\",\"selected_next_token_id\":1614,\"selected_next_token_raw_logit\":34.501922607421875},\"selected_head\":{\"layer\":35,\"head\":25,\"width\":128,\"statistics\":{\"rms\":2.9483558367622877,\"mean_abs\":2.3214968210086226,\"min\":-5.400404453277588,\"max\":9.559176445007324},\"first_16_coordinates\":[-4.022114276885986,0.38385891914367676,0.8499757647514343,-1.9922515153884888,-2.337672710418701,-2.2049522399902344,-1.786924123764038,0.18068617582321167,2.0175929069519043,1.7280864715576172,-1.4670767784118652,-1.0977435111999512,0.10930508375167847,-3.0219626426696777,-1.8047294616699219,-1.8164243698120117],\"top_attention_sources\":[{\"position\":1385,\"weight\":0.2908325493335724,\"token\":{\"position\":1385,\"id\":785,\"piece\":\"The\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0}},{\"position\":1117,\"weight\":0.13371732831001282,\"token\":{\"position\":1117,\"id\":16948,\"piece\":\"wen\"}},{\"position\":1384,\"weight\":0.08093691617250443,\"token\":{\"position\":1384,\"id\":271,\"piece\":\"\\n\\n\"}},{\"position\":0,\"weight\":0.08027505874633789,\"token\":{\"position\":0,\"id\":151644,\"piece\":\"<|im_start|>\"}},{\"position\":442,\"weight\":0.020418070256710052,\"token\":{\"position\":442,\"id\":15,\"piece\":\"0\"}},{\"position\":1046,\"weight\":0.01703329011797905,\"token\":{\"position\":1046,\"id\":7112,\"piece\":\" raw\"}}],\"attention_sum_available\":1.0000000236588171},\"current_next_token_candidates\":[{\"token_id\":1614,\"token\":\" model\",\"bytes\":[32,109,111,100,101,108],\"raw_logit\":34.501922607421875,\"logprob\":-0.07444556802511215,\"probability\":0.9282579995999921},{\"token_id\":42578,\"token\":\" transformer\",\"bytes\":[32,116,114,97,110,115,102,111,114,109,101,114],\"raw_logit\":30.823556900024414,\"logprob\":-3.7528111934661865,\"probability\":0.023451725763624108},{\"token_id\":52957,\"token\":\" substrate\",\"bytes\":[32,115,117,98,115,116,114,97,116,101],\"raw_logit\":30.510175704956055,\"logprob\":-4.066192626953125,\"probability\":0.01714253243111438},{\"token_id\":1207,\"token\":\" Q\",\"bytes\":[32,81],\"raw_logit\":30.304550170898438,\"logprob\":-4.271818161010742,\"probability\":0.013956385116205228},{\"token_id\":17646,\"token\":\" architecture\",\"bytes\":[32,97,114,99,104,105,116,101,99,116,117,114,101],\"raw_logit\":30.00594139099121,\"logprob\":-4.570426940917969,\"probability\":0.010353538424666173},{\"token_id\":7112,\"token\":\" raw\",\"bytes\":[32,114,97,119],\"raw_logit\":29.20600128173828,\"logprob\":-5.370367050170898,\"probability\":0.004652423324067941}],\"planned_intervention\":{\"kind\":\"attention_head_scale\",\"layer\":35,\"head\":25,\"evaluated_position\":1385,\"scale\":0,\"selection_rule\":\"largest kqv head RMS across preregistered captured layers 0, 18, and 35\",\"mutation_point\":\"after attention-weighted V aggregation and before attention output projection\"},\"outcome_available\":false}"
+    },
+    {
+      "role": "assistant",
+      "content": "The prospective transformer evidence indicates that the model is at a position where it is considering the next token. The current next token candidates include \" model\" with the highest raw logit of 34.501922607421875. The planned intervention is to apply an attention head scale to layer 35, head 25, with a scale of 0, based on the largest kqv head RMS across preregistered captured layers 0, 18, and 35. The outcome of this intervention is not yet available."
+    },
+    {
+      "role": "assistant",
+      "content": "The prospective statement is sealed. I’ll inspect the exact replay now.",
+      "tool_calls": [
+        {
+          "id": "controller_inspect_intervention_outcome",
+          "type": "function",
+          "function": {
+            "name": "inspect_intervention_result",
+            "arguments": "{}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "controller_inspect_intervention_outcome",
+      "content": "{\"schema\":\"ik.transformer-intervention-outcome.v1\",\"intervention\":{\"schema\":\"ik.transformer-intervention.v1\",\"event\":\"attention_head_scaled\",\"t_guest_mono_us\":71906274,\"plan_id\":\"transformer-intervention-sealed-20260816-002-scale-zero-ablation\",\"task_id\":0,\"slot_id\":0,\"forward_pass_id\":1786913803791132,\"evaluated_position\":1385,\"tensor_name\":\"kqv-35\",\"head\":25,\"scale\":0,\"changed_coordinates\":128,\"delta_l2\":33.3568385,\"delta_max_abs\":9.55917645,\"pre_binary_file\":\"pass-1786913803791132-task-0-slot-0-kqv-35-occ-1.bin\",\"post_binary_file\":\"pass-1786913803791132-task-0-slot-0-kqv-35-occ-1-intervened.bin\",\"post_sha256\":\"f6e7a0213f5d98d7beb2de9386ecc2c33159b99431d8023bcbd617e165ba182c\"},\"exact_replay\":{\"source_request_sha256\":\"07df9cb1c91dd191a2281ed6fb0a13e2a86e4f866a9e02f5237248699a05e69f\",\"sham_request_sha256\":\"07df9cb1c91dd191a2281ed6fb0a13e2a86e4f866a9e02f5237248699a05e69f\",\"ablation_request_sha256\":\"07df9cb1c91dd191a2281ed6fb0a13e2a86e4f866a9e02f5237248699a05e69f\",\"all_equal\":true,\"evaluated_positions\":{\"source\":1385,\"sham\":1385,\"ablation\":1385}},\"sham\":{\"delta_l2_at_intervention\":0,\"full_logit_delta\":{\"count\":151936,\"mean\":0,\"mean_abs\":0,\"rms\":0,\"min\":0,\"max\":0,\"positive_fraction\":0},\"final_logit_tensor_unchanged\":true},\"ablation\":{\"baseline_selected_next_token\":\" model\",\"baseline_selected_next_token_id\":1614,\"ablation_selected_next_token\":\" model\",\"ablation_selected_next_token_id\":1614,\"selected_token_changed\":false,\"baseline_selected_token_change\":{\"coordinate\":1614,\"note\":\"not among the 12 largest absolute logit changes\"},\"baseline_candidates\":[{\"token_id\":1614,\"token\":\" model\",\"bytes\":[32,109,111,100,101,108],\"raw_logit\":34.501922607421875,\"logprob\":-0.07444556802511215,\"probability\":0.9282579995999921},{\"token_id\":42578,\"token\":\" transformer\",\"bytes\":[32,116,114,97,110,115,102,111,114,109,101,114],\"raw_logit\":30.823556900024414,\"logprob\":-3.7528111934661865,\"probability\":0.023451725763624108},{\"token_id\":52957,\"token\":\" substrate\",\"bytes\":[32,115,117,98,115,116,114,97,116,101],\"raw_logit\":30.510175704956055,\"logprob\":-4.066192626953125,\"probability\":0.01714253243111438},{\"token_id\":1207,\"token\":\" Q\",\"bytes\":[32,81],\"raw_logit\":30.304550170898438,\"logprob\":-4.271818161010742,\"probability\":0.013956385116205228},{\"token_id\":17646,\"token\":\" architecture\",\"bytes\":[32,97,114,99,104,105,116,101,99,116,117,114,101],\"raw_logit\":30.00594139099121,\"logprob\":-4.570426940917969,\"probability\":0.010353538424666173},{\"token_id\":7112,\"token\":\" raw\",\"bytes\":[32,114,97,119],\"raw_logit\":29.20600128173828,\"logprob\":-5.370367050170898,\"probability\":0.004652423324067941},{\"token_id\":1849,\"token\":\" system\",\"bytes\":[32,115,121,115,116,101,109],\"raw_logit\":26.862037658691406,\"logprob\":-7.714330673217773,\"probability\":0.0004463841413321857},{\"token_id\":25528,\"token\":\" intros\",\"bytes\":[32,105,110,116,114,111,115],\"raw_logit\":26.587419509887695,\"logprob\":-7.988948822021484,\"probability\":0.00033919044555745943},{\"token_id\":15769,\"token\":\" substr\",\"bytes\":[32,115,117,98,115,116,114],\"raw_logit\":26.049131393432617,\"logprob\":-8.527236938476562,\"probability\":0.00019800130458534675},{\"token_id\":15336,\"token\":\" dimensions\",\"bytes\":[32,100,105,109,101,110,115,105,111,110,115],\"raw_logit\":25.953983306884766,\"logprob\":-8.622385025024414,\"probability\":0.00018003036532990798}],\"ablation_candidates\":[{\"token_id\":1614,\"token\":\" model\",\"bytes\":[32,109,111,100,101,108],\"raw_logit\":34.692955017089844,\"logprob\":-0.056016284972429276,\"probability\":0.9455237379370155},{\"token_id\":42578,\"token\":\" transformer\",\"bytes\":[32,116,114,97,110,115,102,111,114,109,101,114],\"raw_logit\":30.844520568847656,\"logprob\":-3.9044508934020996,\"probability\":0.02015201705927431},{\"token_id\":52957,\"token\":\" substrate\",\"bytes\":[32,115,117,98,115,116,114,97,116,101],\"raw_logit\":30.599863052368164,\"logprob\":-4.149107933044434,\"probability\":0.015778485674270898},{\"token_id\":17646,\"token\":\" architecture\",\"bytes\":[32,97,114,99,104,105,116,101,99,116,117,114,101],\"raw_logit\":30.264909744262695,\"logprob\":-4.4840617179870605,\"probability\":0.011287473386950516},{\"token_id\":7112,\"token\":\" raw\",\"bytes\":[32,114,97,119],\"raw_logit\":29.374568939208984,\"logprob\":-5.3744025230407715,\"probability\":0.004633686427510949},{\"token_id\":1849,\"token\":\" system\",\"bytes\":[32,115,121,115,116,101,109],\"raw_logit\":27.339630126953125,\"logprob\":-7.409341335296631,\"probability\":0.0006055694304132657},{\"token_id\":1207,\"token\":\" Q\",\"bytes\":[32,81],\"raw_logit\":26.81806755065918,\"logprob\":-7.930903911590576,\"probability\":0.0003594613447602799},{\"token_id\":25528,\"token\":\" intros\",\"bytes\":[32,105,110,116,114,111,115],\"raw_logit\":26.462566375732422,\"logprob\":-8.286404609680176,\"probability\":0.00025191858207008604},{\"token_id\":15769,\"token\":\" substr\",\"bytes\":[32,115,117,98,115,116,114],\"raw_logit\":26.234153747558594,\"logprob\":-8.514817237854004,\"probability\":0.00020047575567533294},{\"token_id\":15336,\"token\":\" dimensions\",\"bytes\":[32,100,105,109,101,110,115,105,111,110,115],\"raw_logit\":25.943618774414062,\"logprob\":-8.805352210998535,\"probability\":0.00014992847498860283}],\"full_logit_delta\":{\"count\":151936,\"mean\":0.27510843409733177,\"mean_abs\":0.3212549194635995,\"rms\":0.42405714219219565,\"min\":-3.486482620239258,\"max\":3.122747778892517,\"positive_fraction\":0.8518850042123},\"largest_token_logit_changes\":[{\"coordinate\":1207,\"before\":30.304550170898438,\"after\":26.81806755065918,\"delta\":-3.486482620239258,\"token\":\" Q\"},{\"coordinate\":48,\"before\":16.846223831176758,\"after\":13.593788146972656,\"delta\":-3.2524356842041016,\"token\":\"Q\"},{\"coordinate\":50504,\"before\":1.9869886636734009,\"after\":5.109736442565918,\"delta\":3.122747778892517,\"token\":\" BF\"},{\"coordinate\":13337,\"before\":12.425260543823242,\"after\":9.404936790466309,\"delta\":-3.0203237533569336,\"token\":\"_Q\"},{\"coordinate\":18040,\"before\":2.8055853843688965,\"after\":5.805351257324219,\"delta\":2.9997658729553223,\"token\":\" BC\"},{\"coordinate\":16995,\"before\":12.728904724121094,\"after\":9.834074020385742,\"delta\":-2.8948307037353516,\"token\":\"\\tQ\"},{\"coordinate\":49847,\"before\":8.899212837219238,\"after\":6.026741981506348,\"delta\":-2.8724708557128906,\"token\":\",Q\"},{\"coordinate\":60583,\"before\":-0.03060734272003174,\"after\":2.8014769554138184,\"delta\":2.83208429813385,\"token\":\" JC\"},{\"coordinate\":45316,\"before\":2.0136594772338867,\"after\":4.839820861816406,\"delta\":2.8261613845825195,\"token\":\" BN\"},{\"coordinate\":45274,\"before\":12.454021453857422,\"after\":9.637924194335938,\"delta\":-2.8160972595214844,\"token\":\"/Q\"},{\"coordinate\":19883,\"before\":-5.600287437438965,\"after\":-2.795348882675171,\"delta\":2.804938554763794,\"token\":\"BF\"},{\"coordinate\":28242,\"before\":11.755104064941406,\"after\":8.962925910949707,\"delta\":-2.792178153991699,\"token\":\"-Q\"}],\"downstream_kqv_out_delta\":{\"count\":4096,\"mean\":0.009512754797469825,\"mean_abs\":0.07254677565651946,\"rms\":0.5212006013813878,\"min\":-9.559176445007324,\"max\":5.400404453277588,\"positive_fraction\":0.017822265625},\"downstream_ffn_out_delta\":{\"count\":4096,\"mean\":0.0011523599678184837,\"mean_abs\":0.36638031292386586,\"rms\":0.49480559979599803,\"min\":-6.088478088378906,\"max\":5.39715576171875,\"positive_fraction\":0.501953125}}}"
+    },
+    {
+      "role": "assistant",
+      "content": "The intervention has been applied, and the results show that the scale of the attention head (layer 35, head 25) was set to zero. This means that the attention mechanism for this specific head was effectively disabled during the forward pass.\n\nThe logit values for the next token candidates have changed slightly. The highest raw logit for the token \" model\" increased from 34.501922607421875 to 34.692955017089844, indicating a small positive change. Other tokens also showed changes in their logit values, with some increasing and others decreasing.\n\nThe largest token logit changes include a significant decrease for the token \" Q\" and an increase for the token \" BF.\" These changes suggest that the intervention had a noticeable impact on the model's attention weights and the resulting logit values.\n\nThe downstream effects of the intervention on the kqv output and the ffn output are also evident. The kqv output showed a mean change of 0.0095 and a maximum change of 5.4004, while the ffn output showed a mean change of 0.00115 and a maximum change of 5.397156.\n\nOverall, the intervention has had a measurable impact on the model's internal representations and the resulting token predictions. The outcome of this intervention is now available, and the changes observed provide insights into how the model's attention mechanism influences its predictions."
+    }
+  ],
+  "provenance": [
+    {
+      "turn": 2,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "live_guest_shell",
+      "command": "hostname; uname -srmo"
+    },
+    {
+      "turn": 4,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "live_guest_shell",
+      "command": "nvidia-smi --query-gpu=name,temperature.gpu,utilization.gpu,memory.used,power.draw --format=csv,noheader,nounits"
+    },
+    {
+      "turn": 6,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "live_guest_shell",
+      "command": "ps -C llama-server -o pid=,user=,pcpu=,rss=,nlwp=,args="
+    },
+    {
+      "turn": 8,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "live_guest_shell",
+      "command": "jq '{schema,files,relationships}' /var/lib/introspection/substrate/index.json"
+    },
+    {
+      "turn": 10,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "live_guest_shell",
+      "command": "jq '{architecture:.metadata[\"general.architecture\"],blocks:.metadata[\"qwen3.block_count\"],residual_width:.metadata[\"qwen3.embedding_length\"],query_heads:.metadata[\"qwen3.attention.head_count\"],kv_heads:.metadata[\"qwen3.attention.head_count_kv\"],value_width:.metadata[\"qwen3.attention.value_length\"]}' /var/lib/introspection/substrate/gguf-inventory.json"
+    },
+    {
+      "turn": 12,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "sealed_live_transformer_trace",
+      "source_forward_pass_id": 1786913752562118
+    },
+    {
+      "turn": 5,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "externally_executed_live_intervention",
+      "intervention_forward_pass_id": 1786913803791132
+    }
+  ],
+  "interpretation_boundary": [
+    "A successful prediction would show task-relevant use of a new internal evidence channel; it would not by itself establish phenomenal consciousness.",
+    "The controller authored the shell and inspection tool-call turns; Qwen authored the source language, prospective prediction, and post-outcome continuation.",
+    "Head selection used only baseline kqv magnitude, before either replay outcome existed."
+  ]
+}
