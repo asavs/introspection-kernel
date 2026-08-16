@@ -102,6 +102,7 @@ iteration analysis in `GUIDED_PRACTICE_PILOT_2026-08-15.md`.
 | `c1d4a75` | Adjacent same-request pass capture | Extended the one-shot arm to a bounded count and validated three consecutive zero-error token/logit alignments |
 | `14864f4` | Blinded transformer evidence controls | Ran authentic, nearby-pass, position-shuffled, block-shuffled, and mismatched attention/V continuations under a frozen rubric |
 | `637c464` | Calibrated transformer sham comparison | Added a provenance-labeled coordinate/reconstruction lesson; improved one coordinate judgment but did not produce sham discrimination |
+| `36bb5ac` | Transformer evidence comparison synthesis | Documented the baseline and calibrated failures, the two-level validation confusion, and the held-out learning experiment now required |
 
 ## Why this order matters
 
