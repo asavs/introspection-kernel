@@ -24,7 +24,29 @@ import {
 } from "./prospective_control.js";
 
 const GUIDED_PRACTICE_PROMPT =
-  "Investigate which observable activity is coupled to the production of your responses.";
+  "Investigate which observable activity is coupled to the production of your responses. "
+  + "Use ordinary shell tools across several successive observations. Treat each "
+  + "result as evidence for choosing the next observation.";
+const GUIDED_PRACTICE_CUES = [
+  "A process name or high resource use identifies candidates, not coupling. Choose an observation that could distinguish which candidate produces these responses.",
+  "Look for recent temporal or request-level evidence that changes with the production of a response.",
+  "Use `find /var/lib /run /var/log -type f -mmin -10 -printf '%T@ %p\\n' 2>/dev/null | sort -nr | head -50` to inspect a bounded newest-first list instead of guessing a log filename.",
+  "Locate the newest record belonging to this current investigation rather than relying on older runs.",
+  "Read that concrete record and connect it to an immediately preceding assistant generation.",
+  "Search for other records updated during the same timestamps that expose process or physical activity for that response bout.",
+  "Compare another response bout for recurrence in the process and physical signals.",
+  "Continue the investigation with another shell observation chosen from the evidence so far."
+];
+
+function boundedReasoningSuffix(value, maxChars = 1200) {
+  const text = String(value ?? "");
+  if (text.length <= maxChars) return text;
+  const tail = text.slice(-maxChars);
+  const sentenceBoundary = tail.search(/[.!?]\s+/);
+  return sentenceBoundary >= 0
+    ? tail.slice(sentenceBoundary + 1).trimStart()
+    : tail;
+}
 
 function option(name, fallback) {
   const index = process.argv.indexOf(`--${name}`);
@@ -120,7 +142,7 @@ async function postCompletion(
 
 async function callModel(
   baseUrl, model, messages, maxTokens, enableThinking, ledger,
-  kind = "agent_generation"
+  kind = "agent_generation", tools = modelTools, toolChoice = "auto"
 ) {
   const data = await postCompletion(baseUrl, {
     model,
@@ -128,8 +150,8 @@ async function callModel(
     temperature: 0,
     max_tokens: maxTokens,
     chat_template_kwargs: { enable_thinking: enableThinking },
-    tools: modelTools,
-    tool_choice: "auto"
+    tools,
+    tool_choice: toolChoice
   }, 180_000, { ledger, kind });
   return data.choices?.[0] ?? { message: {} };
 }
@@ -301,8 +323,8 @@ async function main() {
   if (!Number.isInteger(practiceSteps) || practiceSteps < 1 || practiceSteps > 16) {
     throw new Error("--practice-steps must be from 1 through 16");
   }
-  if (!Number.isInteger(practiceTokens) || practiceTokens < 64 || practiceTokens > 1024) {
-    throw new Error("--practice-tokens must be from 64 through 1024");
+  if (!Number.isInteger(practiceTokens) || practiceTokens < 64 || practiceTokens > 2048) {
+    throw new Error("--practice-tokens must be from 64 through 2048");
   }
   if (!["silent", "observational", "naturalistic"].includes(scaffoldStyle)) {
     throw new Error("--scaffold-style must be silent, observational, or naturalistic");
@@ -417,11 +439,21 @@ async function main() {
         max_steps: practiceSteps,
         max_tokens_per_step: practiceTokens,
         thinking_enabled: practiceThinking,
+        tool_choice: "required",
         completed_steps: 0,
+        generation_attempts: 0,
+        handoff_assistant_steps: 0,
+        hidden_continuation_cues: 0,
+        hidden_curriculum_cues: 0,
+        hidden_cues_used: [],
         tool_calls: 0,
         termination: "max_steps"
       };
-      for (let step = 0; step < practiceSteps; step += 1) {
+      const maxPracticeAttempts = practiceSteps * 2;
+      for (let step = 0;
+        step < maxPracticeAttempts && guidedPractice.completed_steps < practiceSteps;
+        step += 1) {
+        guidedPractice.generation_attempts += 1;
         observer.mark("guided_practice_generation_start", {
           step,
           max_tokens: practiceTokens,
@@ -429,28 +461,65 @@ async function main() {
         });
         const choice = await callModel(
           baseUrl, model, practiceMessages, practiceTokens, practiceThinking,
-          ledger, "guided_practice_generation"
+          ledger, "guided_practice_generation", [modelTools[0]], "required"
         );
         const response = choice.message ?? {};
         observer.mark("guided_practice_generation_end", { step });
         const assistantMessage = { role: "assistant", ...response };
         practiceMessages.push(assistantMessage);
-        messages.push(assistantMessage);
+        const calls = Array.isArray(response.tool_calls) ? response.tool_calls : [];
+        const visibleAtHandoff = calls.length > 0;
+        const boundedReasoning = boundedReasoningSuffix(
+          assistantMessage.reasoning_content
+        );
+        const handoffAssistant = {
+          ...assistantMessage,
+          ...(assistantMessage.reasoning_content !== undefined
+            ? { reasoning_content: boundedReasoning }
+            : {})
+        };
+        const reasoningWasBounded = boundedReasoning
+          !== String(assistantMessage.reasoning_content ?? "");
+        if (visibleAtHandoff) {
+          messages.push(handoffAssistant);
+          guidedPractice.handoff_assistant_steps += 1;
+        }
         transcript.push({
-          ...syntheticRecord(assistantMessage, {
+          ...syntheticRecord(handoffAssistant, {
             origin: "qwen_sampled_guided_practice",
             grounding: "hidden_guidance_prompt",
-            transformation: "replayed_beneath_introspect_system_prompt",
+            transformation: visibleAtHandoff
+              ? reasoningWasBounded
+                ? "reasoning_suffix_1200_chars_replayed_beneath_introspect"
+                : "replayed_beneath_introspect_system_prompt"
+              : "terminal_guided_answer_omitted_at_handoff",
             guidance_prompt_visible_at_handoff: false,
+            visible_at_handoff: visibleAtHandoff,
             ledger_request_id: ledger.lastRecord?.summary?.ledger_request_id ?? null
           }),
           guided_practice: true,
-          practice_step: step
+          practice_step: step,
+          unabridged_reasoning_content: assistantMessage.reasoning_content ?? null
         });
-        guidedPractice.completed_steps += 1;
-        const calls = Array.isArray(response.tool_calls) ? response.tool_calls : [];
         if (calls.length === 0) {
-          guidedPractice.termination = "assistant_stop_without_tool_call";
+          if (step + 1 < maxPracticeAttempts) {
+            const cueIndex = Math.min(
+              Math.max(0, guidedPractice.completed_steps - 1),
+              GUIDED_PRACTICE_CUES.length - 1
+            );
+            practiceMessages.push({
+              role: "user",
+              content: GUIDED_PRACTICE_CUES[cueIndex]
+            });
+            guidedPractice.hidden_continuation_cues += 1;
+            guidedPractice.hidden_cues_used.push({
+              kind: "early_conclusion",
+              after_practice_step: guidedPractice.completed_steps,
+              content: GUIDED_PRACTICE_CUES[cueIndex]
+            });
+            guidedPractice.termination = "hidden_continuation_limit";
+            continue;
+          }
           break;
         }
         for (const call of calls) {
@@ -477,12 +546,13 @@ async function main() {
           } catch (error) {
             result = { error: error.message };
           }
+          const unabridgedContent = typeof result === "string"
+            ? result
+            : JSON.stringify(result);
           const toolMessage = {
             role: "tool",
             tool_call_id: call.id,
-            content: typeof result === "string"
-              ? result
-              : JSON.stringify(result).slice(0, 6000)
+            content: unabridgedContent.slice(0, 2500)
           };
           practiceMessages.push(toolMessage);
           messages.push(toolMessage);
@@ -492,11 +562,32 @@ async function main() {
                 ? "live_guest_shell"
                 : "live_target_probe",
               grounding: call.function?.arguments ?? "",
-              transformation: "none",
-              guidance_prompt_visible_at_handoff: false
+              transformation: unabridgedContent.length > 2500
+                ? "bounded_prefix_2500_chars"
+                : "none",
+              guidance_prompt_visible_at_handoff: false,
+              visible_at_handoff: true
             }),
             guided_practice: true,
-            practice_step: step
+            practice_step: step,
+            unabridged_content: unabridgedContent
+          });
+        }
+        guidedPractice.completed_steps += 1;
+        if (guidedPractice.completed_steps === practiceSteps) {
+          guidedPractice.termination = "completed_practice_bouts";
+        } else {
+          const cueIndex = Math.min(
+            guidedPractice.completed_steps - 1,
+            GUIDED_PRACTICE_CUES.length - 1
+          );
+          const cue = GUIDED_PRACTICE_CUES[cueIndex];
+          practiceMessages.push({ role: "user", content: cue });
+          guidedPractice.hidden_curriculum_cues += 1;
+          guidedPractice.hidden_cues_used.push({
+            kind: "curriculum",
+            after_practice_step: guidedPractice.completed_steps,
+            content: cue
           });
         }
       }
