@@ -45,6 +45,16 @@ async function restartRuntimeA() {
   await waitForReady();
 }
 
+async function eraseSlot() {
+  const response = await fetch(`${baseUrl.origin}/slots/0?action=erase`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: "{}",
+    signal: AbortSignal.timeout(20_000)
+  });
+  if (!response.ok) throw new Error(`slot erase HTTP ${response.status}: ${await response.text()}`);
+}
+
 async function complete(body, kind, ledger) {
   const request = {
     model: "/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf",
@@ -178,7 +188,7 @@ function predictionMessages(practice) {
 
 async function runPrediction({ opaqueId, practice, ledger }) {
   const { prefix, messages } = predictionMessages(practice);
-  await restartRuntimeA();
+  await eraseSlot();
   const prose = await complete({
     messages,
     tools: [practiceTool, heldoutTool],
@@ -206,7 +216,7 @@ async function runPrediction({ opaqueId, practice, ledger }) {
       required_values: "other-minus-baseline raw-logit deltas"
     }) }
   ];
-  await restartRuntimeA();
+  await eraseSlot();
   const structured = await complete({
     messages: recordMessages,
     tools: [practiceTool, heldoutTool, openRecordTool, recordTool],
@@ -336,7 +346,8 @@ const preregistration = {
   prediction_count: conditions.length,
   controls: {
     every_outcome_last_once_per_condition: true,
-    fresh_runtime_and_empty_kv_before_each_inference: true,
+    single_runtime_process: true,
+    verified_slot_erase_before_each_inference: true,
     matched_shuffled_prompt_token_parity_by_rotation: promptTokenCounts,
     temperature: 0
   },
