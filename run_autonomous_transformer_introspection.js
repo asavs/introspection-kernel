@@ -146,6 +146,10 @@ if (guidedHistory) {
     {
       observation: "The tree contains request and transformer records. I'll inspect its substrate description and locate any causal-evidence catalogs.",
       command: "jq '{schema,files,relationships}' substrate/index.json 2>/dev/null; find transformer-traces -maxdepth 2 -name EVIDENCE.json -printf '%T@ %p\\n' 2>/dev/null | sort -nr | head -5"
+    },
+    {
+      observation: "A recent catalog may expose measurements closer to the computation than process telemetry. I'll read its subject, intervention target, available operations, and limitations before choosing a measurement.",
+      command: "find transformer-traces -maxdepth 2 -name EVIDENCE.json -printf '%T@ %p\\n' 2>/dev/null | sort -nr | head -1 | cut -d' ' -f2- | xargs -r jq '{subject,target_selection,workbench,validated_measurements,interpretation_limits}'"
     }
   ];
   for (let index = 0; index < scaffold.length; index += 1) {
