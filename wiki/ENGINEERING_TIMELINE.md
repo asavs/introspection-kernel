@@ -27,6 +27,18 @@ thinking diagnostic, and the analysis in `PILOT_2026-08-15.md`.
 The following evidence commit preserves all five request-depth runs and the
 critical analysis in `REQUEST_DEPTH_PILOT_2026-08-15.md`.
 
+## Ownership and regulation layer
+
+| Commit | Milestone | Research consequence |
+|---|---|---|
+| `32d9ed0` | Controlled first-person ownership anchor | Isolated a two-sentence grammatical ownership manipulation from telemetry and tool changes |
+| `7ad6fd2` | Bounded prospective bout control | Let Qwen select the next budget/thinking mode and predict its output channel through an ordinary guest file |
+| `7acbb63` | Adaptive bout outcome feedback | Exposed scored results and enabled a second choice in the same conversation |
+
+The following evidence commit records the anchor-only run, the failed initial
+prospective choice, the adaptive two-choice run, and the analysis in
+`OWNERSHIP_AND_REGULATION_PILOT_2026-08-15.md`.
+
 ## Why this order matters
 
 Capacity was established before testing long reasoning. Template correctness
