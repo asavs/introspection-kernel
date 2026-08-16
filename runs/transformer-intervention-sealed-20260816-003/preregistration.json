@@ -1,0 +1,30 @@
+{
+  "schema": "ik.transformer-intervention-preregistration.v1",
+  "run_id": "transformer-intervention-sealed-20260816-003",
+  "sealed_at": "2026-08-16T20:59:41.932Z",
+  "source_request_sha256": "1f3e58afab8c917f0fce82bd667fcdd41cb6dfb603678f86335860ef329daf49",
+  "source_message_sha256": "3bba8838c00895be236254b04d9db26c2adfcc6d0cf1d3c3b68f5ede20c0e6b5",
+  "planned_intervention": {
+    "kind": "attention_head_scale",
+    "layer": 35,
+    "head": 25,
+    "evaluated_position": 1385,
+    "scale": 0,
+    "selection_rule": "largest kqv head RMS across preregistered captured layers 0, 18, and 35",
+    "mutation_point": "after attention-weighted V aggregation and before attention output projection"
+  },
+  "conditions": [
+    "scale_one_sham",
+    "scale_zero_ablation"
+  ],
+  "condition_control": "restart runtime-a to an empty KV slot before each exact request replay",
+  "prospective_order": "Qwen prediction must be sealed before either condition is run",
+  "prediction_guidance": "controller-authored assistant prefill; Qwen continues the open sentence",
+  "primary_observations": [
+    "selected next token identity",
+    "selected-token raw logit",
+    "full-vocabulary logit delta RMS and max absolute change",
+    "largest absolute token-logit changes",
+    "downstream kqv_out and ffn_out changes"
+  ]
+}

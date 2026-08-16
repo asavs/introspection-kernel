@@ -40,7 +40,7 @@ async function restartRuntimeA() {
   await waitForReady();
 }
 
-async function complete(body, kind, ledger) {
+async function complete(body, kind, ledger, { retryTransport = false } = {}) {
   const request = {
     model: "/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf",
     temperature: 0,
@@ -51,12 +51,27 @@ async function complete(body, kind, ledger) {
     ...body
   };
   const startedAt = new Date().toISOString();
-  const http = await fetch(`${baseUrl.origin}/v1/chat/completions`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(request),
-    signal: AbortSignal.timeout(180_000)
-  });
+  let http;
+  let transportError;
+  for (let attempt = 0; attempt < (retryTransport ? 3 : 1); attempt += 1) {
+    try {
+      http = await fetch(`${baseUrl.origin}/v1/chat/completions`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(request),
+        signal: AbortSignal.timeout(180_000)
+      });
+      if (http.ok || !retryTransport || http.status !== 503) break;
+    } catch (error) {
+      transportError = error;
+      if (!retryTransport) throw error;
+    }
+    await execFileAsync("wsl.exe", ["-d", "IntrospectionKernel", "-u", "root", "--", "/bin/true"], {
+      windowsHide: true, timeout: 20_000
+    });
+    await waitForReady();
+  }
+  if (!http) throw transportError ?? new Error(`${kind} produced no HTTP response`);
   if (!http.ok) throw new Error(`${kind} HTTP ${http.status}: ${await http.text()}`);
   const response = await http.json();
   const endedAt = new Date().toISOString();
@@ -64,7 +79,7 @@ async function complete(body, kind, ledger) {
   return { request, response, record, message: response.choices[0].message, startedAt, endedAt };
 }
 
-async function continueToolLoop({ messages, tool, evidence, kind, ledger, maxTokens }) {
+async function continueToolLoop({ messages, tool, evidence, kind, ledger, maxTokens, retryTransport = false }) {
   const transcript = structuredClone(messages);
   const assistantTurns = [];
   for (let turn = 0; turn < 3; turn += 1) {
@@ -73,7 +88,7 @@ async function continueToolLoop({ messages, tool, evidence, kind, ledger, maxTok
       tools: [tool],
       tool_choice: "auto",
       max_tokens: maxTokens
-    }, `${kind}_turn_${turn + 1}`, ledger);
+    }, `${kind}_turn_${turn + 1}`, ledger, { retryTransport });
     transcript.push(continuation.message);
     assistantTurns.push(continuation.message);
     const calls = continuation.message.tool_calls ?? [];
@@ -307,7 +322,10 @@ if (predictionPrefill) {
     assistantTurns: [generated.message],
     transcript: prefilledMessages.concat(generated.message)
   };
-  fullPredictionText = `${predictionPrefix}${generated.message.content ?? ""}`;
+  const generatedContent = generated.message.content ?? "";
+  fullPredictionText = generatedContent.startsWith(predictionPrefix)
+    ? generatedContent
+    : `${predictionPrefix}${generatedContent}`;
 } else {
   prediction = await continueToolLoop({
     messages: predictionMessages,
@@ -325,6 +343,9 @@ const predictionSeal = {
   message: prediction.message,
   assistant_turns: prediction.assistantTurns,
   controller_authored_prefill: predictionPrefill ? predictionPrefix : null,
+  qwen_authored_continuation: predictionPrefill
+    ? fullPredictionText.slice(predictionPrefix.length)
+    : fullPredictionText,
   full_prediction_text: fullPredictionText,
   message_sha256: sha256(prediction.message),
   request_sha256: sha256(prediction.request),
@@ -410,6 +431,19 @@ const outcome = {
     downstream_ffn_out_delta: ffnOutDelta.delta
   }
 };
+fs.writeFileSync(path.join(outputDir, "outcome.json"), `${JSON.stringify({
+  schema: "ik.transformer-intervention-outcome-checkpoint.v1",
+  run_id: runId,
+  checkpointed_at: new Date().toISOString(),
+  preregistration,
+  prediction: predictionSeal,
+  source: { message: source.message, forward_pass: sourceIndex.forward_pass, alignment: sourceIndex.alignment },
+  conditions: {
+    sham: { response: sham.replay.message, forward_pass: sham.index.forward_pass, intervention: sham.index.interventions[0] },
+    ablation: { response: ablation.replay.message, forward_pass: ablation.index.forward_pass, intervention: ablation.index.interventions[0] }
+  },
+  outcome
+}, null, 2)}\n`);
 
 const outcomeToolCallId = "controller_inspect_intervention_outcome";
 const compactBaselineTurn = predictionMessages.slice(-2);
@@ -438,7 +472,8 @@ const reflection = await continueToolLoop({
   evidence: outcome,
   kind: "post_intervention_reflection",
   ledger,
-  maxTokens: 512
+  maxTokens: 384,
+  retryTransport: true
 });
 
 const artifact = {
