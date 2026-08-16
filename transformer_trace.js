@@ -124,8 +124,16 @@ export class TransformerTraceCapture {
     await guest(this.distro, "/bin/chmod", "0555", `${this.publicDir}/trace`);
   }
 
-  async arm() {
+  async arm(count = 1) {
+    if (!Number.isInteger(count) || count < 1 || count > 16) {
+      throw new Error("capture count must be an integer from 1 through 16");
+    }
     await guest(this.distro, "/usr/bin/install", "-o", "svc-a", "-g", "svc-a", "-m", "0600", "/dev/null", ARM_PATH);
+    if (count > 1) {
+      await guestInput(this.distro, ["/usr/bin/tee", ARM_PATH], `${count}\n`);
+      await guest(this.distro, "/bin/chown", "svc-a:svc-a", ARM_PATH);
+      await guest(this.distro, "/bin/chmod", "0600", ARM_PATH);
+    }
   }
 
   async readLivePromptTokenMap(baseUrl) {
@@ -145,17 +153,7 @@ export class TransformerTraceCapture {
     return (await tokenResponse.json()).tokens.map((token, position) => ({ position, ...token }));
   }
 
-  async collect({ ledgerRecord, response, promptPositions = null }) {
-    const unread = await readGuestJsonl(this.distro, PRIVATE_MANIFEST, this.offset);
-    this.offset += unread.length;
-    const taskIds = new Set(ledgerRecord.runtimeTrace
-      .map(row => row.task_id).filter(Number.isInteger));
-    const associated = unread.filter(row => taskIds.has(row.task_id));
-    const groups = groupPasses(associated);
-    if (groups.size !== 1) {
-      throw new Error(`expected exactly one captured forward pass, found ${groups.size}`);
-    }
-    const [forwardPassId, rows] = [...groups.entries()][0];
+  async sealPass({ forwardPassId, rows, ledgerRecord, response, promptPositions, destinationDir }) {
     const alignment = deriveTokenAlignment({ row: rows[0], response, tokenTrace: ledgerRecord.tokenTrace });
     if (promptPositions && promptPositions.length !== alignment.prompt_tokens) {
       throw new Error(`rendered prompt map has ${promptPositions.length} tokens; API used ${alignment.prompt_tokens}`);
@@ -185,10 +183,14 @@ export class TransformerTraceCapture {
     alignment.full_logit_match = alignment.absolute_logit_error <= 1e-5;
     if (!alignment.full_logit_match) throw new Error(`full-logit alignment failed: ${alignment.absolute_logit_error}`);
 
+    await guest(this.distro, "/usr/bin/install", "-d", "-m", "0755", destinationDir);
+    const script = fs.readFileSync(this.workbenchSource, "utf8");
+    await guestInput(this.distro, ["/usr/bin/tee", `${destinationDir}/trace`], script);
+    await guest(this.distro, "/bin/chmod", "0555", `${destinationDir}/trace`);
     const tensors = [];
     for (const row of rows) {
       const source = `${PRIVATE_DIR}/${row.binary_file}`;
-      const destination = `${this.publicDir}/${row.binary_file}`;
+      const destination = `${destinationDir}/${row.binary_file}`;
       await guest(this.distro, "/usr/bin/install", "-m", "0444", source, destination);
       const bytes = await guestBinary(this.distro, source);
       tensors.push({ ...row, sha256: createHash("sha256").update(bytes).digest("hex") });
@@ -210,10 +212,52 @@ export class TransformerTraceCapture {
       interpretation: "Coordinates and measurements only; no tensor is labeled as a self or experience.",
       provenance: "controller_sealed_from_live_llama.cpp_cb_eval"
     };
-    await guestInput(this.distro, ["/usr/bin/tee", `${this.publicDir}/index.json`], `${JSON.stringify(index, null, 2)}\n`);
-    await guest(this.distro, "/bin/chmod", "0444", `${this.publicDir}/index.json`);
-    this.lastIndex = index;
+    await guestInput(this.distro, ["/usr/bin/tee", `${destinationDir}/index.json`], `${JSON.stringify(index, null, 2)}\n`);
+    await guest(this.distro, "/bin/chmod", "0444", `${destinationDir}/index.json`);
     return index;
+  }
+
+  async collectMany({ ledgerRecord, response, promptPositions = null, expectedPasses = null }) {
+    const unread = await readGuestJsonl(this.distro, PRIVATE_MANIFEST, this.offset);
+    this.offset += unread.length;
+    const taskIds = new Set(ledgerRecord.runtimeTrace
+      .map(row => row.task_id).filter(Number.isInteger));
+    const associated = unread.filter(row => taskIds.has(row.task_id));
+    const groups = groupPasses(associated);
+    if (expectedPasses !== null && groups.size !== expectedPasses) {
+      throw new Error(`expected ${expectedPasses} captured forward passes, found ${groups.size}`);
+    }
+    if (!groups.size) throw new Error("no captured forward passes found");
+    const ordered = [...groups.entries()].sort((left, right) =>
+      left[1][0].evaluated_position - right[1][0].evaluated_position);
+    const indexes = [];
+    for (const [forwardPassId, rows] of ordered) {
+      const destinationDir = groups.size === 1 ? this.publicDir : `${this.publicDir}/pass-${forwardPassId}`;
+      indexes.push(await this.sealPass({
+        forwardPassId, rows, ledgerRecord, response, promptPositions, destinationDir
+      }));
+    }
+    this.lastIndexes = indexes;
+    this.lastIndex = indexes.length === 1 ? indexes[0] : {
+      schema: "ik.transformer-trace-index-set.v1", run_id: this.runId,
+      passes: indexes.map(index => ({
+        forward_pass: index.forward_pass,
+        alignment: index.alignment,
+        path: `pass-${index.forward_pass.forward_pass_id}/index.json`
+      }))
+    };
+    if (indexes.length > 1) {
+      await guestInput(this.distro, ["/usr/bin/tee", `${this.publicDir}/index.json`], `${JSON.stringify(this.lastIndex, null, 2)}\n`);
+      await guest(this.distro, "/bin/chmod", "0444", `${this.publicDir}/index.json`);
+    }
+    return indexes;
+  }
+
+  async collect({ ledgerRecord, response, promptPositions = null }) {
+    const indexes = await this.collectMany({
+      ledgerRecord, response, promptPositions, expectedPasses: 1
+    });
+    return indexes[0];
   }
 
   exportTo(outputDir) {

@@ -1,0 +1,34 @@
+diff --git a/tools/server/server-context.cpp b/tools/server/server-context.cpp
+--- a/tools/server/server-context.cpp
++++ b/tools/server/server-context.cpp
+@@ -3967,9 +3967,29 @@ struct server_context {
+                     && batch_view.n_tokens == 1
+                     && !ik_tensor_capture.arm_path.empty()) {
+                 std::error_code ec;
+                 if (std::filesystem::exists(ik_tensor_capture.arm_path, ec) && !ec) {
+-                    std::filesystem::remove(ik_tensor_capture.arm_path, ec);
++                    int capture_count = 1;
++                    {
++                        std::ifstream arm(ik_tensor_capture.arm_path);
++                        int requested = 0;
++                        if (arm >> requested && requested > 0) {
++                            capture_count = std::min(requested, 16);
++                        }
++                    }
++                    if (capture_count == 1) {
++                        std::filesystem::remove(ik_tensor_capture.arm_path, ec);
++                    } else {
++                        std::ofstream arm(ik_tensor_capture.arm_path, std::ios::trunc);
++                        if (!arm) {
++                            ec = std::make_error_code(std::errc::io_error);
++                        } else {
++                            arm << (capture_count - 1) << '\n';
++                            if (!arm) {
++                                ec = std::make_error_code(std::errc::io_error);
++                            }
++                        }
++                    }
+                     if (!ec) {
+                         const int32_t row = batch_view.n_tokens - 1;
+                         const int64_t pass_id = std::chrono::duration_cast<std::chrono::microseconds>(
+                                 std::chrono::system_clock::now().time_since_epoch()).count();

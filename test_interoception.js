@@ -108,6 +108,14 @@ const aligned = deriveTokenAlignment({
 assert.equal(aligned.selected_token_index, 1);
 assert.equal(aligned.selected_token_id, 101);
 assert.equal(aligned.api_raw_logit, 7.75);
+assert.throws(
+  () => deriveTokenAlignment({
+    row: { evaluated_position: 12 },
+    response: { usage: { prompt_tokens: 10 } },
+    tokenTrace: [{ selected: { token_id: 1, token: "x", raw_logit: 1 } }]
+  }),
+  /outside returned token trace/
+);
 const ledgerExportDir = fs.mkdtempSync(path.join(os.tmpdir(), "ik-ledger-test-"));
 const ledgerExport = Object.create(RequestLedger.prototype);
 ledgerExport.records = [{
