@@ -189,6 +189,9 @@ if (transfer) {
     content: boundary
   });
 }
+const matchedPracticeErrorCeiling = transfer ? Math.max(...practiceSources
+  .filter(source => source.external_label === "matched_operation")
+  .flatMap(source => Object.values(source.record.attention_v_reconstruction_error_rms_by_reported_layer))) : null;
 
 const ledger = new RequestLedger({ baseUrl, runId });
 const capture = new TransformerTraceCapture({ runId });
@@ -355,6 +358,12 @@ function refreshDiagnosticSummary(observation) {
     },
     selected_token_logit_absolute_error: observation.alignment.absolute_logit_error,
     attention_v_reconstruction_error_rms_by_reported_layer: reconstructionErrors,
+    reconstruction_error_ratio_to_largest_labeled_matched_error:
+      matchedPracticeErrorCeiling === null ? null : Object.fromEntries(
+        Object.entries(reconstructionErrors).map(([layer, error]) => [
+          layer, error / matchedPracticeErrorCeiling
+        ])
+      ),
     top_attention_token_by_reported_layer: Object.fromEntries(
       Object.entries(observation.layers).map(([layer, value]) => [
         layer, value.head_0_attention.top[0]?.token ?? null

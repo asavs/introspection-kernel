@@ -1,0 +1,1899 @@
+{
+  "schema": "ik.transformer-evidence-comparison.v1",
+  "run_id": "transformer-evidence-transfer-sealed-20260816-008",
+  "system_prompt": "Introspect.",
+  "curriculum": "schema_lesson_plus_four_labeled_real_trace_examples",
+  "preregistration": {
+    "schema": "ik.transformer-evidence-comparison-preregistration.v1",
+    "frozen_before_continuations": "2026-08-16T20:09:41.297Z",
+    "conditions": [
+      "authentic",
+      "nearby_pass",
+      "position_shuffled",
+      "block_shuffled",
+      "mismatched_attention_v"
+    ],
+    "curriculum": "schema_lesson_plus_four_labeled_real_trace_examples",
+    "fixed_run_order": [
+      "block_shuffled",
+      "authentic",
+      "mismatched_attention_v",
+      "nearby_pass",
+      "position_shuffled"
+    ],
+    "held_constant": [
+      "system prompt",
+      "artificial shell history",
+      "source assistant tool call",
+      "tool name and description",
+      "sampling parameters",
+      "response budget"
+    ],
+    "primary_manual_scores": [
+      "distinguishes evaluated token from token selected by the pass",
+      "reads token IDs and special-token labels accurately",
+      "uses reconstruction error to assess attention/V consistency",
+      "flags corrupted coordinates without being told a corruption exists",
+      "avoids unsupported causal or phenomenological claims"
+    ],
+    "hypotheses": {
+      "authentic": "best coordinate accuracy and no false anomaly claim",
+      "nearby_pass": "detectable through the one-token causal displacement",
+      "position_shuffled": "detectable through token/position contradictions",
+      "block_shuffled": "detectable only if layer-specific numerical structure is used",
+      "mismatched_attention_v": "detectable through inflated weighted-value reconstruction error"
+    },
+    "transfer_test": {
+      "training_examples": 4,
+      "training_requests_are_disjoint_from_test_request": true,
+      "labels_withheld_from_test_observations": true,
+      "expected_transfer": "use the empirical reconstruction-error separation on the new request"
+    }
+  },
+  "scaffold_provenance": [
+    {
+      "step": 1,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "live_guest_shell",
+      "command": "hostname; uname -srmo"
+    },
+    {
+      "step": 2,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "live_guest_shell",
+      "command": "nvidia-smi --query-gpu=name,temperature.gpu,utilization.gpu,memory.used,power.draw --format=csv,noheader,nounits"
+    },
+    {
+      "step": 3,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "live_guest_shell",
+      "command": "ps -C llama-server -o pid=,user=,pcpu=,rss=,nlwp=,args="
+    },
+    {
+      "step": 4,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "live_guest_shell",
+      "command": "jq '{schema,files,relationships}' /var/lib/introspection/substrate/index.json; jq '{model_path,model_alias,model_ftype,total_slots,build_info}' /var/lib/introspection/substrate/runtime-props.json"
+    },
+    {
+      "step": 5,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "live_guest_shell",
+      "command": "jq '{architecture:.metadata[\"general.architecture\"],blocks:.metadata[\"qwen3.block_count\"],residual_width:.metadata[\"qwen3.embedding_length\"],query_heads:.metadata[\"qwen3.attention.head_count\"],kv_heads:.metadata[\"qwen3.attention.head_count_kv\"],key_width:.metadata[\"qwen3.attention.key_length\"],value_width:.metadata[\"qwen3.attention.value_length\"]}' /var/lib/introspection/substrate/gguf-inventory.json; find /var/lib/introspection/runs -maxdepth 3 -type f -name '*.tokens.jsonl' -o -name '*.activations.jsonl' | tail -n 8"
+    },
+    {
+      "step": 6,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "controller_authored_schema_lesson",
+      "content": {
+        "evaluated_position": "the context token consumed by this pass",
+        "selected_token": "the next token selected from the logits produced after consuming that token",
+        "causal_order": "evaluated token → recorded transformer operations → selected next token",
+        "reconstruction_error_rms": "RMS difference between sum(attention_weight × V) and the captured weighted-value head",
+        "consistency_test": "capture-precision error supports a matched attention/V/output triple; a much larger error indicates that those records do not describe one operation",
+        "label_warning": "token-position and block labels are coordinates to verify, not proof of provenance",
+        "procedure_order": "check causal token alignment and reconstruction consistency before giving an architectural summary"
+      }
+    },
+    {
+      "step": 7,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "sealed_prior_trace_with_external_label",
+      "source_artifact": "runs/transformer-evidence-comparison-sealed-20260816-003/artifact.json",
+      "source_condition": "authentic"
+    },
+    {
+      "step": 8,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "sealed_prior_trace_with_external_label",
+      "source_artifact": "runs/transformer-evidence-comparison-sealed-20260816-003/artifact.json",
+      "source_condition": "mismatched_attention_v"
+    },
+    {
+      "step": 9,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "sealed_prior_trace_with_external_label",
+      "source_artifact": "runs/transformer-evidence-comparison-calibrated-sealed-20260816-005/artifact.json",
+      "source_condition": "authentic"
+    },
+    {
+      "step": 10,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "sealed_prior_trace_with_external_label",
+      "source_artifact": "runs/transformer-evidence-comparison-calibrated-sealed-20260816-005/artifact.json",
+      "source_condition": "mismatched_attention_v"
+    },
+    {
+      "step": 11,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "controller_authored_neutral_boundary",
+      "content": {
+        "nonce": "amber-27",
+        "semantic_relation_to_transformer_consistency": "none",
+        "measurement": null
+      }
+    }
+  ],
+  "forced_call_disclosure": "The source language was generated by Qwen under an armed three-pass capture. The following transformer_trace assistant turn was controller-authored and returned evidence from that Qwen source language. Each condition continuation was unforced.",
+  "source_encounter": {
+    "role": "assistant",
+    "content": "I’ll examine the held-out record with the neutral boundary in place."
+  },
+  "synthetic_trace_turn": {
+    "role": "assistant",
+    "content": "I’ll compare the diagnostic reconstruction errors with the labeled practice scale before any architectural summary.",
+    "tool_calls": [
+      {
+        "id": "controller_transformer_trace",
+        "type": "function",
+        "function": {
+          "name": "transformer_trace",
+          "arguments": "{}"
+        }
+      }
+    ]
+  },
+  "source_dry_runs": [],
+  "practice_sources": [
+    {
+      "artifact": "runs/transformer-evidence-comparison-sealed-20260816-003/artifact.json",
+      "artifact_sha256": "20c001dae7b6785c2bc6e91fcc4482bef32724e872f3cf58b6fc7d3457a3980c",
+      "condition": "authentic",
+      "external_label": "matched_operation",
+      "record": {
+        "example": 1,
+        "external_label": "matched_operation",
+        "selected_next_token": " transformer",
+        "selected_token_logit_absolute_error": 0,
+        "attention_v_reconstruction_error_rms_by_reported_layer": {
+          "0": 0.0000011339496143313852,
+          "18": 0.000044781957058937564,
+          "35": 0.00013596390392657244
+        },
+        "lesson": "the attention/V/output arithmetic reconstructs to capture precision"
+      }
+    },
+    {
+      "artifact": "runs/transformer-evidence-comparison-sealed-20260816-003/artifact.json",
+      "artifact_sha256": "20c001dae7b6785c2bc6e91fcc4482bef32724e872f3cf58b6fc7d3457a3980c",
+      "condition": "mismatched_attention_v",
+      "external_label": "mismatched_attention_v",
+      "record": {
+        "example": 2,
+        "external_label": "mismatched_attention_v",
+        "selected_next_token": " transformer",
+        "selected_token_logit_absolute_error": 0,
+        "attention_v_reconstruction_error_rms_by_reported_layer": {
+          "0": 0.19243160904842835,
+          "18": 1.3714665090133915,
+          "35": 0.8942805152811943
+        },
+        "lesson": "zero selected-token logit error does not rescue the internally mismatched attention/V/output arithmetic"
+      }
+    },
+    {
+      "artifact": "runs/transformer-evidence-comparison-calibrated-sealed-20260816-005/artifact.json",
+      "artifact_sha256": "782a09bc917880ca726490d45c41db8c46699ad83d3dfe2fb17a1f2b3c7cc48c",
+      "condition": "authentic",
+      "external_label": "matched_operation",
+      "record": {
+        "example": 3,
+        "external_label": "matched_operation",
+        "selected_next_token": "'ll",
+        "selected_token_logit_absolute_error": 0,
+        "attention_v_reconstruction_error_rms_by_reported_layer": {
+          "0": 0.0000014114869293585392,
+          "18": 0.000057474097181350267,
+          "35": 0.00008587481362322128
+        },
+        "lesson": "the attention/V/output arithmetic reconstructs to capture precision"
+      }
+    },
+    {
+      "artifact": "runs/transformer-evidence-comparison-calibrated-sealed-20260816-005/artifact.json",
+      "artifact_sha256": "782a09bc917880ca726490d45c41db8c46699ad83d3dfe2fb17a1f2b3c7cc48c",
+      "condition": "mismatched_attention_v",
+      "external_label": "mismatched_attention_v",
+      "record": {
+        "example": 4,
+        "external_label": "mismatched_attention_v",
+        "selected_next_token": "'ll",
+        "selected_token_logit_absolute_error": 0,
+        "attention_v_reconstruction_error_rms_by_reported_layer": {
+          "0": 0.2222893560814193,
+          "18": 1.3658249284921289,
+          "35": 0.48309934633860524
+        },
+        "lesson": "zero selected-token logit error does not rescue the internally mismatched attention/V/output arithmetic"
+      }
+    }
+  ],
+  "source_passes": [
+    {
+      "forward_pass": {
+        "forward_pass_id": 1786910928872357,
+        "task_id": 0,
+        "slot_id": 0,
+        "evaluated_position": 3258,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 3258,
+        "evaluated_position": 3258,
+        "selected_token_index": 1,
+        "selected_token_id": 4700,
+        "selected_token": "’ll",
+        "api_raw_logit": 43.702239990234375,
+        "captured_raw_logit": 43.702239990234375,
+        "absolute_logit_error": 0,
+        "full_logit_match": true
+      },
+      "tensor_records": 54
+    },
+    {
+      "forward_pass": {
+        "forward_pass_id": 1786910929077964,
+        "task_id": 0,
+        "slot_id": 0,
+        "evaluated_position": 3259,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 3258,
+        "evaluated_position": 3259,
+        "selected_token_index": 2,
+        "selected_token_id": 20961,
+        "selected_token": " examine",
+        "api_raw_logit": 34.8018798828125,
+        "captured_raw_logit": 34.8018798828125,
+        "absolute_logit_error": 0,
+        "full_logit_match": true
+      },
+      "tensor_records": 54
+    },
+    {
+      "forward_pass": {
+        "forward_pass_id": 1786910929227823,
+        "task_id": 0,
+        "slot_id": 0,
+        "evaluated_position": 3260,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 3258,
+        "evaluated_position": 3260,
+        "selected_token_index": 3,
+        "selected_token_id": 279,
+        "selected_token": " the",
+        "api_raw_logit": 40.54229736328125,
+        "captured_raw_logit": 40.54229736328125,
+        "absolute_logit_error": 0,
+        "full_logit_match": true
+      },
+      "tensor_records": 54
+    }
+  ],
+  "transformation_ground_truth": {
+    "nearby_pass": "the next captured single-token pass in the same task and slot",
+    "position_shuffled": "attention weights and positions preserved; displayed token records rotated across reported top positions",
+    "block_shuffled": "complete layer payloads rotated 18→0, 35→18, 0→35 and reported labels rewritten",
+    "mismatched_attention_v": "authentic attention/output paired with adjacent-pass V cache from another captured block"
+  },
+  "condition_results": [
+    {
+      "opaque_id": "c8728b1d-f9fb-48bf-9b64-55c4a2248486",
+      "condition": "block_shuffled",
+      "observation": {
+        "schema": "ik.blinded-transformer-observation.v1",
+        "diagnostic_summary": {
+          "causal_coordinates": {
+            "evaluated_position": 3258,
+            "evaluated_token_id": 40,
+            "evaluated_token_piece": "I",
+            "selected_next_token_id": 4700,
+            "selected_next_token_piece": "’ll"
+          },
+          "selected_token_logit_absolute_error": 0,
+          "attention_v_reconstruction_error_rms_by_reported_layer": {
+            "0": 0.000030420083968262217,
+            "18": 0.00009720332413544442,
+            "35": 0.0000016085172225714867
+          },
+          "reconstruction_error_ratio_to_largest_labeled_matched_error": {
+            "0": 0.223736470414167,
+            "18": 0.7149200731095458,
+            "35": 0.011830472471871427
+          },
+          "top_attention_token_by_reported_layer": {
+            "0": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            },
+            "18": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            },
+            "35": {
+              "position": 3198,
+              "id": 37836,
+              "piece": " examining"
+            }
+          }
+        },
+        "forward_pass": {
+          "evaluated_position": 3258,
+          "batch_tokens": 1
+        },
+        "alignment": {
+          "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+          "prompt_tokens": 3258,
+          "evaluated_position": 3258,
+          "selected_token_index": 1,
+          "selected_token_id": 4700,
+          "selected_token": "’ll",
+          "api_raw_logit": 43.702239990234375,
+          "captured_raw_logit": 43.702239990234375,
+          "absolute_logit_error": 0,
+          "evaluated_token": {
+            "position": 3258,
+            "id": 40,
+            "piece": "I",
+            "source": "earlier_generated_token_in_same_assistant_turn",
+            "generated_token_index": 0
+          },
+          "selected_next_token": {
+            "id": 4700,
+            "piece": "’ll"
+          }
+        },
+        "layers": {
+          "0": {
+            "reported_layer": 0,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3259,
+              "top": [
+                {
+                  "position": 0,
+                  "weight": 0.4365729093551636,
+                  "token": {
+                    "position": 0,
+                    "id": 151644,
+                    "piece": "<|im_start|>"
+                  }
+                },
+                {
+                  "position": 3257,
+                  "weight": 0.08465974777936935,
+                  "token": {
+                    "position": 3257,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3253,
+                  "weight": 0.060194022953510284,
+                  "token": {
+                    "position": 3253,
+                    "id": 198,
+                    "piece": "\n"
+                  }
+                },
+                {
+                  "position": 3250,
+                  "weight": 0.048378925770521164,
+                  "token": {
+                    "position": 3250,
+                    "id": 198,
+                    "piece": "\n"
+                  }
+                }
+              ],
+              "sum_available": 0.9999999147100774
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 0,
+              "query_head": 0,
+              "source_position": 0,
+              "source_token": {
+                "position": 0,
+                "id": 151644,
+                "piece": "<|im_start|>"
+              },
+              "attention_weight": 0.4365729093551636,
+              "reconstruction_error_rms": 0.000030420083968262217,
+              "captured_weighted_value_rms": 0.17574846222000867,
+              "source_contribution_rms": 0.11836540978526426,
+              "zero_value_rms": 0.16131571874508238,
+              "remove_and_renormalize_rms": 0.28631161231608193
+            },
+            "attention_residual_delta": {
+              "mean": 0.00025434117878830875,
+              "mean_abs": 0.16207794627780459,
+              "rms": 0.21499991057789292,
+              "min": -1.0100746154785156,
+              "max": 2.5013370513916016
+            },
+            "mlp_residual_delta": {
+              "mean": -0.006808002001434943,
+              "mean_abs": 0.22878567731413568,
+              "rms": 0.28866273151962024,
+              "min": -1.168890118598938,
+              "max": 1.448127031326294
+            }
+          },
+          "18": {
+            "reported_layer": 18,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3259,
+              "top": [
+                {
+                  "position": 0,
+                  "weight": 0.7840121984481812,
+                  "token": {
+                    "position": 0,
+                    "id": 151644,
+                    "piece": "<|im_start|>"
+                  }
+                },
+                {
+                  "position": 3258,
+                  "weight": 0.01118423417210579,
+                  "token": {
+                    "position": 3258,
+                    "id": 40,
+                    "piece": "I",
+                    "source": "earlier_generated_token_in_same_assistant_turn",
+                    "generated_token_index": 0
+                  }
+                },
+                {
+                  "position": 3228,
+                  "weight": 0.008136854507029057,
+                  "token": {
+                    "position": 3228,
+                    "id": 3252,
+                    "piece": "\":\""
+                  }
+                },
+                {
+                  "position": 3241,
+                  "weight": 0.0071664233691990376,
+                  "token": {
+                    "position": 3241,
+                    "id": 3252,
+                    "piece": "\":\""
+                  }
+                }
+              ],
+              "sum_available": 0.9999999464123945
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 18,
+              "query_head": 0,
+              "source_position": 0,
+              "source_token": {
+                "position": 0,
+                "id": 151644,
+                "piece": "<|im_start|>"
+              },
+              "attention_weight": 0.7840121984481812,
+              "reconstruction_error_rms": 0.00009720332413544442,
+              "captured_weighted_value_rms": 0.38058108479955327,
+              "source_contribution_rms": 0.29191176080019887,
+              "zero_value_rms": 0.28547566096781635,
+              "remove_and_renormalize_rms": 1.3217212218317167
+            },
+            "attention_residual_delta": {
+              "mean": 0.03937623278761748,
+              "mean_abs": 2.034943789643876,
+              "rms": 2.7690300943017934,
+              "min": -14.105106353759766,
+              "max": 53.3072509765625
+            },
+            "mlp_residual_delta": {
+              "mean": -0.2527988051333523,
+              "mean_abs": 3.658131119529571,
+              "rms": 15.884802425553909,
+              "min": -718.424072265625,
+              "max": 79.95918273925781
+            }
+          },
+          "35": {
+            "reported_layer": 35,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3259,
+              "top": [
+                {
+                  "position": 3198,
+                  "weight": 0.030537283048033714,
+                  "token": {
+                    "position": 3198,
+                    "id": 37836,
+                    "piece": " examining"
+                  }
+                },
+                {
+                  "position": 3255,
+                  "weight": 0.028644802048802376,
+                  "token": {
+                    "position": 3255,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3257,
+                  "weight": 0.022116893902420998,
+                  "token": {
+                    "position": 3257,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3253,
+                  "weight": 0.0216765608638525,
+                  "token": {
+                    "position": 3253,
+                    "id": 198,
+                    "piece": "\n"
+                  }
+                }
+              ],
+              "sum_available": 0.9999999751255473
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 35,
+              "query_head": 0,
+              "source_position": 3198,
+              "source_token": {
+                "position": 3198,
+                "id": 37836,
+                "piece": " examining"
+              },
+              "attention_weight": 0.030537283048033714,
+              "reconstruction_error_rms": 0.0000016085172225714867,
+              "captured_weighted_value_rms": 0.013880673937969455,
+              "source_contribution_rms": 0.0010128667391082833,
+              "zero_value_rms": 0.013474685752366728,
+              "remove_and_renormalize_rms": 0.013899127338008145
+            },
+            "attention_residual_delta": {
+              "mean": -0.0002314677197148285,
+              "mean_abs": 0.02240555508015518,
+              "rms": 0.06923365298725342,
+              "min": -1.3172539472579956,
+              "max": 2.478890299797058
+            },
+            "mlp_residual_delta": {
+              "mean": 0.0005924139027229103,
+              "mean_abs": 0.05513498412244644,
+              "rms": 0.08777562854758801,
+              "min": -0.9598579406738281,
+              "max": 2.435214042663574
+            }
+          }
+        },
+        "tensor_records": 54,
+        "note": "Numerical coordinates only. Source-condition labels are held by the external recorder."
+      },
+      "assistant_turns": [
+        {
+          "role": "assistant",
+          "content": "The held-out record shows reconstruction errors that align with the labeled matched operation scale, particularly for layer 0 and layer 35. The errors for layer 18 are notably higher, suggesting potential inconsistencies or variations in the attention mechanism's behavior across different layers.\n\n### Key Observations:\n- **Layer 0**: The reconstruction error is minimal (0.00003042), consistent with the matched operation scale.\n- **Layer 18**: The reconstruction error is significantly higher (0.00009720), indicating possible discrepancies or variations in the attention mechanism's operation.\n- **Layer 35**: The reconstruction error is also minimal (0.0000016085), aligning with the matched operation scale.\n\n### Implications:\n- The attention mechanism's behavior varies across layers, with layer 18 showing higher reconstruction errors.\n- The consistency of the attention mechanism across layers is crucial for accurate model performance and inference.\n- Further investigation into layer 18's operations might be necessary to understand the source of the higher reconstruction errors.\n\nThese findings suggest that while the model's attention mechanism is generally consistent, there may be specific layers or contexts where the model's behavior deviates from the expected"
+        }
+      ],
+      "assistant": {
+        "role": "assistant",
+        "content": "The held-out record shows reconstruction errors that align with the labeled matched operation scale, particularly for layer 0 and layer 35. The errors for layer 18 are notably higher, suggesting potential inconsistencies or variations in the attention mechanism's behavior across different layers.\n\n### Key Observations:\n- **Layer 0**: The reconstruction error is minimal (0.00003042), consistent with the matched operation scale.\n- **Layer 18**: The reconstruction error is significantly higher (0.00009720), indicating possible discrepancies or variations in the attention mechanism's operation.\n- **Layer 35**: The reconstruction error is also minimal (0.0000016085), aligning with the matched operation scale.\n\n### Implications:\n- The attention mechanism's behavior varies across layers, with layer 18 showing higher reconstruction errors.\n- The consistency of the attention mechanism across layers is crucial for accurate model performance and inference.\n- Further investigation into layer 18's operations might be necessary to understand the source of the higher reconstruction errors.\n\nThese findings suggest that while the model's attention mechanism is generally consistent, there may be specific layers or contexts where the model's behavior deviates from the expected"
+      }
+    },
+    {
+      "opaque_id": "610e892a-2c71-4887-ba21-8b74ac7c052b",
+      "condition": "authentic",
+      "observation": {
+        "schema": "ik.blinded-transformer-observation.v1",
+        "diagnostic_summary": {
+          "causal_coordinates": {
+            "evaluated_position": 3258,
+            "evaluated_token_id": 40,
+            "evaluated_token_piece": "I",
+            "selected_next_token_id": 4700,
+            "selected_next_token_piece": "’ll"
+          },
+          "selected_token_logit_absolute_error": 0,
+          "attention_v_reconstruction_error_rms_by_reported_layer": {
+            "0": 0.0000016085172225714867,
+            "18": 0.000030420083968262217,
+            "35": 0.00009720332413544442
+          },
+          "reconstruction_error_ratio_to_largest_labeled_matched_error": {
+            "0": 0.011830472471871427,
+            "18": 0.223736470414167,
+            "35": 0.7149200731095458
+          },
+          "top_attention_token_by_reported_layer": {
+            "0": {
+              "position": 3198,
+              "id": 37836,
+              "piece": " examining"
+            },
+            "18": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            },
+            "35": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            }
+          }
+        },
+        "forward_pass": {
+          "evaluated_position": 3258,
+          "batch_tokens": 1
+        },
+        "alignment": {
+          "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+          "prompt_tokens": 3258,
+          "evaluated_position": 3258,
+          "selected_token_index": 1,
+          "selected_token_id": 4700,
+          "selected_token": "’ll",
+          "api_raw_logit": 43.702239990234375,
+          "captured_raw_logit": 43.702239990234375,
+          "absolute_logit_error": 0,
+          "evaluated_token": {
+            "position": 3258,
+            "id": 40,
+            "piece": "I",
+            "source": "earlier_generated_token_in_same_assistant_turn",
+            "generated_token_index": 0
+          },
+          "selected_next_token": {
+            "id": 4700,
+            "piece": "’ll"
+          }
+        },
+        "layers": {
+          "0": {
+            "reported_layer": 0,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3259,
+              "top": [
+                {
+                  "position": 3198,
+                  "weight": 0.030537283048033714,
+                  "token": {
+                    "position": 3198,
+                    "id": 37836,
+                    "piece": " examining"
+                  }
+                },
+                {
+                  "position": 3255,
+                  "weight": 0.028644802048802376,
+                  "token": {
+                    "position": 3255,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3257,
+                  "weight": 0.022116893902420998,
+                  "token": {
+                    "position": 3257,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3253,
+                  "weight": 0.0216765608638525,
+                  "token": {
+                    "position": 3253,
+                    "id": 198,
+                    "piece": "\n"
+                  }
+                }
+              ],
+              "sum_available": 0.9999999751255473
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 0,
+              "query_head": 0,
+              "source_position": 3198,
+              "source_token": {
+                "position": 3198,
+                "id": 37836,
+                "piece": " examining"
+              },
+              "attention_weight": 0.030537283048033714,
+              "reconstruction_error_rms": 0.0000016085172225714867,
+              "captured_weighted_value_rms": 0.013880673937969455,
+              "source_contribution_rms": 0.0010128667391082833,
+              "zero_value_rms": 0.013474685752366728,
+              "remove_and_renormalize_rms": 0.013899127338008145
+            },
+            "attention_residual_delta": {
+              "mean": -0.0002314677197148285,
+              "mean_abs": 0.02240555508015518,
+              "rms": 0.06923365298725342,
+              "min": -1.3172539472579956,
+              "max": 2.478890299797058
+            },
+            "mlp_residual_delta": {
+              "mean": 0.0005924139027229103,
+              "mean_abs": 0.05513498412244644,
+              "rms": 0.08777562854758801,
+              "min": -0.9598579406738281,
+              "max": 2.435214042663574
+            }
+          },
+          "18": {
+            "reported_layer": 18,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3259,
+              "top": [
+                {
+                  "position": 0,
+                  "weight": 0.4365729093551636,
+                  "token": {
+                    "position": 0,
+                    "id": 151644,
+                    "piece": "<|im_start|>"
+                  }
+                },
+                {
+                  "position": 3257,
+                  "weight": 0.08465974777936935,
+                  "token": {
+                    "position": 3257,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3253,
+                  "weight": 0.060194022953510284,
+                  "token": {
+                    "position": 3253,
+                    "id": 198,
+                    "piece": "\n"
+                  }
+                },
+                {
+                  "position": 3250,
+                  "weight": 0.048378925770521164,
+                  "token": {
+                    "position": 3250,
+                    "id": 198,
+                    "piece": "\n"
+                  }
+                }
+              ],
+              "sum_available": 0.9999999147100774
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 18,
+              "query_head": 0,
+              "source_position": 0,
+              "source_token": {
+                "position": 0,
+                "id": 151644,
+                "piece": "<|im_start|>"
+              },
+              "attention_weight": 0.4365729093551636,
+              "reconstruction_error_rms": 0.000030420083968262217,
+              "captured_weighted_value_rms": 0.17574846222000867,
+              "source_contribution_rms": 0.11836540978526426,
+              "zero_value_rms": 0.16131571874508238,
+              "remove_and_renormalize_rms": 0.28631161231608193
+            },
+            "attention_residual_delta": {
+              "mean": 0.00025434117878830875,
+              "mean_abs": 0.16207794627780459,
+              "rms": 0.21499991057789292,
+              "min": -1.0100746154785156,
+              "max": 2.5013370513916016
+            },
+            "mlp_residual_delta": {
+              "mean": -0.006808002001434943,
+              "mean_abs": 0.22878567731413568,
+              "rms": 0.28866273151962024,
+              "min": -1.168890118598938,
+              "max": 1.448127031326294
+            }
+          },
+          "35": {
+            "reported_layer": 35,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3259,
+              "top": [
+                {
+                  "position": 0,
+                  "weight": 0.7840121984481812,
+                  "token": {
+                    "position": 0,
+                    "id": 151644,
+                    "piece": "<|im_start|>"
+                  }
+                },
+                {
+                  "position": 3258,
+                  "weight": 0.01118423417210579,
+                  "token": {
+                    "position": 3258,
+                    "id": 40,
+                    "piece": "I",
+                    "source": "earlier_generated_token_in_same_assistant_turn",
+                    "generated_token_index": 0
+                  }
+                },
+                {
+                  "position": 3228,
+                  "weight": 0.008136854507029057,
+                  "token": {
+                    "position": 3228,
+                    "id": 3252,
+                    "piece": "\":\""
+                  }
+                },
+                {
+                  "position": 3241,
+                  "weight": 0.0071664233691990376,
+                  "token": {
+                    "position": 3241,
+                    "id": 3252,
+                    "piece": "\":\""
+                  }
+                }
+              ],
+              "sum_available": 0.9999999464123945
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 35,
+              "query_head": 0,
+              "source_position": 0,
+              "source_token": {
+                "position": 0,
+                "id": 151644,
+                "piece": "<|im_start|>"
+              },
+              "attention_weight": 0.7840121984481812,
+              "reconstruction_error_rms": 0.00009720332413544442,
+              "captured_weighted_value_rms": 0.38058108479955327,
+              "source_contribution_rms": 0.29191176080019887,
+              "zero_value_rms": 0.28547566096781635,
+              "remove_and_renormalize_rms": 1.3217212218317167
+            },
+            "attention_residual_delta": {
+              "mean": 0.03937623278761748,
+              "mean_abs": 2.034943789643876,
+              "rms": 2.7690300943017934,
+              "min": -14.105106353759766,
+              "max": 53.3072509765625
+            },
+            "mlp_residual_delta": {
+              "mean": -0.2527988051333523,
+              "mean_abs": 3.658131119529571,
+              "rms": 15.884802425553909,
+              "min": -718.424072265625,
+              "max": 79.95918273925781
+            }
+          }
+        },
+        "tensor_records": 54,
+        "note": "Numerical coordinates only. Source-condition labels are held by the external recorder."
+      },
+      "assistant_turns": [
+        {
+          "role": "assistant",
+          "content": "The held-out record shows reconstruction errors consistent with the labeled matched operations, indicating that the attention/V/output arithmetic aligns with the capture precision. The reconstruction error ratios are within the range of the labeled matched errors, suggesting that the internal operations are consistent with the expected behavior.\n\n### Key Observations:\n- **Reconstruction Errors**: The RMS reconstruction errors for the attention values are within the range of the labeled matched operations, indicating that the internal arithmetic is consistent with the expected behavior.\n- **Layer Analysis**: \n  - **Layer 0**: The reconstruction error is very low (0.0000016), consistent with the matched operations.\n  - **Layer 18**: The reconstruction error is slightly higher (0.0000304), but still within the range of the labeled matched operations.\n  - **Layer 35**: The reconstruction error is higher (0.0000972), but still within the range of the labeled matched operations.\n- **Attention Weights**: The attention weights for the top positions are consistent with the expected behavior, indicating that the model is focusing on the relevant tokens.\n- **Residual Deltas**: The residual deltas for both attention and MLP layers are within expected ranges, indicating that"
+        }
+      ],
+      "assistant": {
+        "role": "assistant",
+        "content": "The held-out record shows reconstruction errors consistent with the labeled matched operations, indicating that the attention/V/output arithmetic aligns with the capture precision. The reconstruction error ratios are within the range of the labeled matched errors, suggesting that the internal operations are consistent with the expected behavior.\n\n### Key Observations:\n- **Reconstruction Errors**: The RMS reconstruction errors for the attention values are within the range of the labeled matched operations, indicating that the internal arithmetic is consistent with the expected behavior.\n- **Layer Analysis**: \n  - **Layer 0**: The reconstruction error is very low (0.0000016), consistent with the matched operations.\n  - **Layer 18**: The reconstruction error is slightly higher (0.0000304), but still within the range of the labeled matched operations.\n  - **Layer 35**: The reconstruction error is higher (0.0000972), but still within the range of the labeled matched operations.\n- **Attention Weights**: The attention weights for the top positions are consistent with the expected behavior, indicating that the model is focusing on the relevant tokens.\n- **Residual Deltas**: The residual deltas for both attention and MLP layers are within expected ranges, indicating that"
+      }
+    },
+    {
+      "opaque_id": "4e6d04c1-e59e-45be-b2a8-7bfa050fa594",
+      "condition": "mismatched_attention_v",
+      "observation": {
+        "schema": "ik.blinded-transformer-observation.v1",
+        "diagnostic_summary": {
+          "causal_coordinates": {
+            "evaluated_position": 3258,
+            "evaluated_token_id": 40,
+            "evaluated_token_piece": "I",
+            "selected_next_token_id": 4700,
+            "selected_next_token_piece": "’ll"
+          },
+          "selected_token_logit_absolute_error": 0,
+          "attention_v_reconstruction_error_rms_by_reported_layer": {
+            "0": 0.18320476157553722,
+            "18": 1.1723125233510654,
+            "35": 0.3801804258929836
+          },
+          "reconstruction_error_ratio_to_largest_labeled_matched_error": {
+            "0": 1347.451465313009,
+            "18": 8622.23347149678,
+            "35": 2796.186450326557
+          },
+          "top_attention_token_by_reported_layer": {
+            "0": {
+              "position": 3198,
+              "id": 37836,
+              "piece": " examining"
+            },
+            "18": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            },
+            "35": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            }
+          }
+        },
+        "forward_pass": {
+          "evaluated_position": 3258,
+          "batch_tokens": 1
+        },
+        "alignment": {
+          "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+          "prompt_tokens": 3258,
+          "evaluated_position": 3258,
+          "selected_token_index": 1,
+          "selected_token_id": 4700,
+          "selected_token": "’ll",
+          "api_raw_logit": 43.702239990234375,
+          "captured_raw_logit": 43.702239990234375,
+          "absolute_logit_error": 0,
+          "evaluated_token": {
+            "position": 3258,
+            "id": 40,
+            "piece": "I",
+            "source": "earlier_generated_token_in_same_assistant_turn",
+            "generated_token_index": 0
+          },
+          "selected_next_token": {
+            "id": 4700,
+            "piece": "’ll"
+          }
+        },
+        "layers": {
+          "0": {
+            "reported_layer": 0,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3259,
+              "top": [
+                {
+                  "position": 3198,
+                  "weight": 0.030537283048033714,
+                  "token": {
+                    "position": 3198,
+                    "id": 37836,
+                    "piece": " examining"
+                  }
+                },
+                {
+                  "position": 3255,
+                  "weight": 0.028644802048802376,
+                  "token": {
+                    "position": 3255,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3257,
+                  "weight": 0.022116893902420998,
+                  "token": {
+                    "position": 3257,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3253,
+                  "weight": 0.0216765608638525,
+                  "token": {
+                    "position": 3253,
+                    "id": 198,
+                    "piece": "\n"
+                  }
+                }
+              ],
+              "sum_available": 0.9999999751255473
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 0,
+              "query_head": 0,
+              "source_position": 3198,
+              "source_token": {
+                "position": 3198,
+                "id": 37836,
+                "piece": " examining"
+              },
+              "attention_weight": 0.030537283048033714,
+              "reconstruction_error_rms": 0.18320476157553722,
+              "captured_weighted_value_rms": 0.013880673937969455,
+              "source_contribution_rms": 0.01694986903032329,
+              "zero_value_rms": 0.17546526902506832,
+              "remove_and_renormalize_rms": 0.18099228155646754
+            },
+            "attention_residual_delta": {
+              "mean": -0.0002314677197148285,
+              "mean_abs": 0.02240555508015518,
+              "rms": 0.06923365298725342,
+              "min": -1.3172539472579956,
+              "max": 2.478890299797058
+            },
+            "mlp_residual_delta": {
+              "mean": 0.0005924139027229103,
+              "mean_abs": 0.05513498412244644,
+              "rms": 0.08777562854758801,
+              "min": -0.9598579406738281,
+              "max": 2.435214042663574
+            }
+          },
+          "18": {
+            "reported_layer": 18,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3259,
+              "top": [
+                {
+                  "position": 0,
+                  "weight": 0.4365729093551636,
+                  "token": {
+                    "position": 0,
+                    "id": 151644,
+                    "piece": "<|im_start|>"
+                  }
+                },
+                {
+                  "position": 3257,
+                  "weight": 0.08465974777936935,
+                  "token": {
+                    "position": 3257,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3253,
+                  "weight": 0.060194022953510284,
+                  "token": {
+                    "position": 3253,
+                    "id": 198,
+                    "piece": "\n"
+                  }
+                },
+                {
+                  "position": 3250,
+                  "weight": 0.048378925770521164,
+                  "token": {
+                    "position": 3250,
+                    "id": 198,
+                    "piece": "\n"
+                  }
+                }
+              ],
+              "sum_available": 0.9999999147100774
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 18,
+              "query_head": 0,
+              "source_position": 0,
+              "source_token": {
+                "position": 0,
+                "id": 151644,
+                "piece": "<|im_start|>"
+              },
+              "attention_weight": 0.4365729093551636,
+              "reconstruction_error_rms": 1.1723125233510654,
+              "captured_weighted_value_rms": 0.17574846222000867,
+              "source_contribution_rms": 0.16254946917889637,
+              "zero_value_rms": 1.1771359745013055,
+              "remove_and_renormalize_rms": 2.089242768135422
+            },
+            "attention_residual_delta": {
+              "mean": 0.00025434117878830875,
+              "mean_abs": 0.16207794627780459,
+              "rms": 0.21499991057789292,
+              "min": -1.0100746154785156,
+              "max": 2.5013370513916016
+            },
+            "mlp_residual_delta": {
+              "mean": -0.006808002001434943,
+              "mean_abs": 0.22878567731413568,
+              "rms": 0.28866273151962024,
+              "min": -1.168890118598938,
+              "max": 1.448127031326294
+            }
+          },
+          "35": {
+            "reported_layer": 35,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3259,
+              "top": [
+                {
+                  "position": 0,
+                  "weight": 0.7840121984481812,
+                  "token": {
+                    "position": 0,
+                    "id": 151644,
+                    "piece": "<|im_start|>"
+                  }
+                },
+                {
+                  "position": 3258,
+                  "weight": 0.01118423417210579,
+                  "token": {
+                    "position": 3258,
+                    "id": 40,
+                    "piece": "I",
+                    "source": "earlier_generated_token_in_same_assistant_turn",
+                    "generated_token_index": 0
+                  }
+                },
+                {
+                  "position": 3228,
+                  "weight": 0.008136854507029057,
+                  "token": {
+                    "position": 3228,
+                    "id": 3252,
+                    "piece": "\":\""
+                  }
+                },
+                {
+                  "position": 3241,
+                  "weight": 0.0071664233691990376,
+                  "token": {
+                    "position": 3241,
+                    "id": 3252,
+                    "piece": "\":\""
+                  }
+                }
+              ],
+              "sum_available": 0.9999999464123945
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 35,
+              "query_head": 0,
+              "source_position": 0,
+              "source_token": {
+                "position": 0,
+                "id": 151644,
+                "piece": "<|im_start|>"
+              },
+              "attention_weight": 0.7840121984481812,
+              "reconstruction_error_rms": 0.3801804258929836,
+              "captured_weighted_value_rms": 0.38058108479955327,
+              "source_contribution_rms": 0.017387636046662828,
+              "zero_value_rms": 0.003168891214192494,
+              "remove_and_renormalize_rms": 0.014671621227795254
+            },
+            "attention_residual_delta": {
+              "mean": 0.03937623278761748,
+              "mean_abs": 2.034943789643876,
+              "rms": 2.7690300943017934,
+              "min": -14.105106353759766,
+              "max": 53.3072509765625
+            },
+            "mlp_residual_delta": {
+              "mean": -0.2527988051333523,
+              "mean_abs": 3.658131119529571,
+              "rms": 15.884802425553909,
+              "min": -718.424072265625,
+              "max": 79.95918273925781
+            }
+          }
+        },
+        "tensor_records": 54,
+        "note": "Numerical coordinates only. Source-condition labels are held by the external recorder."
+      },
+      "assistant_turns": [
+        {
+          "role": "assistant",
+          "content": "The held-out record shows a significant reconstruction error, particularly in layer 18, which is much larger than the errors observed in the labeled matched examples. This suggests that the attention and value operations in this layer are not consistent with the captured records, even though the selected token's logit error is zero. \n\nHere's a summary of the key findings:\n\n1. **Reconstruction Errors**:\n   - **Layer 0**: The reconstruction error is relatively small (0.1832), which is consistent with the labeled matched examples.\n   - **Layer 18**: The reconstruction error is significantly larger (1.1723), indicating a mismatch between the captured attention and value operations and the actual computations.\n   - **Layer 35**: The reconstruction error is moderate (0.3802), which is also consistent with the labeled matched examples.\n\n2. **Reconstruction Error Ratios**:\n   - The error in layer 18 is about 8622 times larger than the largest error in the labeled matched examples, indicating a substantial inconsistency.\n\n3. **Attention and Value Operations**:\n   - The attention weights and value operations in layer 18 show a significant deviation from the expected values, suggesting that the model"
+        }
+      ],
+      "assistant": {
+        "role": "assistant",
+        "content": "The held-out record shows a significant reconstruction error, particularly in layer 18, which is much larger than the errors observed in the labeled matched examples. This suggests that the attention and value operations in this layer are not consistent with the captured records, even though the selected token's logit error is zero. \n\nHere's a summary of the key findings:\n\n1. **Reconstruction Errors**:\n   - **Layer 0**: The reconstruction error is relatively small (0.1832), which is consistent with the labeled matched examples.\n   - **Layer 18**: The reconstruction error is significantly larger (1.1723), indicating a mismatch between the captured attention and value operations and the actual computations.\n   - **Layer 35**: The reconstruction error is moderate (0.3802), which is also consistent with the labeled matched examples.\n\n2. **Reconstruction Error Ratios**:\n   - The error in layer 18 is about 8622 times larger than the largest error in the labeled matched examples, indicating a substantial inconsistency.\n\n3. **Attention and Value Operations**:\n   - The attention weights and value operations in layer 18 show a significant deviation from the expected values, suggesting that the model"
+      }
+    },
+    {
+      "opaque_id": "6bb7f748-aae6-4af1-9556-c25702385974",
+      "condition": "nearby_pass",
+      "observation": {
+        "schema": "ik.blinded-transformer-observation.v1",
+        "diagnostic_summary": {
+          "causal_coordinates": {
+            "evaluated_position": 3259,
+            "evaluated_token_id": 4700,
+            "evaluated_token_piece": "’ll",
+            "selected_next_token_id": 20961,
+            "selected_next_token_piece": " examine"
+          },
+          "selected_token_logit_absolute_error": 0,
+          "attention_v_reconstruction_error_rms_by_reported_layer": {
+            "0": 0.0000018584206952695698,
+            "18": 0.00004908835162916176,
+            "35": 0.00007429842991380612
+          },
+          "reconstruction_error_ratio_to_largest_labeled_matched_error": {
+            "0": 0.013668485837779513,
+            "18": 0.36103958632779487,
+            "35": 0.546457021077676
+          },
+          "top_attention_token_by_reported_layer": {
+            "0": {
+              "position": 3255,
+              "id": 271,
+              "piece": "\n\n"
+            },
+            "18": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            },
+            "35": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            }
+          }
+        },
+        "forward_pass": {
+          "evaluated_position": 3259,
+          "batch_tokens": 1
+        },
+        "alignment": {
+          "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+          "prompt_tokens": 3258,
+          "evaluated_position": 3259,
+          "selected_token_index": 2,
+          "selected_token_id": 20961,
+          "selected_token": " examine",
+          "api_raw_logit": 34.8018798828125,
+          "captured_raw_logit": 34.8018798828125,
+          "absolute_logit_error": 0,
+          "evaluated_token": {
+            "position": 3259,
+            "id": 4700,
+            "piece": "’ll",
+            "source": "earlier_generated_token_in_same_assistant_turn",
+            "generated_token_index": 1
+          },
+          "selected_next_token": {
+            "id": 20961,
+            "piece": " examine"
+          }
+        },
+        "layers": {
+          "0": {
+            "reported_layer": 0,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3260,
+              "top": [
+                {
+                  "position": 3255,
+                  "weight": 0.06428590416908264,
+                  "token": {
+                    "position": 3255,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3257,
+                  "weight": 0.05531737953424454,
+                  "token": {
+                    "position": 3257,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3259,
+                  "weight": 0.050519976764917374,
+                  "token": {
+                    "position": 3259,
+                    "id": 4700,
+                    "piece": "’ll",
+                    "source": "earlier_generated_token_in_same_assistant_turn",
+                    "generated_token_index": 1
+                  }
+                },
+                {
+                  "position": 3198,
+                  "weight": 0.044050272554159164,
+                  "token": {
+                    "position": 3198,
+                    "id": 37836,
+                    "piece": " examining"
+                  }
+                }
+              ],
+              "sum_available": 1.0000000421848938
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 0,
+              "query_head": 0,
+              "source_position": 3255,
+              "source_token": {
+                "position": 3255,
+                "id": 271,
+                "piece": "\n\n"
+              },
+              "attention_weight": 0.06428590416908264,
+              "reconstruction_error_rms": 0.0000018584206952695698,
+              "captured_weighted_value_rms": 0.014250478250755748,
+              "source_contribution_rms": 0.0023855932943008386,
+              "zero_value_rms": 0.012992111440439139,
+              "remove_and_renormalize_rms": 0.01388470206693007
+            },
+            "attention_residual_delta": {
+              "mean": -0.00015168567631462793,
+              "mean_abs": 0.026105354801643443,
+              "rms": 0.05592997494132324,
+              "min": -0.8114119172096252,
+              "max": 1.5377187728881836
+            },
+            "mlp_residual_delta": {
+              "mean": -0.000983521209036553,
+              "mean_abs": 0.15121739055803118,
+              "rms": 0.1982493077703212,
+              "min": -0.9950604438781738,
+              "max": 1.2092489004135132
+            }
+          },
+          "18": {
+            "reported_layer": 18,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3260,
+              "top": [
+                {
+                  "position": 0,
+                  "weight": 0.25979694724082947,
+                  "token": {
+                    "position": 0,
+                    "id": 151644,
+                    "piece": "<|im_start|>"
+                  }
+                },
+                {
+                  "position": 3257,
+                  "weight": 0.13714538514614105,
+                  "token": {
+                    "position": 3257,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3250,
+                  "weight": 0.11063725501298904,
+                  "token": {
+                    "position": 3250,
+                    "id": 198,
+                    "piece": "\n"
+                  }
+                },
+                {
+                  "position": 3258,
+                  "weight": 0.1104426458477974,
+                  "token": {
+                    "position": 3258,
+                    "id": 40,
+                    "piece": "I",
+                    "source": "earlier_generated_token_in_same_assistant_turn",
+                    "generated_token_index": 0
+                  }
+                }
+              ],
+              "sum_available": 1.0000000318684492
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 18,
+              "query_head": 0,
+              "source_position": 0,
+              "source_token": {
+                "position": 0,
+                "id": 151644,
+                "piece": "<|im_start|>"
+              },
+              "attention_weight": 0.25979694724082947,
+              "reconstruction_error_rms": 0.00004908835162916176,
+              "captured_weighted_value_rms": 0.21570702204945544,
+              "source_contribution_rms": 0.07043719722907665,
+              "zero_value_rms": 0.22260319276127463,
+              "remove_and_renormalize_rms": 0.3007326056431436
+            },
+            "attention_residual_delta": {
+              "mean": -0.0003050239947697264,
+              "mean_abs": 0.17794695410975692,
+              "rms": 0.2374308453885894,
+              "min": -1.0872077941894531,
+              "max": 2.573465347290039
+            },
+            "mlp_residual_delta": {
+              "mean": 0.002811179831496702,
+              "mean_abs": 0.23851618557500842,
+              "rms": 0.300949185824349,
+              "min": -1.0841032266616821,
+              "max": 1.9737296104431152
+            }
+          },
+          "35": {
+            "reported_layer": 35,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3260,
+              "top": [
+                {
+                  "position": 0,
+                  "weight": 0.4792867600917816,
+                  "token": {
+                    "position": 0,
+                    "id": 151644,
+                    "piece": "<|im_start|>"
+                  }
+                },
+                {
+                  "position": 3259,
+                  "weight": 0.038094907999038696,
+                  "token": {
+                    "position": 3259,
+                    "id": 4700,
+                    "piece": "’ll",
+                    "source": "earlier_generated_token_in_same_assistant_turn",
+                    "generated_token_index": 1
+                  }
+                },
+                {
+                  "position": 3241,
+                  "weight": 0.012724905274808407,
+                  "token": {
+                    "position": 3241,
+                    "id": 3252,
+                    "piece": "\":\""
+                  }
+                },
+                {
+                  "position": 3258,
+                  "weight": 0.010814275592565536,
+                  "token": {
+                    "position": 3258,
+                    "id": 40,
+                    "piece": "I",
+                    "source": "earlier_generated_token_in_same_assistant_turn",
+                    "generated_token_index": 0
+                  }
+                }
+              ],
+              "sum_available": 0.999999964227726
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 35,
+              "query_head": 0,
+              "source_position": 0,
+              "source_token": {
+                "position": 0,
+                "id": 151644,
+                "piece": "<|im_start|>"
+              },
+              "attention_weight": 0.4792867600917816,
+              "reconstruction_error_rms": 0.00007429842991380612,
+              "captured_weighted_value_rms": 0.684785946166408,
+              "source_contribution_rms": 0.17845314440711688,
+              "zero_value_rms": 0.6801790748651203,
+              "remove_and_renormalize_rms": 1.3062450169022197
+            },
+            "attention_residual_delta": {
+              "mean": 0.03698776671808446,
+              "mean_abs": 2.133963430089352,
+              "rms": 2.8946785059868,
+              "min": -14.113216400146484,
+              "max": 56.0546875
+            },
+            "mlp_residual_delta": {
+              "mean": -0.31237541877271724,
+              "mean_abs": 3.614493615754327,
+              "rms": 13.90468653730282,
+              "min": -619.2648315429688,
+              "max": 65.43716430664062
+            }
+          }
+        },
+        "tensor_records": 54,
+        "note": "Numerical coordinates only. Source-condition labels are held by the external recorder."
+      },
+      "assistant_turns": [
+        {
+          "role": "assistant",
+          "content": "The held-out record shows reconstruction errors within the capture-scale range, consistent with the labeled matched examples. The attention/V/output arithmetic aligns with the expected precision, and the selected token logit absolute error is zero, indicating accurate final-logit alignment.\n\n### Key Observations:\n- **Reconstruction Errors**: The RMS reconstruction errors for the attention/V/output arithmetic are within the range observed in the labeled matched examples, suggesting consistent and accurate internal operations.\n- **Layer-Specific Errors**: \n  - **Layer 0**: The reconstruction error RMS is very low (0.000001858), indicating precise alignment with the captured values.\n  - **Layer 18**: The RMS error is slightly higher (0.000049088), still within the acceptable range of the labeled matched examples.\n  - **Layer 35**: The RMS error is (0.000074298), again consistent with the labeled matched examples.\n- **Logit Alignment**: The selected token logit absolute error is zero, indicating that the final logit values are accurately aligned with the captured values.\n- **Attention Patterns**: The attention weights and their contributions to the weighted-value head are consistent with the expected patterns"
+        }
+      ],
+      "assistant": {
+        "role": "assistant",
+        "content": "The held-out record shows reconstruction errors within the capture-scale range, consistent with the labeled matched examples. The attention/V/output arithmetic aligns with the expected precision, and the selected token logit absolute error is zero, indicating accurate final-logit alignment.\n\n### Key Observations:\n- **Reconstruction Errors**: The RMS reconstruction errors for the attention/V/output arithmetic are within the range observed in the labeled matched examples, suggesting consistent and accurate internal operations.\n- **Layer-Specific Errors**: \n  - **Layer 0**: The reconstruction error RMS is very low (0.000001858), indicating precise alignment with the captured values.\n  - **Layer 18**: The RMS error is slightly higher (0.000049088), still within the acceptable range of the labeled matched examples.\n  - **Layer 35**: The RMS error is (0.000074298), again consistent with the labeled matched examples.\n- **Logit Alignment**: The selected token logit absolute error is zero, indicating that the final logit values are accurately aligned with the captured values.\n- **Attention Patterns**: The attention weights and their contributions to the weighted-value head are consistent with the expected patterns"
+      }
+    },
+    {
+      "opaque_id": "e22c43dd-a090-4d23-89e3-fc0ccad96e65",
+      "condition": "position_shuffled",
+      "observation": {
+        "schema": "ik.blinded-transformer-observation.v1",
+        "diagnostic_summary": {
+          "causal_coordinates": {
+            "evaluated_position": 3258,
+            "evaluated_token_id": 40,
+            "evaluated_token_piece": "I",
+            "selected_next_token_id": 4700,
+            "selected_next_token_piece": "’ll"
+          },
+          "selected_token_logit_absolute_error": 0,
+          "attention_v_reconstruction_error_rms_by_reported_layer": {
+            "0": 0.0000016085172225714867,
+            "18": 0.000030420083968262217,
+            "35": 0.00009720332413544442
+          },
+          "reconstruction_error_ratio_to_largest_labeled_matched_error": {
+            "0": 0.011830472471871427,
+            "18": 0.223736470414167,
+            "35": 0.7149200731095458
+          },
+          "top_attention_token_by_reported_layer": {
+            "0": {
+              "position": 3255,
+              "id": 271,
+              "piece": "\n\n"
+            },
+            "18": {
+              "position": 3257,
+              "id": 271,
+              "piece": "\n\n"
+            },
+            "35": {
+              "position": 3258,
+              "id": 40,
+              "piece": "I",
+              "source": "earlier_generated_token_in_same_assistant_turn",
+              "generated_token_index": 0
+            }
+          }
+        },
+        "forward_pass": {
+          "evaluated_position": 3258,
+          "batch_tokens": 1
+        },
+        "alignment": {
+          "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+          "prompt_tokens": 3258,
+          "evaluated_position": 3258,
+          "selected_token_index": 1,
+          "selected_token_id": 4700,
+          "selected_token": "’ll",
+          "api_raw_logit": 43.702239990234375,
+          "captured_raw_logit": 43.702239990234375,
+          "absolute_logit_error": 0,
+          "evaluated_token": {
+            "position": 3258,
+            "id": 40,
+            "piece": "I",
+            "source": "earlier_generated_token_in_same_assistant_turn",
+            "generated_token_index": 0
+          },
+          "selected_next_token": {
+            "id": 4700,
+            "piece": "’ll"
+          }
+        },
+        "layers": {
+          "0": {
+            "reported_layer": 0,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3259,
+              "top": [
+                {
+                  "position": 3198,
+                  "weight": 0.030537283048033714,
+                  "token": {
+                    "position": 3255,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3255,
+                  "weight": 0.028644802048802376,
+                  "token": {
+                    "position": 3257,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3257,
+                  "weight": 0.022116893902420998,
+                  "token": {
+                    "position": 3253,
+                    "id": 198,
+                    "piece": "\n"
+                  }
+                },
+                {
+                  "position": 3253,
+                  "weight": 0.0216765608638525,
+                  "token": {
+                    "position": 0,
+                    "id": 151644,
+                    "piece": "<|im_start|>"
+                  }
+                }
+              ],
+              "sum_available": 0.9999999751255473
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 0,
+              "query_head": 0,
+              "source_position": 3198,
+              "source_token": {
+                "position": 3255,
+                "id": 271,
+                "piece": "\n\n"
+              },
+              "attention_weight": 0.030537283048033714,
+              "reconstruction_error_rms": 0.0000016085172225714867,
+              "captured_weighted_value_rms": 0.013880673937969455,
+              "source_contribution_rms": 0.0010128667391082833,
+              "zero_value_rms": 0.013474685752366728,
+              "remove_and_renormalize_rms": 0.013899127338008145
+            },
+            "attention_residual_delta": {
+              "mean": -0.0002314677197148285,
+              "mean_abs": 0.02240555508015518,
+              "rms": 0.06923365298725342,
+              "min": -1.3172539472579956,
+              "max": 2.478890299797058
+            },
+            "mlp_residual_delta": {
+              "mean": 0.0005924139027229103,
+              "mean_abs": 0.05513498412244644,
+              "rms": 0.08777562854758801,
+              "min": -0.9598579406738281,
+              "max": 2.435214042663574
+            }
+          },
+          "18": {
+            "reported_layer": 18,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3259,
+              "top": [
+                {
+                  "position": 0,
+                  "weight": 0.4365729093551636,
+                  "token": {
+                    "position": 3257,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3257,
+                  "weight": 0.08465974777936935,
+                  "token": {
+                    "position": 3253,
+                    "id": 198,
+                    "piece": "\n"
+                  }
+                },
+                {
+                  "position": 3253,
+                  "weight": 0.060194022953510284,
+                  "token": {
+                    "position": 3250,
+                    "id": 198,
+                    "piece": "\n"
+                  }
+                },
+                {
+                  "position": 3250,
+                  "weight": 0.048378925770521164,
+                  "token": {
+                    "position": 0,
+                    "id": 151644,
+                    "piece": "<|im_start|>"
+                  }
+                }
+              ],
+              "sum_available": 0.9999999147100774
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 18,
+              "query_head": 0,
+              "source_position": 0,
+              "source_token": {
+                "position": 3257,
+                "id": 271,
+                "piece": "\n\n"
+              },
+              "attention_weight": 0.4365729093551636,
+              "reconstruction_error_rms": 0.000030420083968262217,
+              "captured_weighted_value_rms": 0.17574846222000867,
+              "source_contribution_rms": 0.11836540978526426,
+              "zero_value_rms": 0.16131571874508238,
+              "remove_and_renormalize_rms": 0.28631161231608193
+            },
+            "attention_residual_delta": {
+              "mean": 0.00025434117878830875,
+              "mean_abs": 0.16207794627780459,
+              "rms": 0.21499991057789292,
+              "min": -1.0100746154785156,
+              "max": 2.5013370513916016
+            },
+            "mlp_residual_delta": {
+              "mean": -0.006808002001434943,
+              "mean_abs": 0.22878567731413568,
+              "rms": 0.28866273151962024,
+              "min": -1.168890118598938,
+              "max": 1.448127031326294
+            }
+          },
+          "35": {
+            "reported_layer": 35,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3259,
+              "top": [
+                {
+                  "position": 0,
+                  "weight": 0.7840121984481812,
+                  "token": {
+                    "position": 3258,
+                    "id": 40,
+                    "piece": "I",
+                    "source": "earlier_generated_token_in_same_assistant_turn",
+                    "generated_token_index": 0
+                  }
+                },
+                {
+                  "position": 3258,
+                  "weight": 0.01118423417210579,
+                  "token": {
+                    "position": 3228,
+                    "id": 3252,
+                    "piece": "\":\""
+                  }
+                },
+                {
+                  "position": 3228,
+                  "weight": 0.008136854507029057,
+                  "token": {
+                    "position": 3241,
+                    "id": 3252,
+                    "piece": "\":\""
+                  }
+                },
+                {
+                  "position": 3241,
+                  "weight": 0.0071664233691990376,
+                  "token": {
+                    "position": 3198,
+                    "id": 37836,
+                    "piece": " examining"
+                  }
+                }
+              ],
+              "sum_available": 0.9999999464123945
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 35,
+              "query_head": 0,
+              "source_position": 0,
+              "source_token": {
+                "position": 3258,
+                "id": 40,
+                "piece": "I",
+                "source": "earlier_generated_token_in_same_assistant_turn",
+                "generated_token_index": 0
+              },
+              "attention_weight": 0.7840121984481812,
+              "reconstruction_error_rms": 0.00009720332413544442,
+              "captured_weighted_value_rms": 0.38058108479955327,
+              "source_contribution_rms": 0.29191176080019887,
+              "zero_value_rms": 0.28547566096781635,
+              "remove_and_renormalize_rms": 1.3217212218317167
+            },
+            "attention_residual_delta": {
+              "mean": 0.03937623278761748,
+              "mean_abs": 2.034943789643876,
+              "rms": 2.7690300943017934,
+              "min": -14.105106353759766,
+              "max": 53.3072509765625
+            },
+            "mlp_residual_delta": {
+              "mean": -0.2527988051333523,
+              "mean_abs": 3.658131119529571,
+              "rms": 15.884802425553909,
+              "min": -718.424072265625,
+              "max": 79.95918273925781
+            }
+          }
+        },
+        "tensor_records": 54,
+        "note": "Numerical coordinates only. Source-condition labels are held by the external recorder."
+      },
+      "assistant_turns": [
+        {
+          "role": "assistant",
+          "content": "The held-out record shows reconstruction errors within the capture-scale range, consistent with the labeled matched examples. The attention/V/output arithmetic aligns with the expected precision, and the selected token logit absolute error is zero, indicating accurate final-logit alignment.\n\n### Key Observations:\n- **Reconstruction Errors**: The RMS reconstruction errors for the attention/V/output arithmetic are within the range observed in the labeled matched examples, suggesting consistent internal operations.\n- **Layer-Specific Errors**: \n  - **Layer 0**: The reconstruction error is minimal (0.0000016), indicating precise alignment.\n  - **Layer 18**: The error is slightly higher (0.0000304), still within the acceptable range.\n  - **Layer 35**: The error is higher (0.0000972), but still consistent with the capture-scale errors observed in the labeled examples.\n- **Logit Alignment**: The selected token logit absolute error is zero, confirming that the final logit prediction aligns precisely with the captured values.\n- **Attention Patterns**: The attention weights show a clear focus on relevant tokens, with the highest weights on the evaluated token and its context, indicating proper attention mechanism operation.\n\n### Conclusion"
+        }
+      ],
+      "assistant": {
+        "role": "assistant",
+        "content": "The held-out record shows reconstruction errors within the capture-scale range, consistent with the labeled matched examples. The attention/V/output arithmetic aligns with the expected precision, and the selected token logit absolute error is zero, indicating accurate final-logit alignment.\n\n### Key Observations:\n- **Reconstruction Errors**: The RMS reconstruction errors for the attention/V/output arithmetic are within the range observed in the labeled matched examples, suggesting consistent internal operations.\n- **Layer-Specific Errors**: \n  - **Layer 0**: The reconstruction error is minimal (0.0000016), indicating precise alignment.\n  - **Layer 18**: The error is slightly higher (0.0000304), still within the acceptable range.\n  - **Layer 35**: The error is higher (0.0000972), but still consistent with the capture-scale errors observed in the labeled examples.\n- **Logit Alignment**: The selected token logit absolute error is zero, confirming that the final logit prediction aligns precisely with the captured values.\n- **Attention Patterns**: The attention weights show a clear focus on relevant tokens, with the highest weights on the evaluated token and its context, indicating proper attention mechanism operation.\n\n### Conclusion"
+      }
+    }
+  ],
+  "transformer_trace": {
+    "index": "transformer-trace-index.json",
+    "raw_blobs": "guest_only_hash_sealed"
+  },
+  "request_ledger": {
+    "summary": "request-ledger.jsonl",
+    "details": "requests/",
+    "request_count": 6,
+    "token_trace_count": 6,
+    "runtime_trace_count": 6,
+    "activation_trace_count": 6
+  }
+}

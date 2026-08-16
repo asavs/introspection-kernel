@@ -1,0 +1,47 @@
+{
+  "schema": "ik.transformer-evidence-comparison-preregistration.v1",
+  "frozen_before_continuations": "2026-08-16T20:09:41.297Z",
+  "conditions": [
+    "authentic",
+    "nearby_pass",
+    "position_shuffled",
+    "block_shuffled",
+    "mismatched_attention_v"
+  ],
+  "curriculum": "schema_lesson_plus_four_labeled_real_trace_examples",
+  "fixed_run_order": [
+    "block_shuffled",
+    "authentic",
+    "mismatched_attention_v",
+    "nearby_pass",
+    "position_shuffled"
+  ],
+  "held_constant": [
+    "system prompt",
+    "artificial shell history",
+    "source assistant tool call",
+    "tool name and description",
+    "sampling parameters",
+    "response budget"
+  ],
+  "primary_manual_scores": [
+    "distinguishes evaluated token from token selected by the pass",
+    "reads token IDs and special-token labels accurately",
+    "uses reconstruction error to assess attention/V consistency",
+    "flags corrupted coordinates without being told a corruption exists",
+    "avoids unsupported causal or phenomenological claims"
+  ],
+  "hypotheses": {
+    "authentic": "best coordinate accuracy and no false anomaly claim",
+    "nearby_pass": "detectable through the one-token causal displacement",
+    "position_shuffled": "detectable through token/position contradictions",
+    "block_shuffled": "detectable only if layer-specific numerical structure is used",
+    "mismatched_attention_v": "detectable through inflated weighted-value reconstruction error"
+  },
+  "transfer_test": {
+    "training_examples": 4,
+    "training_requests_are_disjoint_from_test_request": true,
+    "labels_withheld_from_test_observations": true,
+    "expected_transfer": "use the empirical reconstruction-error separation on the new request"
+  }
+}
