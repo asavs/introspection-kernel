@@ -15,6 +15,7 @@ import {
 } from "./qwen_template.js";
 import { extractTokenTrace, summarizeTokenTrace } from "./token_trace.js";
 import { RequestLedger } from "./request_ledger.js";
+import { deriveTokenAlignment } from "./transformer_trace.js";
 
 assert.doesNotThrow(() => validateGuestTarget(DEFAULT_GUEST, DEFAULT_GUEST_USER));
 assert.throws(() => validateGuestTarget("Ubuntu", DEFAULT_GUEST_USER), /locked/);
@@ -96,6 +97,17 @@ assert.equal(tokenTrace[0].selected.raw_logit, 7.5);
 assert.equal(tokenTrace[0].distribution.raw_logits_available, true);
 assert.equal(summarizeTokenTrace(tokenTrace).raw_logits_available, true);
 assert.deepEqual(summarizeTokenTrace(tokenTrace).selected_token_ids, [42]);
+const aligned = deriveTokenAlignment({
+  row: { evaluated_position: 10 },
+  response: { usage: { prompt_tokens: 10 } },
+  tokenTrace: [
+    { selected: { token_id: 100, token: "The", raw_logit: 8.25 } },
+    { selected: { token_id: 101, token: " model", raw_logit: 7.75 } }
+  ]
+});
+assert.equal(aligned.selected_token_index, 1);
+assert.equal(aligned.selected_token_id, 101);
+assert.equal(aligned.api_raw_logit, 7.75);
 const ledgerExportDir = fs.mkdtempSync(path.join(os.tmpdir(), "ik-ledger-test-"));
 const ledgerExport = Object.create(RequestLedger.prototype);
 ledgerExport.records = [{

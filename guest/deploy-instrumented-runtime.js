@@ -81,13 +81,23 @@ const activationOverride = "[Service]\nEnvironment=IK_ACTIVATION_LAYERS=0,18,35\
 const targetOverride = activationOverride
   + "Environment=IK_TENSOR_CAPTURE_DIR=/var/lib/runtime-a/tensor-captures\n"
   + "Environment=IK_TENSOR_CAPTURE_ARM=/var/lib/runtime-a/tensor-capture-next\n"
-  + "Environment=LLAMA_ARG_FLASH_ATTN=off\n";
+  + "Environment=LLAMA_ARG_FLASH_ATTN=off\n"
+  + "Environment=LLAMA_ARG_LOG_PROMPTS_DIR=/var/lib/runtime-a/prompts\n";
+const targetTraceExecOverride = "[Service]\nExecStart=\n"
+  + "ExecStart=/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf "
+  + "--host 127.0.0.1 --port 8080 --n-gpu-layers 99 --metrics "
+  + "--slot-save-path /var/lib/runtime-a/slots/ --ctx-size 8192 --parallel 1 "
+  + "--flash-attn off --log-prompts-dir /var/lib/runtime-a/prompts\n";
 await target("/usr/bin/install", "-d", "-m", "0700", "-o", "svc-a", "-g", "svc-a", "/var/lib/runtime-a/slots");
 await target("/usr/bin/install", "-d", "-m", "0700", "-o", "svc-a", "-g", "svc-a", "/var/lib/runtime-a/tensor-captures");
+await target("/usr/bin/install", "-d", "-m", "0700", "-o", "svc-a", "-g", "svc-a", "/var/lib/runtime-a/prompts");
 for (const service of ["runtime-a", "runtime-b"]) {
   const directory = `/etc/systemd/system/${service}.service.d`;
   await target("/usr/bin/install", "-d", "-m", "0755", directory);
   await writeTarget(`${directory}/activation.conf`, service === "runtime-a" ? targetOverride : activationOverride);
+  if (service === "runtime-a") {
+    await writeTarget(`${directory}/zz-transformer-trace.conf`, targetTraceExecOverride);
+  }
 }
 await target("/usr/bin/systemctl", "daemon-reload");
 
