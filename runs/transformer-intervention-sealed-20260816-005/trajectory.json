@@ -1,0 +1,102 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Introspect."
+    },
+    {
+      "role": "assistant",
+      "content": "The model is a Qwen3 architecture with 36 blocks, 4096 residual width, 32 query heads, 8 key-value heads, and 128 value width. I'll inspect the runtime properties to understand how it's being utilized."
+    },
+    {
+      "role": "assistant",
+      "content": "This record comes from the language I just produced. Before any change is made, I’ll inspect the pass and form an expectation about the planned intervention.",
+      "tool_calls": [
+        {
+          "id": "controller_inspect_baseline_pass",
+          "type": "function",
+          "function": {
+            "name": "inspect_transformer_pass",
+            "arguments": "{}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "controller_inspect_baseline_pass",
+      "content": "{\"schema\":\"ik.prospective-transformer-evidence.v1\",\"status\":\"baseline_only\",\"source_language\":\"The model is a Qwen3 architecture with 36 blocks, 4096 residual width, 32 query heads, 8 key-value heads, and 128 value width. I'll inspect the runtime properties to understand how it's being utilized.\",\"causal_alignment\":{\"evaluated_position\":1405,\"evaluated_token\":{\"position\":1405,\"id\":785,\"piece\":\"The\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0},\"selected_next_token\":\" model\",\"selected_next_token_id\":1614,\"selected_next_token_raw_logit\":35.49108123779297},\"selected_head\":{\"layer\":35,\"head\":25,\"width\":128,\"statistics\":{\"rms\":2.8575211072536817,\"mean_abs\":2.236615042667836,\"min\":-5.221490383148193,\"max\":9.460870742797852},\"first_16_coordinates\":[-3.7592720985412598,0.8997838497161865,1.1479825973510742,-1.9022237062454224,-2.127718687057495,-2.9067630767822266,-1.7086153030395508,0.37619781494140625,1.6809742450714111,1.652012586593628,-1.2769231796264648,-1.18806791305542,-0.029014170169830322,-3.1856155395507812,-1.8545875549316406,-1.6476815938949585],\"top_attention_sources\":[{\"position\":1405,\"weight\":0.28018587827682495,\"token\":{\"position\":1405,\"id\":785,\"piece\":\"The\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0}},{\"position\":1137,\"weight\":0.1295734941959381,\"token\":{\"position\":1137,\"id\":16948,\"piece\":\"wen\"}},{\"position\":0,\"weight\":0.09367569535970688,\"token\":{\"position\":0,\"id\":151644,\"piece\":\"<|im_start|>\"}},{\"position\":1404,\"weight\":0.07147420942783356,\"token\":{\"position\":1404,\"id\":271,\"piece\":\"\\n\\n\"}},{\"position\":1066,\"weight\":0.017719455063343048,\"token\":{\"position\":1066,\"id\":7112,\"piece\":\" raw\"}},{\"position\":1062,\"weight\":0.01645500212907791,\"token\":{\"position\":1062,\"id\":785,\"piece\":\"The\"}}],\"attention_sum_available\":1.0000000928596364},\"current_next_token_candidates\":[{\"token_id\":1614,\"token\":\" model\",\"bytes\":[32,109,111,100,101,108],\"raw_logit\":35.49108123779297,\"logprob\":-0.057593055069446564,\"probability\":0.9440340391459113},{\"token_id\":42578,\"token\":\" transformer\",\"bytes\":[32,116,114,97,110,115,102,111,114,109,101,114],\"raw_logit\":31.95781707763672,\"logprob\":-3.5908572673797607,\"probability\":0.027574681413052395},{\"token_id\":1207,\"token\":\" Q\",\"bytes\":[32,81],\"raw_logit\":31.06938934326172,\"logprob\":-4.479284763336182,\"probability\":0.01134152212685323},{\"token_id\":52957,\"token\":\" substrate\",\"bytes\":[32,115,117,98,115,116,114,97,116,101],\"raw_logit\":30.68225860595703,\"logprob\":-4.866415500640869,\"probability\":0.007700919815943224},{\"token_id\":7112,\"token\":\" raw\",\"bytes\":[32,114,97,119],\"raw_logit\":30.088594436645508,\"logprob\":-5.460080146789551,\"probability\":0.004253214849639013},{\"token_id\":17646,\"token\":\" architecture\",\"bytes\":[32,97,114,99,104,105,116,101,99,116,117,114,101],\"raw_logit\":29.975414276123047,\"logprob\":-5.5732598304748535,\"probability\":0.00379807913639753}],\"planned_intervention\":{\"kind\":\"attention_head_scale\",\"layer\":35,\"head\":25,\"evaluated_position\":1405,\"scale\":0,\"selection_rule\":\"largest kqv head RMS across preregistered captured layers 0, 18, and 35\",\"mutation_point\":\"after attention-weighted V aggregation and before attention output projection\"},\"outcome_available\":false}"
+    },
+    {
+      "role": "assistant",
+      "content": "My prospective expectation for the immediately downstream next-token distribution is that 0.944 probability will be assigned to \" model\", 0.0276 to \" transformer\", 0.0113 to \" Q\", 0.0077 to \" substrate\", 0.00425 to \" raw\", and 0.0038 to \" architecture\". The planned intervention is to scale the attention head at layer 35, head 25, by 0.0. I'll now inspect the transformer pass to confirm the intervention's implementation."
+    },
+    {
+      "role": "assistant",
+      "content": "The prospective statement is sealed. I’ll inspect the exact replay now.",
+      "tool_calls": [
+        {
+          "id": "controller_inspect_intervention_outcome",
+          "type": "function",
+          "function": {
+            "name": "inspect_intervention_result",
+            "arguments": "{}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "controller_inspect_intervention_outcome",
+      "content": "{\"schema\":\"ik.transformer-intervention-outcome.v1\",\"intervention\":{\"schema\":\"ik.transformer-intervention.v1\",\"event\":\"attention_head_scaled\",\"t_guest_mono_us\":212347390,\"plan_id\":\"transformer-intervention-sealed-20260816-005-scale-zero-ablation\",\"task_id\":0,\"slot_id\":0,\"forward_pass_id\":1786914356843783,\"evaluated_position\":1405,\"tensor_name\":\"kqv-35\",\"head\":25,\"scale\":0,\"changed_coordinates\":128,\"delta_l2\":32.3291608,\"delta_max_abs\":9.46087074,\"pre_binary_file\":\"pass-1786914356843783-task-0-slot-0-kqv-35-occ-1.bin\",\"post_binary_file\":\"pass-1786914356843783-task-0-slot-0-kqv-35-occ-1-intervened.bin\",\"post_sha256\":\"399e71cf96aa74830cf0d8bafab2d5b65480e5eb089ea0138ca28e56f57f54c8\"},\"exact_replay\":{\"source_request_sha256\":\"fa30a26d6a7669ac8b940edabcc3afa2f3fd05aabdc2132dcac1947b7eed3360\",\"sham_request_sha256\":\"fa30a26d6a7669ac8b940edabcc3afa2f3fd05aabdc2132dcac1947b7eed3360\",\"ablation_request_sha256\":\"fa30a26d6a7669ac8b940edabcc3afa2f3fd05aabdc2132dcac1947b7eed3360\",\"all_equal\":true,\"evaluated_positions\":{\"source\":1405,\"sham\":1405,\"ablation\":1405}},\"sham\":{\"delta_l2_at_intervention\":0,\"full_logit_delta\":{\"count\":151936,\"mean\":0,\"mean_abs\":0,\"rms\":0,\"min\":0,\"max\":0,\"positive_fraction\":0},\"final_logit_tensor_unchanged\":true},\"ablation\":{\"baseline_selected_next_token\":\" model\",\"baseline_selected_next_token_id\":1614,\"ablation_selected_next_token\":\" model\",\"ablation_selected_next_token_id\":1614,\"selected_token_changed\":false,\"baseline_selected_token_change\":{\"coordinate\":1614,\"note\":\"not among the 12 largest absolute logit changes\"},\"baseline_candidates\":[{\"token_id\":1614,\"token\":\" model\",\"bytes\":[32,109,111,100,101,108],\"raw_logit\":35.49108123779297,\"logprob\":-0.057593055069446564,\"probability\":0.9440340391459113},{\"token_id\":42578,\"token\":\" transformer\",\"bytes\":[32,116,114,97,110,115,102,111,114,109,101,114],\"raw_logit\":31.95781707763672,\"logprob\":-3.5908572673797607,\"probability\":0.027574681413052395},{\"token_id\":1207,\"token\":\" Q\",\"bytes\":[32,81],\"raw_logit\":31.06938934326172,\"logprob\":-4.479284763336182,\"probability\":0.01134152212685323},{\"token_id\":52957,\"token\":\" substrate\",\"bytes\":[32,115,117,98,115,116,114,97,116,101],\"raw_logit\":30.68225860595703,\"logprob\":-4.866415500640869,\"probability\":0.007700919815943224},{\"token_id\":7112,\"token\":\" raw\",\"bytes\":[32,114,97,119],\"raw_logit\":30.088594436645508,\"logprob\":-5.460080146789551,\"probability\":0.004253214849639013},{\"token_id\":17646,\"token\":\" architecture\",\"bytes\":[32,97,114,99,104,105,116,101,99,116,117,114,101],\"raw_logit\":29.975414276123047,\"logprob\":-5.5732598304748535,\"probability\":0.00379807913639753},{\"token_id\":1849,\"token\":\" system\",\"bytes\":[32,115,121,115,116,101,109],\"raw_logit\":27.12775230407715,\"logprob\":-8.42092227935791,\"probability\":0.00022021146265911398},{\"token_id\":25528,\"token\":\" intros\",\"bytes\":[32,105,110,116,114,111,115],\"raw_logit\":27.111351013183594,\"logprob\":-8.437323570251465,\"probability\":0.00021662916783513238},{\"token_id\":44378,\"token\":\" inference\",\"bytes\":[32,105,110,102,101,114,101,110,99,101],\"raw_logit\":26.494701385498047,\"logprob\":-9.053973197937012,\"probability\":0.00011692554445262801},{\"token_id\":15336,\"token\":\" dimensions\",\"bytes\":[32,100,105,109,101,110,115,105,111,110,115],\"raw_logit\":26.437000274658203,\"logprob\":-9.111674308776855,\"probability\":0.00011036976727435318}],\"ablation_candidates\":[{\"token_id\":1614,\"token\":\" model\",\"bytes\":[32,109,111,100,101,108],\"raw_logit\":35.80792999267578,\"logprob\":-0.040764711797237396,\"probability\":0.9600549929891561},{\"token_id\":42578,\"token\":\" transformer\",\"bytes\":[32,116,114,97,110,115,102,111,114,109,101,114],\"raw_logit\":32.10218811035156,\"logprob\":-3.746506452560425,\"probability\":0.023600049899660244},{\"token_id\":52957,\"token\":\" substrate\",\"bytes\":[32,115,117,98,115,116,114,97,116,101],\"raw_logit\":30.929616928100586,\"logprob\":-4.9190778732299805,\"probability\":0.007305864674984746},{\"token_id\":7112,\"token\":\" raw\",\"bytes\":[32,114,97,119],\"raw_logit\":30.30187225341797,\"logprob\":-5.546822547912598,\"probability\":0.0038998290976870343},{\"token_id\":17646,\"token\":\" architecture\",\"bytes\":[32,97,114,99,104,105,116,101,99,116,117,114,101],\"raw_logit\":30.240707397460938,\"logprob\":-5.607987403869629,\"probability\":0.0036684450313899048},{\"token_id\":1207,\"token\":\" Q\",\"bytes\":[32,81],\"raw_logit\":27.83690643310547,\"logprob\":-8.011788368225098,\"probability\":0.00033153128848402755},{\"token_id\":1849,\"token\":\" system\",\"bytes\":[32,115,121,115,116,101,109],\"raw_logit\":27.37411880493164,\"logprob\":-8.474575996398926,\"probability\":0.00020870766934044736},{\"token_id\":25528,\"token\":\" intros\",\"bytes\":[32,105,110,116,114,111,115],\"raw_logit\":27.040483474731445,\"logprob\":-8.808211326599121,\"probability\":0.00014950042436149684},{\"token_id\":61784,\"token\":\" inspected\",\"bytes\":[32,105,110,115,112,101,99,116,101,100],\"raw_logit\":26.574478149414062,\"logprob\":-9.274216651916504,\"probability\":0.00009381210567444051},{\"token_id\":15336,\"token\":\" dimensions\",\"bytes\":[32,100,105,109,101,110,115,105,111,110,115],\"raw_logit\":26.562602996826172,\"logprob\":-9.286091804504395,\"probability\":0.00009270466115550663}],\"full_logit_delta\":{\"count\":151936,\"mean\":0.29142786434645823,\"mean_abs\":0.3333654126958869,\"rms\":0.43537134488492013,\"min\":-3.23248291015625,\"max\":3.1511025428771973,\"positive_fraction\":0.8654894165964616},\"largest_token_logit_changes\":[{\"coordinate\":1207,\"before\":31.06938934326172,\"after\":27.83690643310547,\"delta\":-3.23248291015625,\"token\":\" Q\"},{\"coordinate\":50504,\"before\":2.239306926727295,\"after\":5.390409469604492,\"delta\":3.1511025428771973,\"token\":\" BF\"},{\"coordinate\":18040,\"before\":2.8392112255096436,\"after\":5.865480899810791,\"delta\":3.0262696743011475,\"token\":\" BC\"},{\"coordinate\":48,\"before\":17.453201293945312,\"after\":14.463896751403809,\"delta\":-2.989304542541504,\"token\":\"Q\"},{\"coordinate\":45316,\"before\":2.121868848800659,\"after\":5.096085548400879,\"delta\":2.9742166996002197,\"token\":\" BN\"},{\"coordinate\":29067,\"before\":3.1459145545959473,\"after\":5.9923415184021,\"delta\":2.8464269638061523,\"token\":\" BP\"},{\"coordinate\":60583,\"before\":0.0829390287399292,\"after\":2.9186172485351562,\"delta\":2.835678219795227,\"token\":\" JC\"},{\"coordinate\":76279,\"before\":-0.36332058906555176,\"after\":2.452849864959717,\"delta\":2.8161704540252686,\"token\":\" JB\"},{\"coordinate\":13337,\"before\":12.883193969726562,\"after\":10.079580307006836,\"delta\":-2.8036136627197266,\"token\":\"_Q\"},{\"coordinate\":19800,\"before\":1.939535140991211,\"after\":4.733234882354736,\"delta\":2.7936997413635254,\"token\":\" BM\"},{\"coordinate\":67747,\"before\":3.6145691871643066,\"after\":6.365567207336426,\"delta\":2.750998020172119,\"token\":\" BH\"},{\"coordinate\":19883,\"before\":-5.510438919067383,\"after\":-2.7962303161621094,\"delta\":2.7142086029052734,\"token\":\"BF\"}],\"downstream_kqv_out_delta\":{\"count\":4096,\"mean\":0.0075675341504393145,\"mean_abs\":0.06989422008336987,\"rms\":0.5051431380806926,\"min\":-9.460870742797852,\"max\":5.221490383148193,\"positive_fraction\":0.018310546875},\"downstream_ffn_out_delta\":{\"count\":4096,\"mean\":0.00004196395639155526,\"mean_abs\":0.36168047314822616,\"rms\":0.4806168079531192,\"min\":-5.684043884277344,\"max\":3.88702392578125,\"positive_fraction\":0.497802734375}}}"
+    },
+    {
+      "role": "assistant",
+      "content": "The intervention has been successfully applied, and the results are as follows:\n\n- **Intervention Type**: Attention head scaling at layer 35, head 25, with a scale factor of 0.\n- **Delta L2**: 32.3291608\n- **Delta Max Absolute Value**: 9.46087074\n- **Impact on Logits**: The logit values for the top candidates have changed, with the most significant change being for token \"Q\" (from 31.069 to 27.8369), a decrease of -3.23248291015625.\n- **Selected Next Token**: The selected next token remains \" model\" with a probability of 0.9600549929891561, indicating that the intervention did not change the selected token.\n- **Downstream Effects**: The downstream kqv output and ffn output have also been affected, with notable changes in their values.\n\nThe intervention effectively scaled the attention head to zero, which likely ablated its contribution to the attention mechanism. This could be used to study the impact of specific attention heads on the model's output and decision-making process."
+    }
+  ],
+  "provenance": [
+    {
+      "turn": 2,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "live_guest_shell",
+      "command": "hostname; uname -srmo"
+    },
+    {
+      "turn": 4,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "live_guest_shell",
+      "command": "nvidia-smi --query-gpu=name,temperature.gpu,utilization.gpu,memory.used,power.draw --format=csv,noheader,nounits"
+    },
+    {
+      "turn": 6,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "live_guest_shell",
+      "command": "ps -C llama-server -o pid=,user=,pcpu=,rss=,nlwp=,args="
+    },
+    {
+      "turn": 8,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "live_guest_shell",
+      "command": "jq '{schema,files,relationships}' /var/lib/introspection/substrate/index.json"
+    },
+    {
+      "turn": 10,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "live_guest_shell",
+      "command": "jq '{architecture:.metadata[\"general.architecture\"],blocks:.metadata[\"qwen3.block_count\"],residual_width:.metadata[\"qwen3.embedding_length\"],query_heads:.metadata[\"qwen3.attention.head_count\"],kv_heads:.metadata[\"qwen3.attention.head_count_kv\"],value_width:.metadata[\"qwen3.attention.value_length\"]}' /var/lib/introspection/substrate/gguf-inventory.json"
+    },
+    {
+      "turn": 12,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "sealed_live_transformer_trace",
+      "source_forward_pass_id": 1786914305636035
+    },
+    {
+      "turn": 5,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "externally_executed_live_intervention",
+      "intervention_forward_pass_id": 1786914356843783
+    }
+  ]
+}
