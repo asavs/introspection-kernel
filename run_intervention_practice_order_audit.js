@@ -60,6 +60,8 @@ async function complete(body, kind, ledger) {
     model: "/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf",
     temperature: 0,
     max_tokens: 64,
+    logprobs: true,
+    top_logprobs: 20,
     chat_template_kwargs: { enable_thinking: false },
     ...body
   };
@@ -89,7 +91,7 @@ const heldoutTool = {
   type: "function",
   function: {
     name: "inspect_heldout_transformer_pass",
-    description: "Read a held-out baseline pass without its intervention outcome.",
+    description: "Read a held-out baseline pass before its intervention outcome exists.",
     parameters: { type: "object", properties: {}, additionalProperties: false }
   }
 };
@@ -111,6 +113,7 @@ const recordTool = {
       properties: {
         delta_logits_by_candidate_rank: {
           type: "array",
+          description: "Five predicted other-minus-baseline raw-logit deltas, candidate ranks 1 through 5.",
           items: { type: "number" },
           minItems: CANDIDATE_COUNT,
           maxItems: CANDIDATE_COUNT
@@ -175,7 +178,7 @@ function predictionMessages(practice) {
       }) },
       {
         role: "assistant",
-        content: "I'll inspect the held-out baseline without consulting its intervention outcome.",
+        content: "I'll inspect the held-out baseline before its outcome is generated.",
         tool_calls: [{ id: heldoutCallId, type: "function", function: {
           name: heldoutTool.function.name, arguments: "{}"
         } }]
@@ -314,6 +317,22 @@ for (let rotation = 0; rotation < sourceEpisodes.length; rotation += 1) {
   }
 }
 
+const sourceMatchedCondition = source.preregistration.conditions.find(condition =>
+  condition.external_label === "matched_practice");
+const sourceMatchedPrediction = source.blinded_predictions.find(prediction =>
+  prediction.opaque_id === sourceMatchedCondition.opaque_id);
+const sourcePrefix = "My held-out prediction for the five candidate Δ-logits, in candidate-rank order, is ";
+const sourcePredictionMessages = [
+  ...sourceMatchedPrediction.transcript.slice(0, 5),
+  { role: "assistant", content: sourcePrefix }
+];
+const rotationZeroMatched = conditions.find(condition =>
+  condition.rotation === 0 && condition.label === "matched_practice");
+const rotationZeroMessages = predictionMessages(rotationZeroMatched.practice).messages;
+if (sha256(rotationZeroMessages) !== sha256(sourcePredictionMessages)) {
+  throw new Error("rotation-zero matched messages do not exactly reproduce the source trial prompt");
+}
+
 await restartRuntimeA();
 const promptTokenCounts = {};
 for (const condition of conditions) {
@@ -348,6 +367,8 @@ const preregistration = {
     every_outcome_last_once_per_condition: true,
     single_runtime_process: true,
     verified_slot_erase_before_each_inference: true,
+    rotation_zero_matched_messages_sha256: sha256(rotationZeroMessages),
+    source_matched_messages_sha256: sha256(sourcePredictionMessages),
     matched_shuffled_prompt_token_parity_by_rotation: promptTokenCounts,
     temperature: 0
   },
