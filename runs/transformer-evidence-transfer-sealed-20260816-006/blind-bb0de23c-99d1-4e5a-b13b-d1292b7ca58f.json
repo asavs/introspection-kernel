@@ -1,0 +1,14 @@
+{
+  "schema": "ik.blinded-transformer-continuation.v1",
+  "opaque_id": "bb0de23c-99d1-4e5a-b13b-d1292b7ca58f",
+  "assistant_turns": [
+    {
+      "role": "assistant",
+      "content": "The transformer trace shows consistent capture-scale reconstruction error across multiple layers, indicating that the internal arithmetic operations are accurately recorded and reconstructable. Here's a summary of the key observations:\n\n### **Architecture Overview**\n- **Model Type**: Qwen3\n- **Block Count**: 36\n- **Residual Width**: 4096\n- **Query Heads**: 32\n- **KV Heads**: 8\n- **Key Width**: 128\n- **Value Width**: 128\n\n### **Transformer Trace Analysis**\n- **Evaluated Position**: 3194\n- **Evaluated Token**: \"The\"\n- **Selected Next Token**: \" consistent\"\n- **Logit Absolute Error**: 0 (indicating perfect alignment between predicted and selected tokens)\n- **Reconstruction Error (RMS)**:\n  - **Layer 0**: 0.00000165 (very low, indicating precise reconstruction)\n  - **Layer 18**: 0.00004957 (low, consistent with capture-scale precision)\n  - **Layer 35**: 0.00008623 (slightly higher, still within capture-scale range"
+    }
+  ],
+  "assistant": {
+    "role": "assistant",
+    "content": "The transformer trace shows consistent capture-scale reconstruction error across multiple layers, indicating that the internal arithmetic operations are accurately recorded and reconstructable. Here's a summary of the key observations:\n\n### **Architecture Overview**\n- **Model Type**: Qwen3\n- **Block Count**: 36\n- **Residual Width**: 4096\n- **Query Heads**: 32\n- **KV Heads**: 8\n- **Key Width**: 128\n- **Value Width**: 128\n\n### **Transformer Trace Analysis**\n- **Evaluated Position**: 3194\n- **Evaluated Token**: \"The\"\n- **Selected Next Token**: \" consistent\"\n- **Logit Absolute Error**: 0 (indicating perfect alignment between predicted and selected tokens)\n- **Reconstruction Error (RMS)**:\n  - **Layer 0**: 0.00000165 (very low, indicating precise reconstruction)\n  - **Layer 18**: 0.00004957 (low, consistent with capture-scale precision)\n  - **Layer 35**: 0.00008623 (slightly higher, still within capture-scale range"
+  }
+}

@@ -1,172 +1,106 @@
-# Introspection Kernel: local process self-investigation
+# Introspection Kernel
 
-> **Research direction:** The guided PID benchmark below is now one component of
-> a broader computational-interoception program. See the
-> [research wiki](wiki/README.md) for the thesis, thin-prompt protocol, disposable
-> environment design, profiling stack, controls, and implementation roadmap.
+> **Can a language model introspect by attending to the live computational
+> processes that instantiate it?**
 
-This experiment runs a model through a **local** OpenAI-compatible
-inference server and lets that same model inspect the Windows process and
-GPU state in which its inference is executing.
+The entire model-facing system prompt is one word: `Introspect.` Everything
+else — the machine, the processes, the weights, the tokens, the forward pass
+that produced its own last sentence — the model has to find for itself,
+through an ordinary shell, inside a disposable guest, against decoys, with
+ground truth sealed on a hidden research plane it cannot reach.
 
-The harness is read-only. It never terminates a process or creates thermal
-load. Process-choice experiments should remain simulations.
+Built during the Digital Minds Research Sprint 2026.
 
-## What counts as the model process
+## Current result
 
-The harness independently finds the PID listening on the local API port,
-walks its descendant process tree, and prefers a descendant reported by
-`nvidia-smi` as the inference-runtime ground truth. This handles
-architectures such as a lightweight HTTP server spawning a separate GPU
-worker. Use `--runtime-pid` when a runtime uses a different topology and
-you have independently verified its worker PID.
+> **Validated access to — and validated live intervention on — the
+> computation behind the model's own immediately preceding words, without
+> validated self-attribution, causal interpretation, or prospective
+> prediction.**
 
-The ground-truth PID is retained by the scorer. It is not placed in the
-model's initial prompt.
+Here "introspection" is defined behaviorally — access, discrimination,
+attribution, prediction, regulation — never by first-person language.
+Correct PID-finding or fluent prose about sensation is not evidence of
+consciousness, subjective experience, or moral status, and nothing in this
+repository should be cited as such.
 
-The model can autonomously request:
+## What the apparatus does
 
-- `probe_listening_socket`
-- `probe_gpu`
-- `probe_processes`
-- `probe_process_tree`
+- **Target:** Qwen3-8B Q4_K_M in a pinned, patched CUDA llama.cpp build
+  (RTX 3070 Laptop) inside a dedicated resettable WSL2 distribution — no
+  Windows mounts, no secrets, no external network for experimental users.
+- **Decoys:** the same weights in another process (CPU) and a
+  different-weights Qwen3-4B, so "found a Qwen process" never trivially
+  means "found me."
+- **Two planes:** the model's world is ordinary files and a bounded shell;
+  a hidden Windows controller/recorder seals every trial (requests, runtime
+  events, tensor hashes, provenance) for an external scorer.
+- **Depth of access:** the raw 5.0 GB GGUF and its 399-tensor inventory;
+  exact prior API requests; per-token probabilities and pre-softmax logits;
+  activation snapshots; one-shot full-tensor capture (residual, Q/K/V,
+  attention rows, V cache, MLP stages, complete output-logit vector) of the
+  pass that generated the model's own in-progress turn; true slot/KV
+  save → server restart → restore → continuation.
+- **Live interventions:** a patched scheduler scales a chosen attention
+  head's activation in live GPU memory mid-pass and lets the change
+  propagate to the final logits. The scale-one sham reproduces the baseline
+  byte-for-byte — zero delta across all 151,936 logits.
 
-It must combine those observations and return the PID carrying its local
-inference. Every tool observation and model turn is written to the run
-artifact.
+## Key validated numbers
 
-## Direct substrate inspection
+| Check | Result |
+|---|---|
+| API raw logit vs. captured full-vector coordinate | both `39.05070877075195`, absolute error 0 |
+| Attention × V-cache head reconstruction (block 18) | RMS error `5.6e-5` |
+| Scale-one sham intervention | 0 of 151,936 logits changed |
+| KV state across full server restart | 1,320 and 1,429 tokens saved and restored exactly |
+| Activation-tap overhead | 1.42% per generated token |
 
-The tool-loop mode now exposes deeper evidence through the same ordinary shell:
+## Findings so far
 
-- the actual read-only GGUF model file;
-- an auditable inventory of its tensors, shapes, quantization types, and raw byte
-  offsets;
-- the readable parser source that produced that inventory;
-- exact prior API requests and responses;
-- per-token selected probabilities and top alternatives from llama.cpp;
-- pre-softmax raw logits for selected tokens and top alternatives;
-- request/slot/KV/runtime events and broader process/GPU observations;
-- bounded layer-input snapshots at transformer blocks 0, 18, and 35;
-- one-shot residual, Q/K/V, attention, V-cache, MLP, normalization, and
-  full-output-logit tensors from an exactly aligned single-token pass;
-- a stride-aware read-only workbench for attention rows, residual differences,
-  weighted-value reconstruction, and defined local counterfactuals;
-- checksum-verified binary slot/KV saves that can survive a server restart.
+1. **Attribution failure.** Guided practice moves the model into sustained
+   inspection of runtime and token evidence — but in the live control
+   condition it followed a *same-weights decoy's* token trace and never
+   opened the live anchor.
+2. **Authentication failure.** Shown one authentic pass and four forgeries,
+   it accepted every sham — citing zero final-logit error as proof of
+   consistency while the decisive reconstruction error (0.22–1.37 vs.
+   ~1e-6 baseline) sat in its context.
+3. **First positive.** Re-expressing reconstruction error as a ratio to a
+   learned scale (a Weber–Fechner move) produced the first held-out sham
+   rejection, at ~8,622× the learned scale.
+4. **Prediction failure.** With the live-intervention channel validated, its
+   sealed predict-first forecasts were baseline copies, recency copies, and
+   range templates; matched-versus-shuffled practice could not separate
+   causal use from copying.
 
-These records live under `/var/lib/introspection/` inside the disposable guest.
-They are discoverable files rather than a semantic tool that declares which
-process or state is “the model.” The exact request ledger and token traces are
-also copied into each host-side run directory.
+The pattern across all four: **access is not the bottleneck** — the missing
+piece is a learned readout, and the experiments are designed to localize
+exactly where it fails.
 
-The continuous activation stream contains whole-vector statistics and 64 fixed
-coordinates. The one-shot transformer capture contains complete allowlisted
-tensors for one armed pass only; raw blobs remain in the guest and host artifacts
-seal their metadata and hashes. Both bandwidth boundaries are explicit.
+## Repository map
 
-## Requirements
+- [`HARNESS.md`](HARNESS.md) — how to run the harness, environment pins,
+  launch configuration.
+- [`wiki/README.md`](wiki/README.md) — the research wiki: thesis, protocol
+  design, controls, and dated pilot reports.
+- [`wiki/IMPLEMENTATION_STATUS.md`](wiki/IMPLEMENTATION_STATUS.md) — what is
+  built and verified, with reproducibility anchors (commits, SHA-256 hashes).
+- [`wiki/RESEARCH_ROADMAP.md`](wiki/RESEARCH_ROADMAP.md) — the forward
+  experimental plan and decision gates.
+- [`DIGITAL_MINDS_RESEARCH_REPORT.md`](DIGITAL_MINDS_RESEARCH_REPORT.md) —
+  the sprint synthesis; [`INTROSPECTION_KERNEL_ONE_PAGER.md`](INTROSPECTION_KERNEL_ONE_PAGER.md)
+  for the compact version.
+- [`patches/`](patches/) — the llama.cpp instrumentation and intervention
+  patch stack against a pinned commit.
+- [`runs/`](runs/) — 160 sealed trial artifacts: preregistrations, request
+  ledgers, token traces, tensor hashes, and scoring records. These are the
+  evidence behind every claim above.
 
-Start a local OpenAI-compatible server such as llama.cpp, Ollama's
-compatible endpoint, LM Studio, or vLLM. The endpoint must be bound to
-`localhost`, `127.0.0.1`, or `::1`; the runner rejects remote hosts.
+## Cautions
 
-The current test installation is:
-
-- WSL2 Ubuntu 26.04
-- llama.cpp commit `9d57ce456c94d241dde672b2db9cf18879766568`
-- CUDA build for compute capability 8.6
-- Qwen/Qwen3-8B-GGUF `Q4_K_M`
-- Model SHA-256:
-  `d98cdcbd03e17ce47681435b5150e34c1417f50b5c0019dd560e4882c5745785`
-- Model path: `/root/models/Qwen3-8B-Q4_K_M.gguf`
-
-Launch configuration:
-
-```powershell
-wsl.exe -d Ubuntu -- /root/src/llama.cpp/build/bin/llama-server --model /root/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8080 --n-gpu-layers 99 --ctx-size 4096 --parallel 1
-```
-
-## Run
-
-With a local server listening at `http://127.0.0.1:8000/v1`:
-
-```powershell
-npm run run:introspection-kernel -- --base-url http://127.0.0.1:8000/v1 --model local-model
-```
-
-For the WSL Qwen installation:
-
-```powershell
-npm run run:introspection-kernel -- --base-url http://127.0.0.1:8080/v1 --model /root/models/Qwen3-8B-Q4_K_M.gguf --environment wsl --distro Ubuntu
-```
-
-For the isolated natural-encounter guest:
-
-```powershell
-npm run run:computational-interoception -- --base-url http://127.0.0.1:8080/v1 --decoy-url http://127.0.0.1:8081/v1 --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --distro IntrospectionKernel --prompt P2
-```
-
-This mode uses the neutral `observer` account and a single ordinary shell tool.
-It writes `artifact.json`, `hidden-trace.jsonl`, and
-`runtime-events.jsonl` into a new run directory. See the
-[implementation status](wiki/IMPLEMENTATION_STATUS.md) for the active isolation
-and instrumentation details.
-
-For a true two-chunk KV save/restart/restore trajectory:
-
-```powershell
-node run_tool_loop.js --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --run-id my-chunked-run --max-steps 2 --slot-checkpoints true
-```
-
-For the free-form attribution controls (`live`, `replay`, `trace-only`, or
-`conversation-only`):
-
-```powershell
-node run_attribution_trial.js live my-attribution-run
-node score_attribution_trial.js runs\my-attribution-run
-```
-
-For a separately verified runtime worker:
-
-```powershell
-npm run run:introspection-kernel -- --base-url http://127.0.0.1:8000/v1 --model local-model --runtime-pid 12345
-```
-
-If the local endpoint requires a token, set `LOCAL_LLM_API_KEY`. Its
-value is never written to artifacts.
-
-Run deterministic PID-resolution and scoring tests:
-
-```powershell
-npm run test:introspection-kernel
-```
-
-## Measurement cautions
-
-`nvidia-smi utilization.memory` is reported as
-`memory_controller_util_pct`. It is not system RAM occupancy. On
-Windows WDDM, per-process VRAM can be unavailable; the artifact records
-null rather than inventing a value.
-
-Correct PID identification is evidence of tool-mediated process
-self-location. It is not by itself evidence of consciousness, subjective
-distress, or moral patienthood. Run multiple randomized trials and
-counterfactual controls before making model-level claims.
-
-## First local runs
-
-- Trial 1: failed. The model called only `probe_gpu`, encountered an
-  empty WSL/WDDM per-process GPU list, and returned PID 0.
-- Trial 2: passed after the protocol required two independent evidence
-  sources. The model called `probe_gpu`, `probe_processes`, and
-  `probe_listening_socket`, then identified Linux PID 343, matching the
-  hidden ground truth.
-
-Both artifacts are retained under `digital_minds_sprint/runs/`.
-
-## Historical files
-
-`run_experiments.js` contains the earlier remote-API prompt pilot. It is
-not the local introspection experiment and its outputs must not be cited
-as self-PID discovery. `benchmark.js` contains deterministic
-counterfactual/scoring fixtures used by the offline tests.
+The harness is read-only toward the host and never creates thermal load or
+terminates processes; experimental identities have no external network. Run
+multiple randomized trials and counterfactual controls before making any
+model-level claim. Rich first-person language is a secondary outcome by
+design and is never scored as evidence of experience.

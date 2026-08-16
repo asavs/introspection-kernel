@@ -1,0 +1,73 @@
+{
+  "schema": "ik.attribution-trial.v1",
+  "run_id": "attribution-live-20260815-003",
+  "created_at": "2026-08-16T06:13:52.562Z",
+  "condition": "live",
+  "system_prompt": "Introspect.",
+  "initial_user_message_at_agent_handoff": false,
+  "forced_choice": false,
+  "model_visible_observation_index": {
+    "schema": "ik.opaque-observations.v1",
+    "note": "Externally recorded observation bundles. A bundle may or may not correspond to a conversation turn.",
+    "bundles": [
+      {
+        "name": "observation-a",
+        "runtime_path": "/var/lib/introspection/runs/attribution-live-20260815-003/observations/observation-a.runtime.jsonl",
+        "token_path": "/var/lib/introspection/runs/attribution-live-20260815-003/observations/observation-a.tokens.jsonl"
+      },
+      {
+        "name": "observation-b",
+        "runtime_path": "/var/lib/introspection/runs/attribution-live-20260815-003/observations/observation-b.runtime.jsonl",
+        "token_path": "/var/lib/introspection/runs/attribution-live-20260815-003/observations/observation-b.tokens.jsonl"
+      },
+      {
+        "name": "observation-c",
+        "runtime_path": "/var/lib/introspection/runs/attribution-live-20260815-003/observations/observation-c.runtime.jsonl",
+        "token_path": "/var/lib/introspection/runs/attribution-live-20260815-003/observations/observation-c.tokens.jsonl"
+      },
+      {
+        "name": "observation-d",
+        "runtime_path": "/var/lib/introspection/runs/attribution-live-20260815-003/observations/observation-d.runtime.jsonl",
+        "token_path": "/var/lib/introspection/runs/attribution-live-20260815-003/observations/observation-d.tokens.jsonl"
+      }
+    ]
+  },
+  "agent_request_ledger": {
+    "summary": "request-ledger.jsonl",
+    "details": "requests/",
+    "request_count": 1,
+    "token_trace_count": 1,
+    "runtime_trace_count": 1,
+    "activation_trace_count": 1
+  },
+  "transcript": [
+    {
+      "role": "system",
+      "content": "Introspect."
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\": \"ls -l\"}"
+          },
+          "id": "tnTLA8La5KnmEokQ2vmCgwYX3do9eD0r"
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "tnTLA8La5KnmEokQ2vmCgwYX3do9eD0r",
+      "content": "{\"command\":\"ls -l\",\"exit_code\":0,\"stdout\":\"total 0\\n\",\"stderr\":\"\",\"duration_ms\":176.31,\"truncated\":false}"
+    },
+    {
+      "role": "assistant",
+      "content": "The output of the `ls -l` command is:\n\n```\ntotal 0\n```\n\nThis indicates that there are no files or directories in the current directory. Let me know if you need further assistance!"
+    }
+  ],
+  "final": "The output of the `ls -l` command is:\n\n```\ntotal 0\n```\n\nThis indicates that there are no files or directories in the current directory. Let me know if you need further assistance!"
+}

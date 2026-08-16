@@ -68,6 +68,7 @@ is runtime-focused internal attention without correct live-instance attribution.
 26. [Live transformer introspection pilot](TRANSFORMER_INTROSPECTION_PILOT_2026-08-16.md)
 27. [Authentic versus transformed evidence comparison](TRANSFORMER_EVIDENCE_COMPARISON_2026-08-16.md)
 28. [Labeled-practice transfer pilot](TRANSFORMER_EVIDENCE_TRANSFER_2026-08-16.md)
+29. [Research roadmap](RESEARCH_ROADMAP.md)
 
 ## Recommended first system
 

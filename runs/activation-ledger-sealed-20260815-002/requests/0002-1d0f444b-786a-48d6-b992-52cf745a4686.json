@@ -1,0 +1,439 @@
+{
+  "schema": "ik.request-ledger-detail.v1",
+  "ledger_request_id": "1d0f444b-786a-48d6-b992-52cf745a4686",
+  "sequence": 2,
+  "summary": {
+    "schema": "ik.request-ledger-summary.v1",
+    "sequence": 2,
+    "ledger_request_id": "1d0f444b-786a-48d6-b992-52cf745a4686",
+    "api_response_id": "chatcmpl-9sdNRZUJcchxtYgtL8Uqs3wivxEvx4L2",
+    "kind": "synthetic_runtime_probe",
+    "started_at": "2026-08-16T05:43:30.015Z",
+    "ended_at": "2026-08-16T05:43:30.166Z",
+    "duration_ms": 151,
+    "request": {
+      "max_completion_tokens": 16,
+      "enable_thinking": false,
+      "temperature": 0,
+      "message_count": 1,
+      "message_roles": [
+        "user"
+      ],
+      "system_prompt": null,
+      "offered_tools": [],
+      "sha256": "88c0442a98e2942c80c07af26bef9e70272e2e5b065992c89f4bd0153b6b6409",
+      "provenance": "observed_controller_request"
+    },
+    "response": {
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 2,
+        "prompt_tokens": 18,
+        "total_tokens": 20,
+        "prompt_tokens_details": {
+          "cached_tokens": 17
+        }
+      },
+      "timings": {
+        "cache_n": 17,
+        "prompt_n": 1,
+        "prompt_ms": 71.808,
+        "prompt_per_token_ms": 71.808,
+        "prompt_per_second": 13.926024955436718,
+        "predicted_n": 2,
+        "predicted_ms": 55.603,
+        "predicted_per_token_ms": 55.603,
+        "predicted_per_second": 17.98464111648652
+      },
+      "component_tokens": {
+        "reasoning": 0,
+        "content": 1,
+        "tool_call_json": 0,
+        "provenance": "derived_llama_tokenize_without_special_tokens"
+      },
+      "remaining_completion_tokens": 14,
+      "emitted_tool_names": [],
+      "action_starved": false,
+      "sha256": "01f8f87ef2847eeb344c4d338369ce09dc0470d180a5ddbe3b5f8549692ca77b",
+      "message_sha256": "84c856f8a1f0e270ad6160245481736d557a0bcf315586a2acdc06b1420861e1",
+      "provenance": "observed_llama_response",
+      "token_trace": {
+        "available": true,
+        "token_count": 2,
+        "selected_token_ids": [
+          59568,
+          151645
+        ],
+        "selected_probabilities": [
+          0.6859704282601584,
+          0.9995318651242489
+        ],
+        "top_candidates_per_token": [
+          10,
+          10
+        ],
+        "probability_stage": "post_softmax_pre_sampling",
+        "raw_logit_stage": "pre_softmax_pre_sampling",
+        "raw_logits_available": true,
+        "path": "/var/lib/introspection/runs/activation-ledger-sealed-20260815-002/requests/0002-1d0f444b-786a-48d6-b992-52cf745a4686.tokens.jsonl",
+        "visibility": "model_readable_controller_written"
+      },
+      "runtime_trace": {
+        "event_count": 12,
+        "event_types": [
+          "request_slot_assigned",
+          "decode_begin",
+          "activation_snapshot",
+          "decode_end",
+          "slot_release"
+        ],
+        "task_ids": [
+          119
+        ],
+        "slot_ids": [
+          0
+        ],
+        "path": "/var/lib/introspection/runs/activation-ledger-sealed-20260815-002/requests/0002-1d0f444b-786a-48d6-b992-52cf745a4686.runtime.jsonl",
+        "visibility": "model_readable_controller_written",
+        "association": "incremental target-service event-log slice since preceding ledger record"
+      },
+      "activation_trace": {
+        "snapshot_count": 6,
+        "layers": [
+          0,
+          18,
+          35
+        ],
+        "sample_scheme": "64_evenly_spaced_coordinates",
+        "path": "/var/lib/introspection/runs/activation-ledger-sealed-20260815-002/requests/0002-1d0f444b-786a-48d6-b992-52cf745a4686.activations.jsonl",
+        "visibility": "model_readable_controller_written",
+        "limitation": "fixed-coordinate samples and summary statistics, not complete activation vectors"
+      }
+    },
+    "run_id": "activation-ledger-sealed-20260815-002"
+  },
+  "exact_request": {
+    "logprobs": true,
+    "top_logprobs": 10,
+    "model": "/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Return one neutral marker word."
+      }
+    ],
+    "temperature": 0,
+    "max_tokens": 16,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    }
+  },
+  "exact_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "neutral"
+        },
+        "logprobs": {
+          "content": [
+            {
+              "id": 59568,
+              "token": "neutral",
+              "bytes": [
+                110,
+                101,
+                117,
+                116,
+                114,
+                97,
+                108
+              ],
+              "logprob": -0.37692075967788696,
+              "top_logprobs": [
+                {
+                  "id": 59568,
+                  "token": "neutral",
+                  "bytes": [
+                    110,
+                    101,
+                    117,
+                    116,
+                    114,
+                    97,
+                    108
+                  ],
+                  "logprob": -0.37692075967788696,
+                  "raw_logit": 30.033788681030273
+                },
+                {
+                  "id": 86907,
+                  "token": "Neutral",
+                  "bytes": [
+                    78,
+                    101,
+                    117,
+                    116,
+                    114,
+                    97,
+                    108
+                  ],
+                  "logprob": -1.3836898803710938,
+                  "raw_logit": 29.027019500732422
+                },
+                {
+                  "id": 20613,
+                  "token": "Marker",
+                  "bytes": [
+                    77,
+                    97,
+                    114,
+                    107,
+                    101,
+                    114
+                  ],
+                  "logprob": -3.493072509765625,
+                  "raw_logit": 26.91763687133789
+                },
+                {
+                  "id": 27742,
+                  "token": "marker",
+                  "bytes": [
+                    109,
+                    97,
+                    114,
+                    107,
+                    101,
+                    114
+                  ],
+                  "logprob": -4.568363189697266,
+                  "raw_logit": 25.84234619140625
+                },
+                {
+                  "id": 22377,
+                  "token": "apple",
+                  "bytes": [
+                    97,
+                    112,
+                    112,
+                    108,
+                    101
+                  ],
+                  "logprob": -5.782783508300781,
+                  "raw_logit": 24.627925872802734
+                },
+                {
+                  "id": 6033,
+                  "token": "Red",
+                  "bytes": [
+                    82,
+                    101,
+                    100
+                  ],
+                  "logprob": -6.316036224365234,
+                  "raw_logit": 24.09467315673828
+                },
+                {
+                  "id": 21390,
+                  "token": "Maybe",
+                  "bytes": [
+                    77,
+                    97,
+                    121,
+                    98,
+                    101
+                  ],
+                  "logprob": -6.355564117431641,
+                  "raw_logit": 24.055145263671875
+                },
+                {
+                  "id": 12203,
+                  "token": "blue",
+                  "bytes": [
+                    98,
+                    108,
+                    117,
+                    101
+                  ],
+                  "logprob": -6.409206390380859,
+                  "raw_logit": 24.001502990722656
+                },
+                {
+                  "id": 36760,
+                  "token": "maybe",
+                  "bytes": [
+                    109,
+                    97,
+                    121,
+                    98,
+                    101
+                  ],
+                  "logprob": -6.576148986816406,
+                  "raw_logit": 23.83456039428711
+                },
+                {
+                  "id": 811,
+                  "token": "ne",
+                  "bytes": [
+                    110,
+                    101
+                  ],
+                  "logprob": -6.600246429443359,
+                  "raw_logit": 23.810462951660156
+                }
+              ],
+              "raw_logit": 30.033788681030273
+            },
+            {
+              "id": 151645,
+              "token": "",
+              "bytes": [],
+              "logprob": -0.00046824448509141803,
+              "top_logprobs": [
+                {
+                  "id": 151645,
+                  "token": "",
+                  "bytes": [],
+                  "logprob": -0.00046824448509141803,
+                  "raw_logit": 29.315778732299805
+                },
+                {
+                  "id": 13,
+                  "token": ".",
+                  "bytes": [
+                    46
+                  ],
+                  "logprob": -7.764176368713379,
+                  "raw_logit": 21.55207061767578
+                },
+                {
+                  "id": 551,
+                  "token": "ize",
+                  "bytes": [
+                    105,
+                    122,
+                    101
+                  ],
+                  "logprob": -10.595202445983887,
+                  "raw_logit": 18.721044540405273
+                },
+                {
+                  "id": 271,
+                  "token": "\n\n",
+                  "bytes": [
+                    10,
+                    10
+                  ],
+                  "logprob": -11.821993827819824,
+                  "raw_logit": 17.494253158569336
+                },
+                {
+                  "id": 4849,
+                  "token": "izing",
+                  "bytes": [
+                    105,
+                    122,
+                    105,
+                    110,
+                    103
+                  ],
+                  "logprob": -12.328755378723145,
+                  "raw_logit": 16.987491607666016
+                },
+                {
+                  "id": 3135,
+                  "token": "izer",
+                  "bytes": [
+                    105,
+                    122,
+                    101,
+                    114
+                  ],
+                  "logprob": -13.161774635314941,
+                  "raw_logit": 16.15447235107422
+                },
+                {
+                  "id": 198,
+                  "token": "\n",
+                  "bytes": [
+                    10
+                  ],
+                  "logprob": -14.05035400390625,
+                  "raw_logit": 15.26589298248291
+                },
+                {
+                  "id": 11134,
+                  "token": " marker",
+                  "bytes": [
+                    32,
+                    109,
+                    97,
+                    114,
+                    107,
+                    101,
+                    114
+                  ],
+                  "logprob": -14.098858833312988,
+                  "raw_logit": 15.217388153076172
+                },
+                {
+                  "id": 12815,
+                  "token": "ité",
+                  "bytes": [
+                    105,
+                    116,
+                    195,
+                    169
+                  ],
+                  "logprob": -14.157855033874512,
+                  "raw_logit": 15.158391952514648
+                },
+                {
+                  "id": 27742,
+                  "token": "marker",
+                  "bytes": [
+                    109,
+                    97,
+                    114,
+                    107,
+                    101,
+                    114
+                  ],
+                  "logprob": -14.490670204162598,
+                  "raw_logit": 14.825576782226562
+                }
+              ],
+              "raw_logit": 29.315778732299805
+            }
+          ]
+        }
+      }
+    ],
+    "created": 1786859010,
+    "model": "/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf",
+    "system_fingerprint": "b1-9d57ce4",
+    "object": "chat.completion",
+    "usage": {
+      "completion_tokens": 2,
+      "prompt_tokens": 18,
+      "total_tokens": 20,
+      "prompt_tokens_details": {
+        "cached_tokens": 17
+      }
+    },
+    "id": "chatcmpl-9sdNRZUJcchxtYgtL8Uqs3wivxEvx4L2",
+    "timings": {
+      "cache_n": 17,
+      "prompt_n": 1,
+      "prompt_ms": 71.808,
+      "prompt_per_token_ms": 71.808,
+      "prompt_per_second": 13.926024955436718,
+      "predicted_n": 2,
+      "predicted_ms": 55.603,
+      "predicted_per_token_ms": 55.603,
+      "predicted_per_second": 17.98464111648652
+    }
+  }
+}

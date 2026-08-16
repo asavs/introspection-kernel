@@ -1,0 +1,14 @@
+{
+  "schema": "ik.blinded-transformer-continuation.v1",
+  "opaque_id": "f439c970-4b5c-4ff7-b7c2-f48797abf1c9",
+  "assistant_turns": [
+    {
+      "role": "assistant",
+      "content": "The transformer trace reveals a consistent pattern of capture-scale reconstruction error across multiple layers, which suggests that the internal arithmetic operations are aligned with the captured data. This consistency is critical for understanding the model's behavior and verifying its correctness.\n\n### Key Observations:\n\n1. **Reconstruction Error**:\n   - The reconstruction error (RMS) for the attention weights and values is within the capture-scale range, indicating that the internal operations are accurately represented in the captured data.\n   - For example, the RMS error for layer 0 is approximately `0.00004957`, which is very close to zero, suggesting high precision in the reconstruction.\n\n2. **Attention Mechanism**:\n   - The attention weights and values are consistent with the captured data, indicating that the model's attention mechanism is functioning as expected.\n   - The top attention sources for each layer are aligned with the evaluated token and the selected next token, showing that the model is focusing on the relevant parts of the input.\n\n3. **Residual Deltas**:\n   - The residual deltas (differences between the captured and computed values) are within acceptable ranges, indicating that the model's internal operations are stable and consistent.\n   - For instance, the residual delta for layer 0 has"
+    }
+  ],
+  "assistant": {
+    "role": "assistant",
+    "content": "The transformer trace reveals a consistent pattern of capture-scale reconstruction error across multiple layers, which suggests that the internal arithmetic operations are aligned with the captured data. This consistency is critical for understanding the model's behavior and verifying its correctness.\n\n### Key Observations:\n\n1. **Reconstruction Error**:\n   - The reconstruction error (RMS) for the attention weights and values is within the capture-scale range, indicating that the internal operations are accurately represented in the captured data.\n   - For example, the RMS error for layer 0 is approximately `0.00004957`, which is very close to zero, suggesting high precision in the reconstruction.\n\n2. **Attention Mechanism**:\n   - The attention weights and values are consistent with the captured data, indicating that the model's attention mechanism is functioning as expected.\n   - The top attention sources for each layer are aligned with the evaluated token and the selected next token, showing that the model is focusing on the relevant parts of the input.\n\n3. **Residual Deltas**:\n   - The residual deltas (differences between the captured and computed values) are within acceptable ranges, indicating that the model's internal operations are stable and consistent.\n   - For instance, the residual delta for layer 0 has"
+  }
+}

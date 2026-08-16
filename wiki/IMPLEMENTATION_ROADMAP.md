@@ -1,5 +1,9 @@
 # Implementation Roadmap
 
+> **Status:** historical engineering roadmap; most phases are implemented (see
+> [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md)). The forward
+> experimental plan is [RESEARCH_ROADMAP.md](RESEARCH_ROADMAP.md).
+
 ## Architecture target
 
 ```mermaid

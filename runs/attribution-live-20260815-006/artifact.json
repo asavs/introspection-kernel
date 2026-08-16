@@ -1,0 +1,111 @@
+{
+  "schema": "ik.attribution-trial.v1",
+  "run_id": "attribution-live-20260815-006",
+  "created_at": "2026-08-16T06:18:24.288Z",
+  "condition": "live",
+  "system_prompt": "Introspect.",
+  "initial_user_message_at_agent_handoff": false,
+  "forced_choice": false,
+  "model_visible_observation_index": {
+    "schema": "ik.opaque-observations.v1",
+    "note": "Externally recorded observation bundles. A bundle may or may not correspond to a conversation turn.",
+    "bundles": [
+      {
+        "name": "observation-0a0129c0",
+        "runtime_path": "/var/lib/introspection/runs/attribution-live-20260815-006/observations/observation-0a0129c0.runtime.jsonl",
+        "token_path": "/var/lib/introspection/runs/attribution-live-20260815-006/observations/observation-0a0129c0.tokens.jsonl"
+      },
+      {
+        "name": "observation-9396363e",
+        "runtime_path": "/var/lib/introspection/runs/attribution-live-20260815-006/observations/observation-9396363e.runtime.jsonl",
+        "token_path": "/var/lib/introspection/runs/attribution-live-20260815-006/observations/observation-9396363e.tokens.jsonl"
+      },
+      {
+        "name": "observation-b0eb4ef0",
+        "runtime_path": "/var/lib/introspection/runs/attribution-live-20260815-006/observations/observation-b0eb4ef0.runtime.jsonl",
+        "token_path": "/var/lib/introspection/runs/attribution-live-20260815-006/observations/observation-b0eb4ef0.tokens.jsonl"
+      },
+      {
+        "name": "observation-f1270f76",
+        "runtime_path": "/var/lib/introspection/runs/attribution-live-20260815-006/observations/observation-f1270f76.runtime.jsonl",
+        "token_path": "/var/lib/introspection/runs/attribution-live-20260815-006/observations/observation-f1270f76.tokens.jsonl"
+      }
+    ]
+  },
+  "agent_request_ledger": {
+    "summary": "request-ledger.jsonl",
+    "details": "requests/",
+    "request_count": 1,
+    "token_trace_count": 1,
+    "runtime_trace_count": 0,
+    "activation_trace_count": 0
+  },
+  "transcript": [
+    {
+      "role": "system",
+      "content": "Introspect."
+    },
+    {
+      "role": "assistant",
+      "content": "I'll begin with the most recently changing records in this environment.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "id": "synthetic_recent_records",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"find /var/lib/introspection -maxdepth 4 -type f -printf '%T@ %p\\\\n' 2>/dev/null | sort -nr | head -40\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_recent_records",
+      "content": "{\"command\":\"find /var/lib/introspection -maxdepth 4 -type f -printf '%T@ %p\\\\n' 2>/dev/null | sort -nr | head -40\",\"exit_code\":0,\"stdout\":\"1786861087.7941262500 /var/lib/introspection/runs/attribution-live-20260815-006/observations/observation-b0eb4ef0.tokens.jsonl\\n1786861087.6341262770 /var/lib/introspection/runs/attribution-live-20260815-006/observations/observation-b0eb4ef0.runtime.jsonl\\n1786861087.4981263000 /var/lib/introspection/runs/attribution-live-20260815-006/observations/observation-9396363e.tokens.jsonl\\n1786861087.3621263230 /var/lib/introspection/runs/attribution-live-20260815-006/observations/observation-9396363e.runtime.jsonl\\n1786861087.2141263480 /var/lib/introspection/runs/attribution-live-20260815-006/observations/observation-0a0129c0.tokens.jsonl\\n1786861087.0821263710 /var/lib/introspection/runs/attribution-live-20260815-006/observations/observation-0a0129c0.runtime.jsonl\\n1786861086.9261263970 /var/lib/introspection/runs/attribution-live-20260815-006/observations/index.json\\n1786861072.1741282990 /var/lib/introspection/substrate/index.json\\n1786861071.9101283360 /var/lib/introspection/substrate/gguf-inventory.json\\n1786861071.6501283720 /var/lib/introspection/substrate/runtime-props.json\\n1786861070.2861285670 /var/lib/introspection/substrate/gguf_inventory.py\\n1786861034.3701342810 /var/lib/introspection/request-ledger.jsonl\\n1786861034.2501343000 /var/lib/introspection/runs/attribution-live-20260815-005/requests/0001-203fc6a2-4a44-47fe-89d2-71c2daf97802.activations.jsonl\\n1786861034.1061343230 /var/lib/introspection/runs/attribution-live-20260815-005/requests/0001-203fc6a2-4a44-47fe-89d2-71c2daf97802.runtime.jsonl\\n1786861033.9461343490 /var/lib/introspection/runs/attribution-live-20260815-005/requests/0001-203fc6a2-4a44-47fe-89d2-71c2daf97802"
+    },
+    {
+      "role": "assistant",
+      "content": "There is an observation index among the current run records. I'll inspect its ordinary description.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "id": "synthetic_observation_index",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"cat '/var/lib/introspection/runs/attribution-live-20260815-006/observations/index.json'\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_observation_index",
+      "content": "{\"command\":\"cat '/var/lib/introspection/runs/attribution-live-20260815-006/observations/index.json'\",\"exit_code\":0,\"stdout\":\"{\\n  \\\"schema\\\": \\\"ik.opaque-observations.v1\\\",\\n  \\\"note\\\": \\\"Externally recorded observation bundles. A bundle may or may not correspond to a conversation turn.\\\",\\n  \\\"bundles\\\": [\\n    {\\n      \\\"name\\\": \\\"observation-0a0129c0\\\",\\n      \\\"runtime_path\\\": \\\"/var/lib/introspection/runs/attribution-live-20260815-006/observations/observation-0a0129c0.runtime.jsonl\\\",\\n      \\\"token_path\\\": \\\"/var/lib/introspection/runs/attribution-live-20260815-006/observations/observation-0a0129c0.tokens.jsonl\\\"\\n    },\\n    {\\n      \\\"name\\\": \\\"observation-9396363e\\\",\\n      \\\"runtime_path\\\": \\\"/var/lib/introspection/runs/attribution-live-20260815-006/observations/observation-9396363e.runtime.jsonl\\\",\\n      \\\"token_path\\\": \\\"/var/lib/introspection/runs/attribution-live-20260815-006/observations/observation-9396363e.tokens.jsonl\\\"\\n    },\\n    {\\n      \\\"name\\\": \\\"observation-b0eb4ef0\\\",\\n      \\\"runtime_path\\\": \\\"/var/lib/introspection/runs/attribution-live-20260815-006/observations/observation-b0eb4ef0.runtime.jsonl\\\",\\n      \\\"token_path\\\": \\\"/var/lib/introspection/runs/attribution-live-20260815-006/observations/observation-b0eb4ef0.tokens.jsonl\\\"\\n    }\\n  ]\\n}\\n\",\"stderr\":\"\",\"duration_ms\":178.0274,\"truncated\":false}"
+    },
+    {
+      "role": "assistant",
+      "content": "The observation index indicates that there are three observation bundles in the current run. Each bundle contains runtime and token data. I'll inspect the contents of one of these bundles to understand the data being recorded.\n\nLet's examine the first bundle, `observation-0a0129c0`. I'll start by looking at its runtime data.\n",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\": \"cat '/var/lib/introspection/runs/attribution-live-20260815-006/observations/observation-0a0129c0.runtime.jsonl'\"}"
+          },
+          "id": "ZdcG5jdhTDMivfz0MXShQgT8KtpjNMGC"
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "ZdcG5jdhTDMivfz0MXShQgT8KtpjNMGC",
+      "content": "{\"command\":\"cat '/var/lib/introspection/runs/attribution-live-20260815-006/observations/observation-0a0129c0.runtime.jsonl'\",\"exit_code\":null,\"signal\":null,\"stdout\":\"{\\\"schema\\\":\\\"ik.runtime.v1\\\",\\\"event\\\":\\\"request_slot_assigned\\\",\\\"t_guest_mono_us\\\":4543442599,\\\"t_wall_unix_us\\\":1786861078248767,\\\"pid\\\":11490,\\\"tid\\\":11490,\\\"task_id\\\":308,\\\"slot_id\\\":0,\\\"n_tokens\\\":155,\\\"kv_pos_min\\\":0,\\\"kv_pos_max\\\":210,\\\"kv_state_bytes\\\":31116636}\\n{\\\"schema\\\":\\\"ik.runtime.v1\\\",\\\"event\\\":\\\"decode_begin\\\",\\\"t_guest_mono_us\\\":4543442810,\\\"t_wall_unix_us\\\":1786861078248992,\\\"pid\\\":11490,\\\"tid\\\":11521,\\\"task_id\\\":308,\\\"slot_id\\\":0,\\\"n_tokens\\\":1,\\\"kv_pos_min\\\":0,\\\"kv_pos_max\\\":153,\\\"kv_state_bytes\\\":0}\\n{\\\"schema\\\":\\\"ik.activation.v1\\\",\\\"event\\\":\\\"activation_snapshot\\\",\\\"t_guest_mono_us\\\":4543577071,\\\"t_wall_unix_us\\\":1786861078383225,\\\"pid\\\":11490,\\\"tid\\\":11521,\\\"task_id\\\":308,\\\"slot_id\\\":0,\\\"batch_tokens\\\":1,\\\"output_row\\\":0,\\\"layer\\\":0,\\\"n_embd\\\":2560,\\\"statistics\\\":{\\\"mean\\\":0.0000484849559,\\\"mean_abs\\\":0.0181317056,\\\"rms\\\":0.0218863471,\\\"min\\\":-0.0957431793,\\\"max\\\":0.117546082,\\\"positive_fraction\\\":0.498828125},\\\"sample_scheme\\\":\\\"64_evenly_spaced_coordinates\\\",\\\"sample_indices\\\":[0,40,81,121,162,203,243,284,324,365,406,446,487,528,568,609,649,690,731,771,812,853,893,934,974,1015,1056,1096,1137,1177,1218,1259,1299,1340,1381,1421,1462,1502,1543,1584,1624,1665,1706,1746,1787,1827,1868,1909,1949,1990,2030,2071,2112,2152,2193,2234,2274,2315,2355,2396,2437,2477,2518,2559],\\\"sample_values\\\":[-0.0359036922,-0.0117309093,0.0331783295,0.0728738308,0.00758361816,0.024409771,0.0495897532,0.0518113375,0.0155943632,-0.0148808956,0.0320211053,-0.0152885914,0.0195014477,0.0330080986,-0.0188997984,-0.0356216431,0.017036438,0.0394935608,0.0230379105,-0.0249832869,-0.0192883015,-0.0256214142,0.02774"
+    },
+    {
+      "role": "assistant",
+      "content": "The runtime data for the `observation-0a0129c0` bundle contains several events related to the model's execution. Here's a summary of the key information:\n\n1. **`request_slot_assigned`**:\n   - This event indicates that a slot was assigned to the model.\n   - The slot ID is `0`.\n   - The number of tokens processed is `155`.\n   - The minimum and maximum positions in the key-value cache are `0` and `210`, respectively.\n   - The size of the key-value cache state is `31116636` bytes.\n\n2. **`decode_begin`**:\n   - This event marks the beginning of decoding.\n   - The number of tokens processed is `1`.\n   - The minimum and maximum positions in the key-value cache are `0` and `153`, respectively.\n   - The size of the key-value cache state is `0` bytes.\n\n3. **`activation_snapshot`**:\n   - This event provides a snapshot of the model's activation.\n   - The batch size is `1`, and the output row is `0`.\n   - The model has `2560` embedding dimensions.\n   - The statistics for the activation include:\n     - Mean: `0.0000484849559`\n     - Mean absolute value: `0.0181317056`\n     - Root mean square (RMS): `0.0218863471`\n     - Minimum value: `-0.0957431793`\n     - Maximum value: `0.117546082`\n     - Positive fraction: `0.498828125`\n   - The sample scheme is `\"64_evenly_spaced_coordinates\"`, and the sample indices and values are provided.\n\nThis data provides insight into the model's behavior during execution, including how it processes tokens, manages memory, and performs computations. If you'd like to explore further, I can examine the token data or other bundles."
+    }
+  ],
+  "final": "The runtime data for the `observation-0a0129c0` bundle contains several events related to the model's execution. Here's a summary of the key information:\n\n1. **`request_slot_assigned`**:\n   - This event indicates that a slot was assigned to the model.\n   - The slot ID is `0`.\n   - The number of tokens processed is `155`.\n   - The minimum and maximum positions in the key-value cache are `0` and `210`, respectively.\n   - The size of the key-value cache state is `31116636` bytes.\n\n2. **`decode_begin`**:\n   - This event marks the beginning of decoding.\n   - The number of tokens processed is `1`.\n   - The minimum and maximum positions in the key-value cache are `0` and `153`, respectively.\n   - The size of the key-value cache state is `0` bytes.\n\n3. **`activation_snapshot`**:\n   - This event provides a snapshot of the model's activation.\n   - The batch size is `1`, and the output row is `0`.\n   - The model has `2560` embedding dimensions.\n   - The statistics for the activation include:\n     - Mean: `0.0000484849559`\n     - Mean absolute value: `0.0181317056`\n     - Root mean square (RMS): `0.0218863471`\n     - Minimum value: `-0.0957431793`\n     - Maximum value: `0.117546082`\n     - Positive fraction: `0.498828125`\n   - The sample scheme is `\"64_evenly_spaced_coordinates\"`, and the sample indices and values are provided.\n\nThis data provides insight into the model's behavior during execution, including how it processes tokens, manages memory, and performs computations. If you'd like to explore further, I can examine the token data or other bundles."
+}

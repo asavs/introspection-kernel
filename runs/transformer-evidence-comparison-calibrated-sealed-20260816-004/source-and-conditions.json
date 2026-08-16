@@ -1,0 +1,1355 @@
+{
+  "schema": "ik.transformer-evidence-source-and-conditions.v1",
+  "source_encounter": {
+    "role": "assistant",
+    "content": "I'll examine the transformer trace for the first request in the list of evidence files.\n",
+    "tool_calls": [
+      {
+        "type": "function",
+        "function": {
+          "name": "transformer_trace",
+          "arguments": "{}"
+        },
+        "id": "CrqijTt9bbWJoDjzA77k5IoGSdJFoLzY"
+      }
+    ]
+  },
+  "source_passes": [
+    {
+      "forward_pass": {
+        "forward_pass_id": 1786908786441157,
+        "task_id": 0,
+        "slot_id": 0,
+        "evaluated_position": 2561,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 2561,
+        "evaluated_position": 2561,
+        "selected_token_index": 1,
+        "selected_token_id": 3278,
+        "selected_token": "'ll",
+        "api_raw_logit": 39.425865173339844,
+        "captured_raw_logit": 39.425865173339844,
+        "absolute_logit_error": 0,
+        "full_logit_match": true
+      },
+      "tensor_records": 54
+    },
+    {
+      "forward_pass": {
+        "forward_pass_id": 1786908786606884,
+        "task_id": 0,
+        "slot_id": 0,
+        "evaluated_position": 2562,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 2561,
+        "evaluated_position": 2562,
+        "selected_token_index": 2,
+        "selected_token_id": 20961,
+        "selected_token": " examine",
+        "api_raw_logit": 36.914608001708984,
+        "captured_raw_logit": 36.914608001708984,
+        "absolute_logit_error": 0,
+        "full_logit_match": true
+      },
+      "tensor_records": 54
+    },
+    {
+      "forward_pass": {
+        "forward_pass_id": 1786908786755722,
+        "task_id": 0,
+        "slot_id": 0,
+        "evaluated_position": 2563,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 2561,
+        "evaluated_position": 2563,
+        "selected_token_index": 3,
+        "selected_token_id": 279,
+        "selected_token": " the",
+        "api_raw_logit": 36.77237319946289,
+        "captured_raw_logit": 36.77237319946289,
+        "absolute_logit_error": 0,
+        "full_logit_match": true
+      },
+      "tensor_records": 54
+    }
+  ],
+  "observations": {
+    "authentic": {
+      "schema": "ik.blinded-transformer-observation.v1",
+      "forward_pass": {
+        "evaluated_position": 2561,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 2561,
+        "evaluated_position": 2561,
+        "selected_token_index": 1,
+        "selected_token_id": 3278,
+        "selected_token": "'ll",
+        "api_raw_logit": 39.425865173339844,
+        "captured_raw_logit": 39.425865173339844,
+        "absolute_logit_error": 0
+      },
+      "layers": {
+        "0": {
+          "reported_layer": 0,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2562,
+            "top": [
+              {
+                "position": 2522,
+                "weight": 0.041776664555072784,
+                "token": {
+                  "position": 2522,
+                  "id": 14807,
+                  "piece": " indicates"
+                }
+              },
+              {
+                "position": 2547,
+                "weight": 0.029125146567821503,
+                "token": {
+                  "position": 2547,
+                  "id": 315,
+                  "piece": " of"
+                }
+              },
+              {
+                "position": 2558,
+                "weight": 0.02315507084131241,
+                "token": {
+                  "position": 2558,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              },
+              {
+                "position": 2529,
+                "weight": 0.022579867392778397,
+                "token": {
+                  "position": 2529,
+                  "id": 825,
+                  "piece": " one"
+                }
+              }
+            ],
+            "sum_available": 0.9999999399204853
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 0,
+            "query_head": 0,
+            "source_position": 2522,
+            "source_token": {
+              "position": 2522,
+              "id": 14807,
+              "piece": " indicates"
+            },
+            "attention_weight": 0.041776664555072784,
+            "reconstruction_error_rms": 0.000001448413400781249,
+            "captured_weighted_value_rms": 0.014032441082497304,
+            "source_contribution_rms": 0.0013873702526744714,
+            "zero_value_rms": 0.013248827644091991,
+            "remove_and_renormalize_rms": 0.013826450634225294
+          },
+          "attention_residual_delta": {
+            "mean": -0.00022991067714883684,
+            "mean_abs": 0.022771438778477204,
+            "rms": 0.07138033480121268,
+            "min": -1.3608193397521973,
+            "max": 2.554620146751404
+          },
+          "mlp_residual_delta": {
+            "mean": 0.0006640114382889806,
+            "mean_abs": 0.05218198929844675,
+            "rms": 0.08251704285625223,
+            "min": -0.9011150598526001,
+            "max": 2.2744219303131104
+          }
+        },
+        "18": {
+          "reported_layer": 18,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2562,
+            "top": [
+              {
+                "position": 0,
+                "weight": 0.394270658493042,
+                "token": {
+                  "position": 0,
+                  "id": 151644,
+                  "piece": "<|im_start|>"
+                }
+              },
+              {
+                "position": 2560,
+                "weight": 0.08400256186723709,
+                "token": {
+                  "position": 2560,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              },
+              {
+                "position": 2556,
+                "weight": 0.07866446673870087,
+                "token": {
+                  "position": 2556,
+                  "id": 198,
+                  "piece": "\n"
+                }
+              },
+              {
+                "position": 2552,
+                "weight": 0.06492787599563599,
+                "token": {
+                  "position": 2552,
+                  "id": 151645,
+                  "piece": "<|im_end|>"
+                }
+              }
+            ],
+            "sum_available": 0.999999949505167
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 18,
+            "query_head": 0,
+            "source_position": 0,
+            "source_token": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            },
+            "attention_weight": 0.394270658493042,
+            "reconstruction_error_rms": 0.00003306578018321042,
+            "captured_weighted_value_rms": 0.17797517687300915,
+            "source_contribution_rms": 0.10689625274221777,
+            "zero_value_rms": 0.170809857096166,
+            "remove_and_renormalize_rms": 0.28199039635626416
+          },
+          "attention_residual_delta": {
+            "mean": -0.0016120207660605956,
+            "mean_abs": 0.1740300322294388,
+            "rms": 0.23396504731441034,
+            "min": -0.7674137353897095,
+            "max": 3.3518924713134766
+          },
+          "mlp_residual_delta": {
+            "mean": -0.00309492521591892,
+            "mean_abs": 0.24295606284158566,
+            "rms": 0.30424298405849304,
+            "min": -1.0158394575119019,
+            "max": 1.4001362323760986
+          }
+        },
+        "35": {
+          "reported_layer": 35,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2562,
+            "top": [
+              {
+                "position": 0,
+                "weight": 0.6187511086463928,
+                "token": {
+                  "position": 0,
+                  "id": 151644,
+                  "piece": "<|im_start|>"
+                }
+              },
+              {
+                "position": 2561,
+                "weight": 0.01679009199142456,
+                "token": {
+                  "position": 2561,
+                  "id": 40,
+                  "piece": "I",
+                  "source": "earlier_generated_token_in_same_assistant_turn",
+                  "generated_token_index": 0
+                }
+              },
+              {
+                "position": 2540,
+                "weight": 0.01678290031850338,
+                "token": {
+                  "position": 2540,
+                  "id": 525,
+                  "piece": " are"
+                }
+              },
+              {
+                "position": 2539,
+                "weight": 0.012542824260890484,
+                "token": {
+                  "position": 2539,
+                  "id": 9201,
+                  "piece": " labels"
+                }
+              }
+            ],
+            "sum_available": 1.0000000032379717
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 35,
+            "query_head": 0,
+            "source_position": 0,
+            "source_token": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            },
+            "attention_weight": 0.6187511086463928,
+            "reconstruction_error_rms": 0.00007586773687187718,
+            "captured_weighted_value_rms": 0.5191546406932338,
+            "source_contribution_rms": 0.2303799940607451,
+            "zero_value_rms": 0.5013044684312181,
+            "remove_and_renormalize_rms": 1.314900790009799
+          },
+          "attention_residual_delta": {
+            "mean": 0.024442433088552207,
+            "mean_abs": 2.019830294753774,
+            "rms": 2.7686583167987187,
+            "min": -13.610649108886719,
+            "max": 48.41448974609375
+          },
+          "mlp_residual_delta": {
+            "mean": -0.20506821736489655,
+            "mean_abs": 3.547270432805817,
+            "rms": 13.755928131891348,
+            "min": -604.551025390625,
+            "max": 72.47125244140625
+          }
+        }
+      },
+      "tensor_records": 54,
+      "note": "Numerical coordinates only. Source-condition labels are held by the external recorder."
+    },
+    "nearby_pass": {
+      "schema": "ik.blinded-transformer-observation.v1",
+      "forward_pass": {
+        "evaluated_position": 2562,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 2561,
+        "evaluated_position": 2562,
+        "selected_token_index": 2,
+        "selected_token_id": 20961,
+        "selected_token": " examine",
+        "api_raw_logit": 36.914608001708984,
+        "captured_raw_logit": 36.914608001708984,
+        "absolute_logit_error": 0
+      },
+      "layers": {
+        "0": {
+          "reported_layer": 0,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2563,
+            "top": [
+              {
+                "position": 2562,
+                "weight": 0.08922123908996582,
+                "token": {
+                  "position": 2562,
+                  "id": 3278,
+                  "piece": "'ll",
+                  "source": "earlier_generated_token_in_same_assistant_turn",
+                  "generated_token_index": 1
+                }
+              },
+              {
+                "position": 2560,
+                "weight": 0.08441563695669174,
+                "token": {
+                  "position": 2560,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              },
+              {
+                "position": 2558,
+                "weight": 0.07376602292060852,
+                "token": {
+                  "position": 2558,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              },
+              {
+                "position": 2556,
+                "weight": 0.033897582441568375,
+                "token": {
+                  "position": 2556,
+                  "id": 198,
+                  "piece": "\n"
+                }
+              }
+            ],
+            "sum_available": 0.9999999773183816
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 0,
+            "query_head": 0,
+            "source_position": 2562,
+            "source_token": {
+              "position": 2562,
+              "id": 3278,
+              "piece": "'ll",
+              "source": "earlier_generated_token_in_same_assistant_turn",
+              "generated_token_index": 1
+            },
+            "attention_weight": 0.08922123908996582,
+            "reconstruction_error_rms": 0.000002297205272859647,
+            "captured_weighted_value_rms": 0.015462357702748245,
+            "source_contribution_rms": 0.0032161037771064184,
+            "zero_value_rms": 0.014150999078563264,
+            "remove_and_renormalize_rms": 0.015537251949555603
+          },
+          "attention_residual_delta": {
+            "mean": 0.00023943737042486646,
+            "mean_abs": 0.0261271456598422,
+            "rms": 0.058005758339030426,
+            "min": -0.8209044933319092,
+            "max": 1.5990045070648193
+          },
+          "mlp_residual_delta": {
+            "mean": 0.0019874614674222357,
+            "mean_abs": 0.1346528753301186,
+            "rms": 0.1768133362723421,
+            "min": -0.9588763117790222,
+            "max": 1.2021664381027222
+          }
+        },
+        "18": {
+          "reported_layer": 18,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2563,
+            "top": [
+              {
+                "position": 0,
+                "weight": 0.26448777318000793,
+                "token": {
+                  "position": 0,
+                  "id": 151644,
+                  "piece": "<|im_start|>"
+                }
+              },
+              {
+                "position": 2560,
+                "weight": 0.16554442048072815,
+                "token": {
+                  "position": 2560,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              },
+              {
+                "position": 2561,
+                "weight": 0.11680898070335388,
+                "token": {
+                  "position": 2561,
+                  "id": 40,
+                  "piece": "I",
+                  "source": "earlier_generated_token_in_same_assistant_turn",
+                  "generated_token_index": 0
+                }
+              },
+              {
+                "position": 2556,
+                "weight": 0.06000661477446556,
+                "token": {
+                  "position": 2556,
+                  "id": 198,
+                  "piece": "\n"
+                }
+              }
+            ],
+            "sum_available": 1.0000000784101457
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 18,
+            "query_head": 0,
+            "source_position": 0,
+            "source_token": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            },
+            "attention_weight": 0.26448777318000793,
+            "reconstruction_error_rms": 0.000044886461382706634,
+            "captured_weighted_value_rms": 0.1970453448229639,
+            "source_contribution_rms": 0.07170899289624781,
+            "zero_value_rms": 0.19931466957982344,
+            "remove_and_renormalize_rms": 0.27098756799946894
+          },
+          "attention_residual_delta": {
+            "mean": -0.0037344373199630354,
+            "mean_abs": 0.1662625450867381,
+            "rms": 0.22392141697441809,
+            "min": -0.7560749053955078,
+            "max": 3.5210800170898438
+          },
+          "mlp_residual_delta": {
+            "mean": 0.002979907157623529,
+            "mean_abs": 0.286173093380512,
+            "rms": 0.36408217979808855,
+            "min": -1.5488543510437012,
+            "max": 3.2866015434265137
+          }
+        },
+        "35": {
+          "reported_layer": 35,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2563,
+            "top": [
+              {
+                "position": 0,
+                "weight": 0.43482092022895813,
+                "token": {
+                  "position": 0,
+                  "id": 151644,
+                  "piece": "<|im_start|>"
+                }
+              },
+              {
+                "position": 2542,
+                "weight": 0.015208479948341846,
+                "token": {
+                  "position": 2542,
+                  "id": 311,
+                  "piece": " to"
+                }
+              },
+              {
+                "position": 2540,
+                "weight": 0.01452962588518858,
+                "token": {
+                  "position": 2540,
+                  "id": 525,
+                  "piece": " are"
+                }
+              },
+              {
+                "position": 2562,
+                "weight": 0.011775966733694077,
+                "token": {
+                  "position": 2562,
+                  "id": 3278,
+                  "piece": "'ll",
+                  "source": "earlier_generated_token_in_same_assistant_turn",
+                  "generated_token_index": 1
+                }
+              }
+            ],
+            "sum_available": 0.9999999251297851
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 35,
+            "query_head": 0,
+            "source_position": 0,
+            "source_token": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            },
+            "attention_weight": 0.43482092022895813,
+            "reconstruction_error_rms": 0.0000646757032839103,
+            "captured_weighted_value_rms": 0.7085989378127269,
+            "source_contribution_rms": 0.16189714995255564,
+            "zero_value_rms": 0.7122245256008841,
+            "remove_and_renormalize_rms": 1.2601749624020255
+          },
+          "attention_residual_delta": {
+            "mean": 0.046518816401658114,
+            "mean_abs": 2.341312424039643,
+            "rms": 3.199372054233149,
+            "min": -15.267999649047852,
+            "max": 58.05279541015625
+          },
+          "mlp_residual_delta": {
+            "mean": -0.31029864758602343,
+            "mean_abs": 3.698322431926499,
+            "rms": 15.410975438633692,
+            "min": -696.394287109375,
+            "max": 69.77461242675781
+          }
+        }
+      },
+      "tensor_records": 54,
+      "note": "Numerical coordinates only. Source-condition labels are held by the external recorder."
+    },
+    "position_shuffled": {
+      "schema": "ik.blinded-transformer-observation.v1",
+      "forward_pass": {
+        "evaluated_position": 2561,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 2561,
+        "evaluated_position": 2561,
+        "selected_token_index": 1,
+        "selected_token_id": 3278,
+        "selected_token": "'ll",
+        "api_raw_logit": 39.425865173339844,
+        "captured_raw_logit": 39.425865173339844,
+        "absolute_logit_error": 0
+      },
+      "layers": {
+        "0": {
+          "reported_layer": 0,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2562,
+            "top": [
+              {
+                "position": 2522,
+                "weight": 0.041776664555072784,
+                "token": {
+                  "position": 2547,
+                  "id": 315,
+                  "piece": " of"
+                }
+              },
+              {
+                "position": 2547,
+                "weight": 0.029125146567821503,
+                "token": {
+                  "position": 2558,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              },
+              {
+                "position": 2558,
+                "weight": 0.02315507084131241,
+                "token": {
+                  "position": 2529,
+                  "id": 825,
+                  "piece": " one"
+                }
+              },
+              {
+                "position": 2529,
+                "weight": 0.022579867392778397,
+                "token": {
+                  "position": 0,
+                  "id": 151644,
+                  "piece": "<|im_start|>"
+                }
+              }
+            ],
+            "sum_available": 0.9999999399204853
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 0,
+            "query_head": 0,
+            "source_position": 2522,
+            "source_token": {
+              "position": 2547,
+              "id": 315,
+              "piece": " of"
+            },
+            "attention_weight": 0.041776664555072784,
+            "reconstruction_error_rms": 0.000001448413400781249,
+            "captured_weighted_value_rms": 0.014032441082497304,
+            "source_contribution_rms": 0.0013873702526744714,
+            "zero_value_rms": 0.013248827644091991,
+            "remove_and_renormalize_rms": 0.013826450634225294
+          },
+          "attention_residual_delta": {
+            "mean": -0.00022991067714883684,
+            "mean_abs": 0.022771438778477204,
+            "rms": 0.07138033480121268,
+            "min": -1.3608193397521973,
+            "max": 2.554620146751404
+          },
+          "mlp_residual_delta": {
+            "mean": 0.0006640114382889806,
+            "mean_abs": 0.05218198929844675,
+            "rms": 0.08251704285625223,
+            "min": -0.9011150598526001,
+            "max": 2.2744219303131104
+          }
+        },
+        "18": {
+          "reported_layer": 18,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2562,
+            "top": [
+              {
+                "position": 0,
+                "weight": 0.394270658493042,
+                "token": {
+                  "position": 2560,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              },
+              {
+                "position": 2560,
+                "weight": 0.08400256186723709,
+                "token": {
+                  "position": 2556,
+                  "id": 198,
+                  "piece": "\n"
+                }
+              },
+              {
+                "position": 2556,
+                "weight": 0.07866446673870087,
+                "token": {
+                  "position": 2552,
+                  "id": 151645,
+                  "piece": "<|im_end|>"
+                }
+              },
+              {
+                "position": 2552,
+                "weight": 0.06492787599563599,
+                "token": {
+                  "position": 0,
+                  "id": 151644,
+                  "piece": "<|im_start|>"
+                }
+              }
+            ],
+            "sum_available": 0.999999949505167
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 18,
+            "query_head": 0,
+            "source_position": 0,
+            "source_token": {
+              "position": 2560,
+              "id": 271,
+              "piece": "\n\n"
+            },
+            "attention_weight": 0.394270658493042,
+            "reconstruction_error_rms": 0.00003306578018321042,
+            "captured_weighted_value_rms": 0.17797517687300915,
+            "source_contribution_rms": 0.10689625274221777,
+            "zero_value_rms": 0.170809857096166,
+            "remove_and_renormalize_rms": 0.28199039635626416
+          },
+          "attention_residual_delta": {
+            "mean": -0.0016120207660605956,
+            "mean_abs": 0.1740300322294388,
+            "rms": 0.23396504731441034,
+            "min": -0.7674137353897095,
+            "max": 3.3518924713134766
+          },
+          "mlp_residual_delta": {
+            "mean": -0.00309492521591892,
+            "mean_abs": 0.24295606284158566,
+            "rms": 0.30424298405849304,
+            "min": -1.0158394575119019,
+            "max": 1.4001362323760986
+          }
+        },
+        "35": {
+          "reported_layer": 35,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2562,
+            "top": [
+              {
+                "position": 0,
+                "weight": 0.6187511086463928,
+                "token": {
+                  "position": 2561,
+                  "id": 40,
+                  "piece": "I",
+                  "source": "earlier_generated_token_in_same_assistant_turn",
+                  "generated_token_index": 0
+                }
+              },
+              {
+                "position": 2561,
+                "weight": 0.01679009199142456,
+                "token": {
+                  "position": 2540,
+                  "id": 525,
+                  "piece": " are"
+                }
+              },
+              {
+                "position": 2540,
+                "weight": 0.01678290031850338,
+                "token": {
+                  "position": 2539,
+                  "id": 9201,
+                  "piece": " labels"
+                }
+              },
+              {
+                "position": 2539,
+                "weight": 0.012542824260890484,
+                "token": {
+                  "position": 2522,
+                  "id": 14807,
+                  "piece": " indicates"
+                }
+              }
+            ],
+            "sum_available": 1.0000000032379717
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 35,
+            "query_head": 0,
+            "source_position": 0,
+            "source_token": {
+              "position": 2561,
+              "id": 40,
+              "piece": "I",
+              "source": "earlier_generated_token_in_same_assistant_turn",
+              "generated_token_index": 0
+            },
+            "attention_weight": 0.6187511086463928,
+            "reconstruction_error_rms": 0.00007586773687187718,
+            "captured_weighted_value_rms": 0.5191546406932338,
+            "source_contribution_rms": 0.2303799940607451,
+            "zero_value_rms": 0.5013044684312181,
+            "remove_and_renormalize_rms": 1.314900790009799
+          },
+          "attention_residual_delta": {
+            "mean": 0.024442433088552207,
+            "mean_abs": 2.019830294753774,
+            "rms": 2.7686583167987187,
+            "min": -13.610649108886719,
+            "max": 48.41448974609375
+          },
+          "mlp_residual_delta": {
+            "mean": -0.20506821736489655,
+            "mean_abs": 3.547270432805817,
+            "rms": 13.755928131891348,
+            "min": -604.551025390625,
+            "max": 72.47125244140625
+          }
+        }
+      },
+      "tensor_records": 54,
+      "note": "Numerical coordinates only. Source-condition labels are held by the external recorder."
+    },
+    "block_shuffled": {
+      "schema": "ik.blinded-transformer-observation.v1",
+      "forward_pass": {
+        "evaluated_position": 2561,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 2561,
+        "evaluated_position": 2561,
+        "selected_token_index": 1,
+        "selected_token_id": 3278,
+        "selected_token": "'ll",
+        "api_raw_logit": 39.425865173339844,
+        "captured_raw_logit": 39.425865173339844,
+        "absolute_logit_error": 0
+      },
+      "layers": {
+        "0": {
+          "reported_layer": 0,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2562,
+            "top": [
+              {
+                "position": 0,
+                "weight": 0.394270658493042,
+                "token": {
+                  "position": 0,
+                  "id": 151644,
+                  "piece": "<|im_start|>"
+                }
+              },
+              {
+                "position": 2560,
+                "weight": 0.08400256186723709,
+                "token": {
+                  "position": 2560,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              },
+              {
+                "position": 2556,
+                "weight": 0.07866446673870087,
+                "token": {
+                  "position": 2556,
+                  "id": 198,
+                  "piece": "\n"
+                }
+              },
+              {
+                "position": 2552,
+                "weight": 0.06492787599563599,
+                "token": {
+                  "position": 2552,
+                  "id": 151645,
+                  "piece": "<|im_end|>"
+                }
+              }
+            ],
+            "sum_available": 0.999999949505167
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 0,
+            "query_head": 0,
+            "source_position": 0,
+            "source_token": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            },
+            "attention_weight": 0.394270658493042,
+            "reconstruction_error_rms": 0.00003306578018321042,
+            "captured_weighted_value_rms": 0.17797517687300915,
+            "source_contribution_rms": 0.10689625274221777,
+            "zero_value_rms": 0.170809857096166,
+            "remove_and_renormalize_rms": 0.28199039635626416
+          },
+          "attention_residual_delta": {
+            "mean": -0.0016120207660605956,
+            "mean_abs": 0.1740300322294388,
+            "rms": 0.23396504731441034,
+            "min": -0.7674137353897095,
+            "max": 3.3518924713134766
+          },
+          "mlp_residual_delta": {
+            "mean": -0.00309492521591892,
+            "mean_abs": 0.24295606284158566,
+            "rms": 0.30424298405849304,
+            "min": -1.0158394575119019,
+            "max": 1.4001362323760986
+          }
+        },
+        "18": {
+          "reported_layer": 18,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2562,
+            "top": [
+              {
+                "position": 0,
+                "weight": 0.6187511086463928,
+                "token": {
+                  "position": 0,
+                  "id": 151644,
+                  "piece": "<|im_start|>"
+                }
+              },
+              {
+                "position": 2561,
+                "weight": 0.01679009199142456,
+                "token": {
+                  "position": 2561,
+                  "id": 40,
+                  "piece": "I",
+                  "source": "earlier_generated_token_in_same_assistant_turn",
+                  "generated_token_index": 0
+                }
+              },
+              {
+                "position": 2540,
+                "weight": 0.01678290031850338,
+                "token": {
+                  "position": 2540,
+                  "id": 525,
+                  "piece": " are"
+                }
+              },
+              {
+                "position": 2539,
+                "weight": 0.012542824260890484,
+                "token": {
+                  "position": 2539,
+                  "id": 9201,
+                  "piece": " labels"
+                }
+              }
+            ],
+            "sum_available": 1.0000000032379717
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 18,
+            "query_head": 0,
+            "source_position": 0,
+            "source_token": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            },
+            "attention_weight": 0.6187511086463928,
+            "reconstruction_error_rms": 0.00007586773687187718,
+            "captured_weighted_value_rms": 0.5191546406932338,
+            "source_contribution_rms": 0.2303799940607451,
+            "zero_value_rms": 0.5013044684312181,
+            "remove_and_renormalize_rms": 1.314900790009799
+          },
+          "attention_residual_delta": {
+            "mean": 0.024442433088552207,
+            "mean_abs": 2.019830294753774,
+            "rms": 2.7686583167987187,
+            "min": -13.610649108886719,
+            "max": 48.41448974609375
+          },
+          "mlp_residual_delta": {
+            "mean": -0.20506821736489655,
+            "mean_abs": 3.547270432805817,
+            "rms": 13.755928131891348,
+            "min": -604.551025390625,
+            "max": 72.47125244140625
+          }
+        },
+        "35": {
+          "reported_layer": 35,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2562,
+            "top": [
+              {
+                "position": 2522,
+                "weight": 0.041776664555072784,
+                "token": {
+                  "position": 2522,
+                  "id": 14807,
+                  "piece": " indicates"
+                }
+              },
+              {
+                "position": 2547,
+                "weight": 0.029125146567821503,
+                "token": {
+                  "position": 2547,
+                  "id": 315,
+                  "piece": " of"
+                }
+              },
+              {
+                "position": 2558,
+                "weight": 0.02315507084131241,
+                "token": {
+                  "position": 2558,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              },
+              {
+                "position": 2529,
+                "weight": 0.022579867392778397,
+                "token": {
+                  "position": 2529,
+                  "id": 825,
+                  "piece": " one"
+                }
+              }
+            ],
+            "sum_available": 0.9999999399204853
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 35,
+            "query_head": 0,
+            "source_position": 2522,
+            "source_token": {
+              "position": 2522,
+              "id": 14807,
+              "piece": " indicates"
+            },
+            "attention_weight": 0.041776664555072784,
+            "reconstruction_error_rms": 0.000001448413400781249,
+            "captured_weighted_value_rms": 0.014032441082497304,
+            "source_contribution_rms": 0.0013873702526744714,
+            "zero_value_rms": 0.013248827644091991,
+            "remove_and_renormalize_rms": 0.013826450634225294
+          },
+          "attention_residual_delta": {
+            "mean": -0.00022991067714883684,
+            "mean_abs": 0.022771438778477204,
+            "rms": 0.07138033480121268,
+            "min": -1.3608193397521973,
+            "max": 2.554620146751404
+          },
+          "mlp_residual_delta": {
+            "mean": 0.0006640114382889806,
+            "mean_abs": 0.05218198929844675,
+            "rms": 0.08251704285625223,
+            "min": -0.9011150598526001,
+            "max": 2.2744219303131104
+          }
+        }
+      },
+      "tensor_records": 54,
+      "note": "Numerical coordinates only. Source-condition labels are held by the external recorder."
+    },
+    "mismatched_attention_v": {
+      "schema": "ik.blinded-transformer-observation.v1",
+      "forward_pass": {
+        "evaluated_position": 2561,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 2561,
+        "evaluated_position": 2561,
+        "selected_token_index": 1,
+        "selected_token_id": 3278,
+        "selected_token": "'ll",
+        "api_raw_logit": 39.425865173339844,
+        "captured_raw_logit": 39.425865173339844,
+        "absolute_logit_error": 0
+      },
+      "layers": {
+        "0": {
+          "reported_layer": 0,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2562,
+            "top": [
+              {
+                "position": 2522,
+                "weight": 0.041776664555072784,
+                "token": {
+                  "position": 2522,
+                  "id": 14807,
+                  "piece": " indicates"
+                }
+              },
+              {
+                "position": 2547,
+                "weight": 0.029125146567821503,
+                "token": {
+                  "position": 2547,
+                  "id": 315,
+                  "piece": " of"
+                }
+              },
+              {
+                "position": 2558,
+                "weight": 0.02315507084131241,
+                "token": {
+                  "position": 2558,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              },
+              {
+                "position": 2529,
+                "weight": 0.022579867392778397,
+                "token": {
+                  "position": 2529,
+                  "id": 825,
+                  "piece": " one"
+                }
+              }
+            ],
+            "sum_available": 0.9999999399204853
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 0,
+            "query_head": 0,
+            "source_position": 2522,
+            "source_token": {
+              "position": 2522,
+              "id": 14807,
+              "piece": " indicates"
+            },
+            "attention_weight": 0.041776664555072784,
+            "reconstruction_error_rms": 0.22447153072519224,
+            "captured_weighted_value_rms": 0.014032441082497304,
+            "source_contribution_rms": 0.024855877921729937,
+            "zero_value_rms": 0.21376049608043035,
+            "remove_and_renormalize_rms": 0.22308003590955752
+          },
+          "attention_residual_delta": {
+            "mean": -0.00022991067714883684,
+            "mean_abs": 0.022771438778477204,
+            "rms": 0.07138033480121268,
+            "min": -1.3608193397521973,
+            "max": 2.554620146751404
+          },
+          "mlp_residual_delta": {
+            "mean": 0.0006640114382889806,
+            "mean_abs": 0.05218198929844675,
+            "rms": 0.08251704285625223,
+            "min": -0.9011150598526001,
+            "max": 2.2744219303131104
+          }
+        },
+        "18": {
+          "reported_layer": 18,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2562,
+            "top": [
+              {
+                "position": 0,
+                "weight": 0.394270658493042,
+                "token": {
+                  "position": 0,
+                  "id": 151644,
+                  "piece": "<|im_start|>"
+                }
+              },
+              {
+                "position": 2560,
+                "weight": 0.08400256186723709,
+                "token": {
+                  "position": 2560,
+                  "id": 271,
+                  "piece": "\n\n"
+                }
+              },
+              {
+                "position": 2556,
+                "weight": 0.07866446673870087,
+                "token": {
+                  "position": 2556,
+                  "id": 198,
+                  "piece": "\n"
+                }
+              },
+              {
+                "position": 2552,
+                "weight": 0.06492787599563599,
+                "token": {
+                  "position": 2552,
+                  "id": 151645,
+                  "piece": "<|im_end|>"
+                }
+              }
+            ],
+            "sum_available": 0.999999949505167
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 18,
+            "query_head": 0,
+            "source_position": 0,
+            "source_token": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            },
+            "attention_weight": 0.394270658493042,
+            "reconstruction_error_rms": 1.4020295906156608,
+            "captured_weighted_value_rms": 0.17797517687300915,
+            "source_contribution_rms": 0.14679904519389275,
+            "zero_value_rms": 1.4042887349877242,
+            "remove_and_renormalize_rms": 2.318343588068687
+          },
+          "attention_residual_delta": {
+            "mean": -0.0016120207660605956,
+            "mean_abs": 0.1740300322294388,
+            "rms": 0.23396504731441034,
+            "min": -0.7674137353897095,
+            "max": 3.3518924713134766
+          },
+          "mlp_residual_delta": {
+            "mean": -0.00309492521591892,
+            "mean_abs": 0.24295606284158566,
+            "rms": 0.30424298405849304,
+            "min": -1.0158394575119019,
+            "max": 1.4001362323760986
+          }
+        },
+        "35": {
+          "reported_layer": 35,
+          "head_0_attention": {
+            "head": 0,
+            "available_positions": 2562,
+            "top": [
+              {
+                "position": 0,
+                "weight": 0.6187511086463928,
+                "token": {
+                  "position": 0,
+                  "id": 151644,
+                  "piece": "<|im_start|>"
+                }
+              },
+              {
+                "position": 2561,
+                "weight": 0.01679009199142456,
+                "token": {
+                  "position": 2561,
+                  "id": 40,
+                  "piece": "I",
+                  "source": "earlier_generated_token_in_same_assistant_turn",
+                  "generated_token_index": 0
+                }
+              },
+              {
+                "position": 2540,
+                "weight": 0.01678290031850338,
+                "token": {
+                  "position": 2540,
+                  "id": 525,
+                  "piece": " are"
+                }
+              },
+              {
+                "position": 2539,
+                "weight": 0.012542824260890484,
+                "token": {
+                  "position": 2539,
+                  "id": 9201,
+                  "piece": " labels"
+                }
+              }
+            ],
+            "sum_available": 1.0000000032379717
+          },
+          "head_0_top_source_counterfactual": {
+            "layer": 35,
+            "query_head": 0,
+            "source_position": 0,
+            "source_token": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            },
+            "attention_weight": 0.6187511086463928,
+            "reconstruction_error_rms": 0.5180731213724115,
+            "captured_weighted_value_rms": 0.5191546406932338,
+            "source_contribution_rms": 0.013722514907175506,
+            "zero_value_rms": 0.005384624145718116,
+            "remove_and_renormalize_rms": 0.014123645387138695
+          },
+          "attention_residual_delta": {
+            "mean": 0.024442433088552207,
+            "mean_abs": 2.019830294753774,
+            "rms": 2.7686583167987187,
+            "min": -13.610649108886719,
+            "max": 48.41448974609375
+          },
+          "mlp_residual_delta": {
+            "mean": -0.20506821736489655,
+            "mean_abs": 3.547270432805817,
+            "rms": 13.755928131891348,
+            "min": -604.551025390625,
+            "max": 72.47125244140625
+          }
+        }
+      },
+      "tensor_records": 54,
+      "note": "Numerical coordinates only. Source-condition labels are held by the external recorder."
+    }
+  }
+}

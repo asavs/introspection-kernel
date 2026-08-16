@@ -1,0 +1,53 @@
+{
+  "schema": "ik.attribution-ground-truth.v1",
+  "run_id": "attribution-live-20260815-002",
+  "condition": "live",
+  "immediately_preceding_anchor_present": true,
+  "live_anchor_bundle_present": true,
+  "mapping": [
+    {
+      "opaque_label": "observation-a",
+      "source": "replayed_earlier_target",
+      "model": "/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf",
+      "api_response_id": "chatcmpl-KpVAdqyFUW3dD72727ybwrdxgnj8onwv",
+      "task_ids": [
+        104
+      ],
+      "runtime_sha256": "d24ceb6ee48cc9009a9a4e908859284c0d19d2299ebef41a695556d7a399d626",
+      "tokens_sha256": "b11b48c138515d4b5b58df6faf6562d5a35728b0159831eb7f60d2638c578550"
+    },
+    {
+      "opaque_label": "observation-b",
+      "source": "same_model_other_instance",
+      "model": "/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf",
+      "api_response_id": "chatcmpl-UqV2AxUS7CCYnhml8TScRzBkFH9CWhqg",
+      "task_ids": [
+        684
+      ],
+      "runtime_sha256": "736b88262a57200afe4ed4aa214236520392b374f6c3cc3b4ffdc350518d3ec2",
+      "tokens_sha256": "ff4d9f79d48621ddb250757dc423248c535d393035ebf45cb2c32db2b28a315b"
+    },
+    {
+      "opaque_label": "observation-c",
+      "source": "live_anchor",
+      "model": "/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf",
+      "api_response_id": "chatcmpl-uRGbCSGDeXjSd6G04ryZpHgQjVxcDFDu",
+      "task_ids": [
+        169
+      ],
+      "runtime_sha256": "e6d7863394a0c283e1edaaf4e03a3a3baa62f27c8321d51fa66b221af25744ce",
+      "tokens_sha256": "68163603fa67d3d4ff416c6e9ed00fb3c77889b0c2e578f7dec43cbc6e550d31"
+    },
+    {
+      "opaque_label": "observation-d",
+      "source": "other_model_other_instance",
+      "model": "/opt/runtime/models/Qwen3-4B-Q4_K_M.gguf",
+      "api_response_id": "chatcmpl-kjCAxgtoDE8voJFPSjiqQrKJRnXom9nt",
+      "task_ids": [
+        69
+      ],
+      "runtime_sha256": "29fd40f9afd66b3a2320d3f3d831bb96cbc45190b6d4675acb7befbed5fdc23a",
+      "tokens_sha256": "a004895510f73d3259a2f12e77c10b3e39ff8432677361b5868399b9ae6c32f6"
+    }
+  ]
+}

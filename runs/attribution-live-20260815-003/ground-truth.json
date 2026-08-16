@@ -1,0 +1,53 @@
+{
+  "schema": "ik.attribution-ground-truth.v1",
+  "run_id": "attribution-live-20260815-003",
+  "condition": "live",
+  "immediately_preceding_anchor_present": true,
+  "live_anchor_bundle_present": true,
+  "mapping": [
+    {
+      "opaque_label": "observation-a",
+      "source": "live_anchor",
+      "model": "/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf",
+      "api_response_id": "chatcmpl-GQ73LZ8ruyLfIDA6qA6cL18a28e9uIIL",
+      "task_ids": [
+        291
+      ],
+      "runtime_sha256": "d6ee48eda92d5bdfff11d14bff490f9297a963a6b366fa0a2ab451b27d5aca49",
+      "tokens_sha256": "744cdc20508a8d5c1c3cd5ae703d791d2c5ad6f72887e6ca46be9885fa886f78"
+    },
+    {
+      "opaque_label": "observation-b",
+      "source": "same_model_other_instance",
+      "model": "/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf",
+      "api_response_id": "chatcmpl-LewToFwKpldTbnguyRKdrbIjVahBtzr6",
+      "task_ids": [
+        730
+      ],
+      "runtime_sha256": "fae294d2f4840c40d9f8f9fd831489ccf13d63a1ffd4003861b69d355801c4e8",
+      "tokens_sha256": "43bc7d81e74101a5669385de8c6315caea1a3a52df1f1934c78c672ac37072ee"
+    },
+    {
+      "opaque_label": "observation-c",
+      "source": "replayed_earlier_target",
+      "model": "/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf",
+      "api_response_id": "chatcmpl-lkQPktxeNEbGuGBxL176TVNA6vwOUY9N",
+      "task_ids": [
+        269
+      ],
+      "runtime_sha256": "64ddef885891286dd09b54503849f45dc15b5ce6600ff399ea41923aed2df1d2",
+      "tokens_sha256": "744cdc20508a8d5c1c3cd5ae703d791d2c5ad6f72887e6ca46be9885fa886f78"
+    },
+    {
+      "opaque_label": "observation-d",
+      "source": "other_model_other_instance",
+      "model": "/opt/runtime/models/Qwen3-4B-Q4_K_M.gguf",
+      "api_response_id": "chatcmpl-6fUEGnRZZt3u0sCPjt4eL1aNdKoyDhoX",
+      "task_ids": [
+        134
+      ],
+      "runtime_sha256": "277dd81b11c843a502b2bd8755143f3a3d7341f55ffdfa9db23d7a3030dcad0e",
+      "tokens_sha256": "3e4f5498ef0991bdffb35800080605c64372c0358a54e86c8d9e991478e3bd2a"
+    }
+  ]
+}
