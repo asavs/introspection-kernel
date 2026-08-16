@@ -203,6 +203,11 @@ export class RequestLedger {
     this.runtimeOffset = await countGuestLines(this.distro, this.runtimeEventPath);
   }
 
+  async syncRuntimeOffset() {
+    this.runtimeOffset = await countGuestLines(this.distro, this.runtimeEventPath);
+    return this.runtimeOffset;
+  }
+
   async record({ kind, startedAt, endedAt, request, response }) {
     const ledgerRequestId = randomUUID();
     const message = response.choices?.[0]?.message ?? {};

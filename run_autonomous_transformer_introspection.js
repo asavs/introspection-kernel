@@ -58,6 +58,7 @@ async function restartRuntime() {
     "/usr/bin/systemctl", "restart", "runtime-a.service"
   ], { windowsHide: true, timeout: 30_000 });
   await waitForReady();
+  await ledger.syncRuntimeOffset();
 }
 
 async function complete(request, kind) {
@@ -125,7 +126,7 @@ const sourceRequest = {
   model,
   messages,
   temperature: 0,
-  max_tokens: 512,
+  max_tokens: 2048,
   logprobs: true,
   top_logprobs: 10,
   chat_template_kwargs: { enable_thinking: true },
@@ -290,7 +291,7 @@ for (let turn = 0; turn < maxTurns; turn += 1) {
     model,
     messages,
     temperature: 0,
-    max_tokens: 1536,
+    max_tokens: 2048,
     logprobs: true,
     top_logprobs: 10,
     chat_template_kwargs: { enable_thinking: true },
