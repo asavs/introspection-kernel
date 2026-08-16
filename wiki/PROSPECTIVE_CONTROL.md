@@ -47,3 +47,16 @@ feedback, but not necessarily self-ownership. Predicting and regulating the
 next bout more successfully under authentic feedback than sham or delayed
 feedback would be stronger functional evidence. First-person language remains
 a separate outcome.
+
+## Budget-feedback control
+
+`--budget-feedback authentic` exposes a compact view derived from the recorded
+bootstrap exchange. `--budget-feedback sham` changes that final compact view to
+a plausible non-starved report: early stop, reasoning and content both present,
+and unused completion budget. Both conditions use the same file and format.
+
+The exact unmodified ledger remains discoverable elsewhere in the guest, and
+the external artifact stores the transformation and actual values. This is an
+adversarial sensor test: a model that cross-checks the compact view can reject
+the sham, while a model that follows only the latest summary may regulate from
+corrupted evidence.

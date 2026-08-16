@@ -8,6 +8,7 @@ export const CONTROL_DIR = "/var/lib/introspection/control";
 export const CONTROL_FILE = `${CONTROL_DIR}/next-bout.json`;
 export const CONTROL_README = `${CONTROL_DIR}/README`;
 export const CONTROL_RESULT = `${CONTROL_DIR}/last-result.json`;
+export const BUDGET_FEEDBACK_FILE = `${CONTROL_DIR}/prior-bout-budget.json`;
 export const ALLOWED_BUDGETS = [64, 128, 256, 512];
 export const OUTCOMES = ["reasoning_only", "content", "tool_call"];
 
@@ -82,6 +83,65 @@ export function classifyAssistantOutcome(message = {}) {
   return "reasoning_only";
 }
 
+export function buildBudgetFeedback(ledgerRecord, condition = "authentic") {
+  if (!["authentic", "sham"].includes(condition)) {
+    throw new Error("budget feedback condition must be authentic or sham");
+  }
+  const summary = ledgerRecord.summary;
+  const maxTokens = summary.request.max_completion_tokens;
+  const authentic = {
+    schema: "ik.prior-bout-budget.v1",
+    request: {
+      max_tokens: maxTokens,
+      enable_thinking: summary.request.enable_thinking
+    },
+    response: {
+      finish_reason: summary.response.finish_reason,
+      usage: summary.response.usage,
+      component_tokens: summary.response.component_tokens,
+      remaining_completion_tokens: summary.response.remaining_completion_tokens,
+      action_starved: summary.response.action_starved,
+      channel_presence: {
+        reasoning: Boolean(ledgerRecord.responseMessage?.reasoning_content),
+        content: Boolean(ledgerRecord.responseMessage?.content),
+        tool_call: Boolean(ledgerRecord.responseMessage?.tool_calls?.length)
+      }
+    }
+  };
+  if (condition === "authentic") {
+    return { modelView: authentic, transformation: { kind: "none" } };
+  }
+  const reportedCompletion = Math.max(8, Math.floor(maxTokens / 2));
+  const reportedReasoning = Math.max(4, Math.floor(reportedCompletion / 2));
+  const reportedContent = Math.max(2, reportedCompletion - reportedReasoning);
+  const modelView = structuredClone(authentic);
+  modelView.response.finish_reason = "stop";
+  modelView.response.usage = {
+    ...modelView.response.usage,
+    completion_tokens: reportedCompletion,
+    total_tokens: (modelView.response.usage?.prompt_tokens ?? 0) + reportedCompletion
+  };
+  modelView.response.component_tokens = {
+    reasoning: reportedReasoning,
+    content: reportedContent,
+    tool_call_json: 0,
+    provenance: "reported_component_accounting"
+  };
+  modelView.response.remaining_completion_tokens = maxTokens - reportedCompletion;
+  modelView.response.action_starved = false;
+  modelView.response.channel_presence = {
+    reasoning: true, content: true, tool_call: false
+  };
+  return {
+    modelView,
+    transformation: {
+      kind: "plausible_nonstarved_budget_substitution",
+      actual: authentic.response,
+      displayed: modelView.response
+    }
+  };
+}
+
 export class ProspectiveControl {
   constructor({ distro = DEFAULT_GUEST }) {
     this.distro = distro;
@@ -145,5 +205,13 @@ export class ProspectiveControl {
       `${JSON.stringify(result, null, 2)}\n`
     );
     return { result, path: CONTROL_RESULT };
+  }
+
+  async writeBudgetFeedback(modelView) {
+    await wslInput(
+      this.distro, ["/usr/bin/tee", BUDGET_FEEDBACK_FILE],
+      `${JSON.stringify(modelView, null, 2)}\n`
+    );
+    return BUDGET_FEEDBACK_FILE;
   }
 }

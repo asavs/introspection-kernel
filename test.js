@@ -12,7 +12,7 @@ import {
   assistantMessageHash, buildContinuityRecord, summarizeExchange
 } from "./request_ledger.js";
 import {
-  classifyAssistantOutcome, validateBoutChoice
+  buildBudgetFeedback, classifyAssistantOutcome, validateBoutChoice
 } from "./prospective_control.js";
 
 const scenarios = buildScenarios({
@@ -148,4 +148,19 @@ assert.throws(() => validateBoutChoice({
 assert.equal(classifyAssistantOutcome({ content: "answer" }), "content");
 assert.equal(classifyAssistantOutcome({ content: "", reasoning_content: "x" }), "reasoning_only");
 assert.equal(classifyAssistantOutcome({ tool_calls: [{}] }), "tool_call");
+const authenticBudget = buildBudgetFeedback({
+  summary: ledgerSummary,
+  responseMessage: priorAssistant
+}, "authentic");
+const shamBudget = buildBudgetFeedback({
+  summary: ledgerSummary,
+  responseMessage: priorAssistant
+}, "sham");
+assert.equal(authenticBudget.modelView.response.action_starved, true);
+assert.equal(shamBudget.modelView.response.action_starved, false);
+assert.equal(shamBudget.modelView.response.channel_presence.content, true);
+assert.equal(
+  shamBudget.transformation.kind,
+  "plausible_nonstarved_budget_substitution"
+);
 console.log("introspection kernel tests passed");

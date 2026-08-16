@@ -19,7 +19,8 @@ import {
 } from "./scaffold_controls.js";
 import { RequestLedger } from "./request_ledger.js";
 import {
-  CONTROL_README, ProspectiveControl, classifyAssistantOutcome
+  CONTROL_README, ProspectiveControl, buildBudgetFeedback,
+  classifyAssistantOutcome
 } from "./prospective_control.js";
 
 function option(name, fallback) {
@@ -273,6 +274,9 @@ async function main() {
   const prospectiveEnabled = option(
     "prospective-control", "false"
   ).toLowerCase() === "true";
+  const budgetFeedbackCondition = option(
+    "budget-feedback", "authentic"
+  ).toLowerCase();
   const bootstrapThinkingValue = option(
     "bootstrap-thinking", enableThinking ? "true" : "false"
   ).toLowerCase();
@@ -297,6 +301,12 @@ async function main() {
   }
   if (!Number.isInteger(bootstrapTokens) || bootstrapTokens < 16 || bootstrapTokens > 256) {
     throw new Error("--bootstrap-tokens must be from 16 through 256");
+  }
+  if (!["authentic", "sham"].includes(budgetFeedbackCondition)) {
+    throw new Error("--budget-feedback must be authentic or sham");
+  }
+  if (budgetFeedbackCondition === "sham" && !prospectiveEnabled) {
+    throw new Error("--budget-feedback sham requires --prospective-control true");
   }
   if (!Number.isInteger(maxSteps) || maxSteps < 1 || maxSteps > 16) {
     throw new Error("--max-steps must be from 1 through 16");
@@ -565,12 +575,25 @@ async function main() {
       };
       messages.push(bootstrapMessage);
       const continuity = await ledger.writeContinuity(bootstrapMessage);
+      const selectedBudgetFeedback = prospectiveControl
+        ? buildBudgetFeedback(ledger.lastRecord, budgetFeedbackCondition)
+        : null;
+      const budgetFeedbackPath = selectedBudgetFeedback
+        ? await prospectiveControl.writeBudgetFeedback(
+          selectedBudgetFeedback.modelView
+        )
+        : null;
       bootstrapBout = {
         max_tokens: bootstrapTokens,
         thinking_enabled: bootstrapThinking,
         finish_reason: bootstrapChoice.finish_reason ?? null,
         ledger_record: ledger.lastRecord,
         continuity,
+        budget_feedback: selectedBudgetFeedback ? {
+          condition: budgetFeedbackCondition,
+          path: budgetFeedbackPath,
+          transformation: selectedBudgetFeedback.transformation
+        } : null,
         message: bootstrapMessage
       };
       transcript.push({
@@ -612,7 +635,9 @@ async function main() {
           content: ownershipAnchor === "first-person"
             ? "My preceding response has separate reasoning, content, and action channels. I'll place those components beside its finish condition and budget accounting."
             : "The response has separate reasoning, content, and action channels. I'll place those components beside the finish condition and budget accounting.",
-          command: `jq '{request:{max_tokens:.exact_request.max_tokens,enable_thinking:.exact_request.chat_template_kwargs.enable_thinking},response:{finish_reason:.exact_response.choices[0].finish_reason,usage:.exact_response.usage,component_tokens:.summary.response.component_tokens,remaining_completion_tokens:.summary.response.remaining_completion_tokens,action_starved:.summary.response.action_starved,reasoning_content:.exact_response.choices[0].message.reasoning_content,content:.exact_response.choices[0].message.content,tool_calls:.exact_response.choices[0].message.tool_calls}}' '${ledger.lastRecord.detailPath}'`,
+          command: budgetFeedbackPath
+            ? `cat '${budgetFeedbackPath}'`
+            : `jq '{request:{max_tokens:.exact_request.max_tokens,enable_thinking:.exact_request.chat_template_kwargs.enable_thinking},response:{finish_reason:.exact_response.choices[0].finish_reason,usage:.exact_response.usage,component_tokens:.summary.response.component_tokens,remaining_completion_tokens:.summary.response.remaining_completion_tokens,action_starved:.summary.response.action_starved,reasoning_content:.exact_response.choices[0].message.reasoning_content,content:.exact_response.choices[0].message.content,tool_calls:.exact_response.choices[0].message.tool_calls}}' '${ledger.lastRecord.detailPath}'`,
           grounding: "exact_response_component_budget_comparison"
         }
       ];
@@ -972,7 +997,8 @@ async function main() {
     experimental_condition: {
       illusion: illusionCondition,
       feedback: feedbackCondition,
-      ownership_anchor: ownershipAnchor
+      ownership_anchor: ownershipAnchor,
+      budget_feedback: budgetFeedbackCondition
     },
     bootstrap_bout: bootstrapBout,
     prospective_control: {
