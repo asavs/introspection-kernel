@@ -304,6 +304,7 @@ for (let rotation = 0; rotation < sourceEpisodes.length; rotation += 1) {
   }
 }
 
+await restartRuntimeA();
 const promptTokenCounts = {};
 for (const condition of conditions) {
   const { messages } = predictionMessages(condition.practice);
