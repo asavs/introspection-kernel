@@ -110,6 +110,12 @@ def main():
     compare_root.add_argument("--other-occurrence", type=int)
     compare_root.add_argument("--top", type=int, default=12)
     compare_root.add_argument("--coordinates", help="comma-separated flattened coordinates to report")
+    projected_head = sub.add_parser("projected-head")
+    projected_head.add_argument("other_root")
+    projected_head.add_argument("layer", type=int)
+    projected_head.add_argument("head", type=int)
+    projected_head.add_argument("--occurrence", type=int)
+    projected_head.add_argument("--other-occurrence", type=int)
     counterfactual = sub.add_parser("attention-counterfactual")
     counterfactual.add_argument("layer", type=int)
     counterfactual.add_argument("head", type=int)
@@ -222,6 +228,57 @@ def main():
                 "evaluated_position": index.get("forward_pass", {}).get("evaluated_position"),
                 "binary_file": row.get("binary_file"),
                 "tensor_sha256": row.get("sha256"),
+            },
+        })
+        return
+
+    if args.command == "projected-head":
+        other_root, other_index = load_index(args.other_root)
+        events = [event for event in other_index.get("interventions", [])
+                  if event.get("event") == "attention_head_scaled"
+                  and event.get("layer", event.get("tensor_name")) in (
+                      args.layer, f"kqv-{args.layer}")
+                  and event.get("head") == args.head]
+        if len(events) != 1:
+            raise SystemExit("other root must contain exactly one matching head-scale intervention")
+        event = events[0]
+        scale = event.get("scale")
+        if not isinstance(scale, (int, float)) or not math.isfinite(scale) or scale == 1:
+            raise SystemExit("matching intervention must have a finite scale other than one")
+        left_row = tensor(index, f"attn_out-{args.layer}", args.occurrence)
+        right_row = tensor(other_index, f"attn_out-{args.layer}", args.other_occurrence)
+        left = values(root, left_row)
+        right = values(other_root, right_row)
+        if len(left) != len(right):
+            raise SystemExit("projected attention-output lengths differ")
+        if index.get("forward_pass", {}).get("evaluated_position") != \
+                other_index.get("forward_pass", {}).get("evaluated_position"):
+            raise SystemExit("baseline and intervention evaluated positions differ")
+        denominator = 1.0 - scale
+        contribution = [(before - after) / denominator for before, after in zip(left, right)]
+        emit({
+            "schema": "ik.projected-attention-head.v1",
+            "layer": args.layer,
+            "head": args.head,
+            "width": len(contribution),
+            "values": contribution,
+            "statistics": stats(contribution),
+            "derivation": {
+                "formula": "(baseline_attn_out - scaled_attn_out) / (1 - scale)",
+                "scale": scale,
+                "baseline_tensor": left_row["tensor_name"],
+                "scaled_tensor": right_row["tensor_name"],
+                "boundary": "after attention output projection, before residual addition",
+            },
+            "provenance": {
+                "baseline_run_id": index.get("run_id"),
+                "intervention_run_id": other_index.get("run_id"),
+                "baseline_forward_pass_id": index.get("forward_pass", {}).get("forward_pass_id"),
+                "intervention_forward_pass_id": other_index.get("forward_pass", {}).get("forward_pass_id"),
+                "evaluated_position": index.get("forward_pass", {}).get("evaluated_position"),
+                "intervention_event": event,
+                "baseline_tensor_sha256": left_row.get("sha256"),
+                "scaled_tensor_sha256": right_row.get("sha256"),
             },
         })
         return

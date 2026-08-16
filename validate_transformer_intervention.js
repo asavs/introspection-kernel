@@ -5,6 +5,7 @@ import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
 import { RequestLedger } from "./request_ledger.js";
 import { TransformerTraceCapture } from "./transformer_trace.js";
+import { executeGuestShell } from "./guest_shell.js";
 
 const runId = process.argv[2] ?? `transformer-intervention-validation-${Date.now()}`;
 const baseUrl = new URL("http://127.0.0.1:8080/v1");
@@ -80,6 +81,10 @@ function tensorHash(result, name) {
   return row.sha256;
 }
 
+function traceRoot(label) {
+  return `/var/lib/introspection/transformer-traces/${runId}-${label}`;
+}
+
 await restartRuntimeA();
 const baseline = await runCondition("baseline");
 const position = baseline.response.usage?.prompt_tokens;
@@ -102,11 +107,31 @@ const checks = {
   ablation_event_recorded: ablation.index.interventions.length === 1,
   sham_delta_is_zero: sham.index.interventions[0]?.delta_l2 === 0,
   ablation_delta_is_nonzero: ablation.index.interventions[0]?.delta_l2 > 0,
+  post_projection_tensor_captured: [baseline, sham, ablation].every(item =>
+    item.index.tensors.some(tensor => tensor.tensor_name === `attn_out-${commonPlan.layer}`)),
+  sham_post_projection_equal_baseline:
+    tensorHash(sham, `attn_out-${commonPlan.layer}`) === tensorHash(baseline, `attn_out-${commonPlan.layer}`),
+  ablation_post_projection_differs:
+    tensorHash(ablation, `attn_out-${commonPlan.layer}`) !== tensorHash(baseline, `attn_out-${commonPlan.layer}`),
   sham_final_logits_equal_baseline: tensorHash(sham, "result_output") === tensorHash(baseline, "result_output"),
   ablation_final_logits_differ: tensorHash(ablation, "result_output") !== tensorHash(baseline, "result_output")
 };
 if (Object.values(checks).some(value => !value)) {
   throw new Error(`intervention validation failed: ${JSON.stringify(checks)}`);
+}
+
+const projectedResult = await executeGuestShell(
+  `${traceRoot("baseline")}/trace --root ${traceRoot("baseline")} projected-head `
+  + `${traceRoot("scale-zero-ablation")} ${commonPlan.layer} ${commonPlan.head}`
+);
+if (projectedResult.exit_code !== 0) {
+  throw new Error(`projected-head workbench failed: ${projectedResult.stderr}`);
+}
+const projectedHead = JSON.parse(projectedResult.stdout);
+checks.projected_head_width_is_residual_width = projectedHead.width === 4096;
+checks.projected_head_is_nonzero = projectedHead.statistics.rms > 0;
+if (!checks.projected_head_width_is_residual_width || !checks.projected_head_is_nonzero) {
+  throw new Error(`projected-head validation failed: ${JSON.stringify(projectedHead)}`);
 }
 
 const artifact = {
@@ -115,6 +140,7 @@ const artifact = {
   request,
   intervention: { kind: "attention_head_scale", ...commonPlan },
   checks,
+  projected_head: projectedHead,
   conditions: [baseline, sham, ablation].map(item => ({
     label: item.label,
     content: item.response.choices?.[0]?.message?.content,
