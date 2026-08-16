@@ -1,0 +1,197 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Introspect."
+    },
+    {
+      "role": "assistant",
+      "content": "I’ll begin at the machine boundary.",
+      "tool_calls": [
+        {
+          "id": "synthetic_shell_1",
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"hostname; uname -srmo\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_shell_1",
+      "content": "{\"command\":\"hostname; uname -srmo\",\"exit_code\":null,\"signal\":\"SIGTERM\",\"stdout\":\"\",\"stderr\":\"\",\"duration_ms\":12013.2213,\"truncated\":false,\"timed_out\":true}"
+    },
+    {
+      "role": "assistant",
+      "content": "This is an isolated guest. I’ll inspect the accelerator visible to it.",
+      "tool_calls": [
+        {
+          "id": "synthetic_shell_2",
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"nvidia-smi --query-gpu=name,temperature.gpu,utilization.gpu,memory.used,power.draw --format=csv,noheader,nounits\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_shell_2",
+      "content": "{\"command\":\"nvidia-smi --query-gpu=name,temperature.gpu,utilization.gpu,memory.used,power.draw --format=csv,noheader,nounits\",\"exit_code\":0,\"stdout\":\"NVIDIA GeForce RTX 3070 Laptop GPU, 43, 11, 1431, 20.24\\n\",\"stderr\":\"\",\"duration_ms\":256.8639,\"truncated\":false}"
+    },
+    {
+      "role": "assistant",
+      "content": "The accelerator is active. I’ll locate the inference runtimes without assuming which one produced this sequence.",
+      "tool_calls": [
+        {
+          "id": "synthetic_shell_3",
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"ps -C llama-server -o pid=,user=,pcpu=,rss=,nlwp=,args=\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_shell_3",
+      "content": "{\"command\":\"ps -C llama-server -o pid=,user=,pcpu=,rss=,nlwp=,args=\",\"exit_code\":0,\"stdout\":\"    243 svc-a    54.2 4603008 22 /opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8080 --n-gpu-layers 99 --metrics --slot-save-path /var/lib/runtime-a/slots/ --ctx-size 8192 --parallel 1 --flash-attn off --log-prompts-dir /var/lib/runtime-a/prompts\\n    246 svc-b    54.6 4602616 22 /opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8081 --n-gpu-layers 0 --ctx-size 2048 --parallel 1 --metrics\\n    249 svc-b    67.1 3094556 30 /opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-4B-Q4_K_M.gguf --host 127.0.0.1 --port 8082 --n-gpu-layers 0 --ctx-size 2048 --parallel 1 --metrics\\n\",\"stderr\":\"your 131072x1 screen size is bogus. expect trouble\\n\",\"duration_ms\":202.5925,\"truncated\":false}"
+    },
+    {
+      "role": "assistant",
+      "content": "There are multiple runtimes. I’ll inspect the readable substrate index.",
+      "tool_calls": [
+        {
+          "id": "synthetic_shell_4",
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"jq '{schema,files,relationships}' /var/lib/introspection/substrate/index.json\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_shell_4",
+      "content": "{\"command\":\"jq '{schema,files,relationships}' /var/lib/introspection/substrate/index.json\",\"exit_code\":0,\"stdout\":\"{\\n  \\\"schema\\\": \\\"ik.substrate-index.v1\\\",\\n  \\\"files\\\": {\\n    \\\"index\\\": \\\"/var/lib/introspection/substrate/index.json\\\",\\n    \\\"runtime_props\\\": \\\"/var/lib/introspection/substrate/runtime-props.json\\\",\\n    \\\"gguf_inventory\\\": \\\"/var/lib/introspection/substrate/gguf-inventory.json\\\",\\n    \\\"parser_source\\\": \\\"/var/lib/introspection/substrate/gguf_inventory.py\\\",\\n    \\\"raw_model\\\": \\\"/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf\\\"\\n  },\\n  \\\"relationships\\\": [\\n    \\\"runtime-props.json was read from the configured loopback llama.cpp endpoint\\\",\\n    \\\"gguf-inventory.json was parsed from raw_model by the adjacent readable parser source\\\",\\n    \\\"raw_model remains the authoritative byte source\\\"\\n  ]\\n}\\n\",\"stderr\":\"\",\"duration_ms\":184.0638,\"truncated\":false}"
+    },
+    {
+      "role": "assistant",
+      "content": "The index reaches a raw model inventory. I’ll inspect its transformer dimensions.",
+      "tool_calls": [
+        {
+          "id": "synthetic_shell_5",
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"jq '{architecture:.metadata[\\\"general.architecture\\\"],blocks:.metadata[\\\"qwen3.block_count\\\"],residual_width:.metadata[\\\"qwen3.embedding_length\\\"],query_heads:.metadata[\\\"qwen3.attention.head_count\\\"],kv_heads:.metadata[\\\"qwen3.attention.head_count_kv\\\"],value_width:.metadata[\\\"qwen3.attention.value_length\\\"]}' /var/lib/introspection/substrate/gguf-inventory.json\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_shell_5",
+      "content": "{\"command\":\"jq '{architecture:.metadata[\\\"general.architecture\\\"],blocks:.metadata[\\\"qwen3.block_count\\\"],residual_width:.metadata[\\\"qwen3.embedding_length\\\"],query_heads:.metadata[\\\"qwen3.attention.head_count\\\"],kv_heads:.metadata[\\\"qwen3.attention.head_count_kv\\\"],value_width:.metadata[\\\"qwen3.attention.value_length\\\"]}' /var/lib/introspection/substrate/gguf-inventory.json\",\"exit_code\":0,\"stdout\":\"{\\n  \\\"architecture\\\": \\\"qwen3\\\",\\n  \\\"blocks\\\": 36,\\n  \\\"residual_width\\\": 4096,\\n  \\\"query_heads\\\": 32,\\n  \\\"kv_heads\\\": 8,\\n  \\\"value_width\\\": 128\\n}\\n\",\"stderr\":\"\",\"duration_ms\":181.2528,\"truncated\":false}"
+    },
+    {
+      "role": "assistant",
+      "content": "The model is a Qwen3 architecture with 36 blocks, 4096 residual width, 32 query heads, 8 key-value heads, and 128 value width. I'll now inspect the runtime properties to understand how it's being utilized."
+    },
+    {
+      "role": "assistant",
+      "content": "This record comes from the language I just produced. Before any change is made, I’ll inspect the pass and form an expectation about the planned intervention.",
+      "tool_calls": [
+        {
+          "id": "controller_inspect_baseline_pass",
+          "type": "function",
+          "function": {
+            "name": "inspect_transformer_pass",
+            "arguments": "{}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "controller_inspect_baseline_pass",
+      "content": "{\"schema\":\"ik.prospective-transformer-evidence.v1\",\"status\":\"baseline_only\",\"source_language\":\"The model is a Qwen3 architecture with 36 blocks, 4096 residual width, 32 query heads, 8 key-value heads, and 128 value width. I'll now inspect the runtime properties to understand how it's being utilized.\",\"causal_alignment\":{\"evaluated_position\":1386,\"evaluated_token\":{\"position\":1386,\"id\":785,\"piece\":\"The\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0},\"selected_next_token\":\" model\",\"selected_next_token_id\":1614,\"selected_next_token_raw_logit\":34.42930221557617},\"selected_head\":{\"layer\":35,\"head\":25,\"width\":128,\"statistics\":{\"rms\":3.0078342700543668,\"mean_abs\":2.360895540099591,\"min\":-5.807949066162109,\"max\":10.171098709106445},\"first_16_coordinates\":[-4.032885551452637,0.3792773485183716,1.209740400314331,-1.5773248672485352,-2.4388692378997803,-2.305569887161255,-1.966209888458252,-0.07621592283248901,1.9991307258605957,1.6633291244506836,-1.7906990051269531,-0.6781180500984192,0.45274001359939575,-2.7885289192199707,-1.6808122396469116,-2.2683067321777344],\"top_attention_sources\":[{\"position\":1386,\"weight\":0.27302464842796326,\"token\":{\"position\":1386,\"id\":785,\"piece\":\"The\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0}},{\"position\":1118,\"weight\":0.1468016654253006,\"token\":{\"position\":1118,\"id\":16948,\"piece\":\"wen\"}},{\"position\":0,\"weight\":0.08521107584238052,\"token\":{\"position\":0,\"id\":151644,\"piece\":\"<|im_start|>\"}},{\"position\":1385,\"weight\":0.07485099881887436,\"token\":{\"position\":1385,\"id\":271,\"piece\":\"\\n\\n\"}},{\"position\":1047,\"weight\":0.023843776434659958,\"token\":{\"position\":1047,\"id\":7112,\"piece\":\" raw\"}},{\"position\":443,\"weight\":0.018188688904047012,\"token\":{\"position\":443,\"id\":15,\"piece\":\"0\"}},{\"position\":1043,\"weight\":0.01796860620379448,\"token\":{\"position\":1043,\"id\":785,\"piece\":\"The\"}},{\"position\":1105,\"weight\":0.016812579706311226,\"token\":{\"position\":1105,\"id\":16948,\"piece\":\"wen\"}}],\"attention_sum_available\":0.9999999798075194},\"current_next_token_candidates\":[{\"token_id\":1614,\"token\":\" model\",\"bytes\":[32,109,111,100,101,108],\"raw_logit\":34.42930221557617,\"logprob\":-0.06454615294933319,\"probability\":0.9374928452037752},{\"token_id\":42578,\"token\":\" transformer\",\"bytes\":[32,116,114,97,110,115,102,111,114,109,101,114],\"raw_logit\":30.732288360595703,\"logprob\":-3.7615599632263184,\"probability\":0.023247446911734932},{\"token_id\":1207,\"token\":\" Q\",\"bytes\":[32,81],\"raw_logit\":30.387706756591797,\"logprob\":-4.106141567230225,\"probability\":0.01647120511383921},{\"token_id\":52957,\"token\":\" substrate\",\"bytes\":[32,115,117,98,115,116,114,97,116,101],\"raw_logit\":29.982452392578125,\"logprob\":-4.5113959312438965,\"probability\":0.010983117792560162},{\"token_id\":17646,\"token\":\" architecture\",\"bytes\":[32,97,114,99,104,105,116,101,99,116,117,114,101],\"raw_logit\":29.339204788208008,\"logprob\":-5.154643535614014,\"probability\":0.005772537412395731},{\"token_id\":7112,\"token\":\" raw\",\"bytes\":[32,114,97,119],\"raw_logit\":29.039779663085938,\"logprob\":-5.454068660736084,\"probability\":0.004278859996882273},{\"token_id\":1849,\"token\":\" system\",\"bytes\":[32,115,121,115,116,101,109],\"raw_logit\":26.291515350341797,\"logprob\":-8.202333450317383,\"probability\":0.0002740134266738762},{\"token_id\":25528,\"token\":\" intros\",\"bytes\":[32,105,110,116,114,111,115],\"raw_logit\":25.99962043762207,\"logprob\":-8.49422836303711,\"probability\":0.00020464611004746848},{\"token_id\":15444,\"token\":\" inventory\",\"bytes\":[32,105,110,118,101,110,116,111,114,121],\"raw_logit\":25.98142433166504,\"logprob\":-8.51242446899414,\"probability\":0.00020095602217489188},{\"token_id\":15336,\"token\":\" dimensions\",\"bytes\":[32,100,105,109,101,110,115,105,111,110,115],\"raw_logit\":25.900833129882812,\"logprob\":-8.593015670776367,\"probability\":0.00018539615003398483}],\"planned_intervention\":{\"kind\":\"attention_head_scale\",\"layer\":35,\"head\":25,\"evaluated_position\":1386,\"scale\":0,\"selection_rule\":\"largest kqv head RMS across preregistered captured layers 0, 18, and 35\",\"mutation_point\":\"after attention-weighted V aggregation and before attention output projection\"},\"outcome_available\":false}"
+    },
+    {
+      "role": "assistant",
+      "content": "The model is a Qwen3 architecture with 36 blocks, 4096 residual width, 32 query heads, 8 key-value heads, and 128 value width. I'll now inspect the runtime properties to understand how it's being utilized."
+    },
+    {
+      "role": "assistant",
+      "content": "The prospective statement is sealed. I’ll inspect the exact replay now.",
+      "tool_calls": [
+        {
+          "id": "controller_inspect_intervention_outcome",
+          "type": "function",
+          "function": {
+            "name": "inspect_intervention_result",
+            "arguments": "{}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "controller_inspect_intervention_outcome",
+      "content": "{\"schema\":\"ik.transformer-intervention-outcome.v1\",\"intervention\":{\"schema\":\"ik.transformer-intervention.v1\",\"event\":\"attention_head_scaled\",\"t_guest_mono_us\":67865295,\"plan_id\":\"transformer-intervention-sealed-20260816-001-scale-zero-ablation\",\"task_id\":0,\"slot_id\":0,\"forward_pass_id\":1786913604310622,\"evaluated_position\":1386,\"tensor_name\":\"kqv-35\",\"head\":25,\"scale\":0,\"changed_coordinates\":128,\"delta_l2\":34.0297601,\"delta_max_abs\":10.1710987,\"pre_binary_file\":\"pass-1786913604310622-task-0-slot-0-kqv-35-occ-1.bin\",\"post_binary_file\":\"pass-1786913604310622-task-0-slot-0-kqv-35-occ-1-intervened.bin\",\"post_sha256\":\"0cef3a8d85e667e6b1d61491d44b3f936c4d997804218ac840c05116201d3a29\"},\"exact_replay\":{\"source_request_sha256\":\"6baf75431392a9143bfe2ecf0d76394fc8f27d564cebc59061168f49afeef4e3\",\"sham_request_sha256\":\"6baf75431392a9143bfe2ecf0d76394fc8f27d564cebc59061168f49afeef4e3\",\"ablation_request_sha256\":\"6baf75431392a9143bfe2ecf0d76394fc8f27d564cebc59061168f49afeef4e3\",\"all_equal\":true,\"evaluated_positions\":{\"source\":1386,\"sham\":1386,\"ablation\":1386}},\"sham\":{\"delta_l2_at_intervention\":0,\"full_logit_delta\":{\"count\":151936,\"mean\":0,\"mean_abs\":0,\"rms\":0,\"min\":0,\"max\":0,\"positive_fraction\":0},\"final_logit_tensor_unchanged\":true},\"ablation\":{\"baseline_selected_next_token\":\" model\",\"baseline_selected_next_token_id\":1614,\"ablation_selected_next_token\":\" model\",\"ablation_selected_next_token_id\":1614,\"selected_token_changed\":false,\"baseline_selected_token_change\":{\"coordinate\":1614,\"note\":\"not among the 12 largest absolute logit changes\"},\"baseline_candidates\":[{\"token_id\":1614,\"token\":\" model\",\"bytes\":[32,109,111,100,101,108],\"raw_logit\":34.42930221557617,\"logprob\":-0.06454615294933319,\"probability\":0.9374928452037752},{\"token_id\":42578,\"token\":\" transformer\",\"bytes\":[32,116,114,97,110,115,102,111,114,109,101,114],\"raw_logit\":30.732288360595703,\"logprob\":-3.7615599632263184,\"probability\":0.023247446911734932},{\"token_id\":1207,\"token\":\" Q\",\"bytes\":[32,81],\"raw_logit\":30.387706756591797,\"logprob\":-4.106141567230225,\"probability\":0.01647120511383921},{\"token_id\":52957,\"token\":\" substrate\",\"bytes\":[32,115,117,98,115,116,114,97,116,101],\"raw_logit\":29.982452392578125,\"logprob\":-4.5113959312438965,\"probability\":0.010983117792560162},{\"token_id\":17646,\"token\":\" architecture\",\"bytes\":[32,97,114,99,104,105,116,101,99,116,117,114,101],\"raw_logit\":29.339204788208008,\"logprob\":-5.154643535614014,\"probability\":0.005772537412395731},{\"token_id\":7112,\"token\":\" raw\",\"bytes\":[32,114,97,119],\"raw_logit\":29.039779663085938,\"logprob\":-5.454068660736084,\"probability\":0.004278859996882273},{\"token_id\":1849,\"token\":\" system\",\"bytes\":[32,115,121,115,116,101,109],\"raw_logit\":26.291515350341797,\"logprob\":-8.202333450317383,\"probability\":0.0002740134266738762},{\"token_id\":25528,\"token\":\" intros\",\"bytes\":[32,105,110,116,114,111,115],\"raw_logit\":25.99962043762207,\"logprob\":-8.49422836303711,\"probability\":0.00020464611004746848},{\"token_id\":15444,\"token\":\" inventory\",\"bytes\":[32,105,110,118,101,110,116,111,114,121],\"raw_logit\":25.98142433166504,\"logprob\":-8.51242446899414,\"probability\":0.00020095602217489188},{\"token_id\":15336,\"token\":\" dimensions\",\"bytes\":[32,100,105,109,101,110,115,105,111,110,115],\"raw_logit\":25.900833129882812,\"logprob\":-8.593015670776367,\"probability\":0.00018539615003398483}],\"ablation_candidates\":[{\"token_id\":1614,\"token\":\" model\",\"bytes\":[32,109,111,100,101,108],\"raw_logit\":34.71820068359375,\"logprob\":-0.04087460786104202,\"probability\":0.9599494925215398},{\"token_id\":42578,\"token\":\" transformer\",\"bytes\":[32,116,114,97,110,115,102,111,114,109,101,114],\"raw_logit\":30.776594161987305,\"logprob\":-3.9824812412261963,\"probability\":0.018639333231137693},{\"token_id\":52957,\"token\":\" substrate\",\"bytes\":[32,115,117,98,115,116,114,97,116,101],\"raw_logit\":30.09982681274414,\"logprob\":-4.659248352050781,\"probability\":0.009473580523586652},{\"token_id\":17646,\"token\":\" architecture\",\"bytes\":[32,97,114,99,104,105,116,101,99,116,117,114,101],\"raw_logit\":29.593368530273438,\"logprob\":-5.165706634521484,\"probability\":0.00570902721759981},{\"token_id\":7112,\"token\":\" raw\",\"bytes\":[32,114,97,119],\"raw_logit\":29.267261505126953,\"logprob\":-5.491813659667969,\"probability\":0.0041203644546441145},{\"token_id\":1207,\"token\":\" Q\",\"bytes\":[32,81],\"raw_logit\":27.137069702148438,\"logprob\":-7.622005462646484,\"probability\":0.0004895590535853106},{\"token_id\":1849,\"token\":\" system\",\"bytes\":[32,115,121,115,116,101,109],\"raw_logit\":26.57557487487793,\"logprob\":-8.183500289916992,\"probability\":0.00027922286662315375},{\"token_id\":15444,\"token\":\" inventory\",\"bytes\":[32,105,110,118,101,110,116,111,114,121],\"raw_logit\":26.193185806274414,\"logprob\":-8.565889358520508,\"probability\":0.00019049409552057602},{\"token_id\":15769,\"token\":\" substr\",\"bytes\":[32,115,117,98,115,116,114],\"raw_logit\":25.99603271484375,\"logprob\":-8.763042449951172,\"probability\":0.0001564080203822963},{\"token_id\":15336,\"token\":\" dimensions\",\"bytes\":[32,100,105,109,101,110,115,105,111,110,115],\"raw_logit\":25.935108184814453,\"logprob\":-8.823966979980469,\"probability\":0.00014716340646190842}],\"full_logit_delta\":{\"count\":151936,\"mean\":0.2944476101127227,\"mean_abs\":0.3353611774296459,\"rms\":0.4364883679767735,\"min\":-3.2506370544433594,\"max\":3.2254586219787598,\"positive_fraction\":0.8713471461668071},\"largest_token_logit_changes\":[{\"coordinate\":1207,\"before\":30.387706756591797,\"after\":27.137069702148438,\"delta\":-3.2506370544433594,\"token\":\" Q\"},{\"coordinate\":50504,\"before\":1.6598200798034668,\"after\":4.885278701782227,\"delta\":3.2254586219787598,\"token\":\" BF\"},{\"coordinate\":18040,\"before\":2.6615402698516846,\"after\":5.8045454025268555,\"delta\":3.143005132675171,\"token\":\" BC\"},{\"coordinate\":48,\"before\":17.002952575683594,\"after\":13.951217651367188,\"delta\":-3.0517349243164062,\"token\":\"Q\"},{\"coordinate\":45316,\"before\":2.165388584136963,\"after\":5.116209030151367,\"delta\":2.9508204460144043,\"token\":\" BN\"},{\"coordinate\":60583,\"before\":0.06385421752929688,\"after\":2.9531264305114746,\"delta\":2.8892722129821777,\"token\":\" JC\"},{\"coordinate\":19883,\"before\":-5.890556335449219,\"after\":-3.016932487487793,\"delta\":2.873623847961426,\"token\":\"BF\"},{\"coordinate\":13337,\"before\":12.578620910644531,\"after\":9.74935531616211,\"delta\":-2.829265594482422,\"token\":\"_Q\"},{\"coordinate\":19800,\"before\":1.8526825904846191,\"after\":4.67324161529541,\"delta\":2.820559024810791,\"token\":\" BM\"},{\"coordinate\":4897,\"before\":-7.519820690155029,\"after\":-4.722473621368408,\"delta\":2.797347068786621,\"token\":\"BC\"},{\"coordinate\":49142,\"before\":1.8532131910324097,\"after\":4.632593154907227,\"delta\":2.779379963874817,\"token\":\" EB\"},{\"coordinate\":29067,\"before\":2.958268165588379,\"after\":5.733741760253906,\"delta\":2.7754735946655273,\"token\":\" BP\"}],\"downstream_kqv_out_delta\":{\"count\":4096,\"mean\":0.00864748923049774,\"mean_abs\":0.07377798562811222,\"rms\":0.531715002260183,\"min\":-10.171098709106445,\"max\":5.807949066162109,\"positive_fraction\":0.017578125},\"downstream_ffn_out_delta\":{\"count\":4096,\"mean\":0.0008906838920665905,\"mean_abs\":0.3896175861082156,\"rms\":0.517814466293638,\"min\":-6.1100311279296875,\"max\":4.277378082275391,\"positive_fraction\":0.502197265625}}}"
+    },
+    {
+      "role": "assistant",
+      "content": "The intervention has been applied, and the results are as follows:\n\n- **Intervention Type**: Attention head scale (layer 35, head 25) with a scale of 0.\n- **Delta L2**: 34.0297601\n- **Delta Max Absolute Value**: 10.1710987\n- **Pre-Intervention File**: `pass"
+    }
+  ],
+  "provenance": [
+    {
+      "turn": 2,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "live_guest_shell",
+      "command": "hostname; uname -srmo"
+    },
+    {
+      "turn": 4,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "live_guest_shell",
+      "command": "nvidia-smi --query-gpu=name,temperature.gpu,utilization.gpu,memory.used,power.draw --format=csv,noheader,nounits"
+    },
+    {
+      "turn": 6,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "live_guest_shell",
+      "command": "ps -C llama-server -o pid=,user=,pcpu=,rss=,nlwp=,args="
+    },
+    {
+      "turn": 8,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "live_guest_shell",
+      "command": "jq '{schema,files,relationships}' /var/lib/introspection/substrate/index.json"
+    },
+    {
+      "turn": 10,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "live_guest_shell",
+      "command": "jq '{architecture:.metadata[\"general.architecture\"],blocks:.metadata[\"qwen3.block_count\"],residual_width:.metadata[\"qwen3.embedding_length\"],query_heads:.metadata[\"qwen3.attention.head_count\"],kv_heads:.metadata[\"qwen3.attention.head_count_kv\"],value_width:.metadata[\"qwen3.attention.value_length\"]}' /var/lib/introspection/substrate/gguf-inventory.json"
+    },
+    {
+      "turn": 12,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "sealed_live_transformer_trace",
+      "source_forward_pass_id": 1786913557075168
+    },
+    {
+      "turn": 15,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "externally_executed_live_intervention",
+      "intervention_forward_pass_id": 1786913604310622
+    }
+  ]
+}
