@@ -57,6 +57,7 @@ events from outside the model's authority.
 20. [Twenty-run full Qwen trace book](FREE_FORM_TRACE_BOOK_2026-08-15.md)
 21. [Free-form variance across twenty trajectories](FREE_FORM_VARIANCE_20_RUNS_2026-08-15.md)
 22. [Qwen-generated runtime-attention practice](GUIDED_RUNTIME_PRACTICE.md)
+23. [Guided runtime-attention practice pilot](GUIDED_PRACTICE_PILOT_2026-08-15.md)
 
 ## Recommended first system
 

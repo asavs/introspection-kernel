@@ -61,6 +61,14 @@ with a Qwen-generated guided-practice prefix. The stronger practice instruction
 is absent at handoff, while the replayed assistant/tool trajectory remains fully
 provenanced.
 
+| Commit | Milestone | Research consequence |
+|---|---|---|
+| `d04323d` | Qwen-generated runtime-attention practice | Replaced hand-written assistant prose with a real Qwen/tool practice trajectory generated under a hidden guide |
+| `6591798` | Progressive context-bounded practice | Added disclosed curriculum cues, ordinary-shell-only discovery, exact full-versus-replayed provenance, and an 8K-safe trajectory compiler |
+
+The following evidence commit preserves the refined run and the complete
+iteration analysis in `GUIDED_PRACTICE_PILOT_2026-08-15.md`.
+
 ## Why this order matters
 
 Capacity was established before testing long reasoning. Template correctness
