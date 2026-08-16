@@ -76,6 +76,23 @@ iteration analysis in `GUIDED_PRACTICE_PILOT_2026-08-15.md`.
 | `b662984` | Direct weights and token distributions | Exposed the authoritative GGUF bytes plus auditable tensor offsets, model-readable per-token distributions, and externally sealed exact request traces |
 | `be386a1` | Raw pre-softmax logits | Patched and hash-verified llama.cpp so selected tokens and top alternatives retain their native logits beside normalized probabilities |
 
+## Activation, persistence, and attribution layer
+
+| Commit | Milestone | Research consequence |
+|---|---|---|
+| `527fa03` | Bounded transformer activation snapshots | Captured statistics and 64 fixed coordinates at Qwen3 blocks 0, 18, and 35 with task/slot/thread provenance |
+| `a2e6679` | Model-readable request-aligned runtime traces | Copied service-private events into the ordinary observer tree and rejected overlapping tasks from request attribution |
+| `394fc5d` | Sealed activation-ledger validation | Verified single-task associations across all requests and 108 snapshots for a 36-token generation |
+| `4279353` | Reversible activation overhead benchmark | Isolated the incremental cost of activation taps while holding raw-logit/runtime instrumentation constant |
+| `ee82394` | Sealed activation overhead evidence | Measured 1.42% median per-token and 0.54% wall-time overhead in the local diagnostic |
+| `7a82045` | Persistent llama slot snapshots | Enabled private on-disk slot/KV state through llama.cpp's native API |
+| `5865937` | Chunked KV pause/restart/restore | Added checksum-verified model-visible snapshots and actual server restart/restore between bouts |
+| `e5cd429` | Sealed two-chunk continuation | Verified exact token-count restoration and 1,253 cached tokens in the resumed generation |
+| `e9e4897` | Verified offline model importer | Kept the guest networkless while importing hash-checked control weights |
+| `bfd76f7` | Different-weights control runtime | Added CPU-only Qwen3-4B beside the same-model Qwen3-8B decoy |
+| `513b61d` | Free-form attribution controls | Added opaque live/replay/instance/model/conversation conditions without an attribution question or forced answer |
+| `5ff5695` | Sealed initial attribution matrix | Preserved the negative result: runtime-directed attention occurred, but live-instance attribution did not |
+
 ## Why this order matters
 
 Capacity was established before testing long reasoning. Template correctness

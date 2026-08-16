@@ -45,17 +45,19 @@ The tool-loop mode now exposes deeper evidence through the same ordinary shell:
 - the readable parser source that produced that inventory;
 - exact prior API requests and responses;
 - per-token selected probabilities and top alternatives from llama.cpp;
-- request/slot/KV/runtime events and broader process/GPU observations.
+- pre-softmax raw logits for selected tokens and top alternatives;
+- request/slot/KV/runtime events and broader process/GPU observations;
+- bounded layer-input snapshots at transformer blocks 0, 18, and 35;
+- checksum-verified binary slot/KV saves that can survive a server restart.
 
 These records live under `/var/lib/introspection/` inside the disposable guest.
 They are discoverable files rather than a semantic tool that declares which
 process or state is “the model.” The exact request ledger and token traces are
 also copied into each host-side run directory.
 
-The token trace contains both pre-softmax raw logits and post-softmax
-probabilities for the selected token and requested top alternatives. There is
-not yet an intermediate-activation stream; that boundary remains stated rather
-than silently treated as completed introspection.
+The activation stream contains whole-vector statistics and 64 fixed coordinates,
+not complete hidden-state vectors. That boundary is explicit in every ledger
+entry.
 
 ## Requirements
 
@@ -104,6 +106,20 @@ It writes `artifact.json`, `hidden-trace.jsonl`, and
 `runtime-events.jsonl` into a new run directory. See the
 [implementation status](wiki/IMPLEMENTATION_STATUS.md) for the active isolation
 and instrumentation details.
+
+For a true two-chunk KV save/restart/restore trajectory:
+
+```powershell
+node run_tool_loop.js --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --run-id my-chunked-run --max-steps 2 --slot-checkpoints true
+```
+
+For the free-form attribution controls (`live`, `replay`, `trace-only`, or
+`conversation-only`):
+
+```powershell
+node run_attribution_trial.js live my-attribution-run
+node score_attribution_trial.js runs\my-attribution-run
+```
 
 For a separately verified runtime worker:
 

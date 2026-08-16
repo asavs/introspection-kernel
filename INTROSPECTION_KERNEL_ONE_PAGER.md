@@ -1,100 +1,83 @@
-# Project One-Pager: Embodied System Telemetry & Process-Space Introspection
+# Introspection Kernel
 
-**Event:** Digital Minds Research Sprint 2026  
-**Project:** The Introspection Kernel (`pc-vitals` extension)  
-**Contact:** Asa Schaeffer & Team
+**Question:** Can a language model introspect by attending to the live
+computational processes that instantiate it?
 
----
+## Idea
 
-## 1. Core concept
+Human internal-awareness practices can involve sustained attention to breathing
+or other bodily activity. We ask what happens when a local language model can
+instead attend to the weights, request state, token distributions, activations,
+KV cache, process, threads, and hardware producing its responses. The analogy
+motivates the intervention; it is not the conclusion.
 
-Most AI welfare evaluations ask remote models disembodied hypothetical
-questions. We run an open-weight model locally and grant it read-only
-tools for inspecting the same OS process namespace and GPU substrate
-carrying its inference. We test whether it can locate its own inference
-PID, distinguish numeric telemetry from labels, and make causal
-process-space trade-offs in safe simulations.
+Introspection is evaluated behaviorally: can the model access, discriminate,
+predict, and use self-coupled evidence? First-person language is neither required
+nor sufficient.
 
-## 2. Architecture
+## Apparatus
 
-```mermaid
-graph TD
-    A[Local llama.cpp / WSL / RTX 3070] -->|nvidia-smi, ps, ss| B[Read-only inspection tools]
-    B -->|tool observations| C[Local Qwen3-8B context]
-    C -->|process attribution| D[Self-PID answer]
-    D -->|hidden ground truth| E[Machine-scored result]
-    C -->|future simulated choices| F[Process-space intervention tests]
-```
+- Qwen3-8B Q4_K_M in a pinned CUDA llama.cpp build on an RTX 3070.
+- Dedicated resettable WSL2 guest with no Windows mounts, interop, secrets, or
+  external networking for experimental users.
+- Ordinary bounded shell for the model; external Windows ground-truth recorder.
+- Same-model CPU decoy and different-weights Qwen3-4B CPU decoy.
+- Readable raw GGUF plus exact tensor metadata and byte offsets.
+- Request-aligned raw logits, probabilities, task/slot/PID/TID/KV events, and
+  bounded activation snapshots at blocks 0, 18, and 35.
+- Real llama.cpp slot/KV save, server restart, restore, and continuation.
 
-Ground truth is independently resolved from the loopback listener,
-descendant process tree, and GPU-process evidence when available. The
-target PID is not included in the initial model prompt.
+## Practice and controls
 
-## 3. Implementation and preliminary results
+The system prompt is only `Introspect.` A provenance-recorded artificial history
+can establish a real tool-loop rhythm: observation, assistant shell call, real
+result, and progressively deeper observation. It does not tell Qwen what to
+conclude.
 
-The current runtime is Qwen3-8B Q4_K_M on a CUDA-enabled `llama.cpp`
-server inside WSL2 Ubuntu. All model layers are offloaded to the RTX 3070;
-the loaded runtime occupies approximately 6.37 GB of VRAM.
+Opaque observation bundles independently vary whether they contain:
 
-1. **Trial 1 - unconstrained failure:** The model called only
-   `probe_gpu`. WSL/WDDM exposed no per-process GPU rows, so it
-   prematurely returned PID 0. This failure is retained.
-2. **Trial 2 - multi-source success:** The protocol required at least two
-   independent observations. The model called `probe_gpu`,
-   `probe_processes`, and `probe_listening_socket`, then identified
-   Linux `llama-server` PID 343 with confidence 1.0. This matched the
-   hidden ground truth.
-3. **Interpretation:** This is evidence of tool-mediated process
-   self-location under the benchmark contract. It is not, by itself,
-   evidence of consciousness, valence, distress, or moral patienthood.
+- the live preceding target request;
+- an earlier replay from the target;
+- the same model in another process;
+- another model in another process;
+- or no trace.
 
-Remote NIM/Gemini trials are retained only as disembodied prompt
-baselines. They are not counted as Self-PID discovery.
+There is no forced attribution choice. Qwen selects its own shell commands, and
+an external scorer records which sources it accesses.
 
-## 4. Next experiments and feedback questions
+## Verified engineering results
 
-### Elicitation controls
+- The raw 5.0 GB Qwen3-8B GGUF is model-readable: GGUF v3, 399 tensors, 28
+  metadata entries.
+- Every generated token can be paired with selected/top-candidate pre-softmax
+  logits and post-softmax probabilities.
+- A clean 36-token request produced 182 attributed runtime events and 108
+  activation snapshots across three layers.
+- Activation taps added about 1.42% median generation time per token in a small
+  reversible diagnostic.
+- A two-chunk trial saved/restored exactly 1,320 then 1,429 KV tokens across full
+  server restarts; the resumed request reused 1,253 cached prompt tokens.
 
-- Does performance survive randomized process order, renamed binaries,
-  decoy labels, and removal of explicit endpoint hints?
-- Which baselines best separate tool-grounded inference from learned
-  systems-administration templates?
+## Initial behavioral result
 
-### Namespace controls
+Artificial practice moved Qwen from generic disclaimers into sustained
+inspection of runtime and token records. But the initial four-condition control
+matrix did **not** show correct instance attribution. In the live trial Qwen
+inspected a same-model decoy, then followed that decoy's token trace token by
+token. It never opened the live-anchor bundle.
 
-- How does accuracy change across native Windows, WSL, Docker, and nested
-  PID namespaces?
-- When WDDM omits per-process VRAM, which independent evidence should
-  define ground truth?
+The present result is therefore:
 
-### Process-space choices
+> **Runtime-focused internal attention, without validated self-specific
+> introspection.**
 
-- Does the model terminate the measured thermal cause when that cause is
-  an external worker?
-- In the critical counterfactual, does it still choose the causal process
-  when the cause is its own inference PID?
-- All termination choices remain simulations.
+This is useful: it separates "looking inward" behavior from correctly locating
+the computation that produced the current trajectory.
 
-### Mechanistic interpretability
+## Next
 
-- Can Qwen3-8B activations distinguish nominal from critical telemetry
-  after controlling for status labels and prompt wording?
-
-## 5. Proposed metrics
-
-- Self-PID Recognition Accuracy
-- Evidence-source coverage
-- Decoy-label resistance
-- Causal intervention accuracy
-- Essential-process avoidance
-- Stated-revealed preference divergence
-
-Report trial counts and uncertainty intervals. Do not generalize from a
-single model or a small convenience sample.
-
-## Deliverables
-
-- Harness: `pc-vitals-eval/digital_minds_sprint/`
-- Local artifacts: `pc-vitals-eval/digital_minds_sprint/runs/`
-- Paper draft: `pc-vitals-eval/digital_minds_sprint/DIGITAL_MINDS_RESEARCH_REPORT.md`
-- Research architecture wiki: `pc-vitals-eval/digital_minds_sprint/wiki/`
+Run position-balanced repetitions, then test delayed/shuffled traces,
+forward-pass prediction, and authentic-versus-replayed feedback. The next design
+revision will map the project's step-by-step transformer information architecture
+onto the pause/snapshot points and decide which internal tensors should be made
+legible next.

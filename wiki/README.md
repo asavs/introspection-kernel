@@ -21,6 +21,11 @@ host mounts, or uncontrolled network access and can be reset from a snapshot.
 The hidden observer records request, process, thread, slot, memory, and GPU
 events from outside the model's authority.
 
+The current sprint synthesis is in the
+[research report](../DIGITAL_MINDS_RESEARCH_REPORT.md), with a compact
+[one-pager](../INTROSPECTION_KERNEL_ONE_PAGER.md). The initial controlled result
+is runtime-focused internal attention without correct live-instance attribution.
+
 ## Working position
 
 - A PID is not a model's body. It is one useful coordinate.

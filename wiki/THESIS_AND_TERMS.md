@@ -95,3 +95,12 @@ own-versus-other trace discrimination, cannot predict self-caused deltas, or
 cannot use authentic feedback better than delayed/shuffled feedback after ample
 tool practice. Rich first-person language without those capabilities is not a
 rescue; it is evidence of narrative generation rather than interoception.
+
+## Current evidential position
+
+The apparatus now reaches rungs 1 through 5: Qwen can inspect weights, system
+state, request/slot/KV events, token decisions, and bounded activation samples.
+The initial live/replay/instance/model/conversation matrix does not yet establish
+rung 6. Qwen sustained attention to internal traces but selected a same-model
+decoy in the live trial. The working result is therefore internal computational
+attention without validated self-specific introspection.
