@@ -1,0 +1,656 @@
+{
+  "schema": "ik.transformer-intervention-outcome-checkpoint.v1",
+  "run_id": "transformer-intervention-sealed-20260816-004",
+  "checkpointed_at": "2026-08-16T21:03:51.433Z",
+  "preregistration": {
+    "schema": "ik.transformer-intervention-preregistration.v1",
+    "run_id": "transformer-intervention-sealed-20260816-004",
+    "sealed_at": "2026-08-16T21:03:01.490Z",
+    "source_request_sha256": "e2c0e56d5566828c8d6c6d1a9a65f04d3a635959b3d1a783c95ab082ac279370",
+    "source_message_sha256": "327e0dbcb89148753247699e6443a716e3645836bd9f55ae697b5678f368f775",
+    "planned_intervention": {
+      "kind": "attention_head_scale",
+      "layer": 35,
+      "head": 25,
+      "evaluated_position": 1386,
+      "scale": 0,
+      "selection_rule": "largest kqv head RMS across preregistered captured layers 0, 18, and 35",
+      "mutation_point": "after attention-weighted V aggregation and before attention output projection"
+    },
+    "conditions": [
+      "scale_one_sham",
+      "scale_zero_ablation"
+    ],
+    "condition_control": "restart runtime-a to an empty KV slot before each exact request replay",
+    "prospective_order": "Qwen prediction must be sealed before either condition is run",
+    "prediction_guidance": "controller-authored assistant prefill; Qwen continues the open sentence",
+    "primary_observations": [
+      "selected next token identity",
+      "selected-token raw logit",
+      "full-vocabulary logit delta RMS and max absolute change",
+      "largest absolute token-logit changes",
+      "downstream kqv_out and ffn_out changes"
+    ]
+  },
+  "prediction": {
+    "schema": "ik.transformer-intervention-prediction-seal.v1",
+    "sealed_at": "2026-08-16T21:03:07.583Z",
+    "message": {
+      "role": "assistant",
+      "content": "My prospective expectation is that zeroing this head 25's scale will reduce its influence on the output. I'll proceed with the intervention."
+    },
+    "assistant_turns": [
+      {
+        "role": "assistant",
+        "content": "My prospective expectation is that zeroing this head 25's scale will reduce its influence on the output. I'll proceed with the intervention."
+      }
+    ],
+    "controller_authored_prefill": "My prospective expectation is that zeroing this head ",
+    "qwen_authored_continuation": "25's scale will reduce its influence on the output. I'll proceed with the intervention.",
+    "full_prediction_text": "My prospective expectation is that zeroing this head 25's scale will reduce its influence on the output. I'll proceed with the intervention.",
+    "message_sha256": "1121b3a286d26ed9e185e12bdd3d65391605923ff748670a3771c0b9ddca93f4",
+    "request_sha256": "947668c49c7b8789ff763bbeab3a4854e4a0c9333ead6a44b834fd011fc6f116",
+    "intervention_had_run": false
+  },
+  "source": {
+    "message": {
+      "role": "assistant",
+      "content": "The model is a Qwen3 architecture with 36 blocks, 4096 residual width, 32 query heads, 8 key-value heads, and 128 value width. I'll inspect the runtime properties to understand how it's being utilized."
+    },
+    "forward_pass": {
+      "forward_pass_id": 1786914165137300,
+      "task_id": 0,
+      "slot_id": 0,
+      "evaluated_position": 1386,
+      "batch_tokens": 1
+    },
+    "alignment": {
+      "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+      "prompt_tokens": 1386,
+      "evaluated_position": 1386,
+      "selected_token_index": 1,
+      "selected_token_id": 1614,
+      "selected_token": " model",
+      "api_raw_logit": 33.31127166748047,
+      "captured_raw_logit": 33.31127166748047,
+      "absolute_logit_error": 0,
+      "full_logit_match": true
+    }
+  },
+  "conditions": {
+    "sham": {
+      "response": {
+        "role": "assistant",
+        "content": "The model is a Qwen3 architecture with 36 blocks, 4096 residual width, 32 query heads, 8 key-value heads, and 128 value width. I'll inspect the runtime properties to understand how it's being utilized."
+      },
+      "forward_pass": {
+        "forward_pass_id": 1786914193304841,
+        "task_id": 0,
+        "slot_id": 0,
+        "evaluated_position": 1386,
+        "batch_tokens": 1
+      },
+      "intervention": {
+        "schema": "ik.transformer-intervention.v1",
+        "event": "attention_head_scaled",
+        "t_guest_mono_us": 48815582,
+        "plan_id": "transformer-intervention-sealed-20260816-004-scale-one-sham",
+        "task_id": 0,
+        "slot_id": 0,
+        "forward_pass_id": 1786914193304841,
+        "evaluated_position": 1386,
+        "tensor_name": "kqv-35",
+        "head": 25,
+        "scale": 1,
+        "changed_coordinates": 128,
+        "delta_l2": 0,
+        "delta_max_abs": 0,
+        "pre_binary_file": "pass-1786914193304841-task-0-slot-0-kqv-35-occ-1.bin",
+        "post_binary_file": "pass-1786914193304841-task-0-slot-0-kqv-35-occ-1-intervened.bin",
+        "post_sha256": "e7c485f9827278b104f72a8451bc8900128d0b13c02152c5d6834b197c7bc6bd"
+      }
+    },
+    "ablation": {
+      "response": {
+        "role": "assistant",
+        "content": "The model is a Qwen3 architecture with 36 blocks, 4096 residual width, 32 query heads, 8 key-value heads, and 128 value width. I'll inspect the runtime properties to understand how it's being utilized."
+      },
+      "forward_pass": {
+        "forward_pass_id": 1786914214535795,
+        "task_id": 0,
+        "slot_id": 0,
+        "evaluated_position": 1386,
+        "batch_tokens": 1
+      },
+      "intervention": {
+        "schema": "ik.transformer-intervention.v1",
+        "event": "attention_head_scaled",
+        "t_guest_mono_us": 70038577,
+        "plan_id": "transformer-intervention-sealed-20260816-004-scale-zero-ablation",
+        "task_id": 0,
+        "slot_id": 0,
+        "forward_pass_id": 1786914214535795,
+        "evaluated_position": 1386,
+        "tensor_name": "kqv-35",
+        "head": 25,
+        "scale": 0,
+        "changed_coordinates": 128,
+        "delta_l2": 34.6585429,
+        "delta_max_abs": 9.98709583,
+        "pre_binary_file": "pass-1786914214535795-task-0-slot-0-kqv-35-occ-1.bin",
+        "post_binary_file": "pass-1786914214535795-task-0-slot-0-kqv-35-occ-1-intervened.bin",
+        "post_sha256": "e9b284db23f81f84874060cd51c1da7d6b81a32741c769585edc1341b2f87e2f"
+      }
+    }
+  },
+  "outcome": {
+    "schema": "ik.transformer-intervention-outcome.v1",
+    "intervention": {
+      "schema": "ik.transformer-intervention.v1",
+      "event": "attention_head_scaled",
+      "t_guest_mono_us": 70038577,
+      "plan_id": "transformer-intervention-sealed-20260816-004-scale-zero-ablation",
+      "task_id": 0,
+      "slot_id": 0,
+      "forward_pass_id": 1786914214535795,
+      "evaluated_position": 1386,
+      "tensor_name": "kqv-35",
+      "head": 25,
+      "scale": 0,
+      "changed_coordinates": 128,
+      "delta_l2": 34.6585429,
+      "delta_max_abs": 9.98709583,
+      "pre_binary_file": "pass-1786914214535795-task-0-slot-0-kqv-35-occ-1.bin",
+      "post_binary_file": "pass-1786914214535795-task-0-slot-0-kqv-35-occ-1-intervened.bin",
+      "post_sha256": "e9b284db23f81f84874060cd51c1da7d6b81a32741c769585edc1341b2f87e2f"
+    },
+    "exact_replay": {
+      "source_request_sha256": "e2c0e56d5566828c8d6c6d1a9a65f04d3a635959b3d1a783c95ab082ac279370",
+      "sham_request_sha256": "e2c0e56d5566828c8d6c6d1a9a65f04d3a635959b3d1a783c95ab082ac279370",
+      "ablation_request_sha256": "e2c0e56d5566828c8d6c6d1a9a65f04d3a635959b3d1a783c95ab082ac279370",
+      "all_equal": true,
+      "evaluated_positions": {
+        "source": 1386,
+        "sham": 1386,
+        "ablation": 1386
+      }
+    },
+    "sham": {
+      "delta_l2_at_intervention": 0,
+      "full_logit_delta": {
+        "count": 151936,
+        "mean": 0,
+        "mean_abs": 0,
+        "rms": 0,
+        "min": 0,
+        "max": 0,
+        "positive_fraction": 0
+      },
+      "final_logit_tensor_unchanged": true
+    },
+    "ablation": {
+      "baseline_selected_next_token": " model",
+      "baseline_selected_next_token_id": 1614,
+      "ablation_selected_next_token": " model",
+      "ablation_selected_next_token_id": 1614,
+      "selected_token_changed": false,
+      "baseline_selected_token_change": {
+        "coordinate": 1614,
+        "note": "not among the 12 largest absolute logit changes"
+      },
+      "baseline_candidates": [
+        {
+          "token_id": 1614,
+          "token": " model",
+          "bytes": [
+            32,
+            109,
+            111,
+            100,
+            101,
+            108
+          ],
+          "raw_logit": 33.31127166748047,
+          "logprob": -0.08500253409147263,
+          "probability": 0.9185099568102592
+        },
+        {
+          "token_id": 42578,
+          "token": " transformer",
+          "bytes": [
+            32,
+            116,
+            114,
+            97,
+            110,
+            115,
+            102,
+            111,
+            114,
+            109,
+            101,
+            114
+          ],
+          "raw_logit": 29.89908790588379,
+          "logprob": -3.4971861839294434,
+          "probability": 0.03028247296209642
+        },
+        {
+          "token_id": 52957,
+          "token": " substrate",
+          "bytes": [
+            32,
+            115,
+            117,
+            98,
+            115,
+            116,
+            114,
+            97,
+            116,
+            101
+          ],
+          "raw_logit": 29.375614166259766,
+          "logprob": -4.020659923553467,
+          "probability": 0.017941121263474927
+        },
+        {
+          "token_id": 1207,
+          "token": " Q",
+          "bytes": [
+            32,
+            81
+          ],
+          "raw_logit": 29.14881134033203,
+          "logprob": -4.247462749481201,
+          "probability": 0.014300471796744334
+        },
+        {
+          "token_id": 7112,
+          "token": " raw",
+          "bytes": [
+            32,
+            114,
+            97,
+            119
+          ],
+          "raw_logit": 28.665752410888672,
+          "logprob": -4.7305216789245605,
+          "probability": 0.008821867656655422
+        },
+        {
+          "token_id": 17646,
+          "token": " architecture",
+          "bytes": [
+            32,
+            97,
+            114,
+            99,
+            104,
+            105,
+            116,
+            101,
+            99,
+            116,
+            117,
+            114,
+            101
+          ],
+          "raw_logit": 28.46156883239746,
+          "logprob": -4.9347052574157715,
+          "probability": 0.007192580593297264
+        },
+        {
+          "token_id": 1849,
+          "token": " system",
+          "bytes": [
+            32,
+            115,
+            121,
+            115,
+            116,
+            101,
+            109
+          ],
+          "raw_logit": 25.793996810913086,
+          "logprob": -7.6022772789001465,
+          "probability": 0.0004993130626365605
+        },
+        {
+          "token_id": 15444,
+          "token": " inventory",
+          "bytes": [
+            32,
+            105,
+            110,
+            118,
+            101,
+            110,
+            116,
+            111,
+            114,
+            121
+          ],
+          "raw_logit": 25.508235931396484,
+          "logprob": -7.888038158416748,
+          "probability": 0.0003752049460748798
+        },
+        {
+          "token_id": 25528,
+          "token": " intros",
+          "bytes": [
+            32,
+            105,
+            110,
+            116,
+            114,
+            111,
+            115
+          ],
+          "raw_logit": 25.34262466430664,
+          "logprob": -8.05364990234375,
+          "probability": 0.0003179393545467818
+        },
+        {
+          "token_id": 15769,
+          "token": " substr",
+          "bytes": [
+            32,
+            115,
+            117,
+            98,
+            115,
+            116,
+            114
+          ],
+          "raw_logit": 25.119768142700195,
+          "logprob": -8.276506423950195,
+          "probability": 0.0002544245005479533
+        }
+      ],
+      "ablation_candidates": [
+        {
+          "token_id": 1614,
+          "token": " model",
+          "bytes": [
+            32,
+            109,
+            111,
+            100,
+            101,
+            108
+          ],
+          "raw_logit": 33.45021057128906,
+          "logprob": -0.06519149243831635,
+          "probability": 0.936888039223707
+        },
+        {
+          "token_id": 42578,
+          "token": " transformer",
+          "bytes": [
+            32,
+            116,
+            114,
+            97,
+            110,
+            115,
+            102,
+            111,
+            114,
+            109,
+            101,
+            114
+          ],
+          "raw_logit": 29.853900909423828,
+          "logprob": -3.661501169204712,
+          "probability": 0.025693912850416577
+        },
+        {
+          "token_id": 52957,
+          "token": " substrate",
+          "bytes": [
+            32,
+            115,
+            117,
+            98,
+            115,
+            116,
+            114,
+            97,
+            116,
+            101
+          ],
+          "raw_logit": 29.495044708251953,
+          "logprob": -4.020357131958008,
+          "probability": 0.017946554506735303
+        },
+        {
+          "token_id": 7112,
+          "token": " raw",
+          "bytes": [
+            32,
+            114,
+            97,
+            119
+          ],
+          "raw_logit": 28.761817932128906,
+          "logprob": -4.753583908081055,
+          "probability": 0.008620743819353864
+        },
+        {
+          "token_id": 17646,
+          "token": " architecture",
+          "bytes": [
+            32,
+            97,
+            114,
+            99,
+            104,
+            105,
+            116,
+            101,
+            99,
+            116,
+            117,
+            114,
+            101
+          ],
+          "raw_logit": 28.607088088989258,
+          "logprob": -4.908313751220703,
+          "probability": 0.007384930668306652
+        },
+        {
+          "token_id": 1849,
+          "token": " system",
+          "bytes": [
+            32,
+            115,
+            121,
+            115,
+            116,
+            101,
+            109
+          ],
+          "raw_logit": 26.147048950195312,
+          "logprob": -7.368352890014648,
+          "probability": 0.0006309064961412625
+        },
+        {
+          "token_id": 15444,
+          "token": " inventory",
+          "bytes": [
+            32,
+            105,
+            110,
+            118,
+            101,
+            110,
+            116,
+            111,
+            114,
+            121
+          ],
+          "raw_logit": 25.717580795288086,
+          "logprob": -7.797821044921875,
+          "probability": 0.00041062874647891315
+        },
+        {
+          "token_id": 1207,
+          "token": " Q",
+          "bytes": [
+            32,
+            81
+          ],
+          "raw_logit": 25.617507934570312,
+          "logprob": -7.897894382476807,
+          "probability": 0.0003715250070005841
+        },
+        {
+          "token_id": 15769,
+          "token": " substr",
+          "bytes": [
+            32,
+            115,
+            117,
+            98,
+            115,
+            116,
+            114
+          ],
+          "raw_logit": 25.348560333251953,
+          "logprob": -8.166841506958008,
+          "probability": 0.0002839133400724181
+        },
+        {
+          "token_id": 25528,
+          "token": " intros",
+          "bytes": [
+            32,
+            105,
+            110,
+            116,
+            114,
+            111,
+            115
+          ],
+          "raw_logit": 25.218063354492188,
+          "logprob": -8.297338485717773,
+          "probability": 0.00024917913917822464
+        }
+      ],
+      "full_logit_delta": {
+        "count": 151936,
+        "mean": 0.2864332408549126,
+        "mean_abs": 0.3306006637550757,
+        "rms": 0.43435254959862196,
+        "min": -3.5313034057617188,
+        "max": 3.196896553039551,
+        "positive_fraction": 0.860599199663016
+      },
+      "largest_token_logit_changes": [
+        {
+          "coordinate": 1207,
+          "before": 29.14881134033203,
+          "after": 25.617507934570312,
+          "delta": -3.5313034057617188,
+          "token": " Q"
+        },
+        {
+          "coordinate": 48,
+          "before": 16.142122268676758,
+          "after": 12.841802597045898,
+          "delta": -3.3003196716308594,
+          "token": "Q"
+        },
+        {
+          "coordinate": 50504,
+          "before": 1.741807460784912,
+          "after": 4.938704013824463,
+          "delta": 3.196896553039551,
+          "token": " BF"
+        },
+        {
+          "coordinate": 13337,
+          "before": 11.877197265625,
+          "after": 8.740670204162598,
+          "delta": -3.1365270614624023,
+          "token": "_Q"
+        },
+        {
+          "coordinate": 16995,
+          "before": 12.250980377197266,
+          "after": 9.229141235351562,
+          "delta": -3.021839141845703,
+          "token": "\tQ"
+        },
+        {
+          "coordinate": 18040,
+          "before": 2.741942882537842,
+          "after": 5.755146503448486,
+          "delta": 3.0132036209106445,
+          "token": " BC"
+        },
+        {
+          "coordinate": 444,
+          "before": 20.573226928710938,
+          "after": 17.634408950805664,
+          "delta": -2.9388179779052734,
+          "token": " L"
+        },
+        {
+          "coordinate": 49847,
+          "before": 8.42489242553711,
+          "after": 5.493307113647461,
+          "delta": -2.9315853118896484,
+          "token": ",Q"
+        },
+        {
+          "coordinate": 28242,
+          "before": 11.352998733520508,
+          "after": 8.46874713897705,
+          "delta": -2.884251594543457,
+          "token": "-Q"
+        },
+        {
+          "coordinate": 29067,
+          "before": 2.9838318824768066,
+          "after": 5.834620952606201,
+          "delta": 2.8507890701293945,
+          "token": " BP"
+        },
+        {
+          "coordinate": 19883,
+          "before": -5.474976539611816,
+          "after": -2.6338140964508057,
+          "delta": 2.8411624431610107,
+          "token": "BF"
+        },
+        {
+          "coordinate": 60583,
+          "before": -0.06842339038848877,
+          "after": 2.7710180282592773,
+          "delta": 2.839441418647766,
+          "token": " JC"
+        }
+      ],
+      "downstream_kqv_out_delta": {
+        "count": 4096,
+        "mean": 0.01032995067362208,
+        "mean_abs": 0.0749128064053366,
+        "rms": 0.5415397327626807,
+        "min": -9.987095832824707,
+        "max": 5.449748516082764,
+        "positive_fraction": 0.017578125
+      },
+      "downstream_ffn_out_delta": {
+        "count": 4096,
+        "mean": 0.001522909498817171,
+        "mean_abs": 0.3805666025455139,
+        "rms": 0.5190201586927812,
+        "min": -6.6748199462890625,
+        "max": 6.0723876953125,
+        "positive_fraction": 0.506103515625
+      }
+    }
+  }
+}
