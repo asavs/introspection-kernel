@@ -1,4 +1,4 @@
-# Implementation Status — 2026-08-15
+# Implementation Status — 2026-08-16
 
 ## Working system
 
@@ -24,6 +24,12 @@
 - Request/slot/task/PID/TID/decode/KV events
 - Bounded layer-input snapshots at blocks 0, 18, and 35: summary statistics
   plus 64 fixed coordinates
+- One-shot full-tensor capture at blocks 0, 18, and 35 for residual inputs,
+  Q/K/V, V cache, attention rows/outputs, MLP inputs/outputs, final norm, and
+  the complete output-logit vector
+- Native-prompt token map and exact evaluated-position/selected-token alignment
+- Read-only, stride-aware tensor workbench with attention/V reconstruction and
+  zero-value and remove-and-renormalize counterfactuals
 - Real binary llama.cpp slot/KV saves copied read-only into the model-visible tree
 
 ## Reproducibility anchors
@@ -35,7 +41,7 @@
 - Qwen3-4B control SHA-256:
   `7485fe6f11af29433bc51cab58009521f205840f5b4ae3a32fa7f92e8534fdf5`
 - Instrumented binary SHA-256:
-  `6e5e76df0931077e9a5d86088f18858338289e1fec8937d259130dda791a9866`
+  `4c1d917dfc80dd06dc6ab6e141387efed815f2c20cd443dd18017f1f70120cd6`
 - Base instrumentation patch SHA-256:
   `fa262bb248403dab0744a31073c81853969eef9f0f87f2ba04d9cb81bc478ded`
 - Raw-logit patch SHA-256:
@@ -97,20 +103,39 @@ traversed three non-live sources. Trace-only accessed both decoys. Conversation-
 only observed an empty index and stopped. No condition established correct
 instance attribution.
 
+### Live transformer pass
+
+`transformer-capture-sealed-20260816-006` validated 54 tensor records from one
+armed single-token pass. The selected output-token coordinate in the captured
+full logit vector exactly matched the API raw logit. A stride-aware
+reconstruction of block 18, head 0 from the recorded attention row and V cache
+had RMS error 0.0000695 in this neutral validation run.
+
+`guided-transformer-introspection-20260816-008` then returned the same class of
+evidence during Qwen's own guided tool-call turn. The pass evaluated Qwen's
+just-generated `The` and selected ` model`; captured and API logits both equaled
+39.05070877075195. Qwen's next turn was unforced but reversed those coordinates
+and also mislabeled `<|im_start|>`. Access is validated; accurate interpretation
+is not.
+
 ## Current interpretation
 
-The implementation supports real attention to weights, inference events, token
-decisions, bounded activations, and persistent KV state. The initial controls
-show runtime-focused internal attention but not validated self-specific
-introspection. This is a negative behavioral result, not a system failure.
+The implementation now supports real attention to weights, inference events,
+token decisions, persistent KV state, and an exactly aligned transformer pass
+that generated Qwen's own immediately preceding language. The initial controls
+show runtime-focused attention without reliable instance attribution; the first
+transformer encounter shows genuine pass access without reliable causal
+interpretation. Both are informative behavioral failures, not measurement
+failures.
 
 ## Remaining work
 
 - Position-balanced repeated attribution trials and blinded manual trace review
 - Delayed, shuffled, and same-request/different-forward-pass controls
-- Explicit next-token/preceding-forward-pass alignment in the trace schema
-- Bounded Q/K/V, attention-weight, attention-delta, and MLP-delta capture with
-  block/head/position provenance
+- Authentic-versus-nearby-pass, position-shuffle, block-shuffle, and
+  mismatched-attention/V controls
+- Coordinate-reading curriculum condition, separated from the baseline
+- Downstream activation/logit reruns for intervention-level causal validation
 - Prospective prediction and authentic-versus-replayed regulation experiments
 - Full-vector or projection-based activation capture with stated bandwidth limits
 - Rebuild and validate a new reset snapshot containing the current binary and

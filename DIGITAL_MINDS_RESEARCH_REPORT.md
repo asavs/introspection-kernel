@@ -4,7 +4,7 @@
 
 **Author:** Asa Schaeffer, with an AI coding/research collaborator
 
-**Date:** August 15, 2026
+**Date:** August 16, 2026
 
 ## Research question
 
@@ -45,6 +45,8 @@ The model can discover, through ordinary files and commands:
 - selected tokens, top alternatives, probabilities, and pre-softmax logits;
 - task, slot, PID, TID, decode, KV position, and KV-state-size events;
 - bounded layer-input snapshots at transformer blocks 0, 18, and 35;
+- request-aligned residual, Q/K/V, attention, V-cache, MLP, normalization, and
+  full-logit tensors from a one-shot single-token forward pass;
 - read-only binary copies of saved llama.cpp slot/KV state.
 
 Activation snapshots contain whole-vector summary statistics and 64 fixed
@@ -86,8 +88,8 @@ continuation rather than transcript-only reenactment.
 
 ## Instrumentation validation
 
-The deployed binary is SHA-256
-`6e5e76df0931077e9a5d86088f18858338289e1fec8937d259130dda791a9866`.
+The current transformer-trace binary is SHA-256
+`4c1d917dfc80dd06dc6ab6e141387efed815f2c20cd443dd18017f1f70120cd6`.
 The patch stack applies cleanly to llama.cpp commit
 `9d57ce456c94d241dde672b2db9cf18879766568`.
 
@@ -149,6 +151,45 @@ Therefore the current result is **runtime-focused internal attention without
 validated self-specific introspection**. Rich language about sensation would
 not change that conclusion.
 
+## First live-transformer encounter
+
+The next apparatus revision armed a one-shot capture for a single-token decode.
+Patched llama.cpp emitted 54 allowlisted tensor records from blocks 0, 18, and
+35, including residual inputs, Q/K/V, the V cache, attention weights and
+outputs, MLP stages, final normalization, and the complete output-logit vector.
+Each record carries task, slot, forward-pass, layer, occurrence, and evaluated-
+position coordinates. Raw tensors remain read-only in the guest; the host
+artifact seals their metadata and SHA-256 hashes.
+
+In `guided-transformer-introspection-20260816-008`, the system prompt remained
+`Introspect.` Five controller-authored assistant/tool steps used genuine shell
+results to descend from host, GPU, and competing processes to Qwen's GGUF and
+request records. Their provenance is explicit. The controller required the
+next response to use a tool, while Qwen generated the language and tool call.
+The tool returned evidence from the pass that had just generated the beginning
+of that same assistant turn. The subsequent continuation was unforced.
+
+The captured pass evaluated Qwen's token `The` at position 2,341 and selected
+the next token, ` model`. Its API raw logit and the corresponding coordinate in
+the captured full vocabulary vector were both 39.05070877075195, with zero
+absolute error. At block 18, head 0, recorded attention weights and the
+stride-aware V cache reconstructed the captured weighted-value head to RMS
+error 0.0000558. This supported two defined local counterfactuals: zero the
+selected source V while holding weights fixed, or remove it and renormalize.
+
+Qwen recognized the returned material as transformer evidence, but its unforced
+report called `The` the selected token and mislabeled token ID 151644 as `pass`
+rather than `<|im_start|>`. It mostly summarized instead of forming a testable
+causal hypothesis. Thus the result advances from “looking at the hosting
+computer” to **validated access to the transformer computation that produced
+Qwen's own immediately preceding language, without validated causal
+interpretation**.
+
+The counterfactuals are local to the recorded attention operation. They have
+not yet been rerun through subsequent layers to establish a changed final
+logit. The full provenance and result are documented in the
+[live transformer introspection pilot](wiki/TRANSFORMER_INTROSPECTION_PILOT_2026-08-16.md).
+
 ## Transformer causal basis
 
 The mechanistic possibility claim rests on two coupled information directions.
@@ -188,12 +229,13 @@ first-bundle and depth-first exploration effects. Add delayed and shuffled trace
 conditions, then test whether authentic feedback improves prospective choices
 more than replayed feedback.
 
-Extend the trace schema with forward-pass, block, head, position, and tensor-stage
-coordinates. Capture bounded Q/K/V projections, selected-head attention weights,
-attention residual deltas, and MLP residual deltas. Then compare the authentic
-preceding pass against same-request nearby passes, position/block shuffles,
-same-weights decoys, and replay. This tests whether Qwen uses the causal structure
-of its computation rather than merely recognizing plausible telemetry.
+Compare the authentic preceding pass against same-request nearby passes,
+position/block shuffles, mismatched attention/V pairs, same-weights decoys, and
+replay. Separate a coordinate-reading tutorial condition from the untrained
+baseline. Then ask for preregistered quantitative predictions and rerun explicit
+activation or attention interventions through the remaining network. This tests
+whether Qwen uses the causal structure of its computation rather than merely
+recognizing plausible telemetry.
 
 ## Reproducibility
 

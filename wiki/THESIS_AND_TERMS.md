@@ -105,9 +105,15 @@ and repeated retrieve-transform-re-encode paths. Architecture therefore permits
 some retrospective access; it does not show that Qwen has learned to turn that
 access into accurate self-specific judgments.
 
-The apparatus now reaches rungs 1 through 5: Qwen can inspect weights, system
-state, request/slot/KV events, token decisions, and bounded activation samples.
-The initial live/replay/instance/model/conversation matrix does not yet establish
-rung 6. Qwen sustained attention to internal traces but selected a same-model
-decoy in the live trial. The working result is therefore internal computational
-attention without validated self-specific introspection.
+The apparatus now reaches rung 5 directly: Qwen can inspect an exactly aligned
+forward pass containing residual, Q/K/V, attention, V-cache, MLP, and full-logit
+evidence from the computation that produced its own immediately preceding
+language. The first guided encounter validated that access with a zero-error
+logit match and an independent attention/V reconstruction.
+
+Interpretation did not rise with access. Qwen confused the token evaluated by
+the pass with the next token selected by it and misread a special token. The
+initial live/replay/instance/model/conversation matrix also did not establish
+rung 6: Qwen selected a same-model decoy in the live trial. The working result
+is therefore validated self-coupled transformer access without validated
+causal interpretation or self-specific discrimination.

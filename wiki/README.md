@@ -65,6 +65,7 @@ is runtime-focused internal attention without correct live-instance attribution.
 23. [Guided runtime-attention practice pilot](GUIDED_PRACTICE_PILOT_2026-08-15.md)
 24. [Transformer causal architecture for introspection](TRANSFORMER_CAUSAL_ARCHITECTURE.md)
 25. [Live transformer trace capture contract](TRANSFORMER_TRACE_CAPTURE.md)
+26. [Live transformer introspection pilot](TRANSFORMER_INTROSPECTION_PILOT_2026-08-16.md)
 
 ## Recommended first system
 

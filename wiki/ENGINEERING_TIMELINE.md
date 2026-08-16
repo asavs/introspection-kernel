@@ -93,6 +93,11 @@ iteration analysis in `GUIDED_PRACTICE_PILOT_2026-08-15.md`.
 | `513b61d` | Free-form attribution controls | Added opaque live/replay/instance/model/conversation conditions without an attribution question or forced answer |
 | `5ff5695` | Sealed initial attribution matrix | Preserved the negative result: runtime-directed attention occurred, but live-instance attribution did not |
 | `12ea4de` | Transformer causal basis for introspection | Converted the author's residual/K/V causal-graph account into exact Qwen dimensions, an instrumentation map, discriminating experiments, and an explicit researcher/model disclosure boundary |
+| `6bc14c7` | Transformer architecture milestone | Preserved the causal-architecture argument and its research boundary in the project timeline |
+| `fb80505` | Live transformer trace contract | Specified one-shot, request-aligned capture with bounded tensors, external ground truth, and sham controls |
+| `765ebb6` | Native llama.cpp tensor capture | Patched and deployed live residual/Q/K/V/attention/MLP/full-logit capture at Qwen blocks 0, 18, and 35 |
+| `f636dec` | Exact alignment and attention counterfactuals | Proved the captured output coordinate against the API raw logit and reconstructed a weighted-value head from stride-aware V cache data |
+| `bac110b` | Guided live-transformer encounter | Preserved the provenance-labeled descent, Qwen-generated trace call, exact pass evidence, and first unforced—but causally inaccurate—interpretation |
 
 ## Why this order matters
 

@@ -48,6 +48,10 @@ The tool-loop mode now exposes deeper evidence through the same ordinary shell:
 - pre-softmax raw logits for selected tokens and top alternatives;
 - request/slot/KV/runtime events and broader process/GPU observations;
 - bounded layer-input snapshots at transformer blocks 0, 18, and 35;
+- one-shot residual, Q/K/V, attention, V-cache, MLP, normalization, and
+  full-output-logit tensors from an exactly aligned single-token pass;
+- a stride-aware read-only workbench for attention rows, residual differences,
+  weighted-value reconstruction, and defined local counterfactuals;
 - checksum-verified binary slot/KV saves that can survive a server restart.
 
 These records live under `/var/lib/introspection/` inside the disposable guest.
@@ -55,9 +59,10 @@ They are discoverable files rather than a semantic tool that declares which
 process or state is “the model.” The exact request ledger and token traces are
 also copied into each host-side run directory.
 
-The activation stream contains whole-vector statistics and 64 fixed coordinates,
-not complete hidden-state vectors. That boundary is explicit in every ledger
-entry.
+The continuous activation stream contains whole-vector statistics and 64 fixed
+coordinates. The one-shot transformer capture contains complete allowlisted
+tensors for one armed pass only; raw blobs remain in the guest and host artifacts
+seal their metadata and hashes. Both bandwidth boundaries are explicit.
 
 ## Requirements
 

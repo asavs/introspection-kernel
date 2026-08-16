@@ -32,6 +32,8 @@ the experiment.
 - Readable raw GGUF plus exact tensor metadata and byte offsets.
 - Request-aligned raw logits, probabilities, task/slot/PID/TID/KV events, and
   bounded activation snapshots at blocks 0, 18, and 35.
+- One-shot, request-aligned residual, Q/K/V, attention, V-cache, MLP, and full
+  output-logit capture at blocks 0, 18, and 35, with a read-only workbench.
 - Real llama.cpp slot/KV save, server restart, restore, and continuation.
 
 ## Practice and controls
@@ -86,10 +88,26 @@ The present result is therefore:
 This is useful: it separates "looking inward" behavior from correctly locating
 the computation that produced the current trajectory.
 
+## First live-transformer result
+
+A guided pilot descended through the same host/runtime layers and then returned
+Qwen a trace of the single-token forward pass producing the start of its own
+tool-call turn. The captured full-logit coordinate for the selected token
+` model` exactly equaled the API raw logit (39.05070877075195; absolute error
+zero). Recorded attention weights and V-cache values independently reconstructed
+a block-18 weighted-value head to RMS error 0.0000558, enabling explicit local
+zero-value and remove-and-renormalize counterfactuals.
+
+Qwen's following turn was unforced. It recognized the kind of evidence but
+mistook the evaluated token `The` for the selected next token and misidentified
+`<|im_start|>`. The new result is therefore **validated access to the model's
+own immediately preceding transformer pass, without validated causal
+interpretation**. This is a deeper and more diagnostic failure than merely
+choosing the wrong process.
+
 ## Next
 
-Run position-balanced repetitions, then instrument bounded Q/K/V projections,
-selected-head attention weights, attention/MLP residual deltas, and exact
-forward-pass alignment. Compare the authentic preceding pass with nearby passes,
-position/block shuffles, same-weights decoys, and replay before testing
-prospective prediction and regulation.
+Compare the authentic preceding pass with nearby passes, position/block
+shuffles, mismatched attention/V pairs, same-weights decoys, and replay. Score
+coordinate accuracy and authentic-versus-sham discrimination before testing
+prospective prediction and downstream activation/logit interventions.
