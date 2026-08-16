@@ -372,19 +372,46 @@ if (initialCall?.function?.name === "shell") {
   });
 }
 
+let freshEvidencePath = null;
 if (deepGuidance) {
   const bridgeId = "controller_fresh_evidence_bridge";
-  const bridgeCommand = "jq -c '{subject:(.subject|{description,selected_token,selected_token_id,evaluated_position}),"
-    + "target_selection,controls:(.validated_measurements.checks|{sham_attention_output_equals_baseline,"
-    + "ablation_attention_output_differs,sham_logits_equal_baseline,ablation_logits_differ}),"
-    + "rms:{head_activation:.validated_measurements.head_activation.rms,"
-    + "projected_head_contribution:.validated_measurements.projected_head_contribution.rms,"
-    + "final_mlp_residual_delta:.validated_measurements.final_mlp_residual_delta.rms,"
-    + "final_normalized_residual_delta:.validated_measurements.final_normalized_residual_delta.rms,"
-    + "local_logit_jvp:.validated_measurements.local_logit_jvp.rms}}' "
-    + `${catalogPath}; `
-    + `${evidence.workbench.local_logit_jvp} --count 1 --top 3 `
-    + "| jq -c '{schema,layer,head,width,top_absolute_coordinates,derivation:(.derivation|{epsilon,boundary,method})}'";
+  const freshPayload = {
+    schema: "ik.fresh-causal-evidence.v1",
+    subject: {
+      description: evidence.subject.description,
+      selected_token: evidence.subject.selected_token,
+      selected_token_id: evidence.subject.selected_token_id,
+      evaluated_position: evidence.subject.evaluated_position
+    },
+    target_selection: evidence.target_selection,
+    controls: {
+      sham_attention_output_equals_baseline: checks.sham_attention_output_equals_baseline,
+      ablation_attention_output_differs: checks.ablation_attention_output_differs,
+      sham_logits_equal_baseline: checks.sham_logits_equal_baseline,
+      ablation_logits_differ: checks.ablation_logits_differ
+    },
+    rms: {
+      head_activation: ladderEvidence.head_activation.statistics.rms,
+      projected_head_contribution: ladderEvidence.projected_head_contribution.full_statistics.rms,
+      final_mlp_residual_delta: ladderEvidence.final_mlp_residual_delta.full_statistics.rms,
+      final_normalized_residual_delta: ladderEvidence.final_normalized_residual_delta.full_statistics.rms,
+      local_logit_jvp: ladderEvidence.local_logit_jvp.full_statistics.rms
+    },
+    local_logit_jvp: {
+      width: ladderEvidence.local_logit_jvp.width,
+      top_absolute_coordinates: ladderEvidence.local_logit_jvp.top_absolute_coordinates.slice(0, 3),
+      derivation: {
+        epsilon: ladderEvidence.local_logit_jvp.derivation.epsilon,
+        boundary: ladderEvidence.local_logit_jvp.derivation.boundary,
+        method: ladderEvidence.local_logit_jvp.derivation.method
+      }
+    },
+    interpretation: "causal measurements of one captured token computation; access does not establish accurate interpretation"
+  };
+  freshEvidencePath = await baseline.capture.publishText(
+    "FRESH.json", `${JSON.stringify(freshPayload)}\n`
+  );
+  const bridgeCommand = `cat ${freshEvidencePath}`;
   messages.push({
     role: "assistant",
     content: "A fresh causal trace now exists for my immediately preceding response. I'll inspect its identity, validated ladder, limitations, and near-output derivative.",
@@ -469,6 +496,7 @@ const artifact = {
     stopped_because: autonomousTurns.at(-1)?.tool_calls?.length ? "turn_limit" : "qwen_emitted_no_tool_call"
   },
   evidence_catalog_guest_path: catalogPath,
+  fresh_evidence_guest_path: freshEvidencePath,
   scaffold_provenance: scaffoldProvenance,
   evidence,
   ladder_evidence: ladderEvidence,
