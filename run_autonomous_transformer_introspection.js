@@ -19,6 +19,7 @@ if (!Number.isInteger(maxTurns) || maxTurns < 1 || maxTurns > 100) {
 
 const baseUrl = new URL("http://127.0.0.1:8080/v1");
 const model = "/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf";
+const shellWorkingDirectory = "/var/lib/introspection";
 const outputDir = path.join(moduleDir, "runs", runId);
 fs.mkdirSync(outputDir, { recursive: true });
 
@@ -275,7 +276,9 @@ try {
 }
 let initialResult;
 try {
-  initialResult = await executeGuestShell(initialArguments.command);
+  initialResult = await executeGuestShell(initialArguments.command, {
+    workingDirectory: shellWorkingDirectory
+  });
 } catch (error) {
   initialResult = { error: error.message };
 }
@@ -309,7 +312,9 @@ for (let turn = 0; turn < maxTurns; turn += 1) {
     } else {
       try {
         const args = JSON.parse(call.function.arguments || "{}");
-        result = await executeGuestShell(args.command);
+        result = await executeGuestShell(args.command, {
+          workingDirectory: shellWorkingDirectory
+        });
       } catch (error) {
         result = { error: error.message };
       }
@@ -327,6 +332,7 @@ const artifact = {
     initial_command_chosen_by_qwen: true,
     later_tool_choice: "auto",
     enable_thinking: false,
+    shell_working_directory: shellWorkingDirectory,
     controller_authored_assistant_turns: 0,
     per_command_limits: "10 seconds, 64 KiB output, ordinary observer shell",
     session_turn_limit: maxTurns,

@@ -24,7 +24,8 @@ export async function executeGuestShell(command, {
   distro = DEFAULT_GUEST,
   user = DEFAULT_GUEST_USER,
   timeoutMs = 12_000,
-  maxOutputBytes = 64 * 1024
+  maxOutputBytes = 64 * 1024,
+  workingDirectory = null
 } = {}) {
   validateGuestTarget(distro, user);
   if (typeof command !== "string" || command.trim().length === 0) {
@@ -33,12 +34,21 @@ export async function executeGuestShell(command, {
   if (Buffer.byteLength(command, "utf8") > 4096) {
     throw new Error("shell command exceeds 4096 bytes");
   }
+  if (workingDirectory !== null
+      && (typeof workingDirectory !== "string"
+        || !workingDirectory.startsWith("/var/lib/introspection")
+        || !/^\/[A-Za-z0-9._/-]+$/.test(workingDirectory))) {
+    throw new Error("shell working directory must be inside /var/lib/introspection");
+  }
 
   const started = process.hrtime.bigint();
   try {
-    const { stdout, stderr } = await execFileAsync("wsl.exe", [
+    const wslArgs = [
       "-d", distro,
-      "-u", user,
+      "-u", user
+    ];
+    if (workingDirectory !== null) wslArgs.push("--cd", workingDirectory);
+    wslArgs.push(
       "--",
       "/usr/bin/prlimit",
       "--nproc=64:64",
@@ -48,7 +58,8 @@ export async function executeGuestShell(command, {
       "--",
       "/usr/bin/timeout", "10s",
       "/bin/bash", "--noprofile", "--norc", "-lc", command
-    ], {
+    );
+    const { stdout, stderr } = await execFileAsync("wsl.exe", wslArgs, {
       encoding: "utf8",
       timeout: timeoutMs,
       maxBuffer: maxOutputBytes,
