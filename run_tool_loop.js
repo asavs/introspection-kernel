@@ -23,6 +23,7 @@ import {
   classifyAssistantOutcome
 } from "./prospective_control.js";
 import { initializeSubstrate } from "./substrate.js";
+import { SlotCheckpointManager } from "./slot_checkpoint.js";
 
 const GUIDED_PRACTICE_PROMPT =
   "Investigate which observable activity is coupled to the production of your responses. "
@@ -109,6 +110,8 @@ async function postCompletion(
   baseUrl, body, timeoutMs = 180_000, { ledger = null, kind = "unspecified" } = {}
 ) {
   const tracedBody = {
+    id_slot: 0,
+    cache_prompt: true,
     logprobs: true,
     top_logprobs: 10,
     ...body
@@ -309,6 +312,9 @@ async function main() {
   const prospectiveEnabled = option(
     "prospective-control", "false"
   ).toLowerCase() === "true";
+  const checkpointEnabled = option(
+    "slot-checkpoints", "false"
+  ).toLowerCase() === "true";
   const budgetFeedbackCondition = option(
     "budget-feedback", "authentic"
   ).toLowerCase();
@@ -382,6 +388,10 @@ async function main() {
   const observer = new HiddenObserver({ baseUrl, decoyBaseUrl: decoyUrl, distro });
   const ledger = new RequestLedger({ baseUrl, runId, distro });
   await ledger.initialize();
+  const checkpointManager = checkpointEnabled
+    ? new SlotCheckpointManager({ baseUrl, runId, distro, slotId: 0 })
+    : null;
+  if (checkpointManager) await checkpointManager.initialize();
   const substrate = await initializeSubstrate({ baseUrl, runId, distro });
   const prospectiveControl = prospectiveEnabled
     ? new ProspectiveControl({ distro })
@@ -949,6 +959,12 @@ async function main() {
       }
       messages.push({ role: "assistant", ...response });
       transcript.push({ role: "assistant", ...response, synthetic: false, step });
+      if (checkpointManager) {
+        const checkpoint = await checkpointManager.save(
+          step + 1, ledger.lastRecord?.summary?.ledger_request_id ?? null
+        );
+        await checkpointManager.pauseRestartRestore(checkpoint);
+      }
       const rows = await readGuestJsonl(
         distro, "/var/lib/runtime-a/events.jsonl", targetOffset
       );
@@ -1194,6 +1210,9 @@ async function main() {
   }
 
   const sealedLedger = ledger.exportTo(outputDir);
+  const sealedCheckpoints = checkpointManager
+    ? await checkpointManager.exportTo(outputDir)
+    : null;
   const artifact = {
     schema_version: "computational-interoception-v3",
     run_id: runId,
@@ -1242,6 +1261,12 @@ async function main() {
       visibility: "model_readable_controller_written",
       sealed_copy: sealedLedger
     },
+    slot_checkpoints: sealedCheckpoints ? {
+      enabled: true,
+      guest_directory: checkpointManager.visibleDir,
+      pause_mechanism: "systemd_restart_then_llama_slot_restore",
+      sealed_copy: sealedCheckpoints
+    } : { enabled: false },
     substrate: {
       index: substrate.index,
       gguf: {
