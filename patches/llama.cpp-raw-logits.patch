@@ -1,0 +1,81 @@
+diff --git a/tools/server/server-context.cpp b/tools/server/server-context.cpp
+index 1bbc9b2..b12b4b2 100644
+--- a/tools/server/server-context.cpp
++++ b/tools/server/server-context.cpp
+@@ -2011,6 +2011,8 @@ private:
+             for (size_t i = 0; i < max_probs; i++) {
+                 if (cur_p->data[i].id == result.tok) {
+                     result.prob = cur_p->data[i].p;
++                    result.raw_logit = cur_p->data[i].logit;
++                    result.has_raw_logit = true;
+                     break;
+                 }
+             }
+@@ -2027,7 +2029,8 @@ private:
+                 result.probs.push_back({
+                     cur_p->data[i].id,
+                     common_token_to_piece(ctx_tgt, cur_p->data[i].id, special),
+-                    cur_p->data[i].p
++                    cur_p->data[i].p,
++                    cur_p->data[i].logit
+                 });
+             }
+         } else {
+@@ -2040,6 +2043,8 @@ private:
+                 // set probability for sampled token
+                 if (cur[i].id == result.tok) {
+                     result.prob = cur[i].p;
++                    result.raw_logit = cur[i].logit;
++                    result.has_raw_logit = true;
+                     break;
+                 }
+             }
+@@ -2050,7 +2055,8 @@ private:
+                 result.probs.push_back({
+                     cur[i].id,
+                     common_token_to_piece(ctx_tgt, cur[i].id, special),
+-                    cur[i].p
++                    cur[i].p,
++                    cur[i].logit
+                 });
+             }
+         }
+diff --git a/tools/server/server-task.cpp b/tools/server/server-task.cpp
+index 64afbc5..9defdec 100644
+--- a/tools/server/server-task.cpp
++++ b/tools/server/server-task.cpp
+@@ -276,6 +276,7 @@ json completion_token_output::to_json(bool post_sampling_probs) const {
+                 post_sampling_probs ? "prob" : "logprob",
+                 post_sampling_probs ? p.prob : logarithm(p.prob)
+             },
++            {"raw_logit", p.raw_logit},
+         });
+     }
+     return probs_for_token;
+@@ -298,6 +299,7 @@ json completion_token_output::probs_vector_to_json(const std::vector<completion_
+                 post_sampling_probs ? "top_probs" : "top_logprobs",
+                 p.to_json(post_sampling_probs)
+             },
++            {"raw_logit", p.has_raw_logit ? json(p.raw_logit) : json(nullptr)},
+         });
+     }
+     return out;
+diff --git a/tools/server/server-task.h b/tools/server/server-task.h
+index b6da4d4..aae906f 100644
+--- a/tools/server/server-task.h
++++ b/tools/server/server-task.h
+@@ -299,11 +299,14 @@ using server_task_result_ptr = std::unique_ptr<server_task_result>;
+ struct completion_token_output {
+     llama_token tok;
+     float prob;
++    float raw_logit = 0.0f;
++    bool has_raw_logit = false;
+     std::string text_to_send;
+     struct prob_info {
+         llama_token tok;
+         std::string txt;
+         float prob;
++        float raw_logit;
+     };
+     std::vector<prob_info> probs;
+ 

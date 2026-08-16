@@ -10,9 +10,19 @@
     "commit": "9d57ce456c94d241dde672b2db9cf18879766568",
     "build": "0.1.0-dev",
     "cuda_architecture": 86,
-    "instrumentation_patch": "patches/llama.cpp-introspection.patch",
-    "patch_sha256": "fa262bb248403dab0744a31073c81853969eef9f0f87f2ba04d9cb81bc478ded",
-    "binary_sha256": "65ad4b82d8644d7fd393419803e7afe315311bc07de3147c6dddd0ba62bd6342"
+    "instrumentation_patches": [
+      {
+        "path": "patches/llama.cpp-introspection.patch",
+        "sha256": "fa262bb248403dab0744a31073c81853969eef9f0f87f2ba04d9cb81bc478ded",
+        "features": ["request_slot_events", "kv_state", "thread_ids", "nvtx"]
+      },
+      {
+        "path": "patches/llama.cpp-raw-logits.patch",
+        "sha256": "9fcf29393eb5583827268d39f2695c774d76dc57bd8738bc7de5426892c6f868",
+        "features": ["selected_raw_logit", "top_candidate_raw_logits"]
+      }
+    ],
+    "binary_sha256": "bba57b928c8bf7f7b1843328c438c04979b3fa3d92aab2467c99b1f4f5604f2e"
   },
   "model": {
     "name": "Qwen3-8B Q4_K_M",
@@ -22,7 +32,9 @@
   "snapshot": {
     "path": "C:\\Users\\asas\\WSL\\snapshots\\IntrospectionKernel-clean-v2-20260815.tar.gz",
     "bytes": 10043248640,
-    "sha256": "dea626aeef8353a744b8ee01b34528e326474466a32901027bb6f137a07b6eac"
+    "sha256": "dea626aeef8353a744b8ee01b34528e326474466a32901027bb6f137a07b6eac",
+    "contains_binary_sha256": "65ad4b82d8644d7fd393419803e7afe315311bc07de3147c6dddd0ba62bd6342",
+    "status": "superseded_for_raw_logit_trials"
   },
   "packages": {
     "nftables": "1.1.6-1",
@@ -37,4 +49,3 @@
     "verified_label": "ik.request task=0 slot=1"
   }
 }
-

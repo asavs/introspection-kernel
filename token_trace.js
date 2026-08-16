@@ -7,6 +7,7 @@ function normalizeCandidate(candidate = {}) {
     token_id: Number.isInteger(candidate.id) ? candidate.id : null,
     token: candidate.token ?? null,
     bytes: Array.isArray(candidate.bytes) ? candidate.bytes : null,
+    raw_logit: Number.isFinite(candidate.raw_logit) ? candidate.raw_logit : null,
     logprob: Number.isFinite(candidate.logprob) ? candidate.logprob : null,
     probability: tokenProbability(candidate.logprob)
   };
@@ -29,9 +30,12 @@ export function extractTokenTrace(response, {
       ? token.top_logprobs.map(normalizeCandidate)
       : [],
     distribution: {
-      stage: "post_softmax_pre_sampling",
+      probability_stage: "post_softmax_pre_sampling",
+      raw_logit_stage: Number.isFinite(token.raw_logit)
+        ? "pre_softmax_pre_sampling"
+        : null,
       coverage: "requested_top_candidates",
-      raw_logits_available: false
+      raw_logits_available: Number.isFinite(token.raw_logit)
     },
     provenance: "llama.cpp_openai_chat_completion_logprobs"
   }));
@@ -51,7 +55,10 @@ export function summarizeTokenTrace(rows) {
     selected_token_ids: rows.map(row => row.selected.token_id),
     selected_probabilities: rows.map(row => row.selected.probability),
     top_candidates_per_token: rows.map(row => row.top_alternatives.length),
-    stage: "post_softmax_pre_sampling",
-    raw_logits_available: false
+    probability_stage: "post_softmax_pre_sampling",
+    raw_logit_stage: rows.every(row => row.distribution.raw_logits_available)
+      ? "pre_softmax_pre_sampling"
+      : null,
+    raw_logits_available: rows.every(row => row.distribution.raw_logits_available)
   };
 }

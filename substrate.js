@@ -40,6 +40,12 @@ export async function initializeSubstrate({
   if (!propsResponse.ok) throw new Error(`props HTTP ${propsResponse.status}`);
   const props = await propsResponse.json();
   const modelPath = validateModelPath(props.model_path);
+  const runtimeBinary = "/opt/runtime/bin/llama-server";
+  const { stdout: runtimeHashText } = await execFileAsync("wsl.exe", [
+    "-d", distro, "-u", "observer", "--",
+    "/usr/bin/sha256sum", runtimeBinary
+  ], { encoding: "utf8", windowsHide: true, timeout: 30_000 });
+  const runtimeBinarySha256 = runtimeHashText.trim().split(/\s+/)[0];
   await execFileAsync("wsl.exe", [
     "-d", distro, "-u", "root", "--",
     "/usr/bin/install", "-d", "-m", "0755", ROOT
@@ -71,6 +77,10 @@ export async function initializeSubstrate({
     run_id: runId,
     captured_at: new Date().toISOString(),
     files,
+    runtime_binary: {
+      path: runtimeBinary,
+      sha256: runtimeBinarySha256
+    },
     relationships: [
       "runtime-props.json was read from the configured loopback llama.cpp endpoint",
       "gguf-inventory.json was parsed from raw_model by the adjacent readable parser source",

@@ -82,16 +82,19 @@ const tokenTrace = extractTokenTrace({ choices: [{ logprobs: { content: [{
   id: 42,
   token: "x",
   bytes: [120],
+  raw_logit: 7.5,
   logprob: Math.log(0.75),
   top_logprobs: [
-    { id: 42, token: "x", bytes: [120], logprob: Math.log(0.75) },
-    { id: 43, token: "y", bytes: [121], logprob: Math.log(0.25) }
+    { id: 42, token: "x", bytes: [120], raw_logit: 7.5, logprob: Math.log(0.75) },
+    { id: 43, token: "y", bytes: [121], raw_logit: 6.4, logprob: Math.log(0.25) }
   ]
 }] } }] }, { ledgerRequestId: "r1", sequence: 2 });
 assert.equal(tokenTrace.length, 1);
 assert.equal(tokenTrace[0].selected.token_id, 42);
 assert.ok(Math.abs(tokenTrace[0].selected.probability - 0.75) < 1e-12);
-assert.equal(tokenTrace[0].distribution.raw_logits_available, false);
+assert.equal(tokenTrace[0].selected.raw_logit, 7.5);
+assert.equal(tokenTrace[0].distribution.raw_logits_available, true);
+assert.equal(summarizeTokenTrace(tokenTrace).raw_logits_available, true);
 assert.deepEqual(summarizeTokenTrace(tokenTrace).selected_token_ids, [42]);
 const ledgerExportDir = fs.mkdtempSync(path.join(os.tmpdir(), "ik-ledger-test-"));
 const ledgerExport = Object.create(RequestLedger.prototype);
