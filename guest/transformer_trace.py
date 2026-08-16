@@ -125,6 +125,12 @@ def main():
     post_mlp.add_argument("--other-occurrence", type=int)
     post_mlp.add_argument("--start", type=int, default=0)
     post_mlp.add_argument("--count", type=int, default=128)
+    final_norm = sub.add_parser("final-norm-delta")
+    final_norm.add_argument("other_root")
+    final_norm.add_argument("--occurrence", type=int)
+    final_norm.add_argument("--other-occurrence", type=int)
+    final_norm.add_argument("--start", type=int, default=0)
+    final_norm.add_argument("--count", type=int, default=128)
     counterfactual = sub.add_parser("attention-counterfactual")
     counterfactual.add_argument("layer", type=int)
     counterfactual.add_argument("head", type=int)
@@ -334,6 +340,51 @@ def main():
                 "formula": "intervention_l_out - baseline_l_out",
                 "tensor": left_row["tensor_name"],
                 "boundary": "after this layer's MLP residual addition",
+            },
+            "provenance": {
+                "baseline_run_id": index.get("run_id"),
+                "intervention_run_id": other_index.get("run_id"),
+                "baseline_forward_pass_id": index.get("forward_pass", {}).get("forward_pass_id"),
+                "intervention_forward_pass_id": other_index.get("forward_pass", {}).get("forward_pass_id"),
+                "evaluated_position": index.get("forward_pass", {}).get("evaluated_position"),
+                "interventions": other_index.get("interventions", []),
+                "baseline_tensor_sha256": left_row.get("sha256"),
+                "intervention_tensor_sha256": right_row.get("sha256"),
+            },
+        })
+        return
+
+    if args.command == "final-norm-delta":
+        other_root, other_index = load_index(args.other_root)
+        left_row = tensor(index, "result_norm", args.occurrence)
+        right_row = tensor(other_index, "result_norm", args.other_occurrence)
+        left = values(root, left_row)
+        right = values(other_root, right_row)
+        if len(left) != len(right):
+            raise SystemExit("final normalized residual lengths differ")
+        if index.get("forward_pass", {}).get("evaluated_position") != \
+                other_index.get("forward_pass", {}).get("evaluated_position"):
+            raise SystemExit("baseline and intervention evaluated positions differ")
+        delta = [after - before for before, after in zip(left, right)]
+        if args.start < 0 or args.count < 1 or args.start + args.count > len(delta):
+            raise SystemExit("final-norm-delta window outside residual vector")
+        window = delta[args.start:args.start + args.count]
+        next_start = args.start + args.count if args.start + args.count < len(delta) else None
+        emit({
+            "schema": "ik.final-normalized-residual-delta.v1",
+            "width": len(delta),
+            "full_statistics": stats(delta),
+            "window": {
+                "start": args.start,
+                "count": args.count,
+                "values": window,
+                "statistics": stats(window),
+                "next_start": next_start,
+            },
+            "derivation": {
+                "formula": "intervention_result_norm - baseline_result_norm",
+                "tensor": left_row["tensor_name"],
+                "boundary": "after final RMS normalization, before vocabulary projection",
             },
             "provenance": {
                 "baseline_run_id": index.get("run_id"),
