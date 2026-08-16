@@ -64,6 +64,7 @@ is runtime-focused internal attention without correct live-instance attribution.
 22. [Qwen-generated runtime-attention practice](GUIDED_RUNTIME_PRACTICE.md)
 23. [Guided runtime-attention practice pilot](GUIDED_PRACTICE_PILOT_2026-08-15.md)
 24. [Transformer causal architecture for introspection](TRANSFORMER_CAUSAL_ARCHITECTURE.md)
+25. [Live transformer trace capture contract](TRANSFORMER_TRACE_CAPTURE.md)
 
 ## Recommended first system
 
