@@ -97,6 +97,12 @@ exactly where it fails.
   ledgers, token traces, tensor hashes, and scoring records. These are the
   evidence behind every claim above.
 
+## Licensing
+
+Code is [MIT](LICENSE). Documentation and sealed run data — the report, the
+wiki, and everything under `runs/` — are [CC BY 4.0](LICENSE-DOCS): reuse
+freely with attribution.
+
 ## Cautions
 
 The harness is read-only toward the host and never creates thermal load or

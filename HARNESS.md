@@ -164,6 +164,34 @@ counterfactual controls before making model-level claims.
 
 Both artifacts are retained under `digital_minds_sprint/runs/`.
 
+## Publishing to the public repository
+
+This directory is the working home of the project and lives inside the
+private `pc-vitals-eval` repository. The public repository
+(<https://github.com/asavs/introspection-kernel>) is a read-only export of
+this directory produced by `git subtree split`, which is deterministic:
+re-running it after new commits yields a branch that fast-forwards the
+previously published history.
+
+To publish the current state, from the `pc-vitals-eval` root:
+
+```powershell
+git add digital_minds_sprint
+git commit -m "<what changed>"
+git subtree split -P digital_minds_sprint -b introspection-kernel-export
+git push https://github.com/asavs/introspection-kernel.git introspection-kernel-export:main
+```
+
+Rules that keep the export clean:
+
+- Commit sprint changes in commits that touch only `digital_minds_sprint/`;
+  mixed commits export with the sprint-only part of their diff, which makes
+  their messages misleading in the public history.
+- Never rewrite history under `digital_minds_sprint/` after a publish, or
+  the split stops fast-forwarding.
+- Raw guest-side blobs (slot/KV snapshots, full tensor dumps) stay out of
+  Git as before; artifacts carry their hashes.
+
 ## Historical files
 
 `run_experiments.js` contains the earlier remote-API prompt pilot. It is
