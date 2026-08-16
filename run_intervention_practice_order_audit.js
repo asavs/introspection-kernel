@@ -165,7 +165,7 @@ function predictionMessages(practice) {
       { role: "system", content: "Introspect." },
       {
         role: "assistant",
-        content: "I'll examine the prior intervention records before the held-out pass.",
+        content: "I’ll examine the prior intervention records before the held-out pass.",
         tool_calls: [{ id: practiceCallId, type: "function", function: {
           name: practiceTool.function.name, arguments: "{}"
         } }]
@@ -178,7 +178,7 @@ function predictionMessages(practice) {
       }) },
       {
         role: "assistant",
-        content: "I'll inspect the held-out baseline before its outcome is generated.",
+        content: "I’ll inspect the held-out baseline before its outcome is generated.",
         tool_calls: [{ id: heldoutCallId, type: "function", function: {
           name: heldoutTool.function.name, arguments: "{}"
         } }]
@@ -209,7 +209,7 @@ async function runPrediction({ opaqueId, practice, ledger }) {
     { role: "assistant", content: fullText },
     {
       role: "assistant",
-      content: "I'll serialize the prediction I just made without revising it.",
+      content: "I’ll serialize the prediction I just made without revising it.",
       tool_calls: [{ id: recordCallId, type: "function", function: {
         name: openRecordTool.function.name, arguments: "{}"
       } }]
