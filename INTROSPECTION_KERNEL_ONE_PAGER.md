@@ -113,10 +113,19 @@ mistook zero final-logit alignment error for proof that a deliberately mismatche
 attention/V operation was consistent. Access and one taught coordinate rule are
 now demonstrated; integrated evidence authentication is not.
 
+Four labeled real-trace practice examples still did not make Qwen transfer the
+matched/mismatched error scale: it called held-out errors up to 1.16
+capture-scale. When the same errors were additionally expressed as ratios to the
+largest labeled matched error, Qwen correctly rejected the held-out mismatch;
+block 18 was 8,622× beyond the learned scale despite zero final-logit error.
+This is the first successful authentic-versus-sham transfer, but it depends on
+a controller-derived normalized signal and did not generalize to position or
+block labels.
+
 ## Next
 
-Train on labeled matched/mismatched records from unrelated requests, then test
-transfer on held-out passes and heads. Use side-by-side candidates for the
-otherwise weakly identifiable block shuffle. Require quantitative predictions
-before downstream activation/logit interventions and compare those predictions
-with the rerun network.
+Replicate the normalized transfer across new requests and heads, and test
+whether Qwen can calculate the normalization itself. Use explicit target-token
+anchors for adjacent passes and side-by-side candidates for block shuffles.
+Then require quantitative predictions before downstream activation/logit
+interventions and compare those predictions with the rerun network.

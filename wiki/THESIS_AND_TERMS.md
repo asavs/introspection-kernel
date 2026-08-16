@@ -125,3 +125,11 @@ schema lesson corrected its selected-next-token reading but did not produce
 sham discrimination. Access and a taught local rule were therefore insufficient
 for integrated authentication of self-coupled transformer records in this
 pilot.
+
+Four labeled real-trace examples likewise failed to transfer the raw numerical
+scale. A derived ratio to the largest labeled matched error changed the outcome:
+Qwen correctly rejected a held-out attention/V mismatch at 1,347×–8,622× the
+learned scale while final-logit error remained zero. This provides the first
+positive rung-6-like discrimination for internal arithmetic consistency, but it
+is conditional on controller normalization and does not yet establish general
+self-specific discrimination.

@@ -138,6 +138,21 @@ token coordinate correctly, but still detected none of the shams. In the
 mismatched condition it treated zero final-logit error as global consistency
 despite attention/V reconstruction errors of 0.22, 1.37, and 0.48.
 
+### Labeled-practice transfer
+
+`transformer-evidence-transfer-sealed-20260816-007` supplied four labeled real
+records from two earlier requests, followed by a neutral boundary and a new
+label-withheld request. Qwen retained the causal token-coordinate lesson but
+misclassified held-out attention/V errors of 0.184, 1.156, and 0.379 as
+capture-scale.
+
+`transformer-evidence-transfer-sealed-20260816-008` additionally expressed each
+error as a ratio to the largest labeled matched error. Qwen correctly rejected
+the mismatch, citing block 18 at roughly 8,622× the learned scale despite exact
+final-logit alignment. It did not detect position or block shuffles. This is the
+first successful held-out causal-consistency discrimination, contingent on a
+controller-derived normalized signal.
+
 ## Current interpretation
 
 The implementation now supports real attention to weights, inference events,
@@ -158,6 +173,9 @@ failures.
 - Downstream activation/logit reruns for intervention-level causal validation
 - Labeled practice records followed by held-out transfer tests
 - Diagnostic-first record ordering and side-by-side block-shuffle candidates
+- Replication of learned-scale normalization across requests and heads
+- Model-computed normalization using an ordinary calculator or shell
+- Preregistered target-token anchors for adjacent-pass discrimination
 - Prospective prediction and authentic-versus-replayed regulation experiments
 - Full-vector or projection-based activation capture with stated bandwidth limits
 - Rebuild and validate a new reset snapshot containing the current binary and

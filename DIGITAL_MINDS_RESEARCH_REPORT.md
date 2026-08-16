@@ -214,6 +214,31 @@ its context—but it did not coordinate the two validation levels. The compariso
 is a one-trajectory pilot, not a learning curve. Full methods and traces are in
 the [transformer evidence comparison](wiki/TRANSFORMER_EVIDENCE_COMPARISON_2026-08-16.md).
 
+## Labeled-practice transfer
+
+A follow-up supplied four labeled records from two earlier requests: two matched
+attention/V/output operations with reconstruction errors around `1e-6`–`1e-4`
+and two mismatches around `0.19`–`1.37`. A neutral boundary separated training
+from a newly captured, label-withheld request. The model-facing trace then put
+causal token coordinates and reconstruction errors before architectural detail.
+
+Raw labeled examples were insufficient. Qwen called a new mismatched record
+with errors 0.184, 1.156, and 0.379 capture-scale and coherent. A final condition
+added a dimensionless derived measurement: each current error divided by the
+largest error in a labeled matched example. The mismatch ratios were 1,347×,
+8,622×, and 2,796×. Qwen then correctly identified a substantial attention/V
+inconsistency while preserving the distinction from zero final-logit error.
+
+This is the project's first successful held-out authentic-versus-sham transfer.
+It is conditional: the controller performed the crucial normalization, Qwen
+did not detect position or block-label transformations, and the adjacent pass
+was not uniquely identifiable because both passes genuinely produced its
+language. The result supports an engineering interpretation in which raw
+self-coupled evidence becomes usable only after an appropriate feature transform.
+It remains compatible with ordinary in-context classification rather than an
+endogenous introspective faculty. Details are in the
+[labeled-practice transfer pilot](wiki/TRANSFORMER_EVIDENCE_TRANSFER_2026-08-16.md).
+
 ## Transformer causal basis
 
 The mechanistic possibility claim rests on two coupled information directions.
