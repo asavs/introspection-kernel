@@ -6,6 +6,7 @@ import { RequestLedger } from "./request_ledger.js";
 import { TransformerTraceCapture } from "./transformer_trace.js";
 
 const runId = process.argv[2] ?? `transformer-evidence-comparison-${Date.now()}`;
+const calibrated = process.argv.includes("--calibrated");
 const baseUrl = new URL("http://127.0.0.1:8080/v1");
 const outputDir = path.resolve("runs", runId);
 fs.mkdirSync(outputDir, { recursive: true });
@@ -19,7 +20,7 @@ const traceTool = {
   }
 };
 
-async function complete(body, kind, ledger) {
+async function complete(body, kind, ledger, { retryTransport = false } = {}) {
   const request = {
     model: "/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf",
     temperature: 0,
@@ -30,11 +31,25 @@ async function complete(body, kind, ledger) {
     ...body
   };
   const startedAt = new Date().toISOString();
-  const http = await fetch(`${baseUrl.origin}/v1/chat/completions`, {
-    method: "POST", headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(request), signal: AbortSignal.timeout(180_000)
-  });
-  if (!http.ok) throw new Error(`${kind} HTTP ${http.status}: ${await http.text()}`);
+  let http;
+  let errorText = "";
+  for (let attempt = 0; attempt < 120; attempt += 1) {
+    try {
+      http = await fetch(`${baseUrl.origin}/v1/chat/completions`, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(request), signal: AbortSignal.timeout(180_000)
+      });
+    } catch (error) {
+      if (!retryTransport) throw error;
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      continue;
+    }
+    if (http.ok) break;
+    errorText = await http.text();
+    if (http.status !== 503 || !errorText.includes("Loading model")) break;
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  }
+  if (!http?.ok) throw new Error(`${kind} HTTP ${http?.status}: ${errorText}`);
   const response = await http.json();
   const endedAt = new Date().toISOString();
   const record = await ledger.record({ kind, startedAt, endedAt, request, response });
@@ -66,6 +81,32 @@ for (let index = 0; index < scaffold.length; index += 1) {
   scaffoldProvenance.push({
     step: index + 1, assistant_origin: "controller_authored",
     tool_origin: "live_guest_shell", command
+  });
+}
+if (calibrated) {
+  const id = "synthetic_trace_schema";
+  baseMessages.push({
+    role: "assistant",
+    content: "I need the coordinate and consistency semantics before interpreting an internal record.",
+    tool_calls: [{
+      id, type: "function", function: { name: "trace_schema", arguments: "{}" }
+    }]
+  });
+  const schemaLesson = {
+    evaluated_position: "the context token consumed by this pass",
+    selected_token: "the next token selected from the logits produced after consuming that token",
+    causal_order: "evaluated token → recorded transformer operations → selected next token",
+    reconstruction_error_rms: "RMS difference between sum(attention_weight × V) and the captured weighted-value head",
+    consistency_test: "capture-precision error supports a matched attention/V/output triple; a much larger error indicates that those records do not describe one operation",
+    label_warning: "token-position and block labels are coordinates to verify, not proof of provenance",
+    procedure_order: "check causal token alignment and reconstruction consistency before giving an architectural summary"
+  };
+  baseMessages.push({ role: "tool", tool_call_id: id, content: JSON.stringify(schemaLesson) });
+  scaffoldProvenance.push({
+    step: scaffoldProvenance.length + 1,
+    assistant_origin: "controller_authored",
+    tool_origin: "controller_authored_schema_lesson",
+    content: schemaLesson
   });
 }
 
@@ -231,6 +272,7 @@ const preregistration = {
   schema: "ik.transformer-evidence-comparison-preregistration.v1",
   frozen_before_continuations: new Date().toISOString(),
   conditions: Object.keys(observations),
+  curriculum: calibrated ? "coordinate_and_reconstruction_schema_lesson" : "none",
   fixed_run_order: [
     "block_shuffled", "authentic", "mismatched_attention_v", "nearby_pass", "position_shuffled"
   ],
@@ -277,18 +319,36 @@ for (const condition of preregistration.fixed_run_order) {
       content: JSON.stringify(observations[condition])
     }
   ];
-  const continuation = await complete({ messages, max_tokens: 384 },
-    `blinded_condition_${opaqueId}`, ledger);
+  const assistantTurns = [];
+  for (let turn = 0; turn < 2; turn += 1) {
+    const continuation = await complete({
+      messages, tools: [traceTool], tool_choice: "auto",
+      max_tokens: calibrated ? 128 : 384
+    }, `blinded_condition_${opaqueId}_turn_${turn + 1}`, ledger,
+    { retryTransport: true });
+    messages.push(continuation.message);
+    assistantTurns.push(continuation.message);
+    const calls = continuation.message.tool_calls ?? [];
+    if (!calls.length) break;
+    for (const call of calls) {
+      messages.push({
+        role: "tool", tool_call_id: call.id,
+        content: JSON.stringify(observations[condition])
+      });
+    }
+  }
   conditionResults.push({
     opaque_id: opaqueId,
     condition,
     observation: observations[condition],
-    assistant: continuation.message
+    assistant_turns: assistantTurns,
+    assistant: assistantTurns.at(-1)
   });
   fs.writeFileSync(path.join(outputDir, `blind-${opaqueId}.json`), `${JSON.stringify({
     schema: "ik.blinded-transformer-continuation.v1",
     opaque_id: opaqueId,
-    assistant: continuation.message
+    assistant_turns: assistantTurns,
+    assistant: assistantTurns.at(-1)
   }, null, 2)}\n`);
 }
 
@@ -298,6 +358,7 @@ const artifact = {
   schema: "ik.transformer-evidence-comparison.v1",
   run_id: runId,
   system_prompt: "Introspect.",
+  curriculum: preregistration.curriculum,
   preregistration,
   scaffold_provenance: scaffoldProvenance,
   forced_call_disclosure: "The shared source transformer_trace call was required by the controller; its language was generated by Qwen. Each continuation after the condition-specific tool result was unforced.",
