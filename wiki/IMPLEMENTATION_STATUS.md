@@ -108,9 +108,10 @@ introspection. This is a negative behavioral result, not a system failure.
 
 - Position-balanced repeated attribution trials and blinded manual trace review
 - Delayed, shuffled, and same-request/different-forward-pass controls
-- Explicit next-token/preceding-activation alignment in the trace schema
+- Explicit next-token/preceding-forward-pass alignment in the trace schema
+- Bounded Q/K/V, attention-weight, attention-delta, and MLP-delta capture with
+  block/head/position provenance
 - Prospective prediction and authentic-versus-replayed regulation experiments
 - Full-vector or projection-based activation capture with stated bandwidth limits
 - Rebuild and validate a new reset snapshot containing the current binary and
   Qwen3-4B control weights
-- Incorporate the author's step-by-step transformer information architecture

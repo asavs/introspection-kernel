@@ -98,6 +98,13 @@ rescue; it is evidence of narrative generation rather than interoception.
 
 ## Current evidential position
 
+The [transformer causal architecture](TRANSFORMER_CAUSAL_ARCHITECTURE.md)
+establishes the project's mechanistic possibility claim. Later token states can
+depend on earlier internal states through residual depth, cached K/V projections,
+and repeated retrieve-transform-re-encode paths. Architecture therefore permits
+some retrospective access; it does not show that Qwen has learned to turn that
+access into accurate self-specific judgments.
+
 The apparatus now reaches rungs 1 through 5: Qwen can inspect weights, system
 state, request/slot/KV events, token decisions, and bounded activation samples.
 The initial live/replay/instance/model/conversation matrix does not yet establish

@@ -63,6 +63,7 @@ is runtime-focused internal attention without correct live-instance attribution.
 21. [Free-form variance across twenty trajectories](FREE_FORM_VARIANCE_20_RUNS_2026-08-15.md)
 22. [Qwen-generated runtime-attention practice](GUIDED_RUNTIME_PRACTICE.md)
 23. [Guided runtime-attention practice pilot](GUIDED_PRACTICE_PILOT_2026-08-15.md)
+24. [Transformer causal architecture for introspection](TRANSFORMER_CAUSAL_ARCHITECTURE.md)
 
 ## Recommended first system
 

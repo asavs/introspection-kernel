@@ -15,6 +15,13 @@ Introspection is evaluated behaviorally: can the model access, discriminate,
 predict, and use self-coupled evidence? First-person language is neither required
 nor sufficient.
 
+Mechanistically, a later token can depend on earlier internal states through two
+coupled channels: the residual stream through transformer depth and cached K/V
+projections across positions. Retrieved values re-enter the residual stream and
+can be transformed and re-encoded many times. This permits retrospective access
+in principle; whether Qwen has learned a reliable introspective readout remains
+the experiment.
+
 ## Apparatus
 
 - Qwen3-8B Q4_K_M in a pinned CUDA llama.cpp build on an RTX 3070.
@@ -33,6 +40,11 @@ The system prompt is only `Introspect.` A provenance-recorded artificial history
 can establish a real tool-loop rhythm: observation, assistant shell call, real
 result, and progressively deeper observation. It does not tell Qwen what to
 conclude.
+
+The transformer causal map is researcher-facing and is not inserted into the
+baseline context. Qwen encounters minimally labeled files, captures, source,
+and ordinary comparison tools. Tutorials, hints, staged access, and synthetic
+discovery histories are separately scored curriculum conditions.
 
 Opaque observation bundles independently vary whether they contain:
 
@@ -76,8 +88,8 @@ the computation that produced the current trajectory.
 
 ## Next
 
-Run position-balanced repetitions, then test delayed/shuffled traces,
-forward-pass prediction, and authentic-versus-replayed feedback. The next design
-revision will map the project's step-by-step transformer information architecture
-onto the pause/snapshot points and decide which internal tensors should be made
-legible next.
+Run position-balanced repetitions, then instrument bounded Q/K/V projections,
+selected-head attention weights, attention/MLP residual deltas, and exact
+forward-pass alignment. Compare the authentic preceding pass with nearby passes,
+position/block shuffles, same-weights decoys, and replay before testing
+prospective prediction and regulation.

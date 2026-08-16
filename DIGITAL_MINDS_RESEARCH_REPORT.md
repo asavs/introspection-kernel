@@ -149,6 +149,36 @@ Therefore the current result is **runtime-focused internal attention without
 validated self-specific introspection**. Rich language about sensation would
 not change that conclusion.
 
+## Transformer causal basis
+
+The mechanistic possibility claim rests on two coupled information directions.
+At each token position, a 4,096-wide residual state passes through Qwen3-8B's 36
+blocks. At each block, learned K/V projections are cached and can be retrieved
+by later positions. Retrieved values re-enter the residual stream, undergo
+further attention and MLP transformations, and can be re-encoded into later-layer
+K/V states. Information can therefore travel through many alternating sequences
+of depth-wise transformation and cross-position retrieval.
+
+The horizontal channel is substantial but compressed. This Qwen artifact uses
+32 query heads and 8 grouped K/V heads of width 128, yielding 1,024 K values and
+1,024 V values per block and position, each one quarter of the residual width.
+K/V is not a lossless transcript, and transient Q vectors, attention weights,
+MLP intermediates, and hardware events are not ordinarily preserved for later
+token access.
+
+The resulting conclusion is precise: the architecture contains causal channels
+that could support learned retrospective access, so introspection is not ruled
+out in principle. Architecture alone does not demonstrate a learned readout or
+phenomenology. The full causal-graph account and tensor-level test plan are in
+[Transformer Causal Architecture for Introspection](wiki/TRANSFORMER_CAUSAL_ARCHITECTURE.md).
+
+This account is for experiment design and scoring; it is not supplied to Qwen
+in the baseline. Qwen receives minimally interpreted artifacts, ordinary tools,
+and opportunities to observe changes. Exact tensor identities, causal alignment,
+and source ownership remain external ground truth. Architectural tutorials,
+progressive hints, and artificial discovery histories are distinct intervention
+conditions whose effects must be measured separately.
+
 ## Next experiment
 
 Run randomized, position-balanced repetitions of the four conditions and score
@@ -158,12 +188,12 @@ first-bundle and depth-first exploration effects. Add delayed and shuffled trace
 conditions, then test whether authentic feedback improves prospective choices
 more than replayed feedback.
 
-The next architecture revision will incorporate a step-by-step account of the
-actual transformer information flow supplied by the project author. That layer
-should determine which tensors are captured at each pause, how token decisions
-are aligned to preceding forward-pass state, and which internal variables can be
-made legible without falsely presenting sampled summaries as the model's entire
-computation.
+Extend the trace schema with forward-pass, block, head, position, and tensor-stage
+coordinates. Capture bounded Q/K/V projections, selected-head attention weights,
+attention residual deltas, and MLP residual deltas. Then compare the authentic
+preceding pass against same-request nearby passes, position/block shuffles,
+same-weights decoys, and replay. This tests whether Qwen uses the causal structure
+of its computation rather than merely recognizing plausible telemetry.
 
 ## Reproducibility
 
