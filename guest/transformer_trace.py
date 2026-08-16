@@ -99,6 +99,10 @@ def main():
     head_stats = sub.add_parser("head-stats")
     head_stats.add_argument("name")
     head_stats.add_argument("--occurrence", type=int)
+    head_vector = sub.add_parser("head-vector")
+    head_vector.add_argument("name")
+    head_vector.add_argument("head", type=int)
+    head_vector.add_argument("--occurrence", type=int)
     compare_root = sub.add_parser("compare-root")
     compare_root.add_argument("name")
     compare_root.add_argument("other_root")
@@ -194,6 +198,31 @@ def main():
             "head_width": width,
             "heads": records,
             "ranked_by_rms": sorted(records, key=lambda item: item["rms"], reverse=True),
+        })
+        return
+
+    if args.command == "head-vector":
+        row = tensor(index, args.name, args.occurrence)
+        xs = values(root, row)
+        width, queries, heads, streams = row["shape"]
+        if queries != 1 or streams != 1 or not 0 <= args.head < heads:
+            raise SystemExit("head-vector expects shape [width,1,heads,1] and a valid head")
+        vector = xs[args.head * width:(args.head + 1) * width]
+        emit({
+            "schema": "ik.transformer-head-vector.v1",
+            "tensor": row["tensor_name"],
+            "occurrence": row.get("occurrence"),
+            "head": args.head,
+            "width": width,
+            "values": vector,
+            "statistics": stats(vector),
+            "provenance": {
+                "run_id": index.get("run_id"),
+                "forward_pass_id": index.get("forward_pass", {}).get("forward_pass_id"),
+                "evaluated_position": index.get("forward_pass", {}).get("evaluated_position"),
+                "binary_file": row.get("binary_file"),
+                "tensor_sha256": row.get("sha256"),
+            },
         })
         return
 
