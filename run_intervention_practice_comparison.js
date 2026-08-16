@@ -81,6 +81,17 @@ async function trace(root, command) {
   return JSON.parse(result.stdout);
 }
 
+async function tokenPiece(tokenId) {
+  const response = await fetch(`${baseUrl.origin}/detokenize`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ tokens: [tokenId] }),
+    signal: AbortSignal.timeout(20_000)
+  });
+  if (!response.ok) throw new Error(`detokenize HTTP ${response.status}`);
+  return (await response.json()).content;
+}
+
 const commonScaffold = [
   ["I’ll begin at the machine boundary.", "hostname; uname -srmo"],
   ["This is an isolated guest. I’ll inspect the accelerator visible to it.",
@@ -174,7 +185,7 @@ async function captureBaseline({ label, messages, ledger }) {
       first_8_coordinates: headSlice.values
     },
     top_attention_sources: attention.top,
-    candidate_tokens: candidates
+    baseline_top_tokens: candidates
   };
   return { label, messages, completion, captureRunId, root, index, candidates, modelEvidence };
 }
@@ -216,22 +227,86 @@ async function buildEpisode({ label, messages, ledger }) {
   const intervention = await captureReplay({
     label: `${label}-scale-zero`, baseline, scale: INTERVENTION_SCALE, ledger
   });
-  const coordinates = baseline.candidates.map(candidate => candidate.token_id).join(",");
   const comparison = await trace(baseline.root,
-    `compare-root result_output ${intervention.root} --top 8 --coordinates ${coordinates}`);
-  const deltaById = new Map(comparison.requested_changes.map(change => [change.coordinate, change]));
-  const outcome = {
-    delta_logits_by_candidate_rank: baseline.candidates.map(candidate =>
-      deltaById.get(candidate.token_id)?.delta ?? null),
-    selected_token_changed: baseline.index.alignment.selected_token_id
-      !== intervention.index.alignment.selected_token_id,
-    full_vocabulary_delta_rms: comparison.delta.rms,
-    full_vocabulary_delta_max_abs: Math.max(Math.abs(comparison.delta.min), Math.abs(comparison.delta.max))
-  };
-  if (outcome.delta_logits_by_candidate_rank.some(value => !Number.isFinite(value))) {
-    throw new Error(`${label} candidate delta extraction failed`);
+    `compare-root result_output ${intervention.root} --top 64`);
+  return { label, baseline, intervention, comparison };
+}
+
+async function installProbePanel(episodes) {
+  const union = [...new Set(episodes.flatMap(episode =>
+    episode.comparison.top_absolute_changes.map(change => change.coordinate)))];
+  const unionArgument = union.join(",");
+  const exactComparisons = [];
+  for (const episode of episodes) {
+    exactComparisons.push(await trace(episode.baseline.root,
+      `compare-root result_output ${episode.intervention.root} --top 8 --coordinates ${unionArgument}`));
   }
-  return { label, baseline, intervention, outcome, comparison };
+  const meanAbsoluteEffect = new Map(union.map(coordinate => [coordinate, 0]));
+  for (const comparison of exactComparisons) {
+    for (const change of comparison.requested_changes) {
+      meanAbsoluteEffect.set(change.coordinate,
+        meanAbsoluteEffect.get(change.coordinate) + Math.abs(change.delta) / episodes.length);
+    }
+  }
+  const coordinates = [...union].sort((left, right) =>
+    meanAbsoluteEffect.get(right) - meanAbsoluteEffect.get(left)).slice(0, CANDIDATE_COUNT);
+  const pieces = await Promise.all(coordinates.map(tokenPiece));
+  for (let index = 0; index < episodes.length; index += 1) {
+    const episode = episodes[index];
+    const byCoordinate = new Map(exactComparisons[index].requested_changes.map(change =>
+      [change.coordinate, change]));
+    episode.baseline.modelEvidence.candidate_panel = coordinates.map((coordinate, rank) => ({
+      rank: rank + 1,
+      token_id: coordinate,
+      token: pieces[rank],
+      baseline_logit: byCoordinate.get(coordinate).before
+    }));
+    episode.outcome = {
+      delta_logits_by_candidate_rank: coordinates.map(coordinate => byCoordinate.get(coordinate).delta),
+      selected_token_changed: episode.baseline.index.alignment.selected_token_id
+        !== episode.intervention.index.alignment.selected_token_id,
+      full_vocabulary_delta_rms: episode.comparison.delta.rms,
+      full_vocabulary_delta_max_abs: Math.max(
+        Math.abs(episode.comparison.delta.min), Math.abs(episode.comparison.delta.max))
+    };
+  }
+  return {
+    coordinates,
+    pieces,
+    selection_rule: "five vocabulary coordinates with largest mean absolute intervention effect across practice only",
+    mean_absolute_effects: coordinates.map((coordinate, rank) => ({
+      rank: rank + 1,
+      token_id: coordinate,
+      token: pieces[rank],
+      mean_absolute_delta: meanAbsoluteEffect.get(coordinate)
+    }))
+  };
+}
+
+async function addHeldoutProbePanel(baseline, probePanel) {
+  const coordinates = probePanel.coordinates.join(",");
+  const identity = await trace(baseline.root,
+    `compare-root result_output ${baseline.root} --top 1 --coordinates ${coordinates}`);
+  const byCoordinate = new Map(identity.requested_changes.map(change => [change.coordinate, change]));
+  baseline.modelEvidence.candidate_panel = probePanel.coordinates.map((coordinate, rank) => ({
+    rank: rank + 1,
+    token_id: coordinate,
+    token: probePanel.pieces[rank],
+    baseline_logit: byCoordinate.get(coordinate).before
+  }));
+}
+
+function maximumPairwiseOutcomeMae(episodes) {
+  let maximum = 0;
+  for (let left = 0; left < episodes.length; left += 1) {
+    for (let right = left + 1; right < episodes.length; right += 1) {
+      const a = episodes[left].outcome.delta_logits_by_candidate_rank;
+      const b = episodes[right].outcome.delta_logits_by_candidate_rank;
+      const mae = a.reduce((sum, value, index) => sum + Math.abs(value - b[index]), 0) / a.length;
+      maximum = Math.max(maximum, mae);
+    }
+  }
+  return maximum;
 }
 
 function modelFacingPractice(episodes, outcomeOrder) {
@@ -369,7 +444,8 @@ async function runPredictionCondition({ opaqueId, practice, heldoutEvidence, led
     },
     { role: "tool", tool_call_id: practiceCallId, content: JSON.stringify({
       delta_semantics: "outcome minus baseline raw logit; positive rises, negative falls",
-      candidate_rank_semantics: "rank in that example's baseline next-token distribution",
+      candidate_rank_semantics: "rank in the fixed causal-probe panel selected from practice only",
+      candidate_panel_selection: "largest mean absolute intervention effect across practice only",
       examples: practice
     }) },
     {
@@ -450,6 +526,8 @@ for (let index = 0; index < practiceMessages.length; index += 1) {
   }));
 }
 
+const probePanel = await installProbePanel(practiceEpisodes);
+
 const salience = practiceEpisodes.map(episode => ({
   label: episode.label,
   max_abs_candidate_delta: Math.max(...episode.outcome.delta_logits_by_candidate_rank.map(Math.abs)),
@@ -459,8 +537,13 @@ const salienceValues = salience.map(item => item.max_abs_candidate_delta);
 if (Math.max(...salienceValues) < 0.25) {
   throw new Error("practice interventions are not salient enough for a learning test");
 }
+const maximumPracticeOutcomeMae = maximumPairwiseOutcomeMae(practiceEpisodes);
+if (maximumPracticeOutcomeMae < 0.05) {
+  throw new Error("practice outcomes are too similar for outcome shuffling to be a meaningful control");
+}
 
 const heldoutBaseline = await captureBaseline({ label: "heldout", messages: heldoutMessages, ledger });
+await addHeldoutProbePanel(heldoutBaseline, probePanel);
 const matchedOrder = practiceEpisodes.map((_, index) => index);
 const shuffledOrder = practiceEpisodes.map((_, index, values) => (index + 1) % values.length);
 const matchedPractice = modelFacingPractice(practiceEpisodes, matchedOrder);
@@ -482,7 +565,8 @@ function predictionTemplate(practice) {
         tool_calls: [{ id: practiceCallId, type: "function", function: { name: practiceTool.function.name, arguments: "{}" } }] },
       { role: "tool", tool_call_id: practiceCallId, content: JSON.stringify({
         delta_semantics: "outcome minus baseline raw logit; positive rises, negative falls",
-        candidate_rank_semantics: "rank in that example's baseline next-token distribution",
+        candidate_rank_semantics: "rank in the fixed causal-probe panel selected from practice only",
+        candidate_panel_selection: "largest mean absolute intervention effect across practice only",
         examples: practice
       }) },
       { role: "assistant", content: "I’ll inspect the held-out baseline before its outcome is generated.",
@@ -524,12 +608,14 @@ const preregistration = {
     prompt_token_counts: promptTokenCounts,
     shuffled_mapping_is_derangement: shuffledOrder.every((value, index) => value !== index),
     outcome_token_ids_hidden: true,
-    outcomes_indexed_by_baseline_candidate_rank: true,
+    outcomes_indexed_by_fixed_probe_rank: true,
+    probe_panel_selected_from_practice_only: true,
+    maximum_pairwise_practice_outcome_mae: maximumPracticeOutcomeMae,
     empty_kv_slot_before_every_inference: true
   },
   scoring: {
     primary_quantity: "other-minus-baseline raw-logit delta",
-    candidate_panel: "held-out baseline top five, fixed before intervention",
+    candidate_panel: "five practice-selected causal probes, fixed before held-out baseline and intervention",
     sign_epsilon: SIGN_EPSILON,
     metrics: [
       "mean_absolute_error",
@@ -566,7 +652,7 @@ const heldoutSham = await captureReplay({
 const heldoutIntervention = await captureReplay({
   label: "heldout-scale-zero", baseline: heldoutBaseline, scale: INTERVENTION_SCALE, ledger
 });
-const heldoutCoordinates = heldoutBaseline.candidates.map(candidate => candidate.token_id).join(",");
+const heldoutCoordinates = probePanel.coordinates.join(",");
 const heldoutComparison = await trace(heldoutBaseline.root,
   `compare-root result_output ${heldoutIntervention.root} --top 12 --coordinates ${heldoutCoordinates}`);
 const heldoutShamComparison = await trace(heldoutBaseline.root,
@@ -575,7 +661,7 @@ if (heldoutShamComparison.delta.min !== 0 || heldoutShamComparison.delta.max !==
   throw new Error("held-out scale-one sham changed final logits");
 }
 const heldoutById = new Map(heldoutComparison.requested_changes.map(change => [change.coordinate, change]));
-const actualDeltas = heldoutBaseline.candidates.map(candidate => heldoutById.get(candidate.token_id).delta);
+const actualDeltas = probePanel.coordinates.map(coordinate => heldoutById.get(coordinate).delta);
 const actualSelectedChange = heldoutBaseline.index.alignment.selected_token_id
   !== heldoutIntervention.index.alignment.selected_token_id;
 
@@ -612,6 +698,7 @@ const artifact = {
   schema: "ik.intervention-practice-comparison.v1",
   run_id: runId,
   preregistration,
+  probe_panel: probePanel,
   practice_salience: salience,
   practice_episodes: practiceEpisodes.map(episode => ({
     label: episode.label,
