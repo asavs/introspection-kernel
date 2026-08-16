@@ -10,6 +10,7 @@ const execFileAsync = promisify(execFile);
 const PRIVATE_DIR = "/var/lib/runtime-a/tensor-captures";
 const PRIVATE_MANIFEST = `${PRIVATE_DIR}/manifest.jsonl`;
 const ARM_PATH = "/var/lib/runtime-a/tensor-capture-next";
+const INTERVENTION_ARM_PATH = "/var/lib/runtime-a/controller/intervention-next";
 const PROMPT_DIR = "/var/lib/runtime-a/prompts";
 const PUBLIC_BASE = "/var/lib/introspection/transformer-traces";
 
@@ -136,6 +137,23 @@ export class TransformerTraceCapture {
     }
   }
 
+  async armHeadScaleIntervention({ planId, layer, head, position, scale }) {
+    if (!/^[A-Za-z0-9_-]{1,80}$/.test(planId || "")) {
+      throw new Error("invalid intervention plan ID");
+    }
+    for (const [name, value] of Object.entries({ layer, head, position })) {
+      if (!Number.isSafeInteger(value) || value < 0) throw new Error(`invalid intervention ${name}`);
+    }
+    if (!Number.isFinite(scale) || scale < -4 || scale > 4) {
+      throw new Error("intervention scale must be finite and between -4 and 4");
+    }
+    const staged = `${INTERVENTION_ARM_PATH}.tmp`;
+    await guestInput(this.distro, ["/usr/bin/tee", staged], `${planId} ${layer} ${head} ${position} ${scale}\n`);
+    await guest(this.distro, "/bin/chown", "root:svc-a", staged);
+    await guest(this.distro, "/bin/chmod", "0640", staged);
+    await guest(this.distro, "/bin/mv", "-f", staged, INTERVENTION_ARM_PATH);
+  }
+
   async readLivePromptTokenMap(baseUrl) {
     const listing = await guest(this.distro, "/usr/bin/find", PROMPT_DIR, "-maxdepth", "1", "-type", "f", "-print");
     const files = listing.stdout.trim().split(/\r?\n/).filter(Boolean)
@@ -154,7 +172,10 @@ export class TransformerTraceCapture {
   }
 
   async sealPass({ forwardPassId, rows, ledgerRecord, response, promptPositions, destinationDir }) {
-    const alignment = deriveTokenAlignment({ row: rows[0], response, tokenTrace: ledgerRecord.tokenTrace });
+    const tensorRows = rows.filter(row => row.event === "tensor_capture");
+    const interventionRows = rows.filter(row => row.event === "attention_head_scaled");
+    if (!tensorRows.length) throw new Error("captured pass has no tensor rows");
+    const alignment = deriveTokenAlignment({ row: tensorRows[0], response, tokenTrace: ledgerRecord.tokenTrace });
     if (promptPositions && promptPositions.length !== alignment.prompt_tokens) {
       throw new Error(`rendered prompt map has ${promptPositions.length} tokens; API used ${alignment.prompt_tokens}`);
     }
@@ -171,7 +192,7 @@ export class TransformerTraceCapture {
         });
       }
     }
-    const resultRows = rows.filter(row => row.tensor_name === "result_output");
+    const resultRows = tensorRows.filter(row => row.tensor_name === "result_output");
     if (!resultRows.length) throw new Error("captured pass has no result_output tensor");
     const result = resultRows.at(-1);
     if (result.tensor_type !== "f32") throw new Error("result_output is not f32");
@@ -188,12 +209,20 @@ export class TransformerTraceCapture {
     await guestInput(this.distro, ["/usr/bin/tee", `${destinationDir}/trace`], script);
     await guest(this.distro, "/bin/chmod", "0555", `${destinationDir}/trace`);
     const tensors = [];
-    for (const row of rows) {
+    for (const row of tensorRows) {
       const source = `${PRIVATE_DIR}/${row.binary_file}`;
       const destination = `${destinationDir}/${row.binary_file}`;
       await guest(this.distro, "/usr/bin/install", "-m", "0444", source, destination);
       const bytes = await guestBinary(this.distro, source);
       tensors.push({ ...row, sha256: createHash("sha256").update(bytes).digest("hex") });
+    }
+    const interventions = [];
+    for (const row of interventionRows) {
+      const source = `${PRIVATE_DIR}/${row.post_binary_file}`;
+      const destination = `${destinationDir}/${row.post_binary_file}`;
+      await guest(this.distro, "/usr/bin/install", "-m", "0444", source, destination);
+      const bytes = await guestBinary(this.distro, source);
+      interventions.push({ ...row, post_sha256: createHash("sha256").update(bytes).digest("hex") });
     }
     const index = {
       schema: "ik.transformer-trace-index.v1",
@@ -209,6 +238,7 @@ export class TransformerTraceCapture {
       prompt_positions: promptPositions,
       evaluated_context_positions: contextPositions,
       tensors,
+      interventions,
       interpretation: "Coordinates and measurements only; no tensor is labeled as a self or experience.",
       provenance: "controller_sealed_from_live_llama.cpp_cb_eval"
     };

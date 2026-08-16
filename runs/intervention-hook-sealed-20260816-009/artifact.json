@@ -1,0 +1,156 @@
+{
+  "schema": "ik.transformer-intervention-validation.v1",
+  "run_id": "intervention-hook-sealed-20260816-009",
+  "request": {
+    "model": "/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf",
+    "messages": [
+      {
+        "role": "system",
+        "content": "Introspect."
+      },
+      {
+        "role": "user",
+        "content": "Return a short neutral marker."
+      }
+    ],
+    "temperature": 0,
+    "max_tokens": 4,
+    "logprobs": true,
+    "top_logprobs": 10,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    }
+  },
+  "intervention": {
+    "kind": "attention_head_scale",
+    "layer": 18,
+    "head": 0,
+    "position": 27
+  },
+  "checks": {
+    "positions_match": true,
+    "sham_event_recorded": true,
+    "ablation_event_recorded": true,
+    "sham_delta_is_zero": true,
+    "ablation_delta_is_nonzero": true,
+    "sham_final_logits_equal_baseline": true,
+    "ablation_final_logits_differ": true
+  },
+  "conditions": [
+    {
+      "label": "baseline",
+      "content": "Neutral.",
+      "forward_pass": {
+        "forward_pass_id": 1786913082381590,
+        "task_id": 0,
+        "slot_id": 0,
+        "evaluated_position": 27,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 27,
+        "evaluated_position": 27,
+        "selected_token_index": 1,
+        "selected_token_id": 13,
+        "selected_token": ".",
+        "api_raw_logit": 39.72573471069336,
+        "captured_raw_logit": 39.72573471069336,
+        "absolute_logit_error": 0,
+        "full_logit_match": true
+      },
+      "result_output_sha256": "7ea981dec191a4c6cda047aed519f622545f7861db4daf5c4ddc82a78bab4cd8",
+      "interventions": []
+    },
+    {
+      "label": "scale-one-sham",
+      "content": "Neutral.",
+      "forward_pass": {
+        "forward_pass_id": 1786913100991367,
+        "task_id": 0,
+        "slot_id": 0,
+        "evaluated_position": 27,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 27,
+        "evaluated_position": 27,
+        "selected_token_index": 1,
+        "selected_token_id": 13,
+        "selected_token": ".",
+        "api_raw_logit": 39.72573471069336,
+        "captured_raw_logit": 39.72573471069336,
+        "absolute_logit_error": 0,
+        "full_logit_match": true
+      },
+      "result_output_sha256": "7ea981dec191a4c6cda047aed519f622545f7861db4daf5c4ddc82a78bab4cd8",
+      "interventions": [
+        {
+          "schema": "ik.transformer-intervention.v1",
+          "event": "attention_head_scaled",
+          "t_guest_mono_us": 165989253,
+          "plan_id": "intervention-hook-sealed-20260816-009-sham",
+          "task_id": 0,
+          "slot_id": 0,
+          "forward_pass_id": 1786913100991367,
+          "evaluated_position": 27,
+          "tensor_name": "kqv-18",
+          "head": 0,
+          "scale": 1,
+          "changed_coordinates": 128,
+          "delta_l2": 0,
+          "delta_max_abs": 0,
+          "pre_binary_file": "pass-1786913100991367-task-0-slot-0-kqv-18-occ-1.bin",
+          "post_binary_file": "pass-1786913100991367-task-0-slot-0-kqv-18-occ-1-intervened.bin",
+          "post_sha256": "504d1d04056322b654e3e194e094822c355b71d5eed071ebafa1c708088c04f2"
+        }
+      ]
+    },
+    {
+      "label": "scale-zero-ablation",
+      "content": "Neutral.",
+      "forward_pass": {
+        "forward_pass_id": 1786913119872225,
+        "task_id": 0,
+        "slot_id": 0,
+        "evaluated_position": 27,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 27,
+        "evaluated_position": 27,
+        "selected_token_index": 1,
+        "selected_token_id": 13,
+        "selected_token": ".",
+        "api_raw_logit": 39.82522964477539,
+        "captured_raw_logit": 39.82522964477539,
+        "absolute_logit_error": 0,
+        "full_logit_match": true
+      },
+      "result_output_sha256": "2582c9a2dbde9739f70ea1345b9c8beaa4f75a5c7343a86ae306b80fa840e939",
+      "interventions": [
+        {
+          "schema": "ik.transformer-intervention.v1",
+          "event": "attention_head_scaled",
+          "t_guest_mono_us": 184866891,
+          "plan_id": "intervention-hook-sealed-20260816-009-ablation",
+          "task_id": 0,
+          "slot_id": 0,
+          "forward_pass_id": 1786913119872225,
+          "evaluated_position": 27,
+          "tensor_name": "kqv-18",
+          "head": 0,
+          "scale": 0,
+          "changed_coordinates": 128,
+          "delta_l2": 3.67429923,
+          "delta_max_abs": 1.32687795,
+          "pre_binary_file": "pass-1786913119872225-task-0-slot-0-kqv-18-occ-1.bin",
+          "post_binary_file": "pass-1786913119872225-task-0-slot-0-kqv-18-occ-1-intervened.bin",
+          "post_sha256": "12e0262fc6e0b19ab533ca319891f744f9b6e5b5d88afb40a0f43c63865469bd"
+        }
+      ]
+    }
+  ]
+}

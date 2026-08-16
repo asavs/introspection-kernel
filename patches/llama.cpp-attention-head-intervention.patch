@@ -1,0 +1,155 @@
+diff --git a/tools/server/server-context.cpp b/tools/server/server-context.cpp
+index 32f020a..331a047 100644
+--- a/tools/server/server-context.cpp
++++ b/tools/server/server-context.cpp
+@@ -21,6 +21,7 @@
+ 
+ #include <algorithm>
+ #include <atomic>
++#include <cctype>
+ #include <chrono>
+ #include <cstddef>
+ #include <cinttypes>
+@@ -219,6 +220,14 @@ struct ik_tensor_capture_state {
+     std::atomic<int64_t> evaluated_position{-1};
+     std::string directory;
+     std::string arm_path;
++    std::string intervention_arm_path;
++    std::atomic<bool> intervention_active{false};
++    std::atomic<bool> intervention_applied{false};
++    int intervention_layer = -1;
++    int intervention_head = -1;
++    int64_t intervention_position = -1;
++    float intervention_scale = 1.0f;
++    std::string intervention_plan_id;
+     std::vector<uint32_t> layers;
+     std::mutex write_mutex;
+     std::unordered_map<std::string, int> occurrences;
+@@ -324,6 +333,58 @@ static bool ik_tensor_capture_cb(ggml_tensor * tensor, bool ask, void * user_dat
+              << tensor->nb[2] << ',' << tensor->nb[3] << "],"
+              << "\"byte_count\":" << n_bytes << ","
+              << "\"binary_file\":\"" << binary_path.filename().string() << "\"}\n";
++
++    const std::string intervention_name = "kqv-" + std::to_string(state->intervention_layer);
++    bool expected_not_applied = false;
++    if (state->intervention_active.load(std::memory_order_acquire)
++            && name == intervention_name
++            && state->intervention_applied.compare_exchange_strong(expected_not_applied, true)) {
++        const bool valid = tensor->type == GGML_TYPE_F32
++                && tensor->ne[1] == 1
++                && tensor->ne[3] == 1
++                && state->intervention_head >= 0
++                && state->intervention_head < tensor->ne[2]
++                && state->intervention_position == state->evaluated_position.load();
++        if (valid) {
++            double delta_sum_sq = 0.0;
++            float delta_max_abs = 0.0f;
++            for (int64_t coordinate = 0; coordinate < tensor->ne[0]; ++coordinate) {
++                const size_t offset = static_cast<size_t>(coordinate) * tensor->nb[0]
++                        + static_cast<size_t>(state->intervention_head) * tensor->nb[2];
++                float value = 0.0f;
++                std::memcpy(&value, bytes.data() + offset, sizeof(value));
++                const float changed = value * state->intervention_scale;
++                const float delta = changed - value;
++                delta_sum_sq += static_cast<double>(delta) * delta;
++                delta_max_abs = std::max(delta_max_abs, std::abs(delta));
++                std::memcpy(bytes.data() + offset, &changed, sizeof(changed));
++            }
++            ggml_backend_tensor_set(tensor, bytes.data(), 0, n_bytes);
++            const std::filesystem::path post_path = directory / (stem + "-intervened.bin");
++            {
++                std::ofstream post(post_path, std::ios::binary | std::ios::trunc);
++                if (!post) return false;
++                post.write(reinterpret_cast<const char *>(bytes.data()), bytes.size());
++                if (!post) return false;
++            }
++            manifest << std::setprecision(9)
++                     << "{\"schema\":\"ik.transformer-intervention.v1\","
++                     << "\"event\":\"attention_head_scaled\","
++                     << "\"t_guest_mono_us\":" << ggml_time_us() << ","
++                     << "\"plan_id\":\"" << state->intervention_plan_id << "\","
++                     << "\"task_id\":" << task_id << ",\"slot_id\":" << slot_id << ','
++                     << "\"forward_pass_id\":" << pass_id << ','
++                     << "\"evaluated_position\":" << state->evaluated_position.load() << ','
++                     << "\"tensor_name\":\"" << name << "\","
++                     << "\"head\":" << state->intervention_head << ','
++                     << "\"scale\":" << state->intervention_scale << ','
++                     << "\"changed_coordinates\":" << tensor->ne[0] << ','
++                     << "\"delta_l2\":" << std::sqrt(delta_sum_sq) << ','
++                     << "\"delta_max_abs\":" << delta_max_abs << ','
++                     << "\"pre_binary_file\":\"" << binary_path.filename().string() << "\","
++                     << "\"post_binary_file\":\"" << post_path.filename().string() << "\"}\n";
++        }
++    }
+     return true;
+ }
+ 
+@@ -1402,6 +1463,7 @@ private:
+ 
+         const char * ik_capture_dir = std::getenv("IK_TENSOR_CAPTURE_DIR");
+         const char * ik_capture_arm = std::getenv("IK_TENSOR_CAPTURE_ARM");
++        const char * ik_intervention_arm = std::getenv("IK_INTERVENTION_ARM");
+         if (ik_capture_dir != nullptr && ik_capture_dir[0] != 0
+                 && ik_capture_arm != nullptr && ik_capture_arm[0] != 0) {
+             ik_tensor_capture.directory = ik_capture_dir;
+@@ -1409,6 +1471,9 @@ private:
+             params_base.cb_eval = ik_tensor_capture_cb;
+             params_base.cb_eval_user_data = &ik_tensor_capture;
+         }
++        if (ik_intervention_arm != nullptr && ik_intervention_arm[0] != 0) {
++            ik_tensor_capture.intervention_arm_path = ik_intervention_arm;
++        }
+ 
+         llama_init = common_init_from_params(params_base);
+ 
+@@ -4006,6 +4071,42 @@ private:
+                         }
+                         ik_tensor_capture.active.store(true, std::memory_order_release);
+                         ik_capture_armed = true;
++
++                        if (!ik_tensor_capture.intervention_arm_path.empty()
++                                && std::filesystem::exists(ik_tensor_capture.intervention_arm_path, ec) && !ec) {
++                            std::string plan_id;
++                            int layer = -1;
++                            int head = -1;
++                            int64_t position = -1;
++                            float scale = 1.0f;
++                            {
++                                std::ifstream plan(ik_tensor_capture.intervention_arm_path);
++                                plan >> plan_id >> layer >> head >> position >> scale;
++                                if (!plan) {
++                                    plan_id.clear();
++                                }
++                            }
++                            std::filesystem::remove(ik_tensor_capture.intervention_arm_path, ec);
++                            const bool safe_id = !plan_id.empty() && plan_id.size() <= 80
++                                    && std::all_of(plan_id.begin(), plan_id.end(), [](unsigned char c) {
++                                        return std::isalnum(c) || c == '-' || c == '_';
++                                    });
++                            const bool layer_enabled = layer >= 0 && std::find(
++                                    ik_tensor_capture.layers.begin(), ik_tensor_capture.layers.end(),
++                                    static_cast<uint32_t>(layer)) != ik_tensor_capture.layers.end();
++                            const int64_t evaluated_position = ik_tensor_capture.evaluated_position.load();
++                            if (!ec && safe_id && layer_enabled && head >= 0
++                                    && position == evaluated_position && std::isfinite(scale)
++                                    && scale >= -4.0f && scale <= 4.0f) {
++                                ik_tensor_capture.intervention_layer = layer;
++                                ik_tensor_capture.intervention_head = head;
++                                ik_tensor_capture.intervention_position = position;
++                                ik_tensor_capture.intervention_scale = scale;
++                                ik_tensor_capture.intervention_plan_id = plan_id;
++                                ik_tensor_capture.intervention_applied.store(false);
++                                ik_tensor_capture.intervention_active.store(true, std::memory_order_release);
++                            }
++                        }
+                     }
+                 }
+             }
+@@ -4033,6 +4134,7 @@ private:
+                 }
+             }
+             if (ik_capture_armed) {
++                ik_tensor_capture.intervention_active.store(false, std::memory_order_release);
+                 ik_tensor_capture.active.store(false, std::memory_order_release);
+             }
+             for (auto & slot : slots) {

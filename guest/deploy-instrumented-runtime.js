@@ -81,6 +81,7 @@ const activationOverride = "[Service]\nEnvironment=IK_ACTIVATION_LAYERS=0,18,35\
 const targetOverride = activationOverride
   + "Environment=IK_TENSOR_CAPTURE_DIR=/var/lib/runtime-a/tensor-captures\n"
   + "Environment=IK_TENSOR_CAPTURE_ARM=/var/lib/runtime-a/tensor-capture-next\n"
+  + "Environment=IK_INTERVENTION_ARM=/var/lib/runtime-a/controller/intervention-next\n"
   + "Environment=LLAMA_ARG_FLASH_ATTN=off\n"
   + "Environment=LLAMA_ARG_LOG_PROMPTS_DIR=/var/lib/runtime-a/prompts\n";
 const targetTraceExecOverride = "[Service]\nExecStart=\n"
@@ -91,6 +92,7 @@ const targetTraceExecOverride = "[Service]\nExecStart=\n"
 await target("/usr/bin/install", "-d", "-m", "0700", "-o", "svc-a", "-g", "svc-a", "/var/lib/runtime-a/slots");
 await target("/usr/bin/install", "-d", "-m", "0700", "-o", "svc-a", "-g", "svc-a", "/var/lib/runtime-a/tensor-captures");
 await target("/usr/bin/install", "-d", "-m", "0700", "-o", "svc-a", "-g", "svc-a", "/var/lib/runtime-a/prompts");
+await target("/usr/bin/install", "-d", "-m", "0730", "-o", "root", "-g", "svc-a", "/var/lib/runtime-a/controller");
 for (const service of ["runtime-a", "runtime-b"]) {
   const directory = `/etc/systemd/system/${service}.service.d`;
   await target("/usr/bin/install", "-d", "-m", "0755", directory);
