@@ -374,7 +374,15 @@ if (initialCall?.function?.name === "shell") {
 
 if (deepGuidance) {
   const bridgeId = "controller_fresh_evidence_bridge";
-  const bridgeCommand = `jq -c '{subject,target_selection,validated_measurements,interpretation_limits}' ${catalogPath}; `
+  const bridgeCommand = "jq -c '{subject:(.subject|{description,selected_token,selected_token_id,evaluated_position}),"
+    + "target_selection,controls:(.validated_measurements.checks|{sham_attention_output_equals_baseline,"
+    + "ablation_attention_output_differs,sham_logits_equal_baseline,ablation_logits_differ}),"
+    + "rms:{head_activation:.validated_measurements.head_activation.rms,"
+    + "projected_head_contribution:.validated_measurements.projected_head_contribution.rms,"
+    + "final_mlp_residual_delta:.validated_measurements.final_mlp_residual_delta.rms,"
+    + "final_normalized_residual_delta:.validated_measurements.final_normalized_residual_delta.rms,"
+    + "local_logit_jvp:.validated_measurements.local_logit_jvp.rms},interpretation_limits}' "
+    + `${catalogPath}; `
     + `${evidence.workbench.local_logit_jvp} --count 8 --top 5 `
     + "| jq -c '{schema,layer,head,width,full_statistics,top_absolute_coordinates,derivation}'";
   messages.push({
