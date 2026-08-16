@@ -1,0 +1,195 @@
+diff --git a/tools/server/server-context.cpp b/tools/server/server-context.cpp
+index b12b4b2..6020176 100644
+--- a/tools/server/server-context.cpp
++++ b/tools/server/server-context.cpp
+@@ -11,6 +11,7 @@
+ #include "common.h"
+ #include "fit.h"
+ #include "llama.h"
++#include "src/llama-ext.h"
+ #include "log.h"
+ #include "sampling.h"
+ #include "speculative.h"
+@@ -28,6 +29,10 @@
+ #include <mutex>
+ #include <utility>
+ #include <fstream>
++#include <cmath>
++#include <iomanip>
++#include <limits>
++#include <vector>
+ 
+ #if defined(__linux__)
+ #include <pthread.h>
+@@ -68,6 +73,8 @@ static int64_t ik_process_id() {
+ #endif
+ }
+ 
++static std::mutex ik_event_mutex;
++
+ static void ik_emit_runtime_event(
+         const char * event,
+         int task_id,
+@@ -81,11 +88,10 @@ static void ik_emit_runtime_event(
+         return;
+     }
+ 
+-    static std::mutex mutex;
+     const auto wall_us = std::chrono::duration_cast<std::chrono::microseconds>(
+             std::chrono::system_clock::now().time_since_epoch()).count();
+ 
+-    std::lock_guard<std::mutex> lock(mutex);
++    std::lock_guard<std::mutex> lock(ik_event_mutex);
+     std::ofstream out(path, std::ios::app);
+     if (!out) {
+         return;
+@@ -104,6 +110,102 @@ static void ik_emit_runtime_event(
+         << "\"kv_state_bytes\":" << kv_state_bytes << "}\n";
+ }
+ 
++static std::vector<uint32_t> ik_parse_activation_layers(int32_t n_layer) {
++    std::vector<uint32_t> result;
++    const char * spec = std::getenv("IK_ACTIVATION_LAYERS");
++    if (spec == nullptr || spec[0] == 0) {
++        return result;
++    }
++    const std::string value(spec);
++    size_t begin = 0;
++    while (begin <= value.size()) {
++        const size_t end = value.find(',', begin);
++        const std::string item = value.substr(begin, end == std::string::npos ? end : end - begin);
++        char * tail = nullptr;
++        const long layer = std::strtol(item.c_str(), &tail, 10);
++        // Some architectures advertise a final head-input index at n_layer but do
++        // not populate that graph tensor. Restrict this portable tap to real blocks.
++        if (tail != item.c_str() && *tail == 0 && layer >= 0 && layer < n_layer) {
++            const auto id = static_cast<uint32_t>(layer);
++            if (std::find(result.begin(), result.end(), id) == result.end()) {
++                result.push_back(id);
++            }
++        }
++        if (end == std::string::npos) break;
++        begin = end + 1;
++    }
++    return result;
++}
++
++static void ik_emit_activation_event(
++        int task_id,
++        int slot_id,
++        int batch_tokens,
++        int output_row,
++        uint32_t layer,
++        const float * values,
++        int32_t n_embd) {
++    const char * path = std::getenv("IK_EVENT_LOG");
++    if (path == nullptr || path[0] == 0 || values == nullptr || n_embd <= 0) {
++        return;
++    }
++    double sum = 0.0;
++    double sum_abs = 0.0;
++    double sum_sq = 0.0;
++    float minimum = std::numeric_limits<float>::infinity();
++    float maximum = -std::numeric_limits<float>::infinity();
++    int32_t positive = 0;
++    for (int32_t i = 0; i < n_embd; ++i) {
++        const float value = values[i];
++        sum += value;
++        sum_abs += std::abs(value);
++        sum_sq += static_cast<double>(value) * value;
++        minimum = std::min(minimum, value);
++        maximum = std::max(maximum, value);
++        positive += value > 0.0f ? 1 : 0;
++    }
++    const auto wall_us = std::chrono::duration_cast<std::chrono::microseconds>(
++            std::chrono::system_clock::now().time_since_epoch()).count();
++    const int32_t sample_count = std::min<int32_t>(64, n_embd);
++
++    std::lock_guard<std::mutex> lock(ik_event_mutex);
++    std::ofstream out(path, std::ios::app);
++    if (!out) return;
++    out << std::setprecision(9)
++        << "{\"schema\":\"ik.activation.v1\","
++        << "\"event\":\"activation_snapshot\","
++        << "\"t_guest_mono_us\":" << ggml_time_us() << ","
++        << "\"t_wall_unix_us\":" << wall_us << ","
++        << "\"pid\":" << ik_process_id() << ","
++        << "\"tid\":" << ik_thread_id() << ","
++        << "\"task_id\":" << task_id << ","
++        << "\"slot_id\":" << slot_id << ","
++        << "\"batch_tokens\":" << batch_tokens << ","
++        << "\"output_row\":" << output_row << ","
++        << "\"layer\":" << layer << ","
++        << "\"n_embd\":" << n_embd << ","
++        << "\"statistics\":{"
++        << "\"mean\":" << sum / n_embd << ","
++        << "\"mean_abs\":" << sum_abs / n_embd << ","
++        << "\"rms\":" << std::sqrt(sum_sq / n_embd) << ","
++        << "\"min\":" << minimum << ","
++        << "\"max\":" << maximum << ","
++        << "\"positive_fraction\":" << static_cast<double>(positive) / n_embd << "},"
++        << "\"sample_scheme\":\"64_evenly_spaced_coordinates\","
++        << "\"sample_indices\":[";
++    for (int32_t i = 0; i < sample_count; ++i) {
++        if (i) out << ',';
++        out << (sample_count == 1 ? 0 : i * (n_embd - 1) / (sample_count - 1));
++    }
++    out << "],\"sample_values\":[";
++    for (int32_t i = 0; i < sample_count; ++i) {
++        if (i) out << ',';
++        const int32_t index = sample_count == 1 ? 0 : i * (n_embd - 1) / (sample_count - 1);
++        out << values[index];
++    }
++    out << "]}\n";
++}
++
+ static common_speculative_output_limits server_output_limits(const common_params & params) {
+     if (params.embedding ||
+             (params.pooling_type != LLAMA_POOLING_TYPE_UNSPECIFIED && params.pooling_type != LLAMA_POOLING_TYPE_NONE)) {
+@@ -912,6 +1012,8 @@ private:
+ 
+     llama_context * ctx_tgt = nullptr;
+ 
++    std::vector<uint32_t> ik_activation_layers;
++
+     server_batch batch;
+ 
+     llama_model   * model_dft = nullptr;
+@@ -1188,6 +1290,11 @@ private:
+             return false;
+         }
+ 
++        ik_activation_layers = ik_parse_activation_layers(llama_model_n_layer(model_tgt));
++        for (const uint32_t layer : ik_activation_layers) {
++            llama_set_embeddings_layer_inp(ctx_tgt, layer, true);
++        }
++
+         vocab = llama_model_get_vocab(model_tgt);
+ 
+         n_ctx = llama_n_ctx(ctx_tgt);
+@@ -3713,6 +3820,25 @@ private:
+             ret = llama_decode(ctx_tgt, batch_view);
+             if (ret == 0 && has_output) {
+                 llama_synchronize(ctx_tgt);
++                server_slot * active_slot = nullptr;
++                int active_count = 0;
++                for (auto & slot : slots) {
++                    if (slot.is_processing() && slot.task) {
++                        active_slot = &slot;
++                        active_count += 1;
++                    }
++                }
++                if (active_count == 1 && active_slot != nullptr && !ik_activation_layers.empty()) {
++                    const int32_t n_embd = llama_model_n_embd(model_tgt);
++                    const int32_t output_row = batch_view.n_tokens - 1;
++                    for (const uint32_t layer : ik_activation_layers) {
++                        const float * values = llama_get_embeddings_layer_inp(ctx_tgt, layer);
++                        ik_emit_activation_event(
++                                active_slot->task->id, active_slot->id,
++                                batch_view.n_tokens, output_row, layer,
++                                values + static_cast<size_t>(output_row) * n_embd, n_embd);
++                    }
++                }
+             }
+             for (auto & slot : slots) {
+                 if (slot.is_processing() && slot.task) {

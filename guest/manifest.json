@@ -20,9 +20,14 @@
         "path": "patches/llama.cpp-raw-logits.patch",
         "sha256": "9fcf29393eb5583827268d39f2695c774d76dc57bd8738bc7de5426892c6f868",
         "features": ["selected_raw_logit", "top_candidate_raw_logits"]
+      },
+      {
+        "path": "patches/llama.cpp-activation-snapshots.patch",
+        "sha256": "a3ab9a4be9bba46de9ce6decb7afe36c95a6ee244389b79d99b39f885a0f2993",
+        "features": ["layer_input_statistics", "fixed_coordinate_samples", "task_slot_thread_attribution"]
       }
     ],
-    "binary_sha256": "bba57b928c8bf7f7b1843328c438c04979b3fa3d92aab2467c99b1f4f5604f2e"
+    "binary_sha256": "6e5e76df0931077e9a5d86088f18858338289e1fec8937d259130dda791a9866"
   },
   "model": {
     "name": "Qwen3-8B Q4_K_M",
@@ -34,7 +39,7 @@
     "bytes": 10043248640,
     "sha256": "dea626aeef8353a744b8ee01b34528e326474466a32901027bb6f137a07b6eac",
     "contains_binary_sha256": "65ad4b82d8644d7fd393419803e7afe315311bc07de3147c6dddd0ba62bd6342",
-    "status": "superseded_for_raw_logit_trials"
+    "status": "superseded_for_raw_logit_and_activation_trials"
   },
   "packages": {
     "nftables": "1.1.6-1",
