@@ -105,6 +105,7 @@ iteration analysis in `GUIDED_PRACTICE_PILOT_2026-08-15.md`.
 | `36bb5ac` | Transformer evidence comparison synthesis | Documented the baseline and calibrated failures, the two-level validation confusion, and the held-out learning experiment now required |
 | `65c2ddd` | Held-out labeled-trace transfer | Used four real labeled practice records and a neutral boundary; Qwen transferred token coordinates but still misclassified a severe raw attention/V mismatch |
 | `4fa79b6` | Learned-scale normalization | Added an unlabeled dimensionless error ratio; Qwen correctly rejected the held-out mismatch at up to 8,622× matched scale |
+| `050febb` | Learned-transfer synthesis | Documented the first positive held-out discrimination, its dependency on engineered normalization, and the intervention experiment required next |
 
 ## Why this order matters
 
