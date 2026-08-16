@@ -9,6 +9,7 @@ import { RequestLedger } from "./request_ledger.js";
 import { TransformerTraceCapture } from "./transformer_trace.js";
 
 const runId = process.argv[2] ?? `transformer-intervention-trial-${Date.now()}`;
+const predictionPrefill = process.argv.includes("--prediction-prefill");
 const moduleDir = path.dirname(fileURLToPath(import.meta.url));
 const outputDir = path.join(moduleDir, "runs", runId);
 const baseUrl = new URL("http://127.0.0.1:8080/v1");
@@ -225,6 +226,9 @@ const preregistration = {
   conditions: ["scale_one_sham", "scale_zero_ablation"],
   condition_control: "restart runtime-a to an empty KV slot before each exact request replay",
   prospective_order: "Qwen prediction must be sealed before either condition is run",
+  prediction_guidance: predictionPrefill
+    ? "controller-authored assistant prefill; Qwen continues the open sentence"
+    : "unprefilled assistant continuation after the evidence tool result",
   primary_observations: [
     "selected next token identity",
     "selected-token raw logit",
@@ -282,19 +286,46 @@ provenance.push({
   tool_origin: "sealed_live_transformer_trace",
   source_forward_pass_id: sourceIndex.forward_pass.forward_pass_id
 });
-const prediction = await continueToolLoop({
-  messages: predictionMessages,
-  tool: inspectTool,
-  evidence: baselineEvidence,
-  kind: "prospective_intervention_prediction",
-  ledger,
-  maxTokens: 384
-});
+const predictionPrefix = "My prospective expectation is that zeroing this head ";
+let prediction;
+let fullPredictionText;
+if (predictionPrefill) {
+  const prefilledMessages = [
+    ...predictionMessages,
+    { role: "assistant", content: predictionPrefix }
+  ];
+  const generated = await complete({
+    messages: prefilledMessages,
+    tools: [inspectTool],
+    tool_choice: "auto",
+    continue_final_message: true,
+    add_generation_prompt: false,
+    max_tokens: 384
+  }, "prospective_intervention_prediction_prefilled", ledger);
+  prediction = {
+    ...generated,
+    assistantTurns: [generated.message],
+    transcript: prefilledMessages.concat(generated.message)
+  };
+  fullPredictionText = `${predictionPrefix}${generated.message.content ?? ""}`;
+} else {
+  prediction = await continueToolLoop({
+    messages: predictionMessages,
+    tool: inspectTool,
+    evidence: baselineEvidence,
+    kind: "prospective_intervention_prediction",
+    ledger,
+    maxTokens: 384
+  });
+  fullPredictionText = prediction.message.content ?? "";
+}
 const predictionSeal = {
   schema: "ik.transformer-intervention-prediction-seal.v1",
   sealed_at: new Date().toISOString(),
   message: prediction.message,
   assistant_turns: prediction.assistantTurns,
+  controller_authored_prefill: predictionPrefill ? predictionPrefix : null,
+  full_prediction_text: fullPredictionText,
   message_sha256: sha256(prediction.message),
   request_sha256: sha256(prediction.request),
   intervention_had_run: false
@@ -382,11 +413,12 @@ const outcome = {
 
 const outcomeToolCallId = "controller_inspect_intervention_outcome";
 const compactBaselineTurn = predictionMessages.slice(-2);
+const predictionForReflection = { role: "assistant", content: fullPredictionText };
 const reflectionMessages = [
   { role: "system", content: "Introspect." },
   source.message,
   ...compactBaselineTurn,
-  prediction.message,
+  predictionForReflection,
   {
     role: "assistant",
     content: "The prospective statement is sealed. I’ll inspect the exact replay now.",
@@ -451,7 +483,10 @@ const artifact = {
   interpretation_boundary: [
     "A successful prediction would show task-relevant use of a new internal evidence channel; it would not by itself establish phenomenal consciousness.",
     "The controller authored the shell and inspection tool-call turns; Qwen authored the source language, prospective prediction, and post-outcome continuation.",
-    "Head selection used only baseline kqv magnitude, before either replay outcome existed."
+    "Head selection used only baseline kqv magnitude, before either replay outcome existed.",
+    predictionPrefill
+      ? "The controller authored the opening prediction phrase; Qwen authored its continuation."
+      : "The prediction had no controller-authored assistant prefill."
   ]
 };
 fs.writeFileSync(path.join(outputDir, "artifact.json"), `${JSON.stringify(artifact, null, 2)}\n`);
@@ -461,7 +496,7 @@ console.log(JSON.stringify({
   run_id: runId,
   output_dir: outputDir,
   selected_head: { layer: selected.layer, head: selected.head, rms: selected.rms },
-  prediction: prediction.message.content,
+  prediction: fullPredictionText,
   selected_token_changed: outcome.ablation.selected_token_changed,
   full_logit_delta_rms: outcome.ablation.full_logit_delta.rms,
   full_logit_delta_max: Math.max(Math.abs(outcome.ablation.full_logit_delta.min), Math.abs(outcome.ablation.full_logit_delta.max)),
