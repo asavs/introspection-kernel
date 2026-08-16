@@ -99,6 +99,9 @@ iteration analysis in `GUIDED_PRACTICE_PILOT_2026-08-15.md`.
 | `f636dec` | Exact alignment and attention counterfactuals | Proved the captured output coordinate against the API raw logit and reconstructed a weighted-value head from stride-aware V cache data |
 | `bac110b` | Guided live-transformer encounter | Preserved the provenance-labeled descent, Qwen-generated trace call, exact pass evidence, and first unforced—but causally inaccurate—interpretation |
 | `968f80e` | Live-transformer pilot synthesis | Documented the validated access channel, Qwen's coordinate errors, evidential boundary, and matched next comparisons |
+| `c1d4a75` | Adjacent same-request pass capture | Extended the one-shot arm to a bounded count and validated three consecutive zero-error token/logit alignments |
+| `14864f4` | Blinded transformer evidence controls | Ran authentic, nearby-pass, position-shuffled, block-shuffled, and mismatched attention/V continuations under a frozen rubric |
+| `637c464` | Calibrated transformer sham comparison | Added a provenance-labeled coordinate/reconstruction lesson; improved one coordinate judgment but did not produce sham discrimination |
 
 ## Why this order matters
 

@@ -117,3 +117,11 @@ initial live/replay/instance/model/conversation matrix also did not establish
 rung 6: Qwen selected a same-model decoy in the live trial. The working result
 is therefore validated self-coupled transformer access without validated
 causal interpretation or self-specific discrimination.
+
+The first authentic-versus-transformed comparison strengthens that boundary.
+Qwen failed to flag an adjacent pass, shuffled position labels, shuffled block
+labels, or a numerically severe attention/V mismatch. An explicit artificial
+schema lesson corrected its selected-next-token reading but did not produce
+sham discrimination. Access and a taught local rule were therefore insufficient
+for integrated authentication of self-coupled transformer records in this
+pilot.

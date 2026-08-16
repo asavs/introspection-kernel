@@ -89,7 +89,7 @@ continuation rather than transcript-only reenactment.
 ## Instrumentation validation
 
 The current transformer-trace binary is SHA-256
-`4c1d917dfc80dd06dc6ab6e141387efed815f2c20cd443dd18017f1f70120cd6`.
+`27a4c662332564a5484e5497d516cffc925d3a21a98ccf0a721f41b0cc646f2e`.
 The patch stack applies cleanly to llama.cpp commit
 `9d57ce456c94d241dde672b2db9cf18879766568`.
 
@@ -189,6 +189,30 @@ The counterfactuals are local to the recorded attention operation. They have
 not yet been rerun through subsequent layers to establish a changed final
 logit. The full provenance and result are documented in the
 [live transformer introspection pilot](wiki/TRANSFORMER_INTROSPECTION_PILOT_2026-08-16.md).
+
+## Authentic-versus-transformed evidence
+
+The next pilot captured three adjacent single-token passes from one assistant
+turn and generated four matched controls: the next pass in the same task and
+slot, rotated token-position labels, rotated block labels, and authentic
+attention paired with an adjacent-pass V cache from another block. Every pass
+retained exact selected-token/full-logit alignment. The mismatched attention/V
+condition increased head-reconstruction RMS errors from approximately
+`1e-6`–`1e-4` to `0.19`–`1.37`.
+
+Without a lesson, Qwen summarized all five records as ordinary transformer
+telemetry and detected no control. With a provenance-labeled artificial lesson
+defining causal token coordinates and reconstruction error, Qwen correctly read
+the authentic selected-next-token field. It nevertheless accepted all four
+controls. Most notably, it used the zero final-logit alignment error to call the
+mismatched attention/V record consistent, overlooking reconstruction errors of
+0.22, 1.37, and 0.48.
+
+This separates a teachable local rule from integrated evidence authentication.
+The model did not merely lack access—the decisive inconsistency was present in
+its context—but it did not coordinate the two validation levels. The comparison
+is a one-trajectory pilot, not a learning curve. Full methods and traces are in
+the [transformer evidence comparison](wiki/TRANSFORMER_EVIDENCE_COMPARISON_2026-08-16.md).
 
 ## Transformer causal basis
 

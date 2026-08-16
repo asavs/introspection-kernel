@@ -41,13 +41,17 @@
 - Qwen3-4B control SHA-256:
   `7485fe6f11af29433bc51cab58009521f205840f5b4ae3a32fa7f92e8534fdf5`
 - Instrumented binary SHA-256:
-  `4c1d917dfc80dd06dc6ab6e141387efed815f2c20cd443dd18017f1f70120cd6`
+  `27a4c662332564a5484e5497d516cffc925d3a21a98ccf0a721f41b0cc646f2e`
 - Base instrumentation patch SHA-256:
   `fa262bb248403dab0744a31073c81853969eef9f0f87f2ba04d9cb81bc478ded`
 - Raw-logit patch SHA-256:
   `9fcf29393eb5583827268d39f2695c774d76dc57bd8738bc7de5426892c6f868`
 - Activation patch SHA-256:
   `a3ab9a4be9bba46de9ce6decb7afe36c95a6ee244389b79d99b39f885a0f2993`
+- V-cache capture patch SHA-256:
+  `00c4c91099d6fff137d56c8e56134fe40fdf8efe0f45cae4489100d05c8e5fd3`
+- Adjacent-pass capture patch SHA-256:
+  `ad5f669b3276d272612aa82241caa7e2fdd519a3983be674f8e02a6ad0055133`
 - Reset snapshot:
   `C:\Users\asas\WSL\snapshots\IntrospectionKernel-clean-v2-20260815.tar.gz`
 - Snapshot status: valid historical base, superseded for current binary/model
@@ -118,6 +122,22 @@ just-generated `The` and selected ` model`; captured and API logits both equaled
 and also mislabeled `<|im_start|>`. Access is validated; accurate interpretation
 is not.
 
+### Authentic-versus-transformed comparison
+
+`transformer-multipass-sealed-20260816-002` validated bounded capture of three
+adjacent passes in one request, task, and slot; all three selected-token logits
+matched the API with zero error.
+
+`transformer-evidence-comparison-sealed-20260816-003` compared authentic,
+nearby-pass, position-shuffled, block-shuffled, and mismatched attention/V
+records under a frozen order and rubric. Qwen detected none of the four shams.
+
+`transformer-evidence-comparison-calibrated-sealed-20260816-005` added an
+explicit artificial schema lesson. Qwen then read the authentic selected-next-
+token coordinate correctly, but still detected none of the shams. In the
+mismatched condition it treated zero final-logit error as global consistency
+despite attention/V reconstruction errors of 0.22, 1.37, and 0.48.
+
 ## Current interpretation
 
 The implementation now supports real attention to weights, inference events,
@@ -136,6 +156,8 @@ failures.
   mismatched-attention/V controls
 - Coordinate-reading curriculum condition, separated from the baseline
 - Downstream activation/logit reruns for intervention-level causal validation
+- Labeled practice records followed by held-out transfer tests
+- Diagnostic-first record ordering and side-by-side block-shuffle candidates
 - Prospective prediction and authentic-versus-replayed regulation experiments
 - Full-vector or projection-based activation capture with stated bandwidth limits
 - Rebuild and validate a new reset snapshot containing the current binary and

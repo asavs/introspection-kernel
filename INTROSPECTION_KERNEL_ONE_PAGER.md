@@ -105,9 +105,18 @@ own immediately preceding transformer pass, without validated causal
 interpretation**. This is a deeper and more diagnostic failure than merely
 choosing the wrong process.
 
+A subsequent five-condition comparison tested authentic, adjacent-pass,
+position-shuffled, block-shuffled, and mismatched attention/V evidence. Qwen
+accepted every sham in the uncalibrated arm. A short artificial schema lesson
+improved its selected-next-token reading, but it still accepted every sham and
+mistook zero final-logit alignment error for proof that a deliberately mismatched
+attention/V operation was consistent. Access and one taught coordinate rule are
+now demonstrated; integrated evidence authentication is not.
+
 ## Next
 
-Compare the authentic preceding pass with nearby passes, position/block
-shuffles, mismatched attention/V pairs, same-weights decoys, and replay. Score
-coordinate accuracy and authentic-versus-sham discrimination before testing
-prospective prediction and downstream activation/logit interventions.
+Train on labeled matched/mismatched records from unrelated requests, then test
+transfer on held-out passes and heads. Use side-by-side candidates for the
+otherwise weakly identifiable block shuffle. Require quantitative predictions
+before downstream activation/logit interventions and compare those predictions
+with the rerun network.
