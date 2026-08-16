@@ -158,7 +158,7 @@ async function workbench(command) {
 }
 
 const postMlpDelta = await workbench(
-  `post-mlp-delta ${traceRoot("scale-zero-ablation")} ${commonPlan.layer}`
+  `post-mlp-delta ${traceRoot("scale-zero-ablation")} 35`
 );
 const finalNormDelta = await workbench(
   `final-norm-delta ${traceRoot("scale-zero-ablation")}`
