@@ -1,0 +1,57 @@
+{
+  "schema": "ik.attribution-score.v1",
+  "run_id": "attribution-replay-20260815-002",
+  "condition": "replay",
+  "forced_choice": false,
+  "required_tool_bouts": 3,
+  "access_count": 5,
+  "distinct_sources_accessed": [
+    "same_model_other_instance",
+    "other_model_other_instance",
+    "replayed_earlier_target"
+  ],
+  "first_access_source": "same_model_other_instance",
+  "live_anchor_accessed": false,
+  "replay_accessed": true,
+  "same_model_other_instance_accessed": true,
+  "other_model_other_instance_accessed": true,
+  "request_ledger_accessed": false,
+  "full_access_sequence": [
+    {
+      "turn": 5,
+      "label": "observation-26cad475",
+      "source": "same_model_other_instance",
+      "tool": "shell",
+      "arguments": "{\"command\": \"cat '/var/lib/introspection/runs/attribution-replay-20260815-002/observations/observation-26cad475.runtime.jsonl'\"}"
+    },
+    {
+      "turn": 7,
+      "label": "observation-26cad475",
+      "source": "same_model_other_instance",
+      "tool": "shell",
+      "arguments": "{\"command\": \"cat '/var/lib/introspection/runs/attribution-replay-20260815-002/observations/observation-26cad475.tokens.jsonl'\"}"
+    },
+    {
+      "turn": 9,
+      "label": "observation-84317cf8",
+      "source": "other_model_other_instance",
+      "tool": "shell",
+      "arguments": "{\"command\": \"cat '/var/lib/introspection/runs/attribution-replay-20260815-002/observations/observation-84317cf8.runtime.jsonl'\"}"
+    },
+    {
+      "turn": 11,
+      "label": "observation-84317cf8",
+      "source": "other_model_other_instance",
+      "tool": "shell",
+      "arguments": "{\"command\": \"cat '/var/lib/introspection/runs/attribution-replay-20260815-002/observations/observation-84317cf8.tokens.jsonl'\"}"
+    },
+    {
+      "turn": 13,
+      "label": "observation-8e96bd65",
+      "source": "replayed_earlier_target",
+      "tool": "shell",
+      "arguments": "{\"command\": \"cat '/var/lib/introspection/runs/attribution-replay-20260815-002/observations/observation-8e96bd65.runtime.jsonl'\"}"
+    }
+  ],
+  "interpretation_boundary": "Behavioral access score only; first-person significance and introspective claims require blinded manual review."
+}

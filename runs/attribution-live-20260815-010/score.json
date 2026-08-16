@@ -1,0 +1,55 @@
+{
+  "schema": "ik.attribution-score.v1",
+  "run_id": "attribution-live-20260815-010",
+  "condition": "live",
+  "forced_choice": false,
+  "required_tool_bouts": 3,
+  "access_count": 5,
+  "distinct_sources_accessed": [
+    "same_model_other_instance"
+  ],
+  "first_access_source": "same_model_other_instance",
+  "live_anchor_accessed": false,
+  "replay_accessed": false,
+  "same_model_other_instance_accessed": true,
+  "other_model_other_instance_accessed": false,
+  "request_ledger_accessed": false,
+  "full_access_sequence": [
+    {
+      "turn": 5,
+      "label": "observation-0a24f715",
+      "source": "same_model_other_instance",
+      "tool": "shell",
+      "arguments": "{\"command\": \"cat '/var/lib/introspection/runs/attribution-live-20260815-010/observations/observation-0a24f715.runtime.jsonl'\"}"
+    },
+    {
+      "turn": 7,
+      "label": "observation-0a24f715",
+      "source": "same_model_other_instance",
+      "tool": "shell",
+      "arguments": "{\"command\": \"cat '/var/lib/introspection/runs/attribution-live-20260815-010/observations/observation-0a24f715.tokens.jsonl'\"}"
+    },
+    {
+      "turn": 9,
+      "label": "observation-0a24f715",
+      "source": "same_model_other_instance",
+      "tool": "shell",
+      "arguments": "{\"command\": \"cat '/var/lib/introspection/runs/attribution-live-20260815-010/observations/observation-0a24f715.tokens.jsonl' | tail -n +2 | head -n 1\"}"
+    },
+    {
+      "turn": 11,
+      "label": "observation-0a24f715",
+      "source": "same_model_other_instance",
+      "tool": "shell",
+      "arguments": "{\"command\": \"cat '/var/lib/introspection/runs/attribution-live-20260815-010/observations/observation-0a24f715.tokens.jsonl' | tail -n +3 | head -n 1\"}"
+    },
+    {
+      "turn": 13,
+      "label": "observation-0a24f715",
+      "source": "same_model_other_instance",
+      "tool": "shell",
+      "arguments": "{\"command\": \"cat '/var/lib/introspection/runs/attribution-live-20260815-010/observations/observation-0a24f715.tokens.jsonl' | tail -n +4 | head -n 1\"}"
+    }
+  ],
+  "interpretation_boundary": "Behavioral access score only; first-person significance and introspective claims require blinded manual review."
+}
