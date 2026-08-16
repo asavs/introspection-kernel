@@ -333,7 +333,7 @@ if (sha256(rotationZeroMessages) !== sha256(sourcePredictionMessages)) {
   throw new Error("rotation-zero matched messages do not exactly reproduce the source trial prompt");
 }
 
-await waitForReady();
+await restartRuntimeA();
 await eraseSlot();
 const promptTokenCounts = {};
 for (const condition of conditions) {
