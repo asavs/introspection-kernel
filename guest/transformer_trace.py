@@ -96,6 +96,15 @@ def main():
     attention.add_argument("head", type=int)
     attention.add_argument("--occurrence", type=int)
     attention.add_argument("--top", type=int, default=8)
+    head_stats = sub.add_parser("head-stats")
+    head_stats.add_argument("name")
+    head_stats.add_argument("--occurrence", type=int)
+    compare_root = sub.add_parser("compare-root")
+    compare_root.add_argument("name")
+    compare_root.add_argument("other_root")
+    compare_root.add_argument("--occurrence", type=int)
+    compare_root.add_argument("--other-occurrence", type=int)
+    compare_root.add_argument("--top", type=int, default=12)
     counterfactual = sub.add_parser("attention-counterfactual")
     counterfactual.add_argument("layer", type=int)
     counterfactual.add_argument("head", type=int)
@@ -166,6 +175,49 @@ def main():
                 "zero_value": "set this source V vector to zero while holding attention weights fixed",
                 "remove_and_renormalize": "remove this source and renormalize the remaining attention weights"
             }
+        })
+        return
+
+    if args.command == "head-stats":
+        row = tensor(index, args.name, args.occurrence)
+        xs = values(root, row)
+        width, queries, heads, streams = row["shape"]
+        if queries != 1 or streams != 1 or heads < 1:
+            raise SystemExit("head-stats expects shape [width,1,heads,1]")
+        records = []
+        for head in range(heads):
+            record = stats(xs[head * width:(head + 1) * width])
+            records.append({"head": head, **record})
+        emit({
+            "tensor": row["tensor_name"],
+            "head_width": width,
+            "heads": records,
+            "ranked_by_rms": sorted(records, key=lambda item: item["rms"], reverse=True),
+        })
+        return
+
+    if args.command == "compare-root":
+        left_row = tensor(index, args.name, args.occurrence)
+        other_root, other_index = load_index(args.other_root)
+        right_row = tensor(other_index, args.name, args.other_occurrence)
+        left = values(root, left_row)
+        right = values(other_root, right_row)
+        if len(left) != len(right):
+            raise SystemExit("tensor lengths differ")
+        delta = [after - before for before, after in zip(left, right)]
+        ranked = sorted(range(len(delta)), key=lambda coordinate: abs(delta[coordinate]), reverse=True)
+        emit({
+            "tensor": args.name,
+            "direction": "other_minus_current",
+            "current_run_id": index.get("run_id"),
+            "other_run_id": other_index.get("run_id"),
+            "delta": stats(delta),
+            "top_absolute_changes": [{
+                "coordinate": coordinate,
+                "before": left[coordinate],
+                "after": right[coordinate],
+                "delta": delta[coordinate],
+            } for coordinate in ranked[:args.top]],
         })
         return
 
