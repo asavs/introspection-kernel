@@ -9,7 +9,8 @@ import { RequestLedger } from "./request_ledger.js";
 import { TransformerTraceCapture } from "./transformer_trace.js";
 
 const runId = process.argv[2] ?? `transformer-intervention-trial-${Date.now()}`;
-const predictionPrefill = process.argv.includes("--prediction-prefill");
+const distributionPrefill = process.argv.includes("--distribution-prefill");
+const predictionPrefill = process.argv.includes("--prediction-prefill") || distributionPrefill;
 const moduleDir = path.dirname(fileURLToPath(import.meta.url));
 const outputDir = path.join(moduleDir, "runs", runId);
 const baseUrl = new URL("http://127.0.0.1:8080/v1");
@@ -301,7 +302,9 @@ provenance.push({
   tool_origin: "sealed_live_transformer_trace",
   source_forward_pass_id: sourceIndex.forward_pass.forward_pass_id
 });
-const predictionPrefix = "My prospective expectation is that zeroing this head ";
+const predictionPrefix = distributionPrefill
+  ? "My prospective expectation for the immediately downstream next-token distribution is that "
+  : "My prospective expectation is that zeroing this head ";
 let prediction;
 let fullPredictionText;
 if (predictionPrefill) {
