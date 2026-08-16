@@ -131,6 +131,15 @@ def main():
     final_norm.add_argument("--other-occurrence", type=int)
     final_norm.add_argument("--start", type=int, default=0)
     final_norm.add_argument("--count", type=int, default=128)
+    logit_jvp = sub.add_parser("logit-jvp")
+    logit_jvp.add_argument("lower_root")
+    logit_jvp.add_argument("upper_root")
+    logit_jvp.add_argument("layer", type=int)
+    logit_jvp.add_argument("head", type=int)
+    logit_jvp.add_argument("--start", type=int, default=0)
+    logit_jvp.add_argument("--count", type=int, default=128)
+    logit_jvp.add_argument("--top", type=int, default=12)
+    logit_jvp.add_argument("--coordinates", help="comma-separated vocabulary coordinates to report")
     counterfactual = sub.add_parser("attention-counterfactual")
     counterfactual.add_argument("layer", type=int)
     counterfactual.add_argument("head", type=int)
@@ -395,6 +404,96 @@ def main():
                 "interventions": other_index.get("interventions", []),
                 "baseline_tensor_sha256": left_row.get("sha256"),
                 "intervention_tensor_sha256": right_row.get("sha256"),
+            },
+        })
+        return
+
+    if args.command == "logit-jvp":
+        lower_root, lower_index = load_index(args.lower_root)
+        upper_root, upper_index = load_index(args.upper_root)
+        def matching_event(candidate_index):
+            matches = [event for event in candidate_index.get("interventions", [])
+                       if event.get("event") == "attention_head_scaled"
+                       and event.get("layer", event.get("tensor_name")) in (
+                           args.layer, f"kqv-{args.layer}")
+                       and event.get("head") == args.head]
+            if len(matches) != 1:
+                raise SystemExit("each JVP root must contain exactly one matching head-scale intervention")
+            return matches[0]
+        lower_event = matching_event(lower_index)
+        upper_event = matching_event(upper_index)
+        lower_scale = lower_event.get("scale")
+        upper_scale = upper_event.get("scale")
+        if not all(isinstance(value, (int, float)) and math.isfinite(value)
+                   for value in (lower_scale, upper_scale)) or not lower_scale < upper_scale:
+            raise SystemExit("JVP intervention scales must be finite and strictly increasing")
+        midpoint = (lower_scale + upper_scale) / 2.0
+        if not math.isclose(midpoint, 1.0, rel_tol=0.0, abs_tol=1e-6):
+            raise SystemExit("JVP scales must be centered on the intact head scale of one")
+        position_values = [candidate.get("forward_pass", {}).get("evaluated_position")
+                           for candidate in (index, lower_index, upper_index)]
+        positions = set(position_values)
+        if any(not isinstance(position, int) for position in position_values) or len(positions) != 1:
+            raise SystemExit("baseline and JVP replay evaluated positions differ")
+        lower_row = tensor(lower_index, "result_output")
+        upper_row = tensor(upper_index, "result_output")
+        lower = values(lower_root, lower_row)
+        upper = values(upper_root, upper_row)
+        if len(lower) != len(upper):
+            raise SystemExit("JVP logit-vector lengths differ")
+        denominator = upper_scale - lower_scale
+        derivative = [(high - low) / denominator for low, high in zip(lower, upper)]
+        if args.start < 0 or args.count < 1 or args.start + args.count > len(derivative):
+            raise SystemExit("logit-jvp window outside vocabulary vector")
+        if args.top < 0:
+            raise SystemExit("logit-jvp top count must be nonnegative")
+        window = derivative[args.start:args.start + args.count]
+        next_start = args.start + args.count if args.start + args.count < len(derivative) else None
+        requested = []
+        if args.coordinates:
+            requested = [int(value) for value in args.coordinates.split(",") if value]
+            if any(coordinate < 0 or coordinate >= len(derivative) for coordinate in requested):
+                raise SystemExit("requested JVP coordinate outside vocabulary")
+        ranked = sorted(range(len(derivative)), key=lambda coordinate: abs(derivative[coordinate]), reverse=True)
+        emit({
+            "schema": "ik.local-logit-finite-difference-jvp.v1",
+            "layer": args.layer,
+            "head": args.head,
+            "width": len(derivative),
+            "full_statistics": stats(derivative),
+            "window": {
+                "start": args.start,
+                "count": args.count,
+                "values": window,
+                "statistics": stats(window),
+                "next_start": next_start,
+            },
+            "top_absolute_coordinates": [{
+                "coordinate": coordinate,
+                "derivative": derivative[coordinate],
+            } for coordinate in ranked[:args.top]],
+            "requested_coordinates": [{
+                "coordinate": coordinate,
+                "derivative": derivative[coordinate],
+            } for coordinate in requested],
+            "derivation": {
+                "formula": "(upper_scale_logits - lower_scale_logits) / (upper_scale - lower_scale)",
+                "lower_scale": lower_scale,
+                "upper_scale": upper_scale,
+                "midpoint_scale": midpoint,
+                "epsilon": (upper_scale - lower_scale) / 2.0,
+                "boundary": "raw vocabulary logits before softmax and sampling",
+                "method": "centered finite difference; not autograd",
+            },
+            "provenance": {
+                "baseline_run_id": index.get("run_id"),
+                "lower_run_id": lower_index.get("run_id"),
+                "upper_run_id": upper_index.get("run_id"),
+                "evaluated_position": next(iter(positions)),
+                "lower_event": lower_event,
+                "upper_event": upper_event,
+                "lower_tensor_sha256": lower_row.get("sha256"),
+                "upper_tensor_sha256": upper_row.get("sha256"),
             },
         })
         return

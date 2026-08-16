@@ -100,9 +100,20 @@ await restartRuntimeA();
 const ablation = await runCondition("scale-zero-ablation", {
   ...commonPlan, planId: `${runId}-ablation`.replace(/[^A-Za-z0-9_-]/g, "_"), scale: 0
 });
+const jvpEpsilon = 0.05;
+await restartRuntimeA();
+const jvpLower = await runCondition("jvp-lower", {
+  ...commonPlan, planId: `${runId}-jvp-lower`.replace(/[^A-Za-z0-9_-]/g, "_"), scale: 1 - jvpEpsilon
+});
+await restartRuntimeA();
+const jvpUpper = await runCondition("jvp-upper", {
+  ...commonPlan, planId: `${runId}-jvp-upper`.replace(/[^A-Za-z0-9_-]/g, "_"), scale: 1 + jvpEpsilon
+});
 
 const checks = {
   positions_match: [sham, ablation].every(item => item.index.forward_pass.evaluated_position === position),
+  jvp_positions_match: [jvpLower, jvpUpper].every(item =>
+    item.index.forward_pass.evaluated_position === position),
   sham_event_recorded: sham.index.interventions.length === 1,
   ablation_event_recorded: ablation.index.interventions.length === 1,
   sham_delta_is_zero: sham.index.interventions[0]?.delta_l2 === 0,
@@ -138,6 +149,38 @@ if (!checks.projected_head_width_is_residual_width || !checks.projected_head_is_
   throw new Error(`projected-head validation failed: ${JSON.stringify(projectedHead)}`);
 }
 
+async function workbench(command) {
+  const result = await executeGuestShell(`${traceRoot("baseline")}/trace --root ${traceRoot("baseline")} ${command}`);
+  if (result.exit_code !== 0) {
+    throw new Error(`workbench failed for ${command}: ${result.stderr || result.stdout}`);
+  }
+  return JSON.parse(result.stdout);
+}
+
+const postMlpDelta = await workbench(
+  `post-mlp-delta ${traceRoot("scale-zero-ablation")} ${commonPlan.layer}`
+);
+const finalNormDelta = await workbench(
+  `final-norm-delta ${traceRoot("scale-zero-ablation")}`
+);
+const logitJvp = await workbench(
+  `logit-jvp ${traceRoot("jvp-lower")} ${traceRoot("jvp-upper")} `
+  + `${commonPlan.layer} ${commonPlan.head}`
+);
+checks.post_mlp_delta_width_is_residual_width = postMlpDelta.width === 4096;
+checks.post_mlp_delta_is_nonzero = postMlpDelta.full_statistics.rms > 0;
+checks.final_norm_delta_width_is_residual_width = finalNormDelta.width === 4096;
+checks.final_norm_delta_is_nonzero = finalNormDelta.full_statistics.rms > 0;
+checks.logit_jvp_width_is_vocabulary = logitJvp.width === 151936;
+checks.logit_jvp_is_nonzero = logitJvp.full_statistics.rms > 0;
+checks.logit_jvp_is_centered_on_intact_scale =
+  Math.abs(logitJvp.derivation.midpoint_scale - 1) < 1e-6
+  && Math.abs(logitJvp.derivation.epsilon - jvpEpsilon) < 1e-6;
+if (Object.entries(checks).some(([name, value]) =>
+  ["post_mlp_delta", "final_norm_delta", "logit_jvp"].some(prefix => name.startsWith(prefix)) && !value)) {
+  throw new Error(`evidence-ladder validation failed: ${JSON.stringify(checks)}`);
+}
+
 const artifact = {
   schema: "ik.transformer-intervention-validation.v1",
   run_id: runId,
@@ -145,7 +188,10 @@ const artifact = {
   intervention: { kind: "attention_head_scale", ...commonPlan },
   checks,
   projected_head: projectedHead,
-  conditions: [baseline, sham, ablation].map(item => ({
+  post_mlp_delta: postMlpDelta,
+  final_norm_delta: finalNormDelta,
+  local_logit_jvp: logitJvp,
+  conditions: [baseline, sham, ablation, jvpLower, jvpUpper].map(item => ({
     label: item.label,
     content: item.response.choices?.[0]?.message?.content,
     forward_pass: item.index.forward_pass,
