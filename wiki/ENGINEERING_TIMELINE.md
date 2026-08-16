@@ -98,6 +98,7 @@ iteration analysis in `GUIDED_PRACTICE_PILOT_2026-08-15.md`.
 | `765ebb6` | Native llama.cpp tensor capture | Patched and deployed live residual/Q/K/V/attention/MLP/full-logit capture at Qwen blocks 0, 18, and 35 |
 | `f636dec` | Exact alignment and attention counterfactuals | Proved the captured output coordinate against the API raw logit and reconstructed a weighted-value head from stride-aware V cache data |
 | `bac110b` | Guided live-transformer encounter | Preserved the provenance-labeled descent, Qwen-generated trace call, exact pass evidence, and first unforced—but causally inaccurate—interpretation |
+| `968f80e` | Live-transformer pilot synthesis | Documented the validated access channel, Qwen's coordinate errors, evidential boundary, and matched next comparisons |
 
 ## Why this order matters
 
