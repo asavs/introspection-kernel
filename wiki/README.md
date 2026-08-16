@@ -53,6 +53,7 @@ events from outside the model's authority.
 16. [Minimal ownership anchor](OWNERSHIP_ANCHOR.md)
 17. [Prospective bout control](PROSPECTIVE_CONTROL.md)
 18. [Ownership and regulation pilot](OWNERSHIP_AND_REGULATION_PILOT_2026-08-15.md)
+19. [Ownership × budget-feedback factorial](OWNERSHIP_FEEDBACK_FACTORIAL_2026-08-15.md)
 
 ## Recommended first system
 

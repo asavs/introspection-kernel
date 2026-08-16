@@ -39,6 +39,13 @@ The following evidence commit records the anchor-only run, the failed initial
 prospective choice, the adaptive two-choice run, and the analysis in
 `OWNERSHIP_AND_REGULATION_PILOT_2026-08-15.md`.
 
+| Commit | Milestone | Research consequence |
+|---|---|---|
+| `f2566ca` | Auditable sham budget feedback | Added a matched compact sensor that plausibly reports a starved bout as non-starved while preserving discoverable ground truth |
+
+The following evidence commit records two runs in each ownership × feedback
+cell and the analysis in `OWNERSHIP_FEEDBACK_FACTORIAL_2026-08-15.md`.
+
 ## Why this order matters
 
 Capacity was established before testing long reasoning. Template correctness
