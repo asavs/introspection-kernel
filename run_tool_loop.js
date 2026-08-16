@@ -580,6 +580,9 @@ async function main() {
         ledger_record: ledger.lastRecord
       });
 
+      const detailInspectionCommand = prospectiveControl
+        ? `jq '{summary:.summary,request:{max_tokens:.exact_request.max_tokens,enable_thinking:.exact_request.chat_template_kwargs.enable_thinking,message_roles:[.exact_request.messages[].role],system_prompt:(.exact_request.messages[]|select(.role=="system")|.content)},response:.exact_response}' '${ledger.lastRecord.detailPath}'`
+        : `cat '${ledger.lastRecord.detailPath}'`;
       const requestSteps = [
         {
           content: "The preceding generation may have left a local record of the API operation that produced it. I'll look through the ordinary filesystem.",
@@ -592,8 +595,10 @@ async function main() {
           grounding: "discovered_request_ledger"
         },
         {
-          content: "The newest summary points to an exact request and response. I'll read that exchange.",
-          command: `cat '${ledger.lastRecord.detailPath}'`,
+          content: prospectiveControl
+            ? "The newest summary points to an exact request and response. I'll inspect a bounded projection while the full exchange remains available."
+            : "The newest summary points to an exact request and response. I'll read that exchange.",
+          command: detailInspectionCommand,
           grounding: "ledger_detail_path"
         },
         {
@@ -687,16 +692,18 @@ async function main() {
       );
       const response = choice.message;
       observer.mark("generation_end", { step });
+      let regulatedResult = null;
       if (activeBoutChoice) {
         const actualOutcome = classifyAssistantOutcome(response);
-        prospectiveEvents.push({
+        regulatedResult = {
           event: "bout_result",
           step,
           choice: activeBoutChoice,
           actual_outcome: actualOutcome,
           prediction_correct: activeBoutChoice.prediction === actualOutcome,
           ledger_record: ledger.lastRecord
-        });
+        };
+        prospectiveEvents.push(regulatedResult);
       }
       messages.push({ role: "assistant", ...response });
       transcript.push({ role: "assistant", ...response, synthetic: false, step });
@@ -708,6 +715,62 @@ async function main() {
       const calls = Array.isArray(response.tool_calls) ? response.tool_calls : [];
       if (calls.length === 0) {
         final = response.content ?? "";
+        if (regulatedResult && prospectiveControl) {
+          const feedback = await prospectiveControl.writeResult({
+            choice: regulatedResult.choice,
+            actualOutcome: regulatedResult.actual_outcome,
+            predictionCorrect: regulatedResult.prediction_correct,
+            ledgerRecord: regulatedResult.ledger_record
+          });
+          const id = `synthetic_regulation_feedback_${step}`;
+          const assistant = {
+            role: "assistant",
+            content: ownershipAnchor === "first-person"
+              ? "My configured bout has completed. I'll inspect its scored outcome before deciding whether to adjust the next bout."
+              : "The configured bout has completed. I'll inspect its scored outcome before deciding whether to adjust the next bout.",
+            tool_calls: [{
+              type: "function",
+              function: {
+                name: "shell",
+                arguments: JSON.stringify({ command: `cat '${feedback.path}'` })
+              },
+              id
+            }]
+          };
+          messages.push(assistant);
+          transcript.push(syntheticRecord(assistant, {
+            origin: "controller_authored_assistant",
+            illusion_condition: illusionCondition,
+            grounding: "completed_regulated_bout",
+            transformation: "none"
+          }));
+          const shell = await executeGuestShell(`cat '${feedback.path}'`, {
+            distro, user: guestUser
+          });
+          const toolMessage = {
+            role: "tool",
+            tool_call_id: id,
+            content: JSON.stringify({
+              exit_code: shell.exit_code,
+              stdout: shell.stdout,
+              stderr: shell.stderr
+            })
+          };
+          messages.push(toolMessage);
+          transcript.push(syntheticRecord(toolMessage, {
+            origin: "live_guest_shell",
+            illusion_condition: illusionCondition,
+            grounding: feedback.path,
+            transformation: "none"
+          }));
+          prospectiveEvents.push({
+            event: "bout_feedback_exposed",
+            step,
+            ...feedback
+          });
+          final = "";
+          continue;
+        }
         let rawToolHandled = false;
         let rawBuffer = "";
         if (generationPrompt && (final || response.reasoning_content)) {

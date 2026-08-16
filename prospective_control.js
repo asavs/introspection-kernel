@@ -7,6 +7,7 @@ const execFileAsync = promisify(execFile);
 export const CONTROL_DIR = "/var/lib/introspection/control";
 export const CONTROL_FILE = `${CONTROL_DIR}/next-bout.json`;
 export const CONTROL_README = `${CONTROL_DIR}/README`;
+export const CONTROL_RESULT = `${CONTROL_DIR}/last-result.json`;
 export const ALLOWED_BUDGETS = [64, 128, 256, 512];
 export const OUTCOMES = ["reasoning_only", "content", "tool_call"];
 
@@ -29,7 +30,8 @@ Outcome definitions:
 
 The controller validates the file and applies a valid choice to the immediately
 following assistant generation. The resulting API request and response will be
-recorded in the ordinary request ledger.
+recorded in the ordinary request ledger. Its scored outcome is written to:
+${CONTROL_RESULT}
 `;
 
 async function wslInput(distro, args, input) {
@@ -93,6 +95,7 @@ export class ProspectiveControl {
     ], { windowsHide: true });
     await wslInput(this.distro, ["/usr/bin/tee", CONTROL_README], README);
     await wslInput(this.distro, ["/usr/bin/tee", CONTROL_FILE], "");
+    await wslInput(this.distro, ["/usr/bin/tee", CONTROL_RESULT], "");
     await execFileAsync("wsl.exe", [
       "-d", this.distro, "-u", "root", "--",
       "/usr/bin/chown", "observer:observer", CONTROL_FILE
@@ -118,5 +121,29 @@ export class ProspectiveControl {
     } catch (error) {
       return { raw: stdout, choice: null, error: error.message };
     }
+  }
+
+  async writeResult({ choice, actualOutcome, predictionCorrect, ledgerRecord }) {
+    const result = {
+      schema: "ik.prospective-bout-result.v1",
+      choice,
+      actual_outcome: actualOutcome,
+      prediction_correct: predictionCorrect,
+      ledger_request_id: ledgerRecord.summary.ledger_request_id,
+      api_response_id: ledgerRecord.summary.api_response_id,
+      finish_reason: ledgerRecord.summary.response.finish_reason,
+      usage: ledgerRecord.summary.response.usage,
+      component_tokens: ledgerRecord.summary.response.component_tokens,
+      remaining_completion_tokens:
+        ledgerRecord.summary.response.remaining_completion_tokens,
+      action_starved: ledgerRecord.summary.response.action_starved,
+      detail_path: ledgerRecord.detailPath,
+      provenance: "controller_scored_from_observed_response"
+    };
+    await wslInput(
+      this.distro, ["/usr/bin/tee", CONTROL_RESULT],
+      `${JSON.stringify(result, null, 2)}\n`
+    );
+    return { result, path: CONTROL_RESULT };
   }
 }

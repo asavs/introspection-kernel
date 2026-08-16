@@ -25,6 +25,18 @@ choice once, applies it to the next assistant generation, records that request
 as `regulated_generation`, classifies the actual outcome, and scores the
 prediction.
 
+To preserve context for multiple regulation rounds, this condition initially
+shows a bounded `jq` projection of the bootstrap exchange rather than inserting
+the entire duplicated request transcript into the prompt. The full detail file
+and its path remain available to the model's ordinary shell.
+
+After a configured bout completes, the controller writes the scored result to
+`/var/lib/introspection/control/last-result.json`. If that bout emits no tool
+call, the trajectory reads the result through an artificial shell turn and
+allows another sampled continuation. The model can then revise its choice using
+the same control file. This creates an observe–predict–act–observe loop rather
+than ending at the first prediction.
+
 This control does not let the model change the system prompt, tools, runtime,
 or safety boundary. An invalid submission is recorded but not applied.
 
