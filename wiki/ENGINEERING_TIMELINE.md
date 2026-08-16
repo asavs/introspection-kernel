@@ -74,6 +74,7 @@ iteration analysis in `GUIDED_PRACTICE_PILOT_2026-08-15.md`.
 | Commit | Milestone | Research consequence |
 |---|---|---|
 | `b662984` | Direct weights and token distributions | Exposed the authoritative GGUF bytes plus auditable tensor offsets, model-readable per-token distributions, and externally sealed exact request traces |
+| `be386a1` | Raw pre-softmax logits | Patched and hash-verified llama.cpp so selected tokens and top alternatives retain their native logits beside normalized probabilities |
 
 ## Why this order matters
 

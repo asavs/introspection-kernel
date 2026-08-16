@@ -52,9 +52,10 @@ They are discoverable files rather than a semantic tool that declares which
 process or state is “the model.” The exact request ledger and token traces are
 also copied into each host-side run directory.
 
-The current token trace contains post-softmax probabilities, not raw logits, and
-there is not yet an intermediate-activation stream. Those boundaries are stated
-in the trace schema rather than silently treated as completed introspection.
+The token trace contains both pre-softmax raw logits and post-softmax
+probabilities for the selected token and requested top alternatives. There is
+not yet an intermediate-activation stream; that boundary remains stated rather
+than silently treated as completed introspection.
 
 ## Requirements
 

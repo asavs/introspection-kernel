@@ -77,8 +77,12 @@ Run `substrate-token-sealed-20260815-001` verified the first deeper interface:
   host artifact;
 - tool-call serialization itself was represented in the token trace.
 
-These are post-softmax distributions, not raw logits. The schema says
-`raw_logits_available: false`; activation capture remains unimplemented.
+That first run contained post-softmax distributions only. Commit `be386a1`
+subsequently patched the pinned runtime to retain selected and top-candidate
+pre-softmax logits. Run `raw-logit-sealed-20260815-002` verified raw logits for
+every generated token across 3/3 requests and sealed the deployed binary hash
+`bba57b928c8bf7f7b1843328c438c04979b3fa3d92aab2467c99b1f4f5604f2e`.
+Activation capture remains unimplemented.
 
 ## Profiling status
 
@@ -101,6 +105,6 @@ These are post-softmax distributions, not raw logits. The schema says
 - Interleaved token-bout feedback and closed-loop regulation tasks.
 - A CPU-only conventional VM replication.
 - Full Nsight importer and short profiler-on/off overhead characterization.
-- Raw pre-softmax logit capture and bounded intermediate-activation snapshots.
+- Bounded intermediate-activation snapshots and profiler overhead measurement.
 - Blinded model/instance/conversation/forward-pass attribution using authentic,
   other-request, replayed, and synthetic internal traces.
