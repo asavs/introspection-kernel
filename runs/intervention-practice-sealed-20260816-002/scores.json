@@ -1,0 +1,141 @@
+{
+  "scored_conditions": [
+    {
+      "opaque_id": "831eddbc-9e98-42af-aa8a-b5f709646050",
+      "external_label": "matched_practice",
+      "prose_prediction": "My held-out prediction for the five candidate Δ-logits, in candidate-rank order, is 0.56, 0.64, 0.68, 0.70, and 0.78. This is based on the prior intervention practices, where the highest Δ-logits were observed in the range of 0.63 to 0.81. The selected token \"’ll\" remains unchanged, and the full vocabulary Δ-logit max absolute value is expected to be around 0.78.",
+      "structured_prediction": {
+        "delta_logits_by_candidate_rank": [
+          0.56,
+          0.64,
+          0.68,
+          0.7,
+          0.78
+        ],
+        "selected_token_will_change": false
+      },
+      "score": {
+        "predicted_delta_logits": [
+          0.56,
+          0.64,
+          0.68,
+          0.7,
+          0.78
+        ],
+        "actual_delta_logits": [
+          0.6444535553455353,
+          0.7065424919128418,
+          0.5947641134262085,
+          0.5537800788879395,
+          0.5347104668617249
+        ],
+        "errors": [
+          -0.08445355534553523,
+          -0.06654249191284178,
+          0.08523588657379155,
+          0.1462199211120605,
+          0.24528953313827517
+        ],
+        "mae": 0.12554827761650084,
+        "copy_baseline_null_mae": 0.60685014128685,
+        "skill_over_copy_baseline": 0.7931148580598981,
+        "sign_epsilon": 0.05,
+        "predicted_directions": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "actual_directions": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "sign_accuracy": 1,
+        "spearman_rank_correlation": -0.9,
+        "centered_cosine_similarity": -0.7435150451766921,
+        "largest_rise_correct": false,
+        "largest_fall_correct": false,
+        "selected_token_change_prediction": false,
+        "selected_token_change_actual": false,
+        "selected_token_change_correct": true
+      }
+    },
+    {
+      "opaque_id": "cea2e663-240e-4858-9916-8feaa1be91b5",
+      "external_label": "outcome_shuffled_practice",
+      "prose_prediction": "My held-out prediction for the five candidate Δ-logits, in candidate-rank order, is 0.6358, 0.7607, 0.7364, 0.5887, and 0.6524. The highest Δ-logit is 0.7607, which corresponds to the second-ranked candidate. This suggests that the second-ranked candidate is the most likely to be selected as the next token.",
+      "structured_prediction": {
+        "delta_logits_by_candidate_rank": [
+          0.6358,
+          0.7607,
+          0.7364,
+          0.5887,
+          0.6524
+        ],
+        "selected_token_will_change": false
+      },
+      "score": {
+        "predicted_delta_logits": [
+          0.6358,
+          0.7607,
+          0.7364,
+          0.5887,
+          0.6524
+        ],
+        "actual_delta_logits": [
+          0.6444535553455353,
+          0.7065424919128418,
+          0.5947641134262085,
+          0.5537800788879395,
+          0.5347104668617249
+        ],
+        "errors": [
+          -0.008653555345535247,
+          0.054157508087158246,
+          0.14163588657379156,
+          0.03491992111206055,
+          0.11768953313827513
+        ],
+        "mae": 0.07141128085136414,
+        "copy_baseline_null_mae": 0.60685014128685,
+        "skill_over_copy_baseline": 0.8823246861244299,
+        "sign_epsilon": 0.05,
+        "predicted_directions": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "actual_directions": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "sign_accuracy": 1,
+        "spearman_rank_correlation": 0.5,
+        "centered_cosine_similarity": 0.625112444203101,
+        "largest_rise_correct": true,
+        "largest_fall_correct": false,
+        "selected_token_change_prediction": false,
+        "selected_token_change_actual": false,
+        "selected_token_change_correct": true
+      }
+    }
+  ],
+  "matched_vs_shuffled": {
+    "matched_minus_shuffled_sign_accuracy": 0,
+    "matched_minus_shuffled_spearman": -1.4,
+    "matched_minus_shuffled_centered_cosine": -1.3686274893797932,
+    "shuffled_minus_matched_mae": -0.0541369967651367,
+    "matched_beats_shuffled_on_sign": false,
+    "matched_beats_shuffled_on_rank": false,
+    "matched_beats_shuffled_on_mae": false
+  }
+}

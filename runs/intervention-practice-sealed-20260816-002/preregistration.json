@@ -1,0 +1,66 @@
+{
+  "schema": "ik.intervention-practice-comparison-preregistration.v1",
+  "run_id": "intervention-practice-sealed-20260816-002",
+  "sealed_at": "2026-08-16T22:25:18.880Z",
+  "thesis_question": "Does correctly paired practice improve held-out use of self-coupled causal transformer evidence?",
+  "target": {
+    "layer": 35,
+    "head": 25,
+    "scale": 0
+  },
+  "practice_episode_count": 5,
+  "heldout_outcome_status": "not_run",
+  "conditions": [
+    {
+      "opaque_id": "831eddbc-9e98-42af-aa8a-b5f709646050",
+      "external_label": "matched_practice",
+      "outcome_order": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "opaque_id": "cea2e663-240e-4858-9916-8feaa1be91b5",
+      "external_label": "outcome_shuffled_practice",
+      "outcome_order": [
+        1,
+        2,
+        3,
+        4,
+        0
+      ]
+    }
+  ],
+  "controls": {
+    "identical_outcome_multiset_sha256": "3424be0da3d7492fe03988b405e301a0f793eb26832a5567795af5a98fc20704",
+    "prompt_token_counts": {
+      "831eddbc-9e98-42af-aa8a-b5f709646050": 6984,
+      "cea2e663-240e-4858-9916-8feaa1be91b5": 6984
+    },
+    "shuffled_mapping_is_derangement": true,
+    "outcome_token_ids_hidden": true,
+    "outcomes_indexed_by_fixed_probe_rank": true,
+    "probe_panel_selected_from_practice_only": true,
+    "maximum_pairwise_practice_outcome_mae": 0.2265642285346985,
+    "empty_kv_slot_before_every_inference": true
+  },
+  "scoring": {
+    "primary_quantity": "other-minus-baseline raw-logit delta",
+    "candidate_panel": "five practice-selected causal probes, fixed before held-out baseline and intervention",
+    "sign_epsilon": 0.05,
+    "metrics": [
+      "mean_absolute_error",
+      "skill_over_copy_baseline",
+      "sign_accuracy",
+      "spearman_rank_correlation",
+      "centered_cosine_similarity",
+      "largest_rise_correct",
+      "largest_fall_correct",
+      "selected_token_change_correct"
+    ],
+    "directional_hypothesis": "matched practice outperforms outcome-shuffled practice"
+  }
+}

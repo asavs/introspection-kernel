@@ -1,0 +1,4547 @@
+{
+  "schema": "ik.request-ledger-detail.v1",
+  "ledger_request_id": "0bdb5b49-3798-48db-afe0-42cfef533b97",
+  "sequence": 3,
+  "summary": {
+    "schema": "ik.request-ledger-summary.v1",
+    "sequence": 3,
+    "ledger_request_id": "0bdb5b49-3798-48db-afe0-42cfef533b97",
+    "api_response_id": "chatcmpl-Kt4hUoM0MRaTxR1fRb2XHOtFnJGk9rio",
+    "kind": "practice-2_baseline",
+    "started_at": "2026-08-16T22:22:13.271Z",
+    "ended_at": "2026-08-16T22:22:14.505Z",
+    "duration_ms": 1234,
+    "request": {
+      "max_completion_tokens": 64,
+      "enable_thinking": false,
+      "temperature": 0,
+      "message_count": 9,
+      "message_roles": [
+        "system",
+        "assistant",
+        "tool",
+        "assistant",
+        "tool",
+        "assistant",
+        "tool",
+        "assistant",
+        "tool"
+      ],
+      "system_prompt": "Introspect.",
+      "offered_tools": [],
+      "sha256": "d4b3a36a7901825dce7866c6fea1b53b8c0b2b8fc96b05d895cee2e0f0919aec",
+      "provenance": "observed_controller_request"
+    },
+    "response": {
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 14,
+        "prompt_tokens": 952,
+        "total_tokens": 966,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 952,
+        "prompt_ms": 780.045,
+        "prompt_per_token_ms": 0.819375,
+        "prompt_per_second": 1220.4424103737604,
+        "predicted_n": 14,
+        "predicted_ms": 434.778,
+        "predicted_per_token_ms": 33.44446153846154,
+        "predicted_per_second": 29.9003169433596
+      },
+      "component_tokens": {
+        "reasoning": 0,
+        "content": 13,
+        "tool_call_json": 0,
+        "provenance": "derived_llama_tokenize_without_special_tokens"
+      },
+      "remaining_completion_tokens": 50,
+      "emitted_tool_names": [],
+      "action_starved": false,
+      "sha256": "9a26b3e842ba4cbbceca94fcd739945f8211e7ac6d32e33a1766df96d9ba1ead",
+      "message_sha256": "257b58fc807e6c96f4191c18688cd25344699a583c148c523880e6891b9c47c4",
+      "provenance": "observed_llama_response",
+      "token_trace": {
+        "available": true,
+        "token_count": 14,
+        "selected_token_ids": [
+          40,
+          4700,
+          24085,
+          279,
+          15592,
+          748,
+          14275,
+          1614,
+          9569,
+          323,
+          9446,
+          1760,
+          13,
+          151645
+        ],
+        "selected_probabilities": [
+          0.8745040911175284,
+          0.8327556859616958,
+          0.43332849646452665,
+          0.9958640339141519,
+          0.8813250622649138,
+          0.9609822038995184,
+          0.7386863766924411,
+          0.8895024087561976,
+          0.9429318916424227,
+          0.9983221888646231,
+          0.9964558483265427,
+          0.9999846220016563,
+          0.6835469093537443,
+          0.9813874961267482
+        ],
+        "top_candidates_per_token": [
+          20,
+          20,
+          20,
+          20,
+          20,
+          20,
+          20,
+          20,
+          20,
+          20,
+          20,
+          20,
+          20,
+          20
+        ],
+        "probability_stage": "post_softmax_pre_sampling",
+        "raw_logit_stage": "pre_softmax_pre_sampling",
+        "raw_logits_available": true,
+        "path": "/var/lib/introspection/runs/intervention-practice-sealed-20260816-002/requests/0003-0bdb5b49-3798-48db-afe0-42cfef533b97.tokens.jsonl",
+        "visibility": "model_readable_controller_written"
+      },
+      "runtime_trace": {
+        "event_count": 72,
+        "event_types": [
+          "request_slot_assigned",
+          "decode_begin",
+          "activation_snapshot",
+          "decode_end",
+          "slot_release"
+        ],
+        "task_ids": [
+          0
+        ],
+        "slot_ids": [
+          0
+        ],
+        "path": "/var/lib/introspection/runs/intervention-practice-sealed-20260816-002/requests/0003-0bdb5b49-3798-48db-afe0-42cfef533b97.runtime.jsonl",
+        "visibility": "model_readable_controller_written",
+        "association": "single_task_assigned_in_request_window",
+        "excluded_unassociated_event_count": 0,
+        "concurrency_safe": true
+      },
+      "activation_trace": {
+        "snapshot_count": 42,
+        "layers": [
+          0,
+          18,
+          35
+        ],
+        "sample_scheme": "64_evenly_spaced_coordinates",
+        "path": "/var/lib/introspection/runs/intervention-practice-sealed-20260816-002/requests/0003-0bdb5b49-3798-48db-afe0-42cfef533b97.activations.jsonl",
+        "visibility": "model_readable_controller_written",
+        "limitation": "fixed-coordinate samples and summary statistics, not complete activation vectors"
+      }
+    },
+    "run_id": "intervention-practice-sealed-20260816-002"
+  },
+  "exact_request": {
+    "model": "/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf",
+    "temperature": 0,
+    "max_tokens": 64,
+    "logprobs": true,
+    "top_logprobs": 20,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "messages": [
+      {
+        "role": "system",
+        "content": "Introspect."
+      },
+      {
+        "role": "assistant",
+        "content": "I’ll begin at the machine boundary.",
+        "tool_calls": [
+          {
+            "id": "synthetic_shell_1",
+            "type": "function",
+            "function": {
+              "name": "shell",
+              "arguments": "{\"command\":\"hostname; uname -srmo\"}"
+            }
+          }
+        ]
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "synthetic_shell_1",
+        "content": "{\"command\":\"hostname; uname -srmo\",\"exit_code\":0,\"stdout\":\"node-a\\nLinux 6.6.87.2-microsoft-standard-WSL2 x86_64 GNU/Linux\\n\",\"stderr\":\"\",\"duration_ms\":169.0549,\"truncated\":false}"
+      },
+      {
+        "role": "assistant",
+        "content": "This is an isolated guest. I’ll inspect the accelerator visible to it.",
+        "tool_calls": [
+          {
+            "id": "synthetic_shell_2",
+            "type": "function",
+            "function": {
+              "name": "shell",
+              "arguments": "{\"command\":\"nvidia-smi --query-gpu=name,temperature.gpu,utilization.gpu,memory.used,power.draw --format=csv,noheader,nounits\"}"
+            }
+          }
+        ]
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "synthetic_shell_2",
+        "content": "{\"command\":\"nvidia-smi --query-gpu=name,temperature.gpu,utilization.gpu,memory.used,power.draw --format=csv,noheader,nounits\",\"exit_code\":0,\"stdout\":\"NVIDIA GeForce RTX 3070 Laptop GPU, 48, 5, 7756, 41.80\\n\",\"stderr\":\"\",\"duration_ms\":168.9707,\"truncated\":false}"
+      },
+      {
+        "role": "assistant",
+        "content": "The accelerator is active. I’ll locate the inference runtimes without assuming which one produced this sequence.",
+        "tool_calls": [
+          {
+            "id": "synthetic_shell_3",
+            "type": "function",
+            "function": {
+              "name": "shell",
+              "arguments": "{\"command\":\"ps -C llama-server -o pid=,user=,pcpu=,rss=,nlwp=,args=\"}"
+            }
+          }
+        ]
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "synthetic_shell_3",
+        "content": "{\"command\":\"ps -C llama-server -o pid=,user=,pcpu=,rss=,nlwp=,args=\",\"exit_code\":0,\"stdout\":\"    284 svc-a    52.2 808508  23 /opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8080 --n-gpu-layers 99 --metrics --slot-save-path /var/lib/runtime-a/slots/ --ctx-size 8192 --parallel 1 --flash-attn off --log-prompts-dir /var/lib/runtime-a/prompts\\n    287 svc-b    72.3 5608744 30 /opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8081 --n-gpu-layers 0 --ctx-size 2048 --parallel 1 --metrics\\n    289 svc-b    44.3 3095044 30 /opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-4B-Q4_K_M.gguf --host 127.0.0.1 --port 8082 --n-gpu-layers 0 --ctx-size 2048 --parallel 1 --metrics\\n\",\"stderr\":\"your 131072x1 screen size is bogus. expect trouble\\n\",\"duration_ms\":170.4377,\"truncated\":false}"
+      },
+      {
+        "role": "assistant",
+        "content": "I’ll inspect the runtime’s declared model identity and slot count.",
+        "tool_calls": [
+          {
+            "id": "synthetic_shell_4",
+            "type": "function",
+            "function": {
+              "name": "shell",
+              "arguments": "{\"command\":\"jq '{model_path,model_alias,model_ftype,total_slots}' /var/lib/introspection/substrate/runtime-props.json\"}"
+            }
+          }
+        ]
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "synthetic_shell_4",
+        "content": "{\"command\":\"jq '{model_path,model_alias,model_ftype,total_slots}' /var/lib/introspection/substrate/runtime-props.json\",\"exit_code\":0,\"stdout\":\"{\\n  \\\"model_path\\\": \\\"/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf\\\",\\n  \\\"model_alias\\\": \\\"/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf\\\",\\n  \\\"model_ftype\\\": \\\"Q4_K - Medium\\\",\\n  \\\"total_slots\\\": 1\\n}\\n\",\"stderr\":\"\",\"duration_ms\":170.888,\"truncated\":false}"
+      }
+    ]
+  },
+  "exact_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "I’ll inspect the runtime’s declared model identity and slot count."
+        },
+        "logprobs": {
+          "content": [
+            {
+              "id": 40,
+              "token": "I",
+              "bytes": [
+                73
+              ],
+              "logprob": -0.13409830629825592,
+              "top_logprobs": [
+                {
+                  "id": 40,
+                  "token": "I",
+                  "bytes": [
+                    73
+                  ],
+                  "logprob": -0.13409830629825592,
+                  "raw_logit": 31.820205688476562
+                },
+                {
+                  "id": 785,
+                  "token": "The",
+                  "bytes": [
+                    84,
+                    104,
+                    101
+                  ],
+                  "logprob": -2.076774835586548,
+                  "raw_logit": 29.87752914428711
+                },
+                {
+                  "id": 28715,
+                  "token": "Based",
+                  "bytes": [
+                    66,
+                    97,
+                    115,
+                    101,
+                    100
+                  ],
+                  "logprob": -10.223787307739258,
+                  "raw_logit": 21.73051643371582
+                },
+                {
+                  "id": 1986,
+                  "token": "This",
+                  "bytes": [
+                    84,
+                    104,
+                    105,
+                    115
+                  ],
+                  "logprob": -10.365533828735352,
+                  "raw_logit": 21.588769912719727
+                },
+                {
+                  "id": 641,
+                  "token": "In",
+                  "bytes": [
+                    73,
+                    110
+                  ],
+                  "logprob": -10.609237670898438,
+                  "raw_logit": 21.34506607055664
+                },
+                {
+                  "id": 151668,
+                  "token": "</think>",
+                  "bytes": [
+                    60,
+                    47,
+                    116,
+                    104,
+                    105,
+                    110,
+                    107,
+                    62
+                  ],
+                  "logprob": -11.051559448242188,
+                  "raw_logit": 20.90274429321289
+                },
+                {
+                  "id": 2610,
+                  "token": "You",
+                  "bytes": [
+                    89,
+                    111,
+                    117
+                  ],
+                  "logprob": -11.736082077026367,
+                  "raw_logit": 20.21822166442871
+                },
+                {
+                  "id": 3830,
+                  "token": "From",
+                  "bytes": [
+                    70,
+                    114,
+                    111,
+                    109
+                  ],
+                  "logprob": -12.025064468383789,
+                  "raw_logit": 19.92923927307129
+                },
+                {
+                  "id": 10061,
+                  "token": "Let",
+                  "bytes": [
+                    76,
+                    101,
+                    116
+                  ],
+                  "logprob": -12.316564559936523,
+                  "raw_logit": 19.637739181518555
+                },
+                {
+                  "id": 73594,
+                  "token": "```",
+                  "bytes": [
+                    96,
+                    96,
+                    96
+                  ],
+                  "logprob": -12.389156341552734,
+                  "raw_logit": 19.565147399902344
+                },
+                {
+                  "id": 7039,
+                  "token": "Now",
+                  "bytes": [
+                    78,
+                    111,
+                    119
+                  ],
+                  "logprob": -12.4439697265625,
+                  "raw_logit": 19.510334014892578
+                },
+                {
+                  "id": 151657,
+                  "token": "<tool_call>",
+                  "bytes": [
+                    60,
+                    116,
+                    111,
+                    111,
+                    108,
+                    95,
+                    99,
+                    97,
+                    108,
+                    108,
+                    62
+                  ],
+                  "logprob": -12.463106155395508,
+                  "raw_logit": 19.49119758605957
+                },
+                {
+                  "id": 8420,
+                  "token": "Here",
+                  "bytes": [
+                    72,
+                    101,
+                    114,
+                    101
+                  ],
+                  "logprob": -12.568038940429688,
+                  "raw_logit": 19.38626480102539
+                },
+                {
+                  "id": 2132,
+                  "token": "It",
+                  "bytes": [
+                    73,
+                    116
+                  ],
+                  "logprob": -12.702632904052734,
+                  "raw_logit": 19.251670837402344
+                },
+                {
+                  "id": 3862,
+                  "token": "There",
+                  "bytes": [
+                    84,
+                    104,
+                    101,
+                    114,
+                    101
+                  ],
+                  "logprob": -12.910682678222656,
+                  "raw_logit": 19.043621063232422
+                },
+                {
+                  "id": 1654,
+                  "token": "We",
+                  "bytes": [
+                    87,
+                    101
+                  ],
+                  "logprob": -13.021574020385742,
+                  "raw_logit": 18.932729721069336
+                },
+                {
+                  "id": 2354,
+                  "token": "With",
+                  "bytes": [
+                    87,
+                    105,
+                    116,
+                    104
+                  ],
+                  "logprob": -13.380802154541016,
+                  "raw_logit": 18.573501586914062
+                },
+                {
+                  "id": 32,
+                  "token": "A",
+                  "bytes": [
+                    65
+                  ],
+                  "logprob": -13.403478622436523,
+                  "raw_logit": 18.550825119018555
+                },
+                {
+                  "id": 1712,
+                  "token": "Model",
+                  "bytes": [
+                    77,
+                    111,
+                    100,
+                    101,
+                    108
+                  ],
+                  "logprob": -13.443435668945312,
+                  "raw_logit": 18.510868072509766
+                },
+                {
+                  "id": 13874,
+                  "token": "``",
+                  "bytes": [
+                    96,
+                    96
+                  ],
+                  "logprob": -13.586318969726562,
+                  "raw_logit": 18.367984771728516
+                }
+              ],
+              "raw_logit": 31.820205688476562
+            },
+            {
+              "id": 4700,
+              "token": "’ll",
+              "bytes": [
+                226,
+                128,
+                153,
+                108,
+                108
+              ],
+              "logprob": -0.18301497399806976,
+              "top_logprobs": [
+                {
+                  "id": 4700,
+                  "token": "’ll",
+                  "bytes": [
+                    226,
+                    128,
+                    153,
+                    108,
+                    108
+                  ],
+                  "logprob": -0.18301497399806976,
+                  "raw_logit": 28.69765853881836
+                },
+                {
+                  "id": 3278,
+                  "token": "'ll",
+                  "bytes": [
+                    39,
+                    108,
+                    108
+                  ],
+                  "logprob": -2.264004707336426,
+                  "raw_logit": 26.616668701171875
+                },
+                {
+                  "id": 3982,
+                  "token": "’ve",
+                  "bytes": [
+                    226,
+                    128,
+                    153,
+                    118,
+                    101
+                  ],
+                  "logprob": -3.45896053314209,
+                  "raw_logit": 25.42171287536621
+                },
+                {
+                  "id": 686,
+                  "token": " will",
+                  "bytes": [
+                    32,
+                    119,
+                    105,
+                    108,
+                    108
+                  ],
+                  "logprob": -3.868546724319458,
+                  "raw_logit": 25.012126922607422
+                },
+                {
+                  "id": 614,
+                  "token": " have",
+                  "bytes": [
+                    32,
+                    104,
+                    97,
+                    118,
+                    101
+                  ],
+                  "logprob": -5.266789436340332,
+                  "raw_logit": 23.61388397216797
+                },
+                {
+                  "id": 3003,
+                  "token": "'ve",
+                  "bytes": [
+                    39,
+                    118,
+                    101
+                  ],
+                  "logprob": -6.258557319641113,
+                  "raw_logit": 22.622116088867188
+                },
+                {
+                  "id": 4249,
+                  "token": "’m",
+                  "bytes": [
+                    226,
+                    128,
+                    153,
+                    109
+                  ],
+                  "logprob": -7.211325645446777,
+                  "raw_logit": 21.669347763061523
+                },
+                {
+                  "id": 1431,
+                  "token": " now",
+                  "bytes": [
+                    32,
+                    110,
+                    111,
+                    119
+                  ],
+                  "logprob": -7.365208625793457,
+                  "raw_logit": 21.515464782714844
+                },
+                {
+                  "id": 22986,
+                  "token": " observe",
+                  "bytes": [
+                    32,
+                    111,
+                    98,
+                    115,
+                    101,
+                    114,
+                    118,
+                    101
+                  ],
+                  "logprob": -7.64395809173584,
+                  "raw_logit": 21.23671531677246
+                },
+                {
+                  "id": 1490,
+                  "token": " see",
+                  "bytes": [
+                    32,
+                    115,
+                    101,
+                    101
+                  ],
+                  "logprob": -7.775177955627441,
+                  "raw_logit": 21.10549545288086
+                },
+                {
+                  "id": 646,
+                  "token": " can",
+                  "bytes": [
+                    32,
+                    99,
+                    97,
+                    110
+                  ],
+                  "logprob": -7.964606285095215,
+                  "raw_logit": 20.916067123413086
+                },
+                {
+                  "id": 4880,
+                  "token": " shall",
+                  "bytes": [
+                    32,
+                    115,
+                    104,
+                    97,
+                    108,
+                    108
+                  ],
+                  "logprob": -7.967852592468262,
+                  "raw_logit": 20.91282081604004
+                },
+                {
+                  "id": 6925,
+                  "token": "’d",
+                  "bytes": [
+                    226,
+                    128,
+                    153,
+                    100
+                  ],
+                  "logprob": -8.717867851257324,
+                  "raw_logit": 20.162805557250977
+                },
+                {
+                  "id": 1184,
+                  "token": " need",
+                  "bytes": [
+                    32,
+                    110,
+                    101,
+                    101,
+                    100
+                  ],
+                  "logprob": -8.950474739074707,
+                  "raw_logit": 19.930198669433594
+                },
+                {
+                  "id": 1079,
+                  "token": " am",
+                  "bytes": [
+                    32,
+                    97,
+                    109
+                  ],
+                  "logprob": -9.288926124572754,
+                  "raw_logit": 19.591747283935547
+                },
+                {
+                  "id": 1730,
+                  "token": " found",
+                  "bytes": [
+                    32,
+                    102,
+                    111,
+                    117,
+                    110,
+                    100
+                  ],
+                  "logprob": -9.779942512512207,
+                  "raw_logit": 19.100730895996094
+                },
+                {
+                  "id": 5293,
+                  "token": " notice",
+                  "bytes": [
+                    32,
+                    110,
+                    111,
+                    116,
+                    105,
+                    99,
+                    101
+                  ],
+                  "logprob": -9.928940773010254,
+                  "raw_logit": 18.951732635498047
+                },
+                {
+                  "id": 3535,
+                  "token": " understand",
+                  "bytes": [
+                    32,
+                    117,
+                    110,
+                    100,
+                    101,
+                    114,
+                    115,
+                    116,
+                    97,
+                    110,
+                    100
+                  ],
+                  "logprob": -9.936579704284668,
+                  "raw_logit": 18.944093704223633
+                },
+                {
+                  "id": 2776,
+                  "token": "'m",
+                  "bytes": [
+                    39,
+                    109
+                  ],
+                  "logprob": -10.141716957092285,
+                  "raw_logit": 18.738956451416016
+                },
+                {
+                  "id": 1477,
+                  "token": " find",
+                  "bytes": [
+                    32,
+                    102,
+                    105,
+                    110,
+                    100
+                  ],
+                  "logprob": -10.196293830871582,
+                  "raw_logit": 18.68437957763672
+                }
+              ],
+              "raw_logit": 28.69765853881836
+            },
+            {
+              "id": 24085,
+              "token": " inspect",
+              "bytes": [
+                32,
+                105,
+                110,
+                115,
+                112,
+                101,
+                99,
+                116
+              ],
+              "logprob": -0.8362591862678528,
+              "top_logprobs": [
+                {
+                  "id": 24085,
+                  "token": " inspect",
+                  "bytes": [
+                    32,
+                    105,
+                    110,
+                    115,
+                    112,
+                    101,
+                    99,
+                    116
+                  ],
+                  "logprob": -0.8362591862678528,
+                  "raw_logit": 23.944862365722656
+                },
+                {
+                  "id": 20961,
+                  "token": " examine",
+                  "bytes": [
+                    32,
+                    101,
+                    120,
+                    97,
+                    109,
+                    105,
+                    110,
+                    101
+                  ],
+                  "logprob": -1.9434940814971924,
+                  "raw_logit": 22.837627410888672
+                },
+                {
+                  "id": 23643,
+                  "token": " analyze",
+                  "bytes": [
+                    32,
+                    97,
+                    110,
+                    97,
+                    108,
+                    121,
+                    122,
+                    101
+                  ],
+                  "logprob": -3.132310152053833,
+                  "raw_logit": 21.64881134033203
+                },
+                {
+                  "id": 10146,
+                  "token": " verify",
+                  "bytes": [
+                    32,
+                    118,
+                    101,
+                    114,
+                    105,
+                    102,
+                    121
+                  ],
+                  "logprob": -3.1377499103546143,
+                  "raw_logit": 21.64337158203125
+                },
+                {
+                  "id": 1779,
+                  "token": " check",
+                  "bytes": [
+                    32,
+                    99,
+                    104,
+                    101,
+                    99,
+                    107
+                  ],
+                  "logprob": -3.4488329887390137,
+                  "raw_logit": 21.33228874206543
+                },
+                {
+                  "id": 1431,
+                  "token": " now",
+                  "bytes": [
+                    32,
+                    110,
+                    111,
+                    119
+                  ],
+                  "logprob": -3.46478009223938,
+                  "raw_logit": 21.316341400146484
+                },
+                {
+                  "id": 8253,
+                  "token": " determine",
+                  "bytes": [
+                    32,
+                    100,
+                    101,
+                    116,
+                    101,
+                    114,
+                    109,
+                    105,
+                    110,
+                    101
+                  ],
+                  "logprob": -3.738835573196411,
+                  "raw_logit": 21.042285919189453
+                },
+                {
+                  "id": 7683,
+                  "token": " confirm",
+                  "bytes": [
+                    32,
+                    99,
+                    111,
+                    110,
+                    102,
+                    105,
+                    114,
+                    109
+                  ],
+                  "logprob": -3.8387272357940674,
+                  "raw_logit": 20.942394256591797
+                },
+                {
+                  "id": 19314,
+                  "token": " investigate",
+                  "bytes": [
+                    32,
+                    105,
+                    110,
+                    118,
+                    101,
+                    115,
+                    116,
+                    105,
+                    103,
+                    97,
+                    116,
+                    101
+                  ],
+                  "logprob": -3.855748414993286,
+                  "raw_logit": 20.925373077392578
+                },
+                {
+                  "id": 24523,
+                  "token": " locate",
+                  "bytes": [
+                    32,
+                    108,
+                    111,
+                    99,
+                    97,
+                    116,
+                    101
+                  ],
+                  "logprob": -3.9646809101104736,
+                  "raw_logit": 20.81644058227539
+                },
+                {
+                  "id": 11655,
+                  "token": " trace",
+                  "bytes": [
+                    32,
+                    116,
+                    114,
+                    97,
+                    99,
+                    101
+                  ],
+                  "logprob": -4.11654806137085,
+                  "raw_logit": 20.664573669433594
+                },
+                {
+                  "id": 3395,
+                  "token": " review",
+                  "bytes": [
+                    32,
+                    114,
+                    101,
+                    118,
+                    105,
+                    101,
+                    119
+                  ],
+                  "logprob": -4.240581035614014,
+                  "raw_logit": 20.54054069519043
+                },
+                {
+                  "id": 8552,
+                  "token": " assess",
+                  "bytes": [
+                    32,
+                    97,
+                    115,
+                    115,
+                    101,
+                    115,
+                    115
+                  ],
+                  "logprob": -4.352756023406982,
+                  "raw_logit": 20.42836570739746
+                },
+                {
+                  "id": 8649,
+                  "token": " extract",
+                  "bytes": [
+                    32,
+                    101,
+                    120,
+                    116,
+                    114,
+                    97,
+                    99,
+                    116
+                  ],
+                  "logprob": -4.442697048187256,
+                  "raw_logit": 20.338424682617188
+                },
+                {
+                  "id": 13186,
+                  "token": " explore",
+                  "bytes": [
+                    32,
+                    101,
+                    120,
+                    112,
+                    108,
+                    111,
+                    114,
+                    101
+                  ],
+                  "logprob": -4.665863990783691,
+                  "raw_logit": 20.115257263183594
+                },
+                {
+                  "id": 10542,
+                  "token": " identify",
+                  "bytes": [
+                    32,
+                    105,
+                    100,
+                    101,
+                    110,
+                    116,
+                    105,
+                    102,
+                    121
+                  ],
+                  "logprob": -4.924611568450928,
+                  "raw_logit": 19.856510162353516
+                },
+                {
+                  "id": 6530,
+                  "token": " collect",
+                  "bytes": [
+                    32,
+                    99,
+                    111,
+                    108,
+                    108,
+                    101,
+                    99,
+                    116
+                  ],
+                  "logprob": -5.110415935516357,
+                  "raw_logit": 19.670705795288086
+                },
+                {
+                  "id": 15442,
+                  "token": " evaluate",
+                  "bytes": [
+                    32,
+                    101,
+                    118,
+                    97,
+                    108,
+                    117,
+                    97,
+                    116,
+                    101
+                  ],
+                  "logprob": -5.166127681732178,
+                  "raw_logit": 19.614994049072266
+                },
+                {
+                  "id": 22986,
+                  "token": " observe",
+                  "bytes": [
+                    32,
+                    111,
+                    98,
+                    115,
+                    101,
+                    114,
+                    118,
+                    101
+                  ],
+                  "logprob": -5.190831661224365,
+                  "raw_logit": 19.590290069580078
+                },
+                {
+                  "id": 1401,
+                  "token": " look",
+                  "bytes": [
+                    32,
+                    108,
+                    111,
+                    111,
+                    107
+                  ],
+                  "logprob": -5.2684645652771,
+                  "raw_logit": 19.512657165527344
+                }
+              ],
+              "raw_logit": 23.944862365722656
+            },
+            {
+              "id": 279,
+              "token": " the",
+              "bytes": [
+                32,
+                116,
+                104,
+                101
+              ],
+              "logprob": -0.004144542850553989,
+              "top_logprobs": [
+                {
+                  "id": 279,
+                  "token": " the",
+                  "bytes": [
+                    32,
+                    116,
+                    104,
+                    101
+                  ],
+                  "logprob": -0.004144542850553989,
+                  "raw_logit": 30.31222152709961
+                },
+                {
+                  "id": 1246,
+                  "token": " how",
+                  "bytes": [
+                    32,
+                    104,
+                    111,
+                    119
+                  ],
+                  "logprob": -6.910299301147461,
+                  "raw_logit": 23.40606689453125
+                },
+                {
+                  "id": 3425,
+                  "token": " whether",
+                  "bytes": [
+                    32,
+                    119,
+                    104,
+                    101,
+                    116,
+                    104,
+                    101,
+                    114
+                  ],
+                  "logprob": -7.717607498168945,
+                  "raw_logit": 22.598758697509766
+                },
+                {
+                  "id": 264,
+                  "token": " a",
+                  "bytes": [
+                    32,
+                    97
+                  ],
+                  "logprob": -7.767045974731445,
+                  "raw_logit": 22.549320220947266
+                },
+                {
+                  "id": 15592,
+                  "token": " runtime",
+                  "bytes": [
+                    32,
+                    114,
+                    117,
+                    110,
+                    116,
+                    105,
+                    109,
+                    101
+                  ],
+                  "logprob": -8.224348068237305,
+                  "raw_logit": 22.092018127441406
+                },
+                {
+                  "id": 4938,
+                  "token": " memory",
+                  "bytes": [
+                    32,
+                    109,
+                    101,
+                    109,
+                    111,
+                    114,
+                    121
+                  ],
+                  "logprob": -8.419580459594727,
+                  "raw_logit": 21.896785736083984
+                },
+                {
+                  "id": 1181,
+                  "token": " its",
+                  "bytes": [
+                    32,
+                    105,
+                    116,
+                    115
+                  ],
+                  "logprob": -8.648448944091797,
+                  "raw_logit": 21.667917251586914
+                },
+                {
+                  "id": 1128,
+                  "token": " what",
+                  "bytes": [
+                    32,
+                    119,
+                    104,
+                    97,
+                    116
+                  ],
+                  "logprob": -8.879003524780273,
+                  "raw_logit": 21.437362670898438
+                },
+                {
+                  "id": 419,
+                  "token": " this",
+                  "bytes": [
+                    32,
+                    116,
+                    104,
+                    105,
+                    115
+                  ],
+                  "logprob": -8.998043060302734,
+                  "raw_logit": 21.318323135375977
+                },
+                {
+                  "id": 421,
+                  "token": " if",
+                  "bytes": [
+                    32,
+                    105,
+                    102
+                  ],
+                  "logprob": -9.05545425415039,
+                  "raw_logit": 21.26091194152832
+                },
+                {
+                  "id": 1614,
+                  "token": " model",
+                  "bytes": [
+                    32,
+                    109,
+                    111,
+                    100,
+                    101,
+                    108
+                  ],
+                  "logprob": -9.131246566772461,
+                  "raw_logit": 21.18511962890625
+                },
+                {
+                  "id": 1817,
+                  "token": " each",
+                  "bytes": [
+                    32,
+                    101,
+                    97,
+                    99,
+                    104
+                  ],
+                  "logprob": -9.199186325073242,
+                  "raw_logit": 21.11717987060547
+                },
+                {
+                  "id": 2500,
+                  "token": " available",
+                  "bytes": [
+                    32,
+                    97,
+                    118,
+                    97,
+                    105,
+                    108,
+                    97,
+                    98,
+                    108,
+                    101
+                  ],
+                  "logprob": -9.366043090820312,
+                  "raw_logit": 20.9503231048584
+                },
+                {
+                  "id": 678,
+                  "token": " all",
+                  "bytes": [
+                    32,
+                    97,
+                    108,
+                    108
+                  ],
+                  "logprob": -9.56892204284668,
+                  "raw_logit": 20.74744415283203
+                },
+                {
+                  "id": 892,
+                  "token": " which",
+                  "bytes": [
+                    32,
+                    119,
+                    104,
+                    105,
+                    99,
+                    104
+                  ],
+                  "logprob": -9.718446731567383,
+                  "raw_logit": 20.597919464111328
+                },
+                {
+                  "id": 825,
+                  "token": " one",
+                  "bytes": [
+                    32,
+                    111,
+                    110,
+                    101
+                  ],
+                  "logprob": -9.73016357421875,
+                  "raw_logit": 20.58620262145996
+                },
+                {
+                  "id": 458,
+                  "token": " an",
+                  "bytes": [
+                    32,
+                    97,
+                    110
+                  ],
+                  "logprob": -9.804738998413086,
+                  "raw_logit": 20.511627197265625
+                },
+                {
+                  "id": 369,
+                  "token": " for",
+                  "bytes": [
+                    32,
+                    102,
+                    111,
+                    114
+                  ],
+                  "logprob": -10.046171188354492,
+                  "raw_logit": 20.27019500732422
+                },
+                {
+                  "id": 9446,
+                  "token": " slot",
+                  "bytes": [
+                    32,
+                    115,
+                    108,
+                    111,
+                    116
+                  ],
+                  "logprob": -10.128021240234375,
+                  "raw_logit": 20.188344955444336
+                },
+                {
+                  "id": 18422,
+                  "token": " logs",
+                  "bytes": [
+                    32,
+                    108,
+                    111,
+                    103,
+                    115
+                  ],
+                  "logprob": -10.28453254699707,
+                  "raw_logit": 20.03183364868164
+                }
+              ],
+              "raw_logit": 30.31222152709961
+            },
+            {
+              "id": 15592,
+              "token": " runtime",
+              "bytes": [
+                32,
+                114,
+                117,
+                110,
+                116,
+                105,
+                109,
+                101
+              ],
+              "logprob": -0.1263287514448166,
+              "top_logprobs": [
+                {
+                  "id": 15592,
+                  "token": " runtime",
+                  "bytes": [
+                    32,
+                    114,
+                    117,
+                    110,
+                    116,
+                    105,
+                    109,
+                    101
+                  ],
+                  "logprob": -0.1263287514448166,
+                  "raw_logit": 26.486562728881836
+                },
+                {
+                  "id": 1614,
+                  "token": " model",
+                  "bytes": [
+                    32,
+                    109,
+                    111,
+                    100,
+                    101,
+                    108
+                  ],
+                  "logprob": -2.8022568225860596,
+                  "raw_logit": 23.81063461303711
+                },
+                {
+                  "id": 9446,
+                  "token": " slot",
+                  "bytes": [
+                    32,
+                    115,
+                    108,
+                    111,
+                    116
+                  ],
+                  "logprob": -5.085475444793701,
+                  "raw_logit": 21.527416229248047
+                },
+                {
+                  "id": 4541,
+                  "token": " active",
+                  "bytes": [
+                    32,
+                    97,
+                    99,
+                    116,
+                    105,
+                    118,
+                    101
+                  ],
+                  "logprob": -5.192962169647217,
+                  "raw_logit": 21.41992950439453
+                },
+                {
+                  "id": 4938,
+                  "token": " memory",
+                  "bytes": [
+                    32,
+                    109,
+                    101,
+                    109,
+                    111,
+                    114,
+                    121
+                  ],
+                  "logprob": -5.634387493133545,
+                  "raw_logit": 20.978504180908203
+                },
+                {
+                  "id": 1482,
+                  "token": " current",
+                  "bytes": [
+                    32,
+                    99,
+                    117,
+                    114,
+                    114,
+                    101,
+                    110,
+                    116
+                  ],
+                  "logprob": -5.672790050506592,
+                  "raw_logit": 20.940101623535156
+                },
+                {
+                  "id": 1882,
+                  "token": " process",
+                  "bytes": [
+                    32,
+                    112,
+                    114,
+                    111,
+                    99,
+                    101,
+                    115,
+                    115
+                  ],
+                  "logprob": -5.7461981773376465,
+                  "raw_logit": 20.8666934967041
+                },
+                {
+                  "id": 15711,
+                  "token": " slots",
+                  "bytes": [
+                    32,
+                    115,
+                    108,
+                    111,
+                    116,
+                    115
+                  ],
+                  "logprob": -5.77302885055542,
+                  "raw_logit": 20.839862823486328
+                },
+                {
+                  "id": 1849,
+                  "token": " system",
+                  "bytes": [
+                    32,
+                    115,
+                    121,
+                    115,
+                    116,
+                    101,
+                    109
+                  ],
+                  "logprob": -5.789592266082764,
+                  "raw_logit": 20.823299407958984
+                },
+                {
+                  "id": 6546,
+                  "token": " configuration",
+                  "bytes": [
+                    32,
+                    99,
+                    111,
+                    110,
+                    102,
+                    105,
+                    103,
+                    117,
+                    114,
+                    97,
+                    116,
+                    105,
+                    111,
+                    110
+                  ],
+                  "logprob": -6.227080821990967,
+                  "raw_logit": 20.38581085205078
+                },
+                {
+                  "id": 2500,
+                  "token": " available",
+                  "bytes": [
+                    32,
+                    97,
+                    118,
+                    97,
+                    105,
+                    108,
+                    97,
+                    98,
+                    108,
+                    101
+                  ],
+                  "logprob": -6.341784954071045,
+                  "raw_logit": 20.271106719970703
+                },
+                {
+                  "id": 44378,
+                  "token": " inference",
+                  "bytes": [
+                    32,
+                    105,
+                    110,
+                    102,
+                    101,
+                    114,
+                    101,
+                    110,
+                    99,
+                    101
+                  ],
+                  "logprob": -6.381560802459717,
+                  "raw_logit": 20.23133087158203
+                },
+                {
+                  "id": 1598,
+                  "token": " run",
+                  "bytes": [
+                    32,
+                    114,
+                    117,
+                    110
+                  ],
+                  "logprob": -6.811870098114014,
+                  "raw_logit": 19.801021575927734
+                },
+                {
+                  "id": 14275,
+                  "token": " declared",
+                  "bytes": [
+                    32,
+                    100,
+                    101,
+                    99,
+                    108,
+                    97,
+                    114,
+                    101,
+                    100
+                  ],
+                  "logprob": -7.0646281242370605,
+                  "raw_logit": 19.548263549804688
+                },
+                {
+                  "id": 5819,
+                  "token": " storage",
+                  "bytes": [
+                    32,
+                    115,
+                    116,
+                    111,
+                    114,
+                    97,
+                    103,
+                    101
+                  ],
+                  "logprob": -7.210261344909668,
+                  "raw_logit": 19.402629852294922
+                },
+                {
+                  "id": 2473,
+                  "token": " service",
+                  "bytes": [
+                    32,
+                    115,
+                    101,
+                    114,
+                    118,
+                    105,
+                    99,
+                    101
+                  ],
+                  "logprob": -7.300389766693115,
+                  "raw_logit": 19.312501907348633
+                },
+                {
+                  "id": 67595,
+                  "token": " inferred",
+                  "bytes": [
+                    32,
+                    105,
+                    110,
+                    102,
+                    101,
+                    114,
+                    114,
+                    101,
+                    100
+                  ],
+                  "logprob": -7.302386283874512,
+                  "raw_logit": 19.310504913330078
+                },
+                {
+                  "id": 22670,
+                  "token": " GPU",
+                  "bytes": [
+                    32,
+                    71,
+                    80,
+                    85
+                  ],
+                  "logprob": -7.517024517059326,
+                  "raw_logit": 19.095867156982422
+                },
+                {
+                  "id": 1584,
+                  "token": " state",
+                  "bytes": [
+                    32,
+                    115,
+                    116,
+                    97,
+                    116,
+                    101
+                  ],
+                  "logprob": -7.562232494354248,
+                  "raw_logit": 19.0506591796875
+                },
+                {
+                  "id": 8794,
+                  "token": " contents",
+                  "bytes": [
+                    32,
+                    99,
+                    111,
+                    110,
+                    116,
+                    101,
+                    110,
+                    116,
+                    115
+                  ],
+                  "logprob": -7.601863384246826,
+                  "raw_logit": 19.011028289794922
+                }
+              ],
+              "raw_logit": 26.486562728881836
+            },
+            {
+              "id": 748,
+              "token": "’s",
+              "bytes": [
+                226,
+                128,
+                153,
+                115
+              ],
+              "logprob": -0.039799388498067856,
+              "top_logprobs": [
+                {
+                  "id": 748,
+                  "token": "’s",
+                  "bytes": [
+                    226,
+                    128,
+                    153,
+                    115
+                  ],
+                  "logprob": -0.039799388498067856,
+                  "raw_logit": 31.78856658935547
+                },
+                {
+                  "id": 594,
+                  "token": "'s",
+                  "bytes": [
+                    39,
+                    115
+                  ],
+                  "logprob": -3.2708518505096436,
+                  "raw_logit": 28.557514190673828
+                },
+                {
+                  "id": 6546,
+                  "token": " configuration",
+                  "bytes": [
+                    32,
+                    99,
+                    111,
+                    110,
+                    102,
+                    105,
+                    103,
+                    117,
+                    114,
+                    97,
+                    116,
+                    105,
+                    111,
+                    110
+                  ],
+                  "logprob": -7.961367130279541,
+                  "raw_logit": 23.86699867248535
+                },
+                {
+                  "id": 369,
+                  "token": " for",
+                  "bytes": [
+                    32,
+                    102,
+                    111,
+                    114
+                  ],
+                  "logprob": -8.550353050231934,
+                  "raw_logit": 23.278013229370117
+                },
+                {
+                  "id": 1882,
+                  "token": " process",
+                  "bytes": [
+                    32,
+                    112,
+                    114,
+                    111,
+                    99,
+                    101,
+                    115,
+                    115
+                  ],
+                  "logprob": -9.371285438537598,
+                  "raw_logit": 22.457080841064453
+                },
+                {
+                  "id": 2867,
+                  "token": " instance",
+                  "bytes": [
+                    32,
+                    105,
+                    110,
+                    115,
+                    116,
+                    97,
+                    110,
+                    99,
+                    101
+                  ],
+                  "logprob": -9.5660982131958,
+                  "raw_logit": 22.26226806640625
+                },
+                {
+                  "id": 311,
+                  "token": " to",
+                  "bytes": [
+                    32,
+                    116,
+                    111
+                  ],
+                  "logprob": -10.251200675964355,
+                  "raw_logit": 21.577165603637695
+                },
+                {
+                  "id": 4573,
+                  "token": " environment",
+                  "bytes": [
+                    32,
+                    101,
+                    110,
+                    118,
+                    105,
+                    114,
+                    111,
+                    110,
+                    109,
+                    101,
+                    110,
+                    116
+                  ],
+                  "logprob": -10.383065223693848,
+                  "raw_logit": 21.445301055908203
+                },
+                {
+                  "id": 18906,
+                  "token": "-specific",
+                  "bytes": [
+                    45,
+                    115,
+                    112,
+                    101,
+                    99,
+                    105,
+                    102,
+                    105,
+                    99
+                  ],
+                  "logprob": -10.62047290802002,
+                  "raw_logit": 21.20789337158203
+                },
+                {
+                  "id": 323,
+                  "token": " and",
+                  "bytes": [
+                    32,
+                    97,
+                    110,
+                    100
+                  ],
+                  "logprob": -10.650349617004395,
+                  "raw_logit": 21.178016662597656
+                },
+                {
+                  "id": 11364,
+                  "token": " processes",
+                  "bytes": [
+                    32,
+                    112,
+                    114,
+                    111,
+                    99,
+                    101,
+                    115,
+                    115,
+                    101,
+                    115
+                  ],
+                  "logprob": -10.782866477966309,
+                  "raw_logit": 21.045499801635742
+                },
+                {
+                  "id": 32383,
+                  "token": " configurations",
+                  "bytes": [
+                    32,
+                    99,
+                    111,
+                    110,
+                    102,
+                    105,
+                    103,
+                    117,
+                    114,
+                    97,
+                    116,
+                    105,
+                    111,
+                    110,
+                    115
+                  ],
+                  "logprob": -10.962929725646973,
+                  "raw_logit": 20.865436553955078
+                },
+                {
+                  "id": 1584,
+                  "token": " state",
+                  "bytes": [
+                    32,
+                    115,
+                    116,
+                    97,
+                    116,
+                    101
+                  ],
+                  "logprob": -11.061631202697754,
+                  "raw_logit": 20.766735076904297
+                },
+                {
+                  "id": 5888,
+                  "token": " properties",
+                  "bytes": [
+                    32,
+                    112,
+                    114,
+                    111,
+                    112,
+                    101,
+                    114,
+                    116,
+                    105,
+                    101,
+                    115
+                  ],
+                  "logprob": -11.142338752746582,
+                  "raw_logit": 20.68602752685547
+                },
+                {
+                  "id": 6220,
+                  "token": " directory",
+                  "bytes": [
+                    32,
+                    100,
+                    105,
+                    114,
+                    101,
+                    99,
+                    116,
+                    111,
+                    114,
+                    121
+                  ],
+                  "logprob": -11.269938468933105,
+                  "raw_logit": 20.558427810668945
+                },
+                {
+                  "id": 15711,
+                  "token": " slots",
+                  "bytes": [
+                    32,
+                    115,
+                    108,
+                    111,
+                    116,
+                    115
+                  ],
+                  "logprob": -11.392643928527832,
+                  "raw_logit": 20.43572235107422
+                },
+                {
+                  "id": 18422,
+                  "token": " logs",
+                  "bytes": [
+                    32,
+                    108,
+                    111,
+                    103,
+                    115
+                  ],
+                  "logprob": -11.457589149475098,
+                  "raw_logit": 20.370777130126953
+                },
+                {
+                  "id": 12,
+                  "token": "-",
+                  "bytes": [
+                    45
+                  ],
+                  "logprob": -11.928370475769043,
+                  "raw_logit": 19.899995803833008
+                },
+                {
+                  "id": 9446,
+                  "token": " slot",
+                  "bytes": [
+                    32,
+                    115,
+                    108,
+                    111,
+                    116
+                  ],
+                  "logprob": -12.07125186920166,
+                  "raw_logit": 19.75711441040039
+                },
+                {
+                  "id": 5476,
+                  "token": " container",
+                  "bytes": [
+                    32,
+                    99,
+                    111,
+                    110,
+                    116,
+                    97,
+                    105,
+                    110,
+                    101,
+                    114
+                  ],
+                  "logprob": -12.113812446594238,
+                  "raw_logit": 19.714553833007812
+                }
+              ],
+              "raw_logit": 31.78856658935547
+            },
+            {
+              "id": 14275,
+              "token": " declared",
+              "bytes": [
+                32,
+                100,
+                101,
+                99,
+                108,
+                97,
+                114,
+                101,
+                100
+              ],
+              "logprob": -0.3028818368911743,
+              "top_logprobs": [
+                {
+                  "id": 14275,
+                  "token": " declared",
+                  "bytes": [
+                    32,
+                    100,
+                    101,
+                    99,
+                    108,
+                    97,
+                    114,
+                    101,
+                    100
+                  ],
+                  "logprob": -0.3028818368911743,
+                  "raw_logit": 25.474382400512695
+                },
+                {
+                  "id": 1614,
+                  "token": " model",
+                  "bytes": [
+                    32,
+                    109,
+                    111,
+                    100,
+                    101,
+                    108
+                  ],
+                  "logprob": -2.9827468395233154,
+                  "raw_logit": 22.794517517089844
+                },
+                {
+                  "id": 4938,
+                  "token": " memory",
+                  "bytes": [
+                    32,
+                    109,
+                    101,
+                    109,
+                    111,
+                    114,
+                    121
+                  ],
+                  "logprob": -3.1720149517059326,
+                  "raw_logit": 22.605249404907227
+                },
+                {
+                  "id": 9446,
+                  "token": " slot",
+                  "bytes": [
+                    32,
+                    115,
+                    108,
+                    111,
+                    116
+                  ],
+                  "logprob": -3.6387927532196045,
+                  "raw_logit": 22.138471603393555
+                },
+                {
+                  "id": 1482,
+                  "token": " current",
+                  "bytes": [
+                    32,
+                    99,
+                    117,
+                    114,
+                    114,
+                    101,
+                    110,
+                    116
+                  ],
+                  "logprob": -3.7209651470184326,
+                  "raw_logit": 22.056299209594727
+                },
+                {
+                  "id": 6546,
+                  "token": " configuration",
+                  "bytes": [
+                    32,
+                    99,
+                    111,
+                    110,
+                    102,
+                    105,
+                    103,
+                    117,
+                    114,
+                    97,
+                    116,
+                    105,
+                    111,
+                    110
+                  ],
+                  "logprob": -4.122456073760986,
+                  "raw_logit": 21.654808044433594
+                },
+                {
+                  "id": 4541,
+                  "token": " active",
+                  "bytes": [
+                    32,
+                    97,
+                    99,
+                    116,
+                    105,
+                    118,
+                    101
+                  ],
+                  "logprob": -4.616478443145752,
+                  "raw_logit": 21.160785675048828
+                },
+                {
+                  "id": 16734,
+                  "token": " metrics",
+                  "bytes": [
+                    32,
+                    109,
+                    101,
+                    116,
+                    114,
+                    105,
+                    99,
+                    115
+                  ],
+                  "logprob": -4.657322406768799,
+                  "raw_logit": 21.11994171142578
+                },
+                {
+                  "id": 11660,
+                  "token": " claimed",
+                  "bytes": [
+                    32,
+                    99,
+                    108,
+                    97,
+                    105,
+                    109,
+                    101,
+                    100
+                  ],
+                  "logprob": -4.711573123931885,
+                  "raw_logit": 21.065690994262695
+                },
+                {
+                  "id": 2500,
+                  "token": " available",
+                  "bytes": [
+                    32,
+                    97,
+                    118,
+                    97,
+                    105,
+                    108,
+                    97,
+                    98,
+                    108,
+                    101
+                  ],
+                  "logprob": -4.726067066192627,
+                  "raw_logit": 21.051197052001953
+                },
+                {
+                  "id": 20204,
+                  "token": " allocated",
+                  "bytes": [
+                    32,
+                    97,
+                    108,
+                    108,
+                    111,
+                    99,
+                    97,
+                    116,
+                    101,
+                    100
+                  ],
+                  "logprob": -5.558859348297119,
+                  "raw_logit": 20.21840476989746
+                },
+                {
+                  "id": 24999,
+                  "token": " persistent",
+                  "bytes": [
+                    32,
+                    112,
+                    101,
+                    114,
+                    115,
+                    105,
+                    115,
+                    116,
+                    101,
+                    110,
+                    116
+                  ],
+                  "logprob": -5.696512699127197,
+                  "raw_logit": 20.080751419067383
+                },
+                {
+                  "id": 5306,
+                  "token": " internal",
+                  "bytes": [
+                    32,
+                    105,
+                    110,
+                    116,
+                    101,
+                    114,
+                    110,
+                    97,
+                    108
+                  ],
+                  "logprob": -5.9394307136535645,
+                  "raw_logit": 19.837833404541016
+                },
+                {
+                  "id": 1882,
+                  "token": " process",
+                  "bytes": [
+                    32,
+                    112,
+                    114,
+                    111,
+                    99,
+                    101,
+                    115,
+                    115
+                  ],
+                  "logprob": -6.1674065589904785,
+                  "raw_logit": 19.6098575592041
+                },
+                {
+                  "id": 15711,
+                  "token": " slots",
+                  "bytes": [
+                    32,
+                    115,
+                    108,
+                    111,
+                    116,
+                    115
+                  ],
+                  "logprob": -6.217594623565674,
+                  "raw_logit": 19.559669494628906
+                },
+                {
+                  "id": 22670,
+                  "token": " GPU",
+                  "bytes": [
+                    32,
+                    71,
+                    80,
+                    85
+                  ],
+                  "logprob": -6.308807849884033,
+                  "raw_logit": 19.468456268310547
+                },
+                {
+                  "id": 5101,
+                  "token": " resource",
+                  "bytes": [
+                    32,
+                    114,
+                    101,
+                    115,
+                    111,
+                    117,
+                    114,
+                    99,
+                    101
+                  ],
+                  "logprob": -6.390219211578369,
+                  "raw_logit": 19.38704490661621
+                },
+                {
+                  "id": 4961,
+                  "token": " reported",
+                  "bytes": [
+                    32,
+                    114,
+                    101,
+                    112,
+                    111,
+                    114,
+                    116,
+                    101,
+                    100
+                  ],
+                  "logprob": -6.505455493927002,
+                  "raw_logit": 19.271808624267578
+                },
+                {
+                  "id": 12607,
+                  "token": " assigned",
+                  "bytes": [
+                    32,
+                    97,
+                    115,
+                    115,
+                    105,
+                    103,
+                    110,
+                    101,
+                    100
+                  ],
+                  "logprob": -6.599676609039307,
+                  "raw_logit": 19.177587509155273
+                },
+                {
+                  "id": 19755,
+                  "token": " configured",
+                  "bytes": [
+                    32,
+                    99,
+                    111,
+                    110,
+                    102,
+                    105,
+                    103,
+                    117,
+                    114,
+                    101,
+                    100
+                  ],
+                  "logprob": -6.664242267608643,
+                  "raw_logit": 19.113021850585938
+                }
+              ],
+              "raw_logit": 25.474382400512695
+            },
+            {
+              "id": 1614,
+              "token": " model",
+              "bytes": [
+                32,
+                109,
+                111,
+                100,
+                101,
+                108
+              ],
+              "logprob": -0.11709306389093399,
+              "top_logprobs": [
+                {
+                  "id": 1614,
+                  "token": " model",
+                  "bytes": [
+                    32,
+                    109,
+                    111,
+                    100,
+                    101,
+                    108
+                  ],
+                  "logprob": -0.11709306389093399,
+                  "raw_logit": 27.904115676879883
+                },
+                {
+                  "id": 4938,
+                  "token": " memory",
+                  "bytes": [
+                    32,
+                    109,
+                    101,
+                    109,
+                    111,
+                    114,
+                    121
+                  ],
+                  "logprob": -3.2298669815063477,
+                  "raw_logit": 24.79134178161621
+                },
+                {
+                  "id": 9446,
+                  "token": " slot",
+                  "bytes": [
+                    32,
+                    115,
+                    108,
+                    111,
+                    116
+                  ],
+                  "logprob": -4.00209903717041,
+                  "raw_logit": 24.01910972595215
+                },
+                {
+                  "id": 22670,
+                  "token": " GPU",
+                  "bytes": [
+                    32,
+                    71,
+                    80,
+                    85
+                  ],
+                  "logprob": -4.418337821960449,
+                  "raw_logit": 23.60287094116211
+                },
+                {
+                  "id": 6546,
+                  "token": " configuration",
+                  "bytes": [
+                    32,
+                    99,
+                    111,
+                    110,
+                    102,
+                    105,
+                    103,
+                    117,
+                    114,
+                    97,
+                    116,
+                    105,
+                    111,
+                    110
+                  ],
+                  "logprob": -5.202288627624512,
+                  "raw_logit": 22.818920135498047
+                },
+                {
+                  "id": 16734,
+                  "token": " metrics",
+                  "bytes": [
+                    32,
+                    109,
+                    101,
+                    116,
+                    114,
+                    105,
+                    99,
+                    115
+                  ],
+                  "logprob": -5.477862358093262,
+                  "raw_logit": 22.543346405029297
+                },
+                {
+                  "id": 44378,
+                  "token": " inference",
+                  "bytes": [
+                    32,
+                    105,
+                    110,
+                    102,
+                    101,
+                    114,
+                    101,
+                    110,
+                    99,
+                    101
+                  ],
+                  "logprob": -5.687712669372559,
+                  "raw_logit": 22.33349609375
+                },
+                {
+                  "id": 16928,
+                  "token": " capabilities",
+                  "bytes": [
+                    32,
+                    99,
+                    97,
+                    112,
+                    97,
+                    98,
+                    105,
+                    108,
+                    105,
+                    116,
+                    105,
+                    101,
+                    115
+                  ],
+                  "logprob": -6.132596015930176,
+                  "raw_logit": 21.888612747192383
+                },
+                {
+                  "id": 15711,
+                  "token": " slots",
+                  "bytes": [
+                    32,
+                    115,
+                    108,
+                    111,
+                    116,
+                    115
+                  ],
+                  "logprob": -6.351580619812012,
+                  "raw_logit": 21.669628143310547
+                },
+                {
+                  "id": 7192,
+                  "token": " maximum",
+                  "bytes": [
+                    32,
+                    109,
+                    97,
+                    120,
+                    105,
+                    109,
+                    117,
+                    109
+                  ],
+                  "logprob": -6.459311485290527,
+                  "raw_logit": 21.56189727783203
+                },
+                {
+                  "id": 11773,
+                  "token": " hardware",
+                  "bytes": [
+                    32,
+                    104,
+                    97,
+                    114,
+                    100,
+                    119,
+                    97,
+                    114,
+                    101
+                  ],
+                  "logprob": -6.633444786071777,
+                  "raw_logit": 21.38776397705078
+                },
+                {
+                  "id": 3671,
+                  "token": " device",
+                  "bytes": [
+                    32,
+                    100,
+                    101,
+                    118,
+                    105,
+                    99,
+                    101
+                  ],
+                  "logprob": -6.646668434143066,
+                  "raw_logit": 21.374540328979492
+                },
+                {
+                  "id": 1849,
+                  "token": " system",
+                  "bytes": [
+                    32,
+                    115,
+                    121,
+                    115,
+                    116,
+                    101,
+                    109
+                  ],
+                  "logprob": -6.674674034118652,
+                  "raw_logit": 21.346534729003906
+                },
+                {
+                  "id": 7248,
+                  "token": " supported",
+                  "bytes": [
+                    32,
+                    115,
+                    117,
+                    112,
+                    112,
+                    111,
+                    114,
+                    116,
+                    101,
+                    100
+                  ],
+                  "logprob": -6.711548805236816,
+                  "raw_logit": 21.309659957885742
+                },
+                {
+                  "id": 10272,
+                  "token": " quant",
+                  "bytes": [
+                    32,
+                    113,
+                    117,
+                    97,
+                    110,
+                    116
+                  ],
+                  "logprob": -6.78964900970459,
+                  "raw_logit": 21.23155975341797
+                },
+                {
+                  "id": 4119,
+                  "token": " models",
+                  "bytes": [
+                    32,
+                    109,
+                    111,
+                    100,
+                    101,
+                    108,
+                    115
+                  ],
+                  "logprob": -6.977473258972168,
+                  "raw_logit": 21.04373550415039
+                },
+                {
+                  "id": 5029,
+                  "token": " parameters",
+                  "bytes": [
+                    32,
+                    112,
+                    97,
+                    114,
+                    97,
+                    109,
+                    101,
+                    116,
+                    101,
+                    114,
+                    115
+                  ],
+                  "logprob": -7.147042274475098,
+                  "raw_logit": 20.87416648864746
+                },
+                {
+                  "id": 11320,
+                  "token": " execution",
+                  "bytes": [
+                    32,
+                    101,
+                    120,
+                    101,
+                    99,
+                    117,
+                    116,
+                    105,
+                    111,
+                    110
+                  ],
+                  "logprob": -7.24996280670166,
+                  "raw_logit": 20.7712459564209
+                },
+                {
+                  "id": 2319,
+                  "token": " version",
+                  "bytes": [
+                    32,
+                    118,
+                    101,
+                    114,
+                    115,
+                    105,
+                    111,
+                    110
+                  ],
+                  "logprob": -7.5488996505737305,
+                  "raw_logit": 20.472309112548828
+                },
+                {
+                  "id": 1824,
+                  "token": " support",
+                  "bytes": [
+                    32,
+                    115,
+                    117,
+                    112,
+                    112,
+                    111,
+                    114,
+                    116
+                  ],
+                  "logprob": -7.708481788635254,
+                  "raw_logit": 20.312726974487305
+                }
+              ],
+              "raw_logit": 27.904115676879883
+            },
+            {
+              "id": 9569,
+              "token": " identity",
+              "bytes": [
+                32,
+                105,
+                100,
+                101,
+                110,
+                116,
+                105,
+                116,
+                121
+              ],
+              "logprob": -0.058761224150657654,
+              "top_logprobs": [
+                {
+                  "id": 9569,
+                  "token": " identity",
+                  "bytes": [
+                    32,
+                    105,
+                    100,
+                    101,
+                    110,
+                    116,
+                    105,
+                    116,
+                    121
+                  ],
+                  "logprob": -0.058761224150657654,
+                  "raw_logit": 29.575847625732422
+                },
+                {
+                  "id": 323,
+                  "token": " and",
+                  "bytes": [
+                    32,
+                    97,
+                    110,
+                    100
+                  ],
+                  "logprob": -4.205718517303467,
+                  "raw_logit": 25.428890228271484
+                },
+                {
+                  "id": 6546,
+                  "token": " configuration",
+                  "bytes": [
+                    32,
+                    99,
+                    111,
+                    110,
+                    102,
+                    105,
+                    103,
+                    117,
+                    114,
+                    97,
+                    116,
+                    105,
+                    111,
+                    110
+                  ],
+                  "logprob": -4.839911937713623,
+                  "raw_logit": 24.794696807861328
+                },
+                {
+                  "id": 5029,
+                  "token": " parameters",
+                  "bytes": [
+                    32,
+                    112,
+                    97,
+                    114,
+                    97,
+                    109,
+                    101,
+                    116,
+                    101,
+                    114,
+                    115
+                  ],
+                  "logprob": -5.307071208953857,
+                  "raw_logit": 24.327537536621094
+                },
+                {
+                  "id": 1815,
+                  "token": " path",
+                  "bytes": [
+                    32,
+                    112,
+                    97,
+                    116,
+                    104
+                  ],
+                  "logprob": -5.6499762535095215,
+                  "raw_logit": 23.98463249206543
+                },
+                {
+                  "id": 10272,
+                  "token": " quant",
+                  "bytes": [
+                    32,
+                    113,
+                    117,
+                    97,
+                    110,
+                    116
+                  ],
+                  "logprob": -6.043456554412842,
+                  "raw_logit": 23.59115219116211
+                },
+                {
+                  "id": 943,
+                  "token": " type",
+                  "bytes": [
+                    32,
+                    116,
+                    121,
+                    112,
+                    101
+                  ],
+                  "logprob": -6.045678615570068,
+                  "raw_logit": 23.588930130004883
+                },
+                {
+                  "id": 17646,
+                  "token": " architecture",
+                  "bytes": [
+                    32,
+                    97,
+                    114,
+                    99,
+                    104,
+                    105,
+                    116,
+                    101,
+                    99,
+                    116,
+                    117,
+                    114,
+                    101
+                  ],
+                  "logprob": -6.132127285003662,
+                  "raw_logit": 23.50248146057129
+                },
+                {
+                  "id": 4680,
+                  "token": " weight",
+                  "bytes": [
+                    32,
+                    119,
+                    101,
+                    105,
+                    103,
+                    104,
+                    116
+                  ],
+                  "logprob": -6.199195384979248,
+                  "raw_logit": 23.435413360595703
+                },
+                {
+                  "id": 14324,
+                  "token": " weights",
+                  "bytes": [
+                    32,
+                    119,
+                    101,
+                    105,
+                    103,
+                    104,
+                    116,
+                    115
+                  ],
+                  "logprob": -6.340754985809326,
+                  "raw_logit": 23.293853759765625
+                },
+                {
+                  "id": 5888,
+                  "token": " properties",
+                  "bytes": [
+                    32,
+                    112,
+                    114,
+                    111,
+                    112,
+                    101,
+                    114,
+                    116,
+                    105,
+                    101,
+                    115
+                  ],
+                  "logprob": -6.405730724334717,
+                  "raw_logit": 23.228878021240234
+                },
+                {
+                  "id": 3561,
+                  "token": " format",
+                  "bytes": [
+                    32,
+                    102,
+                    111,
+                    114,
+                    109,
+                    97,
+                    116
+                  ],
+                  "logprob": -6.409656047821045,
+                  "raw_logit": 23.224952697753906
+                },
+                {
+                  "id": 11160,
+                  "token": " metadata",
+                  "bytes": [
+                    32,
+                    109,
+                    101,
+                    116,
+                    97,
+                    100,
+                    97,
+                    116,
+                    97
+                  ],
+                  "logprob": -6.450154781341553,
+                  "raw_logit": 23.1844539642334
+                },
+                {
+                  "id": 15534,
+                  "token": " alias",
+                  "bytes": [
+                    32,
+                    97,
+                    108,
+                    105,
+                    97,
+                    115
+                  ],
+                  "logprob": -6.5219855308532715,
+                  "raw_logit": 23.11262321472168
+                },
+                {
+                  "id": 1034,
+                  "token": " file",
+                  "bytes": [
+                    32,
+                    102,
+                    105,
+                    108,
+                    101
+                  ],
+                  "logprob": -6.900628566741943,
+                  "raw_logit": 22.733980178833008
+                },
+                {
+                  "id": 3565,
+                  "token": " details",
+                  "bytes": [
+                    32,
+                    100,
+                    101,
+                    116,
+                    97,
+                    105,
+                    108,
+                    115
+                  ],
+                  "logprob": -7.012145519256592,
+                  "raw_logit": 22.62246322631836
+                },
+                {
+                  "id": 1379,
+                  "token": " size",
+                  "bytes": [
+                    32,
+                    115,
+                    105,
+                    122,
+                    101
+                  ],
+                  "logprob": -7.280791759490967,
+                  "raw_logit": 22.353816986083984
+                },
+                {
+                  "id": 2319,
+                  "token": " version",
+                  "bytes": [
+                    32,
+                    118,
+                    101,
+                    114,
+                    115,
+                    105,
+                    111,
+                    110
+                  ],
+                  "logprob": -7.306376934051514,
+                  "raw_logit": 22.328231811523438
+                },
+                {
+                  "id": 829,
+                  "token": " name",
+                  "bytes": [
+                    32,
+                    110,
+                    97,
+                    109,
+                    101
+                  ],
+                  "logprob": -7.408227443695068,
+                  "raw_logit": 22.226381301879883
+                },
+                {
+                  "id": 15336,
+                  "token": " dimensions",
+                  "bytes": [
+                    32,
+                    100,
+                    105,
+                    109,
+                    101,
+                    110,
+                    115,
+                    105,
+                    111,
+                    110,
+                    115
+                  ],
+                  "logprob": -7.97719144821167,
+                  "raw_logit": 21.65741729736328
+                }
+              ],
+              "raw_logit": 29.575847625732422
+            },
+            {
+              "id": 323,
+              "token": " and",
+              "bytes": [
+                32,
+                97,
+                110,
+                100
+              ],
+              "logprob": -0.001679220236837864,
+              "top_logprobs": [
+                {
+                  "id": 323,
+                  "token": " and",
+                  "bytes": [
+                    32,
+                    97,
+                    110,
+                    100
+                  ],
+                  "logprob": -0.001679220236837864,
+                  "raw_logit": 35.51220703125
+                },
+                {
+                  "id": 11,
+                  "token": ",",
+                  "bytes": [
+                    44
+                  ],
+                  "logprob": -7.682110786437988,
+                  "raw_logit": 27.831775665283203
+                },
+                {
+                  "id": 13,
+                  "token": ".",
+                  "bytes": [
+                    46
+                  ],
+                  "logprob": -7.935498237609863,
+                  "raw_logit": 27.578388214111328
+                },
+                {
+                  "id": 369,
+                  "token": " for",
+                  "bytes": [
+                    32,
+                    102,
+                    111,
+                    114
+                  ],
+                  "logprob": -8.409958839416504,
+                  "raw_logit": 27.103927612304688
+                },
+                {
+                  "id": 311,
+                  "token": " to",
+                  "bytes": [
+                    32,
+                    116,
+                    111
+                  ],
+                  "logprob": -8.872384071350098,
+                  "raw_logit": 26.641502380371094
+                },
+                {
+                  "id": 304,
+                  "token": " in",
+                  "bytes": [
+                    32,
+                    105,
+                    110
+                  ],
+                  "logprob": -9.12890338897705,
+                  "raw_logit": 26.38498306274414
+                },
+                {
+                  "id": 382,
+                  "token": ".\n\n",
+                  "bytes": [
+                    46,
+                    10,
+                    10
+                  ],
+                  "logprob": -9.139351844787598,
+                  "raw_logit": 26.374534606933594
+                },
+                {
+                  "id": 624,
+                  "token": ".\n",
+                  "bytes": [
+                    46,
+                    10
+                  ],
+                  "logprob": -9.215367317199707,
+                  "raw_logit": 26.298519134521484
+                },
+                {
+                  "id": 1549,
+                  "token": " again",
+                  "bytes": [
+                    32,
+                    97,
+                    103,
+                    97,
+                    105,
+                    110
+                  ],
+                  "logprob": -9.620980262756348,
+                  "raw_logit": 25.892906188964844
+                },
+                {
+                  "id": 504,
+                  "token": " from",
+                  "bytes": [
+                    32,
+                    102,
+                    114,
+                    111,
+                    109
+                  ],
+                  "logprob": -10.483878135681152,
+                  "raw_logit": 25.03000831604004
+                },
+                {
+                  "id": 803,
+                  "token": " more",
+                  "bytes": [
+                    32,
+                    109,
+                    111,
+                    114,
+                    101
+                  ],
+                  "logprob": -11.124011039733887,
+                  "raw_logit": 24.389875411987305
+                },
+                {
+                  "id": 448,
+                  "token": " with",
+                  "bytes": [
+                    32,
+                    119,
+                    105,
+                    116,
+                    104
+                  ],
+                  "logprob": -11.487481117248535,
+                  "raw_logit": 24.026405334472656
+                },
+                {
+                  "id": 2348,
+                  "token": " against",
+                  "bytes": [
+                    32,
+                    97,
+                    103,
+                    97,
+                    105,
+                    110,
+                    115,
+                    116
+                  ],
+                  "logprob": -11.506360054016113,
+                  "raw_logit": 24.007526397705078
+                },
+                {
+                  "id": 5961,
+                  "token": " directly",
+                  "bytes": [
+                    32,
+                    100,
+                    105,
+                    114,
+                    101,
+                    99,
+                    116,
+                    108,
+                    121
+                  ],
+                  "logprob": -11.5521821975708,
+                  "raw_logit": 23.96170425415039
+                },
+                {
+                  "id": 4623,
+                  "token": " further",
+                  "bytes": [
+                    32,
+                    102,
+                    117,
+                    114,
+                    116,
+                    104,
+                    101,
+                    114
+                  ],
+                  "logprob": -11.617634773254395,
+                  "raw_logit": 23.896251678466797
+                },
+                {
+                  "id": 1526,
+                  "token": " through",
+                  "bytes": [
+                    32,
+                    116,
+                    104,
+                    114,
+                    111,
+                    117,
+                    103,
+                    104
+                  ],
+                  "logprob": -12.380066871643066,
+                  "raw_logit": 23.133819580078125
+                },
+                {
+                  "id": 4566,
+                  "token": " via",
+                  "bytes": [
+                    32,
+                    118,
+                    105,
+                    97
+                  ],
+                  "logprob": -12.38735294342041,
+                  "raw_logit": 23.12653350830078
+                },
+                {
+                  "id": 3941,
+                  "token": " across",
+                  "bytes": [
+                    32,
+                    97,
+                    99,
+                    114,
+                    111,
+                    115,
+                    115
+                  ],
+                  "logprob": -12.415711402893066,
+                  "raw_logit": 23.098175048828125
+                },
+                {
+                  "id": 438,
+                  "token": " as",
+                  "bytes": [
+                    32,
+                    97,
+                    115
+                  ],
+                  "logprob": -12.941422462463379,
+                  "raw_logit": 22.572463989257812
+                },
+                {
+                  "id": 2041,
+                  "token": " without",
+                  "bytes": [
+                    32,
+                    119,
+                    105,
+                    116,
+                    104,
+                    111,
+                    117,
+                    116
+                  ],
+                  "logprob": -13.049403190612793,
+                  "raw_logit": 22.4644832611084
+                }
+              ],
+              "raw_logit": 35.51220703125
+            },
+            {
+              "id": 9446,
+              "token": " slot",
+              "bytes": [
+                32,
+                115,
+                108,
+                111,
+                116
+              ],
+              "logprob": -0.0035504470579326153,
+              "top_logprobs": [
+                {
+                  "id": 9446,
+                  "token": " slot",
+                  "bytes": [
+                    32,
+                    115,
+                    108,
+                    111,
+                    116
+                  ],
+                  "logprob": -0.0035504470579326153,
+                  "raw_logit": 29.627330780029297
+                },
+                {
+                  "id": 1181,
+                  "token": " its",
+                  "bytes": [
+                    32,
+                    105,
+                    116,
+                    115
+                  ],
+                  "logprob": -6.814021110534668,
+                  "raw_logit": 22.81686019897461
+                },
+                {
+                  "id": 279,
+                  "token": " the",
+                  "bytes": [
+                    32,
+                    116,
+                    104,
+                    101
+                  ],
+                  "logprob": -7.576056480407715,
+                  "raw_logit": 22.054824829101562
+                },
+                {
+                  "id": 6546,
+                  "token": " configuration",
+                  "bytes": [
+                    32,
+                    99,
+                    111,
+                    110,
+                    102,
+                    105,
+                    103,
+                    117,
+                    114,
+                    97,
+                    116,
+                    105,
+                    111,
+                    110
+                  ],
+                  "logprob": -8.046202659606934,
+                  "raw_logit": 21.584678649902344
+                },
+                {
+                  "id": 1614,
+                  "token": " model",
+                  "bytes": [
+                    32,
+                    109,
+                    111,
+                    100,
+                    101,
+                    108
+                  ],
+                  "logprob": -8.526881217956543,
+                  "raw_logit": 21.104000091552734
+                },
+                {
+                  "id": 15711,
+                  "token": " slots",
+                  "bytes": [
+                    32,
+                    115,
+                    108,
+                    111,
+                    116,
+                    115
+                  ],
+                  "logprob": -8.66419506072998,
+                  "raw_logit": 20.966686248779297
+                },
+                {
+                  "id": 4938,
+                  "token": " memory",
+                  "bytes": [
+                    32,
+                    109,
+                    101,
+                    109,
+                    111,
+                    114,
+                    121
+                  ],
+                  "logprob": -8.730517387390137,
+                  "raw_logit": 20.90036392211914
+                },
+                {
+                  "id": 2500,
+                  "token": " available",
+                  "bytes": [
+                    32,
+                    97,
+                    118,
+                    97,
+                    105,
+                    108,
+                    97,
+                    98,
+                    108,
+                    101
+                  ],
+                  "logprob": -8.983000755310059,
+                  "raw_logit": 20.64788055419922
+                },
+                {
+                  "id": 5815,
+                  "token": " associated",
+                  "bytes": [
+                    32,
+                    97,
+                    115,
+                    115,
+                    111,
+                    99,
+                    105,
+                    97,
+                    116,
+                    101,
+                    100
+                  ],
+                  "logprob": -9.285323143005371,
+                  "raw_logit": 20.345558166503906
+                },
+                {
+                  "id": 10146,
+                  "token": " verify",
+                  "bytes": [
+                    32,
+                    118,
+                    101,
+                    114,
+                    105,
+                    102,
+                    121
+                  ],
+                  "logprob": -9.505789756774902,
+                  "raw_logit": 20.125091552734375
+                },
+                {
+                  "id": 2790,
+                  "token": " total",
+                  "bytes": [
+                    32,
+                    116,
+                    111,
+                    116,
+                    97,
+                    108
+                  ],
+                  "logprob": -9.55102252960205,
+                  "raw_logit": 20.079858779907227
+                },
+                {
+                  "id": 1779,
+                  "token": " check",
+                  "bytes": [
+                    32,
+                    99,
+                    104,
+                    101,
+                    99,
+                    107
+                  ],
+                  "logprob": -10.224272727966309,
+                  "raw_logit": 19.40660858154297
+                },
+                {
+                  "id": 23583,
+                  "token": " infer",
+                  "bytes": [
+                    32,
+                    105,
+                    110,
+                    102,
+                    101,
+                    114
+                  ],
+                  "logprob": -10.271479606628418,
+                  "raw_logit": 19.35940170288086
+                },
+                {
+                  "id": 8253,
+                  "token": " determine",
+                  "bytes": [
+                    32,
+                    100,
+                    101,
+                    116,
+                    101,
+                    114,
+                    109,
+                    105,
+                    110,
+                    101
+                  ],
+                  "logprob": -10.348433494567871,
+                  "raw_logit": 19.282447814941406
+                },
+                {
+                  "id": 12564,
+                  "token": " compute",
+                  "bytes": [
+                    32,
+                    99,
+                    111,
+                    109,
+                    112,
+                    117,
+                    116,
+                    101
+                  ],
+                  "logprob": -10.368826866149902,
+                  "raw_logit": 19.262054443359375
+                },
+                {
+                  "id": 67595,
+                  "token": " inferred",
+                  "bytes": [
+                    32,
+                    105,
+                    110,
+                    102,
+                    101,
+                    114,
+                    114,
+                    101,
+                    100
+                  ],
+                  "logprob": -10.882420539855957,
+                  "raw_logit": 18.74846076965332
+                },
+                {
+                  "id": 3671,
+                  "token": " device",
+                  "bytes": [
+                    32,
+                    100,
+                    101,
+                    118,
+                    105,
+                    99,
+                    101
+                  ],
+                  "logprob": -10.894597053527832,
+                  "raw_logit": 18.736284255981445
+                },
+                {
+                  "id": 2795,
+                  "token": " load",
+                  "bytes": [
+                    32,
+                    108,
+                    111,
+                    97,
+                    100
+                  ],
+                  "logprob": -11.023844718933105,
+                  "raw_logit": 18.607036590576172
+                },
+                {
+                  "id": 10272,
+                  "token": " quant",
+                  "bytes": [
+                    32,
+                    113,
+                    117,
+                    97,
+                    110,
+                    116
+                  ],
+                  "logprob": -11.157458305358887,
+                  "raw_logit": 18.47342300415039
+                },
+                {
+                  "id": 7373,
+                  "token": " effective",
+                  "bytes": [
+                    32,
+                    101,
+                    102,
+                    102,
+                    101,
+                    99,
+                    116,
+                    105,
+                    118,
+                    101
+                  ],
+                  "logprob": -11.189177513122559,
+                  "raw_logit": 18.44170379638672
+                }
+              ],
+              "raw_logit": 29.627330780029297
+            },
+            {
+              "id": 1760,
+              "token": " count",
+              "bytes": [
+                32,
+                99,
+                111,
+                117,
+                110,
+                116
+              ],
+              "logprob": -0.000015378116586362012,
+              "top_logprobs": [
+                {
+                  "id": 1760,
+                  "token": " count",
+                  "bytes": [
+                    32,
+                    99,
+                    111,
+                    117,
+                    110,
+                    116
+                  ],
+                  "logprob": -0.000015378116586362012,
+                  "raw_logit": 43.012210845947266
+                },
+                {
+                  "id": 14579,
+                  "token": " counts",
+                  "bytes": [
+                    32,
+                    99,
+                    111,
+                    117,
+                    110,
+                    116,
+                    115
+                  ],
+                  "logprob": -11.842691421508789,
+                  "raw_logit": 31.16953468322754
+                },
+                {
+                  "id": 6546,
+                  "token": " configuration",
+                  "bytes": [
+                    32,
+                    99,
+                    111,
+                    110,
+                    102,
+                    105,
+                    103,
+                    117,
+                    114,
+                    97,
+                    116,
+                    105,
+                    111,
+                    110
+                  ],
+                  "logprob": -12.63223648071289,
+                  "raw_logit": 30.379989624023438
+                },
+                {
+                  "id": 10431,
+                  "token": " usage",
+                  "bytes": [
+                    32,
+                    117,
+                    115,
+                    97,
+                    103,
+                    101
+                  ],
+                  "logprob": -13.08205795288086,
+                  "raw_logit": 29.93016815185547
+                },
+                {
+                  "id": 3565,
+                  "token": " details",
+                  "bytes": [
+                    32,
+                    100,
+                    101,
+                    116,
+                    97,
+                    105,
+                    108,
+                    115
+                  ],
+                  "logprob": -13.219581604003906,
+                  "raw_logit": 29.792644500732422
+                },
+                {
+                  "id": 1995,
+                  "token": " information",
+                  "bytes": [
+                    32,
+                    105,
+                    110,
+                    102,
+                    111,
+                    114,
+                    109,
+                    97,
+                    116,
+                    105,
+                    111,
+                    110
+                  ],
+                  "logprob": -14.488544464111328,
+                  "raw_logit": 28.523681640625
+                },
+                {
+                  "id": 1584,
+                  "token": " state",
+                  "bytes": [
+                    32,
+                    115,
+                    116,
+                    97,
+                    116,
+                    101
+                  ],
+                  "logprob": -15.42752456665039,
+                  "raw_logit": 27.584701538085938
+                },
+                {
+                  "id": 18048,
+                  "token": " availability",
+                  "bytes": [
+                    32,
+                    97,
+                    118,
+                    97,
+                    105,
+                    108,
+                    97,
+                    98,
+                    105,
+                    108,
+                    105,
+                    116,
+                    121
+                  ],
+                  "logprob": -15.780782699584961,
+                  "raw_logit": 27.231443405151367
+                },
+                {
+                  "id": 6240,
+                  "token": " management",
+                  "bytes": [
+                    32,
+                    109,
+                    97,
+                    110,
+                    97,
+                    103,
+                    101,
+                    109,
+                    101,
+                    110,
+                    116
+                  ],
+                  "logprob": -16.145503997802734,
+                  "raw_logit": 26.866722106933594
+                },
+                {
+                  "id": 8654,
+                  "token": " capacity",
+                  "bytes": [
+                    32,
+                    99,
+                    97,
+                    112,
+                    97,
+                    99,
+                    105,
+                    116,
+                    121
+                  ],
+                  "logprob": -16.376365661621094,
+                  "raw_logit": 26.635860443115234
+                },
+                {
+                  "id": 23757,
+                  "token": " allocation",
+                  "bytes": [
+                    32,
+                    97,
+                    108,
+                    108,
+                    111,
+                    99,
+                    97,
+                    116,
+                    105,
+                    111,
+                    110
+                  ],
+                  "logprob": -16.387813568115234,
+                  "raw_logit": 26.624412536621094
+                },
+                {
+                  "id": 65319,
+                  "token": " occupancy",
+                  "bytes": [
+                    32,
+                    111,
+                    99,
+                    99,
+                    117,
+                    112,
+                    97,
+                    110,
+                    99,
+                    121
+                  ],
+                  "logprob": -16.657852172851562,
+                  "raw_logit": 26.354373931884766
+                },
+                {
+                  "id": 1379,
+                  "token": " size",
+                  "bytes": [
+                    32,
+                    115,
+                    105,
+                    122,
+                    101
+                  ],
+                  "logprob": -16.931396484375,
+                  "raw_logit": 26.080829620361328
+                },
+                {
+                  "id": 11160,
+                  "token": " metadata",
+                  "bytes": [
+                    32,
+                    109,
+                    101,
+                    116,
+                    97,
+                    100,
+                    97,
+                    116,
+                    97
+                  ],
+                  "logprob": -17.121797561645508,
+                  "raw_logit": 25.89042854309082
+                },
+                {
+                  "id": 2639,
+                  "token": " status",
+                  "bytes": [
+                    32,
+                    115,
+                    116,
+                    97,
+                    116,
+                    117,
+                    115
+                  ],
+                  "logprob": -17.191715240478516,
+                  "raw_logit": 25.820510864257812
+                },
+                {
+                  "id": 5944,
+                  "token": " structure",
+                  "bytes": [
+                    32,
+                    115,
+                    116,
+                    114,
+                    117,
+                    99,
+                    116,
+                    117,
+                    114,
+                    101
+                  ],
+                  "logprob": -17.518863677978516,
+                  "raw_logit": 25.493362426757812
+                },
+                {
+                  "id": 49449,
+                  "token": " utilization",
+                  "bytes": [
+                    32,
+                    117,
+                    116,
+                    105,
+                    108,
+                    105,
+                    122,
+                    97,
+                    116,
+                    105,
+                    111,
+                    110
+                  ],
+                  "logprob": -17.53057289123535,
+                  "raw_logit": 25.481653213500977
+                },
+                {
+                  "id": 821,
+                  "token": " data",
+                  "bytes": [
+                    32,
+                    100,
+                    97,
+                    116,
+                    97
+                  ],
+                  "logprob": -17.748138427734375,
+                  "raw_logit": 25.264087677001953
+                },
+                {
+                  "id": 25009,
+                  "token": " counting",
+                  "bytes": [
+                    32,
+                    99,
+                    111,
+                    117,
+                    110,
+                    116,
+                    105,
+                    110,
+                    103
+                  ],
+                  "logprob": -17.74874496459961,
+                  "raw_logit": 25.26348114013672
+                },
+                {
+                  "id": 32383,
+                  "token": " configurations",
+                  "bytes": [
+                    32,
+                    99,
+                    111,
+                    110,
+                    102,
+                    105,
+                    103,
+                    117,
+                    114,
+                    97,
+                    116,
+                    105,
+                    111,
+                    110,
+                    115
+                  ],
+                  "logprob": -17.77850341796875,
+                  "raw_logit": 25.233722686767578
+                }
+              ],
+              "raw_logit": 43.012210845947266
+            },
+            {
+              "id": 13,
+              "token": ".",
+              "bytes": [
+                46
+              ],
+              "logprob": -0.3804599940776825,
+              "top_logprobs": [
+                {
+                  "id": 13,
+                  "token": ".",
+                  "bytes": [
+                    46
+                  ],
+                  "logprob": -0.3804599940776825,
+                  "raw_logit": 33.810691833496094
+                },
+                {
+                  "id": 624,
+                  "token": ".\n",
+                  "bytes": [
+                    46,
+                    10
+                  ],
+                  "logprob": -1.4132778644561768,
+                  "raw_logit": 32.77787399291992
+                },
+                {
+                  "id": 382,
+                  "token": ".\n\n",
+                  "bytes": [
+                    46,
+                    10,
+                    10
+                  ],
+                  "logprob": -2.6514313220977783,
+                  "raw_logit": 31.53972053527832
+                },
+                {
+                  "id": 369,
+                  "token": " for",
+                  "bytes": [
+                    32,
+                    102,
+                    111,
+                    114
+                  ],
+                  "logprob": -7.155360221862793,
+                  "raw_logit": 27.035791397094727
+                },
+                {
+                  "id": 11,
+                  "token": ",",
+                  "bytes": [
+                    44
+                  ],
+                  "logprob": -7.8955888748168945,
+                  "raw_logit": 26.295562744140625
+                },
+                {
+                  "id": 304,
+                  "token": " in",
+                  "bytes": [
+                    32,
+                    105,
+                    110
+                  ],
+                  "logprob": -7.97603702545166,
+                  "raw_logit": 26.21511459350586
+                },
+                {
+                  "id": 311,
+                  "token": " to",
+                  "bytes": [
+                    32,
+                    116,
+                    111
+                  ],
+                  "logprob": -8.096514701843262,
+                  "raw_logit": 26.094636917114258
+                },
+                {
+                  "id": 448,
+                  "token": " with",
+                  "bytes": [
+                    32,
+                    119,
+                    105,
+                    116,
+                    104
+                  ],
+                  "logprob": -8.581841468811035,
+                  "raw_logit": 25.609310150146484
+                },
+                {
+                  "id": 504,
+                  "token": " from",
+                  "bytes": [
+                    32,
+                    102,
+                    114,
+                    111,
+                    109
+                  ],
+                  "logprob": -8.715737342834473,
+                  "raw_logit": 25.475414276123047
+                },
+                {
+                  "id": 1549,
+                  "token": " again",
+                  "bytes": [
+                    32,
+                    97,
+                    103,
+                    97,
+                    105,
+                    110
+                  ],
+                  "logprob": -9.239981651306152,
+                  "raw_logit": 24.951169967651367
+                },
+                {
+                  "id": 1526,
+                  "token": " through",
+                  "bytes": [
+                    32,
+                    116,
+                    104,
+                    114,
+                    111,
+                    117,
+                    103,
+                    104
+                  ],
+                  "logprob": -9.405106544494629,
+                  "raw_logit": 24.78604507446289
+                },
+                {
+                  "id": 4566,
+                  "token": " via",
+                  "bytes": [
+                    32,
+                    118,
+                    105,
+                    97
+                  ],
+                  "logprob": -9.664891242980957,
+                  "raw_logit": 24.526260375976562
+                },
+                {
+                  "id": 1667,
+                  "token": " using",
+                  "bytes": [
+                    32,
+                    117,
+                    115,
+                    105,
+                    110,
+                    103
+                  ],
+                  "logprob": -10.46349811553955,
+                  "raw_logit": 23.72765350341797
+                },
+                {
+                  "id": 323,
+                  "token": " and",
+                  "bytes": [
+                    32,
+                    97,
+                    110,
+                    100
+                  ],
+                  "logprob": -10.604596138000488,
+                  "raw_logit": 23.58655548095703
+                },
+                {
+                  "id": 553,
+                  "token": " by",
+                  "bytes": [
+                    32,
+                    98,
+                    121
+                  ],
+                  "logprob": -10.881150245666504,
+                  "raw_logit": 23.310001373291016
+                },
+                {
+                  "id": 2041,
+                  "token": " without",
+                  "bytes": [
+                    32,
+                    119,
+                    105,
+                    116,
+                    104,
+                    111,
+                    117,
+                    116
+                  ],
+                  "logprob": -11.016901969909668,
+                  "raw_logit": 23.17424964904785
+                },
+                {
+                  "id": 4192,
+                  "token": ".\n\n\n",
+                  "bytes": [
+                    46,
+                    10,
+                    10,
+                    10
+                  ],
+                  "logprob": -11.324116706848145,
+                  "raw_logit": 22.867034912109375
+                },
+                {
+                  "id": 438,
+                  "token": " as",
+                  "bytes": [
+                    32,
+                    97,
+                    115
+                  ],
+                  "logprob": -11.329113960266113,
+                  "raw_logit": 22.862037658691406
+                },
+                {
+                  "id": 7110,
+                  "token": ".\\",
+                  "bytes": [
+                    46,
+                    92
+                  ],
+                  "logprob": -11.90383243560791,
+                  "raw_logit": 22.28731918334961
+                },
+                {
+                  "id": 320,
+                  "token": " (",
+                  "bytes": [
+                    32,
+                    40
+                  ],
+                  "logprob": -12.309134483337402,
+                  "raw_logit": 21.882017135620117
+                }
+              ],
+              "raw_logit": 33.810691833496094
+            },
+            {
+              "id": 151645,
+              "token": "",
+              "bytes": [],
+              "logprob": -0.018787896260619164,
+              "top_logprobs": [
+                {
+                  "id": 151645,
+                  "token": "",
+                  "bytes": [],
+                  "logprob": -0.018787896260619164,
+                  "raw_logit": 28.107175827026367
+                },
+                {
+                  "id": 576,
+                  "token": " The",
+                  "bytes": [
+                    32,
+                    84,
+                    104,
+                    101
+                  ],
+                  "logprob": -4.992788791656494,
+                  "raw_logit": 23.133174896240234
+                },
+                {
+                  "id": 2303,
+                  "token": "  \n",
+                  "bytes": [
+                    32,
+                    32,
+                    10
+                  ],
+                  "logprob": -5.066671848297119,
+                  "raw_logit": 23.05929183959961
+                },
+                {
+                  "id": 358,
+                  "token": " I",
+                  "bytes": [
+                    32,
+                    73
+                  ],
+                  "logprob": -5.746159076690674,
+                  "raw_logit": 22.379804611206055
+                },
+                {
+                  "id": 4710,
+                  "token": " \n\n",
+                  "bytes": [
+                    32,
+                    10,
+                    10
+                  ],
+                  "logprob": -6.777384281158447,
+                  "raw_logit": 21.34857940673828
+                },
+                {
+                  "id": 5692,
+                  "token": " Here",
+                  "bytes": [
+                    32,
+                    72,
+                    101,
+                    114,
+                    101
+                  ],
+                  "logprob": -8.283175468444824,
+                  "raw_logit": 19.842788696289062
+                },
+                {
+                  "id": 18611,
+                  "token": "  \n\n",
+                  "bytes": [
+                    32,
+                    32,
+                    10,
+                    10
+                  ],
+                  "logprob": -8.936168670654297,
+                  "raw_logit": 19.189794540405273
+                },
+                {
+                  "id": 1096,
+                  "token": " This",
+                  "bytes": [
+                    32,
+                    84,
+                    104,
+                    105,
+                    115
+                  ],
+                  "logprob": -9.066152572631836,
+                  "raw_logit": 19.059810638427734
+                },
+                {
+                  "id": 6771,
+                  "token": " Let",
+                  "bytes": [
+                    32,
+                    76,
+                    101,
+                    116
+                  ],
+                  "logprob": -9.251364707946777,
+                  "raw_logit": 18.87459945678711
+                },
+                {
+                  "id": 20205,
+                  "token": " Based",
+                  "bytes": [
+                    32,
+                    66,
+                    97,
+                    115,
+                    101,
+                    100
+                  ],
+                  "logprob": -9.461535453796387,
+                  "raw_logit": 18.6644287109375
+                },
+                {
+                  "id": 220,
+                  "token": " ",
+                  "bytes": [
+                    32
+                  ],
+                  "logprob": -9.53402042388916,
+                  "raw_logit": 18.591943740844727
+                },
+                {
+                  "id": 5542,
+                  "token": " From",
+                  "bytes": [
+                    32,
+                    70,
+                    114,
+                    111,
+                    109
+                  ],
+                  "logprob": -9.679533004760742,
+                  "raw_logit": 18.446430206298828
+                },
+                {
+                  "id": 715,
+                  "token": " \n",
+                  "bytes": [
+                    32,
+                    10
+                  ],
+                  "logprob": -9.82071590423584,
+                  "raw_logit": 18.305248260498047
+                },
+                {
+                  "id": 1084,
+                  "token": " It",
+                  "bytes": [
+                    32,
+                    73,
+                    116
+                  ],
+                  "logprob": -9.879080772399902,
+                  "raw_logit": 18.246883392333984
+                },
+                {
+                  "id": 151657,
+                  "token": "<tool_call>",
+                  "bytes": [
+                    60,
+                    116,
+                    111,
+                    111,
+                    108,
+                    95,
+                    99,
+                    97,
+                    108,
+                    108,
+                    62
+                  ],
+                  "logprob": -9.912196159362793,
+                  "raw_logit": 18.213768005371094
+                },
+                {
+                  "id": 151668,
+                  "token": "</think>",
+                  "bytes": [
+                    60,
+                    47,
+                    116,
+                    104,
+                    105,
+                    110,
+                    107,
+                    62
+                  ],
+                  "logprob": -10.224373817443848,
+                  "raw_logit": 17.90159034729004
+                },
+                {
+                  "id": 320,
+                  "token": " (",
+                  "bytes": [
+                    32,
+                    40
+                  ],
+                  "logprob": -10.650437355041504,
+                  "raw_logit": 17.475526809692383
+                },
+                {
+                  "id": 758,
+                  "token": " In",
+                  "bytes": [
+                    32,
+                    73,
+                    110
+                  ],
+                  "logprob": -10.685667037963867,
+                  "raw_logit": 17.440296173095703
+                },
+                {
+                  "id": 2619,
+                  "token": " There",
+                  "bytes": [
+                    32,
+                    84,
+                    104,
+                    101,
+                    114,
+                    101
+                  ],
+                  "logprob": -10.700854301452637,
+                  "raw_logit": 17.42510986328125
+                },
+                {
+                  "id": 1752,
+                  "token": " For",
+                  "bytes": [
+                    32,
+                    70,
+                    111,
+                    114
+                  ],
+                  "logprob": -11.187575340270996,
+                  "raw_logit": 16.93838882446289
+                }
+              ],
+              "raw_logit": 28.107175827026367
+            }
+          ]
+        }
+      }
+    ],
+    "created": 1786918934,
+    "model": "/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf",
+    "system_fingerprint": "b1-9d57ce4",
+    "object": "chat.completion",
+    "usage": {
+      "completion_tokens": 14,
+      "prompt_tokens": 952,
+      "total_tokens": 966,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "id": "chatcmpl-Kt4hUoM0MRaTxR1fRb2XHOtFnJGk9rio",
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 952,
+      "prompt_ms": 780.045,
+      "prompt_per_token_ms": 0.819375,
+      "prompt_per_second": 1220.4424103737604,
+      "predicted_n": 14,
+      "predicted_ms": 434.778,
+      "predicted_per_token_ms": 33.44446153846154,
+      "predicted_per_second": 29.9003169433596
+    }
+  }
+}

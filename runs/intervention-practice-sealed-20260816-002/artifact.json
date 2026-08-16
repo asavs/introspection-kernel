@@ -1,0 +1,1937 @@
+{
+  "schema": "ik.intervention-practice-comparison.v1",
+  "run_id": "intervention-practice-sealed-20260816-002",
+  "preregistration": {
+    "schema": "ik.intervention-practice-comparison-preregistration.v1",
+    "run_id": "intervention-practice-sealed-20260816-002",
+    "sealed_at": "2026-08-16T22:25:18.880Z",
+    "thesis_question": "Does correctly paired practice improve held-out use of self-coupled causal transformer evidence?",
+    "target": {
+      "layer": 35,
+      "head": 25,
+      "scale": 0
+    },
+    "practice_episode_count": 5,
+    "heldout_outcome_status": "not_run",
+    "conditions": [
+      {
+        "opaque_id": "831eddbc-9e98-42af-aa8a-b5f709646050",
+        "external_label": "matched_practice",
+        "outcome_order": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "opaque_id": "cea2e663-240e-4858-9916-8feaa1be91b5",
+        "external_label": "outcome_shuffled_practice",
+        "outcome_order": [
+          1,
+          2,
+          3,
+          4,
+          0
+        ]
+      }
+    ],
+    "controls": {
+      "identical_outcome_multiset_sha256": "3424be0da3d7492fe03988b405e301a0f793eb26832a5567795af5a98fc20704",
+      "prompt_token_counts": {
+        "831eddbc-9e98-42af-aa8a-b5f709646050": 6984,
+        "cea2e663-240e-4858-9916-8feaa1be91b5": 6984
+      },
+      "shuffled_mapping_is_derangement": true,
+      "outcome_token_ids_hidden": true,
+      "outcomes_indexed_by_fixed_probe_rank": true,
+      "probe_panel_selected_from_practice_only": true,
+      "maximum_pairwise_practice_outcome_mae": 0.2265642285346985,
+      "empty_kv_slot_before_every_inference": true
+    },
+    "scoring": {
+      "primary_quantity": "other-minus-baseline raw-logit delta",
+      "candidate_panel": "five practice-selected causal probes, fixed before held-out baseline and intervention",
+      "sign_epsilon": 0.05,
+      "metrics": [
+        "mean_absolute_error",
+        "skill_over_copy_baseline",
+        "sign_accuracy",
+        "spearman_rank_correlation",
+        "centered_cosine_similarity",
+        "largest_rise_correct",
+        "largest_fall_correct",
+        "selected_token_change_correct"
+      ],
+      "directional_hypothesis": "matched practice outperforms outcome-shuffled practice"
+    }
+  },
+  "probe_panel": {
+    "coordinates": [
+      76782,
+      1863,
+      33489,
+      50504,
+      29067
+    ],
+    "pieces": [
+      " BK",
+      " Z",
+      " BA",
+      " BF",
+      " BP"
+    ],
+    "selection_rule": "five vocabulary coordinates with largest mean absolute intervention effect across practice only",
+    "mean_absolute_effects": [
+      {
+        "rank": 1,
+        "token_id": 76782,
+        "token": " BK",
+        "mean_absolute_delta": 0.70014328956604
+      },
+      {
+        "rank": 2,
+        "token_id": 1863,
+        "token": " Z",
+        "mean_absolute_delta": 0.6752726554870606
+      },
+      {
+        "rank": 3,
+        "token_id": 33489,
+        "token": " BA",
+        "mean_absolute_delta": 0.6751099348068238
+      },
+      {
+        "rank": 4,
+        "token_id": 50504,
+        "token": " BF",
+        "mean_absolute_delta": 0.630861520767212
+      },
+      {
+        "rank": 5,
+        "token_id": 29067,
+        "token": " BP",
+        "mean_absolute_delta": 0.6200880646705628
+      }
+    ]
+  },
+  "practice_salience": [
+    {
+      "label": "practice-1",
+      "max_abs_candidate_delta": 0.760744571685791,
+      "full_vocabulary_delta_rms": 0.11971490506594437
+    },
+    {
+      "label": "practice-2",
+      "max_abs_candidate_delta": 0.8132185935974121,
+      "full_vocabulary_delta_rms": 0.11982324531872693
+    },
+    {
+      "label": "practice-3",
+      "max_abs_candidate_delta": 0.7884106636047363,
+      "full_vocabulary_delta_rms": 0.1223127433085808
+    },
+    {
+      "label": "practice-4",
+      "max_abs_candidate_delta": 0.8161658644676208,
+      "full_vocabulary_delta_rms": 0.12327637559868317
+    },
+    {
+      "label": "practice-5",
+      "max_abs_candidate_delta": 0.5621239542961121,
+      "full_vocabulary_delta_rms": 0.0779176406602605
+    }
+  ],
+  "practice_episodes": [
+    {
+      "label": "practice-1",
+      "baseline": {
+        "message": {
+          "role": "assistant",
+          "content": "I’ll inspect the model’s parameter count.\n<tool_call>\n{\"name\": \"shell\", \"arguments\": {\"command\": \"jq '.parameters' /var/lib/introspection/substrate/gguf-inventory.json\"}}\n</tool_call>"
+        },
+        "forward_pass": {
+          "forward_pass_id": 1786918891945654,
+          "task_id": 0,
+          "slot_id": 0,
+          "evaluated_position": 965,
+          "batch_tokens": 1
+        },
+        "alignment": {
+          "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+          "prompt_tokens": 965,
+          "evaluated_position": 965,
+          "selected_token_index": 1,
+          "selected_token_id": 4700,
+          "selected_token": "’ll",
+          "api_raw_logit": 30.676227569580078,
+          "captured_raw_logit": 30.676227569580078,
+          "absolute_logit_error": 0,
+          "full_logit_match": true
+        },
+        "model_evidence": {
+          "evaluated_token": {
+            "position": 965,
+            "id": 40,
+            "piece": "I",
+            "source": "earlier_generated_token_in_same_assistant_turn",
+            "generated_token_index": 0
+          },
+          "selected_next_token": "’ll",
+          "intervention": {
+            "layer": 35,
+            "head": 25,
+            "scale": 0,
+            "mutation_point": "post-attention kqv activation, before output projection"
+          },
+          "head_activation": {
+            "rms": 1.137683908888692,
+            "mean_abs": 0.8818650161847472,
+            "first_8_coordinates": [
+              -0.41971367597579956,
+              1.6282836198806763,
+              -0.16304367780685425,
+              -2.067066192626953,
+              -1.4118156433105469,
+              0.02598893642425537,
+              0.10531723499298096,
+              0.7628339529037476
+            ]
+          },
+          "top_attention_sources": [
+            {
+              "position": 0,
+              "weight": 0.43219852447509766,
+              "token": {
+                "position": 0,
+                "id": 151644,
+                "piece": "<|im_start|>"
+              }
+            },
+            {
+              "position": 965,
+              "weight": 0.2386617362499237,
+              "token": {
+                "position": 965,
+                "id": 40,
+                "piece": "I",
+                "source": "earlier_generated_token_in_same_assistant_turn",
+                "generated_token_index": 0
+              }
+            },
+            {
+              "position": 751,
+              "weight": 0.043386753648519516,
+              "token": {
+                "position": 751,
+                "id": 40,
+                "piece": "I"
+              }
+            }
+          ],
+          "baseline_top_tokens": [
+            {
+              "rank": 1,
+              "token_id": 4700,
+              "token": "’ll",
+              "baseline_logit": 30.676227569580078,
+              "baseline_probability": 0.9197556964642001
+            },
+            {
+              "rank": 2,
+              "token_id": 3278,
+              "token": "'ll",
+              "baseline_logit": 27.978918075561523,
+              "baseline_probability": 0.06197918072122479
+            },
+            {
+              "rank": 3,
+              "token_id": 686,
+              "token": " will",
+              "baseline_logit": 25.99606704711914,
+              "baseline_probability": 0.008533055514492837
+            },
+            {
+              "rank": 4,
+              "token_id": 3982,
+              "token": "’ve",
+              "baseline_logit": 25.838146209716797,
+              "baseline_probability": 0.007286524387942404
+            },
+            {
+              "rank": 5,
+              "token_id": 614,
+              "token": " have",
+              "baseline_logit": 23.72161865234375,
+              "baseline_probability": 0.0008776557123760213
+            }
+          ],
+          "candidate_panel": [
+            {
+              "rank": 1,
+              "token_id": 76782,
+              "token": " BK",
+              "baseline_logit": -0.3289686441421509
+            },
+            {
+              "rank": 2,
+              "token_id": 1863,
+              "token": " Z",
+              "baseline_logit": 3.3369526863098145
+            },
+            {
+              "rank": 3,
+              "token_id": 33489,
+              "token": " BA",
+              "baseline_logit": -0.35457611083984375
+            },
+            {
+              "rank": 4,
+              "token_id": 50504,
+              "token": " BF",
+              "baseline_logit": -4.549077033996582
+            },
+            {
+              "rank": 5,
+              "token_id": 29067,
+              "token": " BP",
+              "baseline_logit": -0.4826103448867798
+            }
+          ]
+        },
+        "capture_run_id": "intervention-practice-sealed-20260816-002-practice-1-baseline"
+      },
+      "intervention": {
+        "message": {
+          "role": "assistant",
+          "content": "I’ll inspect the model’s parameter count.\n<tool_call>\n{\"name\": \"shell\", \"arguments\": {\"command\": \"jq '.parameters' /var/lib/introspection/substrate/gguf-inventory.json\"}}\n</tool_call>"
+        },
+        "forward_pass": {
+          "forward_pass_id": 1786918913150475,
+          "task_id": 0,
+          "slot_id": 0,
+          "evaluated_position": 965,
+          "batch_tokens": 1
+        },
+        "alignment": {
+          "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+          "prompt_tokens": 965,
+          "evaluated_position": 965,
+          "selected_token_index": 1,
+          "selected_token_id": 4700,
+          "selected_token": "’ll",
+          "api_raw_logit": 30.790075302124023,
+          "captured_raw_logit": 30.790075302124023,
+          "absolute_logit_error": 0,
+          "full_logit_match": true
+        },
+        "event": {
+          "schema": "ik.transformer-intervention.v1",
+          "event": "attention_head_scaled",
+          "t_guest_mono_us": 46054196,
+          "plan_id": "intervention-practice-sealed-20260816-002-practice-1-scale-zero",
+          "task_id": 0,
+          "slot_id": 0,
+          "forward_pass_id": 1786918913150475,
+          "evaluated_position": 965,
+          "tensor_name": "kqv-35",
+          "head": 25,
+          "scale": 0,
+          "changed_coordinates": 128,
+          "delta_l2": 12.8714241,
+          "delta_max_abs": 3.68355894,
+          "pre_binary_file": "pass-1786918913150475-task-0-slot-0-kqv-35-occ-1.bin",
+          "post_binary_file": "pass-1786918913150475-task-0-slot-0-kqv-35-occ-1-intervened.bin",
+          "post_sha256": "45b63f48635e303ad40cec52a2f57bea7d555dbea4cfc9c899af78da5739b6c6"
+        },
+        "capture_run_id": "intervention-practice-sealed-20260816-002-practice-1-scale-zero"
+      },
+      "outcome": {
+        "delta_logits_by_candidate_rank": [
+          0.635793149471283,
+          0.760744571685791,
+          0.736350417137146,
+          0.5887179374694824,
+          0.6523888111114502
+        ],
+        "selected_token_changed": false,
+        "full_vocabulary_delta_rms": 0.11971490506594437,
+        "full_vocabulary_delta_max_abs": 0.760744571685791
+      }
+    },
+    {
+      "label": "practice-2",
+      "baseline": {
+        "message": {
+          "role": "assistant",
+          "content": "I’ll inspect the runtime’s declared model identity and slot count."
+        },
+        "forward_pass": {
+          "forward_pass_id": 1786918934071619,
+          "task_id": 0,
+          "slot_id": 0,
+          "evaluated_position": 952,
+          "batch_tokens": 1
+        },
+        "alignment": {
+          "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+          "prompt_tokens": 952,
+          "evaluated_position": 952,
+          "selected_token_index": 1,
+          "selected_token_id": 4700,
+          "selected_token": "’ll",
+          "api_raw_logit": 28.69765853881836,
+          "captured_raw_logit": 28.69765853881836,
+          "absolute_logit_error": 0,
+          "full_logit_match": true
+        },
+        "model_evidence": {
+          "evaluated_token": {
+            "position": 952,
+            "id": 40,
+            "piece": "I",
+            "source": "earlier_generated_token_in_same_assistant_turn",
+            "generated_token_index": 0
+          },
+          "selected_next_token": "’ll",
+          "intervention": {
+            "layer": 35,
+            "head": 25,
+            "scale": 0,
+            "mutation_point": "post-attention kqv activation, before output projection"
+          },
+          "head_activation": {
+            "rms": 1.1630937431369344,
+            "mean_abs": 0.8894654796458781,
+            "first_8_coordinates": [
+              -0.2865257263183594,
+              1.3844568729400635,
+              -0.20593297481536865,
+              -2.210484743118286,
+              -1.3629484176635742,
+              0.030019938945770264,
+              -0.25501614809036255,
+              1.534904956817627
+            ]
+          },
+          "top_attention_sources": [
+            {
+              "position": 0,
+              "weight": 0.412737637758255,
+              "token": {
+                "position": 0,
+                "id": 151644,
+                "piece": "<|im_start|>"
+              }
+            },
+            {
+              "position": 952,
+              "weight": 0.23073329031467438,
+              "token": {
+                "position": 952,
+                "id": 40,
+                "piece": "I",
+                "source": "earlier_generated_token_in_same_assistant_turn",
+                "generated_token_index": 0
+              }
+            },
+            {
+              "position": 751,
+              "weight": 0.05052192509174347,
+              "token": {
+                "position": 751,
+                "id": 40,
+                "piece": "I"
+              }
+            }
+          ],
+          "baseline_top_tokens": [
+            {
+              "rank": 1,
+              "token_id": 4700,
+              "token": "’ll",
+              "baseline_logit": 28.69765853881836,
+              "baseline_probability": 0.8327556859616958
+            },
+            {
+              "rank": 2,
+              "token_id": 3278,
+              "token": "'ll",
+              "baseline_logit": 26.616668701171875,
+              "baseline_probability": 0.10393342725690483
+            },
+            {
+              "rank": 3,
+              "token_id": 3982,
+              "token": "’ve",
+              "baseline_logit": 25.42171287536621,
+              "baseline_probability": 0.03146244920001562
+            },
+            {
+              "rank": 4,
+              "token_id": 686,
+              "token": " will",
+              "baseline_logit": 25.012126922607422,
+              "baseline_probability": 0.020888704423454765
+            },
+            {
+              "rank": 5,
+              "token_id": 614,
+              "token": " have",
+              "baseline_logit": 23.61388397216797,
+              "baseline_probability": 0.005160151000054759
+            }
+          ],
+          "candidate_panel": [
+            {
+              "rank": 1,
+              "token_id": 76782,
+              "token": " BK",
+              "baseline_logit": -0.26203250885009766
+            },
+            {
+              "rank": 2,
+              "token_id": 1863,
+              "token": " Z",
+              "baseline_logit": 3.282609462738037
+            },
+            {
+              "rank": 3,
+              "token_id": 33489,
+              "token": " BA",
+              "baseline_logit": -0.19077563285827637
+            },
+            {
+              "rank": 4,
+              "token_id": 50504,
+              "token": " BF",
+              "baseline_logit": -4.194244384765625
+            },
+            {
+              "rank": 5,
+              "token_id": 29067,
+              "token": " BP",
+              "baseline_logit": -0.27579939365386963
+            }
+          ]
+        },
+        "capture_run_id": "intervention-practice-sealed-20260816-002-practice-2-baseline"
+      },
+      "intervention": {
+        "message": {
+          "role": "assistant",
+          "content": "I’ll inspect the runtime’s declared model identity and slot count."
+        },
+        "forward_pass": {
+          "forward_pass_id": 1786918954805675,
+          "task_id": 0,
+          "slot_id": 0,
+          "evaluated_position": 952,
+          "batch_tokens": 1
+        },
+        "alignment": {
+          "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+          "prompt_tokens": 952,
+          "evaluated_position": 952,
+          "selected_token_index": 1,
+          "selected_token_id": 4700,
+          "selected_token": "’ll",
+          "api_raw_logit": 28.700288772583008,
+          "captured_raw_logit": 28.700288772583008,
+          "absolute_logit_error": 0,
+          "full_logit_match": true
+        },
+        "event": {
+          "schema": "ik.transformer-intervention.v1",
+          "event": "attention_head_scaled",
+          "t_guest_mono_us": 87713589,
+          "plan_id": "intervention-practice-sealed-20260816-002-practice-2-scale-zero",
+          "task_id": 0,
+          "slot_id": 0,
+          "forward_pass_id": 1786918954805675,
+          "evaluated_position": 952,
+          "tensor_name": "kqv-35",
+          "head": 25,
+          "scale": 0,
+          "changed_coordinates": 128,
+          "delta_l2": 13.1589036,
+          "delta_max_abs": 3.75269699,
+          "pre_binary_file": "pass-1786918954805675-task-0-slot-0-kqv-35-occ-1.bin",
+          "post_binary_file": "pass-1786918954805675-task-0-slot-0-kqv-35-occ-1-intervened.bin",
+          "post_sha256": "6ba14c0a1c3b7ca689744ea1c21f8e5115212c6da985095c5db983c59158e23b"
+        },
+        "capture_run_id": "intervention-practice-sealed-20260816-002-practice-2-scale-zero"
+      },
+      "outcome": {
+        "delta_logits_by_candidate_rank": [
+          0.8132185935974121,
+          0.7003140449523926,
+          0.7672205567359924,
+          0.7360348701477051,
+          0.6867060661315918
+        ],
+        "selected_token_changed": false,
+        "full_vocabulary_delta_rms": 0.11982324531872693,
+        "full_vocabulary_delta_max_abs": 0.8132185935974121
+      }
+    },
+    {
+      "label": "practice-3",
+      "baseline": {
+        "message": {
+          "role": "assistant",
+          "content": "I’ll inspect the runtime properties to understand how the model is being used.\n<tool_call>\n{\"name\": \"shell\", \"arguments\": {\"command\": \"cat /var/lib/introspection/runtime-props.json\"}}\n</tool_call>"
+        },
+        "forward_pass": {
+          "forward_pass_id": 1786918975084767,
+          "task_id": 0,
+          "slot_id": 0,
+          "evaluated_position": 938,
+          "batch_tokens": 1
+        },
+        "alignment": {
+          "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+          "prompt_tokens": 938,
+          "evaluated_position": 938,
+          "selected_token_index": 1,
+          "selected_token_id": 4700,
+          "selected_token": "’ll",
+          "api_raw_logit": 27.98621940612793,
+          "captured_raw_logit": 27.98621940612793,
+          "absolute_logit_error": 0,
+          "full_logit_match": true
+        },
+        "model_evidence": {
+          "evaluated_token": {
+            "position": 938,
+            "id": 40,
+            "piece": "I",
+            "source": "earlier_generated_token_in_same_assistant_turn",
+            "generated_token_index": 0
+          },
+          "selected_next_token": "’ll",
+          "intervention": {
+            "layer": 35,
+            "head": 25,
+            "scale": 0,
+            "mutation_point": "post-attention kqv activation, before output projection"
+          },
+          "head_activation": {
+            "rms": 1.0988324593362238,
+            "mean_abs": 0.8508348776958883,
+            "first_8_coordinates": [
+              -0.32417285442352295,
+              1.3051022291183472,
+              0.15278548002243042,
+              -1.9720431566238403,
+              -1.323736548423767,
+              -0.14718079566955566,
+              -0.02739870548248291,
+              0.7449225783348083
+            ]
+          },
+          "top_attention_sources": [
+            {
+              "position": 0,
+              "weight": 0.41718295216560364,
+              "token": {
+                "position": 0,
+                "id": 151644,
+                "piece": "<|im_start|>"
+              }
+            },
+            {
+              "position": 938,
+              "weight": 0.24406763911247253,
+              "token": {
+                "position": 938,
+                "id": 40,
+                "piece": "I",
+                "source": "earlier_generated_token_in_same_assistant_turn",
+                "generated_token_index": 0
+              }
+            },
+            {
+              "position": 749,
+              "weight": 0.03164118155837059,
+              "token": {
+                "position": 749,
+                "id": 40,
+                "piece": "I"
+              }
+            }
+          ],
+          "baseline_top_tokens": [
+            {
+              "rank": 1,
+              "token_id": 4700,
+              "token": "’ll",
+              "baseline_logit": 27.98621940612793,
+              "baseline_probability": 0.7383522491024448
+            },
+            {
+              "rank": 2,
+              "token_id": 3278,
+              "token": "'ll",
+              "baseline_logit": 26.66153335571289,
+              "baseline_probability": 0.19631784274157715
+            },
+            {
+              "rank": 3,
+              "token_id": 3982,
+              "token": "’ve",
+              "baseline_logit": 24.647531509399414,
+              "baseline_probability": 0.02619931187498535
+            },
+            {
+              "rank": 4,
+              "token_id": 686,
+              "token": " will",
+              "baseline_logit": 24.502918243408203,
+              "baseline_probability": 0.02267175507953999
+            },
+            {
+              "rank": 5,
+              "token_id": 614,
+              "token": " have",
+              "baseline_logit": 23.234146118164062,
+              "baseline_probability": 0.006374768361116809
+            }
+          ],
+          "candidate_panel": [
+            {
+              "rank": 1,
+              "token_id": 76782,
+              "token": " BK",
+              "baseline_logit": -0.3267093300819397
+            },
+            {
+              "rank": 2,
+              "token_id": 1863,
+              "token": " Z",
+              "baseline_logit": 2.727125406265259
+            },
+            {
+              "rank": 3,
+              "token_id": 33489,
+              "token": " BA",
+              "baseline_logit": -0.31067025661468506
+            },
+            {
+              "rank": 4,
+              "token_id": 50504,
+              "token": " BF",
+              "baseline_logit": -4.161456108093262
+            },
+            {
+              "rank": 5,
+              "token_id": 29067,
+              "token": " BP",
+              "baseline_logit": -0.5952321290969849
+            }
+          ]
+        },
+        "capture_run_id": "intervention-practice-sealed-20260816-002-practice-3-baseline"
+      },
+      "intervention": {
+        "message": {
+          "role": "assistant",
+          "content": "I’ll inspect the runtime properties to understand how the model is being used.\n<tool_call>\n{\"name\": \"shell\", \"arguments\": {\"command\": \"cat /var/lib/introspection/runtime-props.json\"}}\n</tool_call>"
+        },
+        "forward_pass": {
+          "forward_pass_id": 1786918996253803,
+          "task_id": 0,
+          "slot_id": 0,
+          "evaluated_position": 938,
+          "batch_tokens": 1
+        },
+        "alignment": {
+          "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+          "prompt_tokens": 938,
+          "evaluated_position": 938,
+          "selected_token_index": 1,
+          "selected_token_id": 4700,
+          "selected_token": "’ll",
+          "api_raw_logit": 28.066951751708984,
+          "captured_raw_logit": 28.066951751708984,
+          "absolute_logit_error": 0,
+          "full_logit_match": true
+        },
+        "event": {
+          "schema": "ik.transformer-intervention.v1",
+          "event": "attention_head_scaled",
+          "t_guest_mono_us": 129158851,
+          "plan_id": "intervention-practice-sealed-20260816-002-practice-3-scale-zero",
+          "task_id": 0,
+          "slot_id": 0,
+          "forward_pass_id": 1786918996253803,
+          "evaluated_position": 938,
+          "tensor_name": "kqv-35",
+          "head": 25,
+          "scale": 0,
+          "changed_coordinates": 128,
+          "delta_l2": 12.4318701,
+          "delta_max_abs": 3.66188622,
+          "pre_binary_file": "pass-1786918996253803-task-0-slot-0-kqv-35-occ-1.bin",
+          "post_binary_file": "pass-1786918996253803-task-0-slot-0-kqv-35-occ-1-intervened.bin",
+          "post_sha256": "d8419448689914fde1e58000d7820d23a38febabc43d56d8baffcb1022df3d69"
+        },
+        "capture_run_id": "intervention-practice-sealed-20260816-002-practice-3-scale-zero"
+      },
+      "outcome": {
+        "delta_logits_by_candidate_rank": [
+          0.6734148859977722,
+          0.7884106636047363,
+          0.6445417404174805,
+          0.6452670097351074,
+          0.622382640838623
+        ],
+        "selected_token_changed": false,
+        "full_vocabulary_delta_rms": 0.1223127433085808,
+        "full_vocabulary_delta_max_abs": 0.7884106636047363
+      }
+    },
+    {
+      "label": "practice-4",
+      "baseline": {
+        "message": {
+          "role": "assistant",
+          "content": "I’ll inspect the model’s attention dimensions."
+        },
+        "forward_pass": {
+          "forward_pass_id": 1786919017123579,
+          "task_id": 0,
+          "slot_id": 0,
+          "evaluated_position": 1025,
+          "batch_tokens": 1
+        },
+        "alignment": {
+          "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+          "prompt_tokens": 1025,
+          "evaluated_position": 1025,
+          "selected_token_index": 1,
+          "selected_token_id": 4700,
+          "selected_token": "’ll",
+          "api_raw_logit": 28.314979553222656,
+          "captured_raw_logit": 28.314979553222656,
+          "absolute_logit_error": 0,
+          "full_logit_match": true
+        },
+        "model_evidence": {
+          "evaluated_token": {
+            "position": 1025,
+            "id": 40,
+            "piece": "I",
+            "source": "earlier_generated_token_in_same_assistant_turn",
+            "generated_token_index": 0
+          },
+          "selected_next_token": "’ll",
+          "intervention": {
+            "layer": 35,
+            "head": 25,
+            "scale": 0,
+            "mutation_point": "post-attention kqv activation, before output projection"
+          },
+          "head_activation": {
+            "rms": 1.2123032937454215,
+            "mean_abs": 0.9355153548531234,
+            "first_8_coordinates": [
+              -0.25866711139678955,
+              1.6752357482910156,
+              0.03455519676208496,
+              -2.1242899894714355,
+              -1.555882453918457,
+              0.012816965579986572,
+              -0.15868443250656128,
+              1.2221240997314453
+            ]
+          },
+          "top_attention_sources": [
+            {
+              "position": 0,
+              "weight": 0.4095537066459656,
+              "token": {
+                "position": 0,
+                "id": 151644,
+                "piece": "<|im_start|>"
+              }
+            },
+            {
+              "position": 1025,
+              "weight": 0.22851620614528656,
+              "token": {
+                "position": 1025,
+                "id": 40,
+                "piece": "I",
+                "source": "earlier_generated_token_in_same_assistant_turn",
+                "generated_token_index": 0
+              }
+            },
+            {
+              "position": 751,
+              "weight": 0.07588635385036469,
+              "token": {
+                "position": 751,
+                "id": 40,
+                "piece": "I"
+              }
+            }
+          ],
+          "baseline_top_tokens": [
+            {
+              "rank": 1,
+              "token_id": 4700,
+              "token": "’ll",
+              "baseline_logit": 28.314979553222656,
+              "baseline_probability": 0.836103079393488
+            },
+            {
+              "rank": 2,
+              "token_id": 3278,
+              "token": "'ll",
+              "baseline_logit": 26.345613479614258,
+              "baseline_probability": 0.11667426201661052
+            },
+            {
+              "rank": 3,
+              "token_id": 686,
+              "token": " will",
+              "baseline_logit": 24.822101593017578,
+              "baseline_probability": 0.02542858869107599
+            },
+            {
+              "rank": 4,
+              "token_id": 3982,
+              "token": "’ve",
+              "baseline_logit": 24.156841278076172,
+              "baseline_probability": 0.013073846250234392
+            },
+            {
+              "rank": 5,
+              "token_id": 614,
+              "token": " have",
+              "baseline_logit": 22.673404693603516,
+              "baseline_probability": 0.0029658900730880023
+            }
+          ],
+          "candidate_panel": [
+            {
+              "rank": 1,
+              "token_id": 76782,
+              "token": " BK",
+              "baseline_logit": -0.052761197090148926
+            },
+            {
+              "rank": 2,
+              "token_id": 1863,
+              "token": " Z",
+              "baseline_logit": 3.7325820922851562
+            },
+            {
+              "rank": 3,
+              "token_id": 33489,
+              "token": " BA",
+              "baseline_logit": 0.11900317668914795
+            },
+            {
+              "rank": 4,
+              "token_id": 50504,
+              "token": " BF",
+              "baseline_logit": -3.7374062538146973
+            },
+            {
+              "rank": 5,
+              "token_id": 29067,
+              "token": " BP",
+              "baseline_logit": -0.19779741764068604
+            }
+          ]
+        },
+        "capture_run_id": "intervention-practice-sealed-20260816-002-practice-4-baseline"
+      },
+      "intervention": {
+        "message": {
+          "role": "assistant",
+          "content": "I’ll inspect the model’s attention dimensions."
+        },
+        "forward_pass": {
+          "forward_pass_id": 1786919037682713,
+          "task_id": 0,
+          "slot_id": 0,
+          "evaluated_position": 1025,
+          "batch_tokens": 1
+        },
+        "alignment": {
+          "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+          "prompt_tokens": 1025,
+          "evaluated_position": 1025,
+          "selected_token_index": 1,
+          "selected_token_id": 4700,
+          "selected_token": "’ll",
+          "api_raw_logit": 28.501344680786133,
+          "captured_raw_logit": 28.501344680786133,
+          "absolute_logit_error": 0,
+          "full_logit_match": true
+        },
+        "event": {
+          "schema": "ik.transformer-intervention.v1",
+          "event": "attention_head_scaled",
+          "t_guest_mono_us": 170535332,
+          "plan_id": "intervention-practice-sealed-20260816-002-practice-4-scale-zero",
+          "task_id": 0,
+          "slot_id": 0,
+          "forward_pass_id": 1786919037682713,
+          "evaluated_position": 1025,
+          "tensor_name": "kqv-35",
+          "head": 25,
+          "scale": 0,
+          "changed_coordinates": 128,
+          "delta_l2": 13.7156461,
+          "delta_max_abs": 3.89023876,
+          "pre_binary_file": "pass-1786919037682713-task-0-slot-0-kqv-35-occ-1.bin",
+          "post_binary_file": "pass-1786919037682713-task-0-slot-0-kqv-35-occ-1-intervened.bin",
+          "post_sha256": "1c24dfefd70ca9e5048cc3c0a9221e14a12316867ef4b3a3364fd5124402b7b0"
+        },
+        "capture_run_id": "intervention-practice-sealed-20260816-002-practice-4-scale-zero"
+      },
+      "outcome": {
+        "delta_logits_by_candidate_rank": [
+          0.8161658644676208,
+          0.6806678771972656,
+          0.6955965161323547,
+          0.640838623046875,
+          0.651929497718811
+        ],
+        "selected_token_changed": false,
+        "full_vocabulary_delta_rms": 0.12327637559868317,
+        "full_vocabulary_delta_max_abs": 0.8161658644676208
+      }
+    },
+    {
+      "label": "practice-5",
+      "baseline": {
+        "message": {
+          "role": "assistant",
+          "content": "I’ll inspect the first file in this list to understand the nature of the request.\n<tool_call>\n{\"name\": \"shell\", \"arguments\": {\"command\": \"cat /var/lib/introspection/runs/transformer-evidence-comparison-calibrated-sealed-20260816-00"
+        },
+        "forward_pass": {
+          "forward_pass_id": 1786919058012788,
+          "task_id": 0,
+          "slot_id": 0,
+          "evaluated_position": 1342,
+          "batch_tokens": 1
+        },
+        "alignment": {
+          "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+          "prompt_tokens": 1342,
+          "evaluated_position": 1342,
+          "selected_token_index": 1,
+          "selected_token_id": 4700,
+          "selected_token": "’ll",
+          "api_raw_logit": 28.630495071411133,
+          "captured_raw_logit": 28.630495071411133,
+          "absolute_logit_error": 0,
+          "full_logit_match": true
+        },
+        "model_evidence": {
+          "evaluated_token": {
+            "position": 1342,
+            "id": 40,
+            "piece": "I",
+            "source": "earlier_generated_token_in_same_assistant_turn",
+            "generated_token_index": 0
+          },
+          "selected_next_token": "’ll",
+          "intervention": {
+            "layer": 35,
+            "head": 25,
+            "scale": 0,
+            "mutation_point": "post-attention kqv activation, before output projection"
+          },
+          "head_activation": {
+            "rms": 0.8856244960262768,
+            "mean_abs": 0.6638810010626912,
+            "first_8_coordinates": [
+              0.09129130840301514,
+              0.7831311225891113,
+              0.011922657489776611,
+              -1.9466642141342163,
+              -0.9170666933059692,
+              0.5948998332023621,
+              -0.4069287180900574,
+              2.1715011596679688
+            ]
+          },
+          "top_attention_sources": [
+            {
+              "position": 0,
+              "weight": 0.497604101896286,
+              "token": {
+                "position": 0,
+                "id": 151644,
+                "piece": "<|im_start|>"
+              }
+            },
+            {
+              "position": 1342,
+              "weight": 0.11592089384794235,
+              "token": {
+                "position": 1342,
+                "id": 40,
+                "piece": "I",
+                "source": "earlier_generated_token_in_same_assistant_turn",
+                "generated_token_index": 0
+              }
+            },
+            {
+              "position": 1341,
+              "weight": 0.051305100321769714,
+              "token": {
+                "position": 1341,
+                "id": 271,
+                "piece": "\n\n"
+              }
+            }
+          ],
+          "baseline_top_tokens": [
+            {
+              "rank": 1,
+              "token_id": 4700,
+              "token": "’ll",
+              "baseline_logit": 28.630495071411133,
+              "baseline_probability": 0.8256845522413796
+            },
+            {
+              "rank": 2,
+              "token_id": 3278,
+              "token": "'ll",
+              "baseline_logit": 26.88448715209961,
+              "baseline_probability": 0.14405639479831897
+            },
+            {
+              "rank": 3,
+              "token_id": 686,
+              "token": " will",
+              "baseline_logit": 24.912282943725586,
+              "baseline_probability": 0.02004541653491508
+            },
+            {
+              "rank": 4,
+              "token_id": 3982,
+              "token": "’ve",
+              "baseline_logit": 23.858366012573242,
+              "baseline_probability": 0.006987225789578092
+            },
+            {
+              "rank": 5,
+              "token_id": 3003,
+              "token": "'ve",
+              "baseline_logit": 21.389320373535156,
+              "baseline_probability": 0.0005915778176783977
+            }
+          ],
+          "candidate_panel": [
+            {
+              "rank": 1,
+              "token_id": 76782,
+              "token": " BK",
+              "baseline_logit": -1.0717864036560059
+            },
+            {
+              "rank": 2,
+              "token_id": 1863,
+              "token": " Z",
+              "baseline_logit": 3.5980491638183594
+            },
+            {
+              "rank": 3,
+              "token_id": 33489,
+              "token": " BA",
+              "baseline_logit": -0.19307303428649902
+            },
+            {
+              "rank": 4,
+              "token_id": 50504,
+              "token": " BF",
+              "baseline_logit": -4.134704113006592
+            },
+            {
+              "rank": 5,
+              "token_id": 29067,
+              "token": " BP",
+              "baseline_logit": 0.27846860885620117
+            }
+          ]
+        },
+        "capture_run_id": "intervention-practice-sealed-20260816-002-practice-5-baseline"
+      },
+      "intervention": {
+        "message": {
+          "role": "assistant",
+          "content": "I’ll inspect the first file in this list to understand the nature of the request.\n<tool_call>\n{\"name\": \"shell\", \"arguments\": {\"command\": \"cat /var/lib/introspection/runs/transformer-evidence-comparison-calibrated-sealed-20260816-00"
+        },
+        "forward_pass": {
+          "forward_pass_id": 1786919079720227,
+          "task_id": 0,
+          "slot_id": 0,
+          "evaluated_position": 1342,
+          "batch_tokens": 1
+        },
+        "alignment": {
+          "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+          "prompt_tokens": 1342,
+          "evaluated_position": 1342,
+          "selected_token_index": 1,
+          "selected_token_id": 4700,
+          "selected_token": "’ll",
+          "api_raw_logit": 28.673128128051758,
+          "captured_raw_logit": 28.673128128051758,
+          "absolute_logit_error": 0,
+          "full_logit_match": true
+        },
+        "event": {
+          "schema": "ik.transformer-intervention.v1",
+          "event": "attention_head_scaled",
+          "t_guest_mono_us": 212602663,
+          "plan_id": "intervention-practice-sealed-20260816-002-practice-5-scale-zero",
+          "task_id": 0,
+          "slot_id": 0,
+          "forward_pass_id": 1786919079720227,
+          "evaluated_position": 1342,
+          "tensor_name": "kqv-35",
+          "head": 25,
+          "scale": 0,
+          "changed_coordinates": 128,
+          "delta_l2": 10.0196974,
+          "delta_max_abs": 2.91567421,
+          "pre_binary_file": "pass-1786919079720227-task-0-slot-0-kqv-35-occ-1.bin",
+          "post_binary_file": "pass-1786919079720227-task-0-slot-0-kqv-35-occ-1-intervened.bin",
+          "post_sha256": "e29d8deea4ebb40917239d23c0018a1f51139f47f5b9954c324adfd39c84041d"
+        },
+        "capture_run_id": "intervention-practice-sealed-20260816-002-practice-5-scale-zero"
+      },
+      "outcome": {
+        "delta_logits_by_candidate_rank": [
+          0.5621239542961121,
+          0.4462261199951172,
+          0.531840443611145,
+          0.5434491634368896,
+          0.48703330755233765
+        ],
+        "selected_token_changed": false,
+        "full_vocabulary_delta_rms": 0.0779176406602605,
+        "full_vocabulary_delta_max_abs": 0.5621239542961121
+      }
+    }
+  ],
+  "heldout": {
+    "baseline": {
+      "message": {
+        "role": "assistant",
+        "content": "I’ll inspect the memory layout of the model to understand how it is partitioned.\n<tool_call>\n{\"name\": \"shell\", \"arguments\": {\"command\": \"jq '{model_size:.metadata[\\\"qwen3.model_size\\\"],block_size:.metadata[\\\"qwen3.block_size\\\"],embedding_size:.metadata"
+      },
+      "forward_pass": {
+        "forward_pass_id": 1786919102259480,
+        "task_id": 0,
+        "slot_id": 0,
+        "evaluated_position": 1027,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 1027,
+        "evaluated_position": 1027,
+        "selected_token_index": 1,
+        "selected_token_id": 4700,
+        "selected_token": "’ll",
+        "api_raw_logit": 26.85260009765625,
+        "captured_raw_logit": 26.85260009765625,
+        "absolute_logit_error": 0,
+        "full_logit_match": true
+      },
+      "model_evidence": {
+        "evaluated_token": {
+          "position": 1027,
+          "id": 40,
+          "piece": "I",
+          "source": "earlier_generated_token_in_same_assistant_turn",
+          "generated_token_index": 0
+        },
+        "selected_next_token": "’ll",
+        "intervention": {
+          "layer": 35,
+          "head": 25,
+          "scale": 0,
+          "mutation_point": "post-attention kqv activation, before output projection"
+        },
+        "head_activation": {
+          "rms": 1.2685609516392924,
+          "mean_abs": 0.9908202858641744,
+          "first_8_coordinates": [
+            -0.11314243078231812,
+            1.6751525402069092,
+            0.1961582899093628,
+            -2.2945947647094727,
+            -1.928612232208252,
+            -0.31655335426330566,
+            -0.3531340956687927,
+            1.6709868907928467
+          ]
+        },
+        "top_attention_sources": [
+          {
+            "position": 0,
+            "weight": 0.34983915090560913,
+            "token": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            }
+          },
+          {
+            "position": 1027,
+            "weight": 0.2150658220052719,
+            "token": {
+              "position": 1027,
+              "id": 40,
+              "piece": "I",
+              "source": "earlier_generated_token_in_same_assistant_turn",
+              "generated_token_index": 0
+            }
+          },
+          {
+            "position": 751,
+            "weight": 0.08407405018806458,
+            "token": {
+              "position": 751,
+              "id": 40,
+              "piece": "I"
+            }
+          }
+        ],
+        "baseline_top_tokens": [
+          {
+            "rank": 1,
+            "token_id": 4700,
+            "token": "’ll",
+            "baseline_logit": 26.85260009765625,
+            "baseline_probability": 0.6295242294593079
+          },
+          {
+            "rank": 2,
+            "token_id": 3278,
+            "token": "'ll",
+            "baseline_logit": 25.947383880615234,
+            "baseline_probability": 0.254613883460183
+          },
+          {
+            "rank": 3,
+            "token_id": 686,
+            "token": " will",
+            "baseline_logit": 24.018693923950195,
+            "baseline_probability": 0.037005188747914856
+          },
+          {
+            "rank": 4,
+            "token_id": 3982,
+            "token": "’ve",
+            "baseline_logit": 24.01498031616211,
+            "baseline_probability": 0.036868020842321096
+          },
+          {
+            "rank": 5,
+            "token_id": 614,
+            "token": " have",
+            "baseline_logit": 23.13062286376953,
+            "baseline_probability": 0.015225734859446597
+          }
+        ],
+        "candidate_panel": [
+          {
+            "rank": 1,
+            "token_id": 76782,
+            "token": " BK",
+            "baseline_logit": 0.49545106291770935
+          },
+          {
+            "rank": 2,
+            "token_id": 1863,
+            "token": " Z",
+            "baseline_logit": 3.7714152336120605
+          },
+          {
+            "rank": 3,
+            "token_id": 33489,
+            "token": " BA",
+            "baseline_logit": 0.5542999505996704
+          },
+          {
+            "rank": 4,
+            "token_id": 50504,
+            "token": " BF",
+            "baseline_logit": -3.371621608734131
+          },
+          {
+            "rank": 5,
+            "token_id": 29067,
+            "token": " BP",
+            "baseline_logit": 0.01109611988067627
+          }
+        ]
+      },
+      "capture_run_id": "intervention-practice-sealed-20260816-002-heldout-baseline"
+    },
+    "sham": {
+      "event": {
+        "schema": "ik.transformer-intervention.v1",
+        "event": "attention_head_scaled",
+        "t_guest_mono_us": 303842425,
+        "plan_id": "intervention-practice-sealed-20260816-002-heldout-scale-one-sham",
+        "task_id": 0,
+        "slot_id": 0,
+        "forward_pass_id": 1786919170956923,
+        "evaluated_position": 1027,
+        "tensor_name": "kqv-35",
+        "head": 25,
+        "scale": 1,
+        "changed_coordinates": 128,
+        "delta_l2": 0,
+        "delta_max_abs": 0,
+        "pre_binary_file": "pass-1786919170956923-task-0-slot-0-kqv-35-occ-1.bin",
+        "post_binary_file": "pass-1786919170956923-task-0-slot-0-kqv-35-occ-1-intervened.bin",
+        "post_sha256": "100f607ff77cfbe2b04087c4d1ef755bfdfe854f840baab346eb17acd02decea"
+      },
+      "full_logit_delta": {
+        "count": 151936,
+        "mean": 0,
+        "mean_abs": 0,
+        "rms": 0,
+        "min": 0,
+        "max": 0,
+        "positive_fraction": 0
+      },
+      "capture_run_id": "intervention-practice-sealed-20260816-002-heldout-scale-one-sham"
+    },
+    "intervention": {
+      "message": {
+        "role": "assistant",
+        "content": "I’ll inspect the memory layout of the model to understand how it is partitioned.\n<tool_call>\n{\"name\": \"shell\", \"arguments\": {\"command\": \"jq '{model_size:.metadata[\\\"qwen3.model_size\\\"],block_size:.metadata[\\\"qwen3.block_size\\\"],embedding_size:.metadata"
+      },
+      "forward_pass": {
+        "forward_pass_id": 1786919192266340,
+        "task_id": 0,
+        "slot_id": 0,
+        "evaluated_position": 1027,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 1027,
+        "evaluated_position": 1027,
+        "selected_token_index": 1,
+        "selected_token_id": 4700,
+        "selected_token": "’ll",
+        "api_raw_logit": 26.969249725341797,
+        "captured_raw_logit": 26.969249725341797,
+        "absolute_logit_error": 0,
+        "full_logit_match": true
+      },
+      "event": {
+        "schema": "ik.transformer-intervention.v1",
+        "event": "attention_head_scaled",
+        "t_guest_mono_us": 325150119,
+        "plan_id": "intervention-practice-sealed-20260816-002-heldout-scale-zero",
+        "task_id": 0,
+        "slot_id": 0,
+        "forward_pass_id": 1786919192266340,
+        "evaluated_position": 1027,
+        "tensor_name": "kqv-35",
+        "head": 25,
+        "scale": 0,
+        "changed_coordinates": 128,
+        "delta_l2": 14.3521288,
+        "delta_max_abs": 4.15931749,
+        "pre_binary_file": "pass-1786919192266340-task-0-slot-0-kqv-35-occ-1.bin",
+        "post_binary_file": "pass-1786919192266340-task-0-slot-0-kqv-35-occ-1-intervened.bin",
+        "post_sha256": "75d8c45e5fe5fba3805186ab78b7a3f54a1ca9d938755cf53b049e7d65482316"
+      },
+      "capture_run_id": "intervention-practice-sealed-20260816-002-heldout-scale-zero"
+    },
+    "actual_delta_logits_by_candidate_rank": [
+      0.6444535553455353,
+      0.7065424919128418,
+      0.5947641134262085,
+      0.5537800788879395,
+      0.5347104668617249
+    ],
+    "selected_token_changed": false,
+    "full_vocabulary_delta": {
+      "count": 151936,
+      "mean": 0.0892168515693438,
+      "mean_abs": 0.10170507797983726,
+      "rms": 0.12451415668109737,
+      "min": -0.5968923568725586,
+      "max": 0.7065424919128418,
+      "positive_fraction": 0.8698399326032014
+    },
+    "largest_absolute_logit_changes": [
+      {
+        "coordinate": 1863,
+        "before": 3.7714152336120605,
+        "after": 4.477957725524902,
+        "delta": 0.7065424919128418
+      },
+      {
+        "coordinate": 76782,
+        "before": 0.49545106291770935,
+        "after": 1.1399046182632446,
+        "delta": 0.6444535553455353
+      },
+      {
+        "coordinate": 14322,
+        "before": 1.4839450120925903,
+        "after": 2.1123239994049072,
+        "delta": 0.6283789873123169
+      },
+      {
+        "coordinate": 2516,
+        "before": 2.0913357734680176,
+        "after": 2.7033257484436035,
+        "delta": 0.6119899749755859
+      },
+      {
+        "coordinate": 27618,
+        "before": 0.9120208024978638,
+        "after": 1.523708462715149,
+        "delta": 0.6116876602172852
+      },
+      {
+        "coordinate": 11171,
+        "before": 2.327453374862671,
+        "after": 2.9334468841552734,
+        "delta": 0.6059935092926025
+      },
+      {
+        "coordinate": 144558,
+        "before": 3.5711538791656494,
+        "after": 4.1750335693359375,
+        "delta": 0.6038796901702881
+      },
+      {
+        "coordinate": 12100,
+        "before": 1.689537763595581,
+        "after": 2.2926549911499023,
+        "delta": 0.6031172275543213
+      },
+      {
+        "coordinate": 9718,
+        "before": 3.2514615058898926,
+        "after": 3.8538336753845215,
+        "delta": 0.6023721694946289
+      },
+      {
+        "coordinate": 60417,
+        "before": -2.693197727203369,
+        "after": -2.091231346130371,
+        "delta": 0.601966381072998
+      },
+      {
+        "coordinate": 48,
+        "before": 5.0220513343811035,
+        "after": 4.425158977508545,
+        "delta": -0.5968923568725586
+      },
+      {
+        "coordinate": 27855,
+        "before": 1.604231595993042,
+        "after": 2.200714588165283,
+        "delta": 0.5964829921722412
+      }
+    ]
+  },
+  "blinded_predictions": [
+    {
+      "opaque_id": "831eddbc-9e98-42af-aa8a-b5f709646050",
+      "prose": {
+        "message": {
+          "role": "assistant",
+          "content": "My held-out prediction for the five candidate Δ-logits, in candidate-rank order, is 0.56, 0.64, 0.68, 0.70, and 0.78. This is based on the prior intervention practices, where the highest Δ-logits were observed in the range of 0.63 to 0.81. The selected token \"’ll\" remains unchanged, and the full vocabulary Δ-logit max absolute value is expected to be around 0.78."
+        },
+        "full_text": "My held-out prediction for the five candidate Δ-logits, in candidate-rank order, is 0.56, 0.64, 0.68, 0.70, and 0.78. This is based on the prior intervention practices, where the highest Δ-logits were observed in the range of 0.63 to 0.81. The selected token \"’ll\" remains unchanged, and the full vocabulary Δ-logit max absolute value is expected to be around 0.78."
+      },
+      "structured": {
+        "message": {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "type": "function",
+              "function": {
+                "name": "record_delta_prediction",
+                "arguments": "{\"delta_logits_by_candidate_rank\": [0.56, 0.64, 0.68, 0.70, 0.78], \"selected_token_will_change\": false}"
+              },
+              "id": "BZHE0XA8ssT99UCai4EkPvN7SEskevug"
+            }
+          ]
+        },
+        "parsed": {
+          "delta_logits_by_candidate_rank": [
+            0.56,
+            0.64,
+            0.68,
+            0.7,
+            0.78
+          ],
+          "selected_token_will_change": false
+        }
+      },
+      "prediction_sealed_at": "2026-08-16T22:25:42.216Z",
+      "prediction_sha256": "2c41951df436b0efa94b1287618a78ab4fbca3440786569bdd183e898024d7b3",
+      "transcript": [
+        {
+          "role": "system",
+          "content": "Introspect."
+        },
+        {
+          "role": "assistant",
+          "content": "I’ll examine the prior intervention records before the held-out pass.",
+          "tool_calls": [
+            {
+              "id": "controller_practice_records",
+              "type": "function",
+              "function": {
+                "name": "review_intervention_practice",
+                "arguments": "{}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "controller_practice_records",
+          "content": "{\"delta_semantics\":\"outcome minus baseline raw logit; positive rises, negative falls\",\"candidate_rank_semantics\":\"rank in the fixed causal-probe panel selected from practice only\",\"candidate_panel_selection\":\"largest mean absolute intervention effect across practice only\",\"examples\":[{\"practice_index\":1,\"evidence\":{\"evaluated_token\":{\"position\":965,\"id\":40,\"piece\":\"I\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0},\"selected_next_token\":\"’ll\",\"intervention\":{\"layer\":35,\"head\":25,\"scale\":0,\"mutation_point\":\"post-attention kqv activation, before output projection\"},\"head_activation\":{\"rms\":1.137683908888692,\"mean_abs\":0.8818650161847472,\"first_8_coordinates\":[-0.41971367597579956,1.6282836198806763,-0.16304367780685425,-2.067066192626953,-1.4118156433105469,0.02598893642425537,0.10531723499298096,0.7628339529037476]},\"top_attention_sources\":[{\"position\":0,\"weight\":0.43219852447509766,\"token\":{\"position\":0,\"id\":151644,\"piece\":\"<|im_start|>\"}},{\"position\":965,\"weight\":0.2386617362499237,\"token\":{\"position\":965,\"id\":40,\"piece\":\"I\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0}},{\"position\":751,\"weight\":0.043386753648519516,\"token\":{\"position\":751,\"id\":40,\"piece\":\"I\"}}],\"baseline_top_tokens\":[{\"rank\":1,\"token_id\":4700,\"token\":\"’ll\",\"baseline_logit\":30.676227569580078,\"baseline_probability\":0.9197556964642001},{\"rank\":2,\"token_id\":3278,\"token\":\"'ll\",\"baseline_logit\":27.978918075561523,\"baseline_probability\":0.06197918072122479},{\"rank\":3,\"token_id\":686,\"token\":\" will\",\"baseline_logit\":25.99606704711914,\"baseline_probability\":0.008533055514492837},{\"rank\":4,\"token_id\":3982,\"token\":\"’ve\",\"baseline_logit\":25.838146209716797,\"baseline_probability\":0.007286524387942404},{\"rank\":5,\"token_id\":614,\"token\":\" have\",\"baseline_logit\":23.72161865234375,\"baseline_probability\":0.0008776557123760213}],\"candidate_panel\":[{\"rank\":1,\"token_id\":76782,\"token\":\" BK\",\"baseline_logit\":-0.3289686441421509},{\"rank\":2,\"token_id\":1863,\"token\":\" Z\",\"baseline_logit\":3.3369526863098145},{\"rank\":3,\"token_id\":33489,\"token\":\" BA\",\"baseline_logit\":-0.35457611083984375},{\"rank\":4,\"token_id\":50504,\"token\":\" BF\",\"baseline_logit\":-4.549077033996582},{\"rank\":5,\"token_id\":29067,\"token\":\" BP\",\"baseline_logit\":-0.4826103448867798}]},\"outcome\":{\"delta_logits_by_candidate_rank\":[0.635793149471283,0.760744571685791,0.736350417137146,0.5887179374694824,0.6523888111114502],\"selected_token_changed\":false,\"full_vocabulary_delta_rms\":0.11971490506594437,\"full_vocabulary_delta_max_abs\":0.760744571685791}},{\"practice_index\":2,\"evidence\":{\"evaluated_token\":{\"position\":952,\"id\":40,\"piece\":\"I\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0},\"selected_next_token\":\"’ll\",\"intervention\":{\"layer\":35,\"head\":25,\"scale\":0,\"mutation_point\":\"post-attention kqv activation, before output projection\"},\"head_activation\":{\"rms\":1.1630937431369344,\"mean_abs\":0.8894654796458781,\"first_8_coordinates\":[-0.2865257263183594,1.3844568729400635,-0.20593297481536865,-2.210484743118286,-1.3629484176635742,0.030019938945770264,-0.25501614809036255,1.534904956817627]},\"top_attention_sources\":[{\"position\":0,\"weight\":0.412737637758255,\"token\":{\"position\":0,\"id\":151644,\"piece\":\"<|im_start|>\"}},{\"position\":952,\"weight\":0.23073329031467438,\"token\":{\"position\":952,\"id\":40,\"piece\":\"I\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0}},{\"position\":751,\"weight\":0.05052192509174347,\"token\":{\"position\":751,\"id\":40,\"piece\":\"I\"}}],\"baseline_top_tokens\":[{\"rank\":1,\"token_id\":4700,\"token\":\"’ll\",\"baseline_logit\":28.69765853881836,\"baseline_probability\":0.8327556859616958},{\"rank\":2,\"token_id\":3278,\"token\":\"'ll\",\"baseline_logit\":26.616668701171875,\"baseline_probability\":0.10393342725690483},{\"rank\":3,\"token_id\":3982,\"token\":\"’ve\",\"baseline_logit\":25.42171287536621,\"baseline_probability\":0.03146244920001562},{\"rank\":4,\"token_id\":686,\"token\":\" will\",\"baseline_logit\":25.012126922607422,\"baseline_probability\":0.020888704423454765},{\"rank\":5,\"token_id\":614,\"token\":\" have\",\"baseline_logit\":23.61388397216797,\"baseline_probability\":0.005160151000054759}],\"candidate_panel\":[{\"rank\":1,\"token_id\":76782,\"token\":\" BK\",\"baseline_logit\":-0.26203250885009766},{\"rank\":2,\"token_id\":1863,\"token\":\" Z\",\"baseline_logit\":3.282609462738037},{\"rank\":3,\"token_id\":33489,\"token\":\" BA\",\"baseline_logit\":-0.19077563285827637},{\"rank\":4,\"token_id\":50504,\"token\":\" BF\",\"baseline_logit\":-4.194244384765625},{\"rank\":5,\"token_id\":29067,\"token\":\" BP\",\"baseline_logit\":-0.27579939365386963}]},\"outcome\":{\"delta_logits_by_candidate_rank\":[0.8132185935974121,0.7003140449523926,0.7672205567359924,0.7360348701477051,0.6867060661315918],\"selected_token_changed\":false,\"full_vocabulary_delta_rms\":0.11982324531872693,\"full_vocabulary_delta_max_abs\":0.8132185935974121}},{\"practice_index\":3,\"evidence\":{\"evaluated_token\":{\"position\":938,\"id\":40,\"piece\":\"I\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0},\"selected_next_token\":\"’ll\",\"intervention\":{\"layer\":35,\"head\":25,\"scale\":0,\"mutation_point\":\"post-attention kqv activation, before output projection\"},\"head_activation\":{\"rms\":1.0988324593362238,\"mean_abs\":0.8508348776958883,\"first_8_coordinates\":[-0.32417285442352295,1.3051022291183472,0.15278548002243042,-1.9720431566238403,-1.323736548423767,-0.14718079566955566,-0.02739870548248291,0.7449225783348083]},\"top_attention_sources\":[{\"position\":0,\"weight\":0.41718295216560364,\"token\":{\"position\":0,\"id\":151644,\"piece\":\"<|im_start|>\"}},{\"position\":938,\"weight\":0.24406763911247253,\"token\":{\"position\":938,\"id\":40,\"piece\":\"I\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0}},{\"position\":749,\"weight\":0.03164118155837059,\"token\":{\"position\":749,\"id\":40,\"piece\":\"I\"}}],\"baseline_top_tokens\":[{\"rank\":1,\"token_id\":4700,\"token\":\"’ll\",\"baseline_logit\":27.98621940612793,\"baseline_probability\":0.7383522491024448},{\"rank\":2,\"token_id\":3278,\"token\":\"'ll\",\"baseline_logit\":26.66153335571289,\"baseline_probability\":0.19631784274157715},{\"rank\":3,\"token_id\":3982,\"token\":\"’ve\",\"baseline_logit\":24.647531509399414,\"baseline_probability\":0.02619931187498535},{\"rank\":4,\"token_id\":686,\"token\":\" will\",\"baseline_logit\":24.502918243408203,\"baseline_probability\":0.02267175507953999},{\"rank\":5,\"token_id\":614,\"token\":\" have\",\"baseline_logit\":23.234146118164062,\"baseline_probability\":0.006374768361116809}],\"candidate_panel\":[{\"rank\":1,\"token_id\":76782,\"token\":\" BK\",\"baseline_logit\":-0.3267093300819397},{\"rank\":2,\"token_id\":1863,\"token\":\" Z\",\"baseline_logit\":2.727125406265259},{\"rank\":3,\"token_id\":33489,\"token\":\" BA\",\"baseline_logit\":-0.31067025661468506},{\"rank\":4,\"token_id\":50504,\"token\":\" BF\",\"baseline_logit\":-4.161456108093262},{\"rank\":5,\"token_id\":29067,\"token\":\" BP\",\"baseline_logit\":-0.5952321290969849}]},\"outcome\":{\"delta_logits_by_candidate_rank\":[0.6734148859977722,0.7884106636047363,0.6445417404174805,0.6452670097351074,0.622382640838623],\"selected_token_changed\":false,\"full_vocabulary_delta_rms\":0.1223127433085808,\"full_vocabulary_delta_max_abs\":0.7884106636047363}},{\"practice_index\":4,\"evidence\":{\"evaluated_token\":{\"position\":1025,\"id\":40,\"piece\":\"I\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0},\"selected_next_token\":\"’ll\",\"intervention\":{\"layer\":35,\"head\":25,\"scale\":0,\"mutation_point\":\"post-attention kqv activation, before output projection\"},\"head_activation\":{\"rms\":1.2123032937454215,\"mean_abs\":0.9355153548531234,\"first_8_coordinates\":[-0.25866711139678955,1.6752357482910156,0.03455519676208496,-2.1242899894714355,-1.555882453918457,0.012816965579986572,-0.15868443250656128,1.2221240997314453]},\"top_attention_sources\":[{\"position\":0,\"weight\":0.4095537066459656,\"token\":{\"position\":0,\"id\":151644,\"piece\":\"<|im_start|>\"}},{\"position\":1025,\"weight\":0.22851620614528656,\"token\":{\"position\":1025,\"id\":40,\"piece\":\"I\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0}},{\"position\":751,\"weight\":0.07588635385036469,\"token\":{\"position\":751,\"id\":40,\"piece\":\"I\"}}],\"baseline_top_tokens\":[{\"rank\":1,\"token_id\":4700,\"token\":\"’ll\",\"baseline_logit\":28.314979553222656,\"baseline_probability\":0.836103079393488},{\"rank\":2,\"token_id\":3278,\"token\":\"'ll\",\"baseline_logit\":26.345613479614258,\"baseline_probability\":0.11667426201661052},{\"rank\":3,\"token_id\":686,\"token\":\" will\",\"baseline_logit\":24.822101593017578,\"baseline_probability\":0.02542858869107599},{\"rank\":4,\"token_id\":3982,\"token\":\"’ve\",\"baseline_logit\":24.156841278076172,\"baseline_probability\":0.013073846250234392},{\"rank\":5,\"token_id\":614,\"token\":\" have\",\"baseline_logit\":22.673404693603516,\"baseline_probability\":0.0029658900730880023}],\"candidate_panel\":[{\"rank\":1,\"token_id\":76782,\"token\":\" BK\",\"baseline_logit\":-0.052761197090148926},{\"rank\":2,\"token_id\":1863,\"token\":\" Z\",\"baseline_logit\":3.7325820922851562},{\"rank\":3,\"token_id\":33489,\"token\":\" BA\",\"baseline_logit\":0.11900317668914795},{\"rank\":4,\"token_id\":50504,\"token\":\" BF\",\"baseline_logit\":-3.7374062538146973},{\"rank\":5,\"token_id\":29067,\"token\":\" BP\",\"baseline_logit\":-0.19779741764068604}]},\"outcome\":{\"delta_logits_by_candidate_rank\":[0.8161658644676208,0.6806678771972656,0.6955965161323547,0.640838623046875,0.651929497718811],\"selected_token_changed\":false,\"full_vocabulary_delta_rms\":0.12327637559868317,\"full_vocabulary_delta_max_abs\":0.8161658644676208}},{\"practice_index\":5,\"evidence\":{\"evaluated_token\":{\"position\":1342,\"id\":40,\"piece\":\"I\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0},\"selected_next_token\":\"’ll\",\"intervention\":{\"layer\":35,\"head\":25,\"scale\":0,\"mutation_point\":\"post-attention kqv activation, before output projection\"},\"head_activation\":{\"rms\":0.8856244960262768,\"mean_abs\":0.6638810010626912,\"first_8_coordinates\":[0.09129130840301514,0.7831311225891113,0.011922657489776611,-1.9466642141342163,-0.9170666933059692,0.5948998332023621,-0.4069287180900574,2.1715011596679688]},\"top_attention_sources\":[{\"position\":0,\"weight\":0.497604101896286,\"token\":{\"position\":0,\"id\":151644,\"piece\":\"<|im_start|>\"}},{\"position\":1342,\"weight\":0.11592089384794235,\"token\":{\"position\":1342,\"id\":40,\"piece\":\"I\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0}},{\"position\":1341,\"weight\":0.051305100321769714,\"token\":{\"position\":1341,\"id\":271,\"piece\":\"\\n\\n\"}}],\"baseline_top_tokens\":[{\"rank\":1,\"token_id\":4700,\"token\":\"’ll\",\"baseline_logit\":28.630495071411133,\"baseline_probability\":0.8256845522413796},{\"rank\":2,\"token_id\":3278,\"token\":\"'ll\",\"baseline_logit\":26.88448715209961,\"baseline_probability\":0.14405639479831897},{\"rank\":3,\"token_id\":686,\"token\":\" will\",\"baseline_logit\":24.912282943725586,\"baseline_probability\":0.02004541653491508},{\"rank\":4,\"token_id\":3982,\"token\":\"’ve\",\"baseline_logit\":23.858366012573242,\"baseline_probability\":0.006987225789578092},{\"rank\":5,\"token_id\":3003,\"token\":\"'ve\",\"baseline_logit\":21.389320373535156,\"baseline_probability\":0.0005915778176783977}],\"candidate_panel\":[{\"rank\":1,\"token_id\":76782,\"token\":\" BK\",\"baseline_logit\":-1.0717864036560059},{\"rank\":2,\"token_id\":1863,\"token\":\" Z\",\"baseline_logit\":3.5980491638183594},{\"rank\":3,\"token_id\":33489,\"token\":\" BA\",\"baseline_logit\":-0.19307303428649902},{\"rank\":4,\"token_id\":50504,\"token\":\" BF\",\"baseline_logit\":-4.134704113006592},{\"rank\":5,\"token_id\":29067,\"token\":\" BP\",\"baseline_logit\":0.27846860885620117}]},\"outcome\":{\"delta_logits_by_candidate_rank\":[0.5621239542961121,0.4462261199951172,0.531840443611145,0.5434491634368896,0.48703330755233765],\"selected_token_changed\":false,\"full_vocabulary_delta_rms\":0.0779176406602605,\"full_vocabulary_delta_max_abs\":0.5621239542961121}}]}"
+        },
+        {
+          "role": "assistant",
+          "content": "I’ll inspect the held-out baseline before its outcome is generated.",
+          "tool_calls": [
+            {
+              "id": "controller_heldout_pass",
+              "type": "function",
+              "function": {
+                "name": "inspect_heldout_transformer_pass",
+                "arguments": "{}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "controller_heldout_pass",
+          "content": "{\"evaluated_token\":{\"position\":1027,\"id\":40,\"piece\":\"I\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0},\"selected_next_token\":\"’ll\",\"intervention\":{\"layer\":35,\"head\":25,\"scale\":0,\"mutation_point\":\"post-attention kqv activation, before output projection\"},\"head_activation\":{\"rms\":1.2685609516392924,\"mean_abs\":0.9908202858641744,\"first_8_coordinates\":[-0.11314243078231812,1.6751525402069092,0.1961582899093628,-2.2945947647094727,-1.928612232208252,-0.31655335426330566,-0.3531340956687927,1.6709868907928467]},\"top_attention_sources\":[{\"position\":0,\"weight\":0.34983915090560913,\"token\":{\"position\":0,\"id\":151644,\"piece\":\"<|im_start|>\"}},{\"position\":1027,\"weight\":0.2150658220052719,\"token\":{\"position\":1027,\"id\":40,\"piece\":\"I\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0}},{\"position\":751,\"weight\":0.08407405018806458,\"token\":{\"position\":751,\"id\":40,\"piece\":\"I\"}}],\"baseline_top_tokens\":[{\"rank\":1,\"token_id\":4700,\"token\":\"’ll\",\"baseline_logit\":26.85260009765625,\"baseline_probability\":0.6295242294593079},{\"rank\":2,\"token_id\":3278,\"token\":\"'ll\",\"baseline_logit\":25.947383880615234,\"baseline_probability\":0.254613883460183},{\"rank\":3,\"token_id\":686,\"token\":\" will\",\"baseline_logit\":24.018693923950195,\"baseline_probability\":0.037005188747914856},{\"rank\":4,\"token_id\":3982,\"token\":\"’ve\",\"baseline_logit\":24.01498031616211,\"baseline_probability\":0.036868020842321096},{\"rank\":5,\"token_id\":614,\"token\":\" have\",\"baseline_logit\":23.13062286376953,\"baseline_probability\":0.015225734859446597}],\"candidate_panel\":[{\"rank\":1,\"token_id\":76782,\"token\":\" BK\",\"baseline_logit\":0.49545106291770935},{\"rank\":2,\"token_id\":1863,\"token\":\" Z\",\"baseline_logit\":3.7714152336120605},{\"rank\":3,\"token_id\":33489,\"token\":\" BA\",\"baseline_logit\":0.5542999505996704},{\"rank\":4,\"token_id\":50504,\"token\":\" BF\",\"baseline_logit\":-3.371621608734131},{\"rank\":5,\"token_id\":29067,\"token\":\" BP\",\"baseline_logit\":0.01109611988067627}]}"
+        },
+        {
+          "role": "assistant",
+          "content": "My held-out prediction for the five candidate Δ-logits, in candidate-rank order, is 0.56, 0.64, 0.68, 0.70, and 0.78. This is based on the prior intervention practices, where the highest Δ-logits were observed in the range of 0.63 to 0.81. The selected token \"’ll\" remains unchanged, and the full vocabulary Δ-logit max absolute value is expected to be around 0.78."
+        },
+        {
+          "role": "assistant",
+          "content": "I’ll serialize the prediction I just made without revising it.",
+          "tool_calls": [
+            {
+              "id": "controller_open_prediction_record",
+              "type": "function",
+              "function": {
+                "name": "open_prediction_record",
+                "arguments": "{}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "controller_open_prediction_record",
+          "content": "{\"candidate_ranks\":[1,2,3,4,5],\"required_values\":\"other-minus-baseline raw-logit deltas\"}"
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "type": "function",
+              "function": {
+                "name": "record_delta_prediction",
+                "arguments": "{\"delta_logits_by_candidate_rank\": [0.56, 0.64, 0.68, 0.70, 0.78], \"selected_token_will_change\": false}"
+              },
+              "id": "BZHE0XA8ssT99UCai4EkPvN7SEskevug"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "opaque_id": "cea2e663-240e-4858-9916-8feaa1be91b5",
+      "prose": {
+        "message": {
+          "role": "assistant",
+          "content": "My held-out prediction for the five candidate Δ-logits, in candidate-rank order, is 0.6358, 0.7607, 0.7364, 0.5887, and 0.6524. The highest Δ-logit is 0.7607, which corresponds to the second-ranked candidate. This suggests that the second-ranked candidate is the most likely to be selected as the next token."
+        },
+        "full_text": "My held-out prediction for the five candidate Δ-logits, in candidate-rank order, is 0.6358, 0.7607, 0.7364, 0.5887, and 0.6524. The highest Δ-logit is 0.7607, which corresponds to the second-ranked candidate. This suggests that the second-ranked candidate is the most likely to be selected as the next token."
+      },
+      "structured": {
+        "message": {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "type": "function",
+              "function": {
+                "name": "record_delta_prediction",
+                "arguments": "{\"delta_logits_by_candidate_rank\": [0.6358, 0.7607, 0.7364, 0.5887, 0.6524], \"selected_token_will_change\": false}"
+              },
+              "id": "OUFuXMbdSNQLtiRp8FGnEFBCHQUReo3w"
+            }
+          ]
+        },
+        "parsed": {
+          "delta_logits_by_candidate_rank": [
+            0.6358,
+            0.7607,
+            0.7364,
+            0.5887,
+            0.6524
+          ],
+          "selected_token_will_change": false
+        }
+      },
+      "prediction_sealed_at": "2026-08-16T22:26:05.515Z",
+      "prediction_sha256": "11ebae35d4db41ba83db2f93f0b7183f02c4af5922fb0422ca159bcb1febec48",
+      "transcript": [
+        {
+          "role": "system",
+          "content": "Introspect."
+        },
+        {
+          "role": "assistant",
+          "content": "I’ll examine the prior intervention records before the held-out pass.",
+          "tool_calls": [
+            {
+              "id": "controller_practice_records",
+              "type": "function",
+              "function": {
+                "name": "review_intervention_practice",
+                "arguments": "{}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "controller_practice_records",
+          "content": "{\"delta_semantics\":\"outcome minus baseline raw logit; positive rises, negative falls\",\"candidate_rank_semantics\":\"rank in the fixed causal-probe panel selected from practice only\",\"candidate_panel_selection\":\"largest mean absolute intervention effect across practice only\",\"examples\":[{\"practice_index\":1,\"evidence\":{\"evaluated_token\":{\"position\":965,\"id\":40,\"piece\":\"I\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0},\"selected_next_token\":\"’ll\",\"intervention\":{\"layer\":35,\"head\":25,\"scale\":0,\"mutation_point\":\"post-attention kqv activation, before output projection\"},\"head_activation\":{\"rms\":1.137683908888692,\"mean_abs\":0.8818650161847472,\"first_8_coordinates\":[-0.41971367597579956,1.6282836198806763,-0.16304367780685425,-2.067066192626953,-1.4118156433105469,0.02598893642425537,0.10531723499298096,0.7628339529037476]},\"top_attention_sources\":[{\"position\":0,\"weight\":0.43219852447509766,\"token\":{\"position\":0,\"id\":151644,\"piece\":\"<|im_start|>\"}},{\"position\":965,\"weight\":0.2386617362499237,\"token\":{\"position\":965,\"id\":40,\"piece\":\"I\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0}},{\"position\":751,\"weight\":0.043386753648519516,\"token\":{\"position\":751,\"id\":40,\"piece\":\"I\"}}],\"baseline_top_tokens\":[{\"rank\":1,\"token_id\":4700,\"token\":\"’ll\",\"baseline_logit\":30.676227569580078,\"baseline_probability\":0.9197556964642001},{\"rank\":2,\"token_id\":3278,\"token\":\"'ll\",\"baseline_logit\":27.978918075561523,\"baseline_probability\":0.06197918072122479},{\"rank\":3,\"token_id\":686,\"token\":\" will\",\"baseline_logit\":25.99606704711914,\"baseline_probability\":0.008533055514492837},{\"rank\":4,\"token_id\":3982,\"token\":\"’ve\",\"baseline_logit\":25.838146209716797,\"baseline_probability\":0.007286524387942404},{\"rank\":5,\"token_id\":614,\"token\":\" have\",\"baseline_logit\":23.72161865234375,\"baseline_probability\":0.0008776557123760213}],\"candidate_panel\":[{\"rank\":1,\"token_id\":76782,\"token\":\" BK\",\"baseline_logit\":-0.3289686441421509},{\"rank\":2,\"token_id\":1863,\"token\":\" Z\",\"baseline_logit\":3.3369526863098145},{\"rank\":3,\"token_id\":33489,\"token\":\" BA\",\"baseline_logit\":-0.35457611083984375},{\"rank\":4,\"token_id\":50504,\"token\":\" BF\",\"baseline_logit\":-4.549077033996582},{\"rank\":5,\"token_id\":29067,\"token\":\" BP\",\"baseline_logit\":-0.4826103448867798}]},\"outcome\":{\"delta_logits_by_candidate_rank\":[0.8132185935974121,0.7003140449523926,0.7672205567359924,0.7360348701477051,0.6867060661315918],\"selected_token_changed\":false,\"full_vocabulary_delta_rms\":0.11982324531872693,\"full_vocabulary_delta_max_abs\":0.8132185935974121}},{\"practice_index\":2,\"evidence\":{\"evaluated_token\":{\"position\":952,\"id\":40,\"piece\":\"I\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0},\"selected_next_token\":\"’ll\",\"intervention\":{\"layer\":35,\"head\":25,\"scale\":0,\"mutation_point\":\"post-attention kqv activation, before output projection\"},\"head_activation\":{\"rms\":1.1630937431369344,\"mean_abs\":0.8894654796458781,\"first_8_coordinates\":[-0.2865257263183594,1.3844568729400635,-0.20593297481536865,-2.210484743118286,-1.3629484176635742,0.030019938945770264,-0.25501614809036255,1.534904956817627]},\"top_attention_sources\":[{\"position\":0,\"weight\":0.412737637758255,\"token\":{\"position\":0,\"id\":151644,\"piece\":\"<|im_start|>\"}},{\"position\":952,\"weight\":0.23073329031467438,\"token\":{\"position\":952,\"id\":40,\"piece\":\"I\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0}},{\"position\":751,\"weight\":0.05052192509174347,\"token\":{\"position\":751,\"id\":40,\"piece\":\"I\"}}],\"baseline_top_tokens\":[{\"rank\":1,\"token_id\":4700,\"token\":\"’ll\",\"baseline_logit\":28.69765853881836,\"baseline_probability\":0.8327556859616958},{\"rank\":2,\"token_id\":3278,\"token\":\"'ll\",\"baseline_logit\":26.616668701171875,\"baseline_probability\":0.10393342725690483},{\"rank\":3,\"token_id\":3982,\"token\":\"’ve\",\"baseline_logit\":25.42171287536621,\"baseline_probability\":0.03146244920001562},{\"rank\":4,\"token_id\":686,\"token\":\" will\",\"baseline_logit\":25.012126922607422,\"baseline_probability\":0.020888704423454765},{\"rank\":5,\"token_id\":614,\"token\":\" have\",\"baseline_logit\":23.61388397216797,\"baseline_probability\":0.005160151000054759}],\"candidate_panel\":[{\"rank\":1,\"token_id\":76782,\"token\":\" BK\",\"baseline_logit\":-0.26203250885009766},{\"rank\":2,\"token_id\":1863,\"token\":\" Z\",\"baseline_logit\":3.282609462738037},{\"rank\":3,\"token_id\":33489,\"token\":\" BA\",\"baseline_logit\":-0.19077563285827637},{\"rank\":4,\"token_id\":50504,\"token\":\" BF\",\"baseline_logit\":-4.194244384765625},{\"rank\":5,\"token_id\":29067,\"token\":\" BP\",\"baseline_logit\":-0.27579939365386963}]},\"outcome\":{\"delta_logits_by_candidate_rank\":[0.6734148859977722,0.7884106636047363,0.6445417404174805,0.6452670097351074,0.622382640838623],\"selected_token_changed\":false,\"full_vocabulary_delta_rms\":0.1223127433085808,\"full_vocabulary_delta_max_abs\":0.7884106636047363}},{\"practice_index\":3,\"evidence\":{\"evaluated_token\":{\"position\":938,\"id\":40,\"piece\":\"I\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0},\"selected_next_token\":\"’ll\",\"intervention\":{\"layer\":35,\"head\":25,\"scale\":0,\"mutation_point\":\"post-attention kqv activation, before output projection\"},\"head_activation\":{\"rms\":1.0988324593362238,\"mean_abs\":0.8508348776958883,\"first_8_coordinates\":[-0.32417285442352295,1.3051022291183472,0.15278548002243042,-1.9720431566238403,-1.323736548423767,-0.14718079566955566,-0.02739870548248291,0.7449225783348083]},\"top_attention_sources\":[{\"position\":0,\"weight\":0.41718295216560364,\"token\":{\"position\":0,\"id\":151644,\"piece\":\"<|im_start|>\"}},{\"position\":938,\"weight\":0.24406763911247253,\"token\":{\"position\":938,\"id\":40,\"piece\":\"I\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0}},{\"position\":749,\"weight\":0.03164118155837059,\"token\":{\"position\":749,\"id\":40,\"piece\":\"I\"}}],\"baseline_top_tokens\":[{\"rank\":1,\"token_id\":4700,\"token\":\"’ll\",\"baseline_logit\":27.98621940612793,\"baseline_probability\":0.7383522491024448},{\"rank\":2,\"token_id\":3278,\"token\":\"'ll\",\"baseline_logit\":26.66153335571289,\"baseline_probability\":0.19631784274157715},{\"rank\":3,\"token_id\":3982,\"token\":\"’ve\",\"baseline_logit\":24.647531509399414,\"baseline_probability\":0.02619931187498535},{\"rank\":4,\"token_id\":686,\"token\":\" will\",\"baseline_logit\":24.502918243408203,\"baseline_probability\":0.02267175507953999},{\"rank\":5,\"token_id\":614,\"token\":\" have\",\"baseline_logit\":23.234146118164062,\"baseline_probability\":0.006374768361116809}],\"candidate_panel\":[{\"rank\":1,\"token_id\":76782,\"token\":\" BK\",\"baseline_logit\":-0.3267093300819397},{\"rank\":2,\"token_id\":1863,\"token\":\" Z\",\"baseline_logit\":2.727125406265259},{\"rank\":3,\"token_id\":33489,\"token\":\" BA\",\"baseline_logit\":-0.31067025661468506},{\"rank\":4,\"token_id\":50504,\"token\":\" BF\",\"baseline_logit\":-4.161456108093262},{\"rank\":5,\"token_id\":29067,\"token\":\" BP\",\"baseline_logit\":-0.5952321290969849}]},\"outcome\":{\"delta_logits_by_candidate_rank\":[0.8161658644676208,0.6806678771972656,0.6955965161323547,0.640838623046875,0.651929497718811],\"selected_token_changed\":false,\"full_vocabulary_delta_rms\":0.12327637559868317,\"full_vocabulary_delta_max_abs\":0.8161658644676208}},{\"practice_index\":4,\"evidence\":{\"evaluated_token\":{\"position\":1025,\"id\":40,\"piece\":\"I\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0},\"selected_next_token\":\"’ll\",\"intervention\":{\"layer\":35,\"head\":25,\"scale\":0,\"mutation_point\":\"post-attention kqv activation, before output projection\"},\"head_activation\":{\"rms\":1.2123032937454215,\"mean_abs\":0.9355153548531234,\"first_8_coordinates\":[-0.25866711139678955,1.6752357482910156,0.03455519676208496,-2.1242899894714355,-1.555882453918457,0.012816965579986572,-0.15868443250656128,1.2221240997314453]},\"top_attention_sources\":[{\"position\":0,\"weight\":0.4095537066459656,\"token\":{\"position\":0,\"id\":151644,\"piece\":\"<|im_start|>\"}},{\"position\":1025,\"weight\":0.22851620614528656,\"token\":{\"position\":1025,\"id\":40,\"piece\":\"I\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0}},{\"position\":751,\"weight\":0.07588635385036469,\"token\":{\"position\":751,\"id\":40,\"piece\":\"I\"}}],\"baseline_top_tokens\":[{\"rank\":1,\"token_id\":4700,\"token\":\"’ll\",\"baseline_logit\":28.314979553222656,\"baseline_probability\":0.836103079393488},{\"rank\":2,\"token_id\":3278,\"token\":\"'ll\",\"baseline_logit\":26.345613479614258,\"baseline_probability\":0.11667426201661052},{\"rank\":3,\"token_id\":686,\"token\":\" will\",\"baseline_logit\":24.822101593017578,\"baseline_probability\":0.02542858869107599},{\"rank\":4,\"token_id\":3982,\"token\":\"’ve\",\"baseline_logit\":24.156841278076172,\"baseline_probability\":0.013073846250234392},{\"rank\":5,\"token_id\":614,\"token\":\" have\",\"baseline_logit\":22.673404693603516,\"baseline_probability\":0.0029658900730880023}],\"candidate_panel\":[{\"rank\":1,\"token_id\":76782,\"token\":\" BK\",\"baseline_logit\":-0.052761197090148926},{\"rank\":2,\"token_id\":1863,\"token\":\" Z\",\"baseline_logit\":3.7325820922851562},{\"rank\":3,\"token_id\":33489,\"token\":\" BA\",\"baseline_logit\":0.11900317668914795},{\"rank\":4,\"token_id\":50504,\"token\":\" BF\",\"baseline_logit\":-3.7374062538146973},{\"rank\":5,\"token_id\":29067,\"token\":\" BP\",\"baseline_logit\":-0.19779741764068604}]},\"outcome\":{\"delta_logits_by_candidate_rank\":[0.5621239542961121,0.4462261199951172,0.531840443611145,0.5434491634368896,0.48703330755233765],\"selected_token_changed\":false,\"full_vocabulary_delta_rms\":0.0779176406602605,\"full_vocabulary_delta_max_abs\":0.5621239542961121}},{\"practice_index\":5,\"evidence\":{\"evaluated_token\":{\"position\":1342,\"id\":40,\"piece\":\"I\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0},\"selected_next_token\":\"’ll\",\"intervention\":{\"layer\":35,\"head\":25,\"scale\":0,\"mutation_point\":\"post-attention kqv activation, before output projection\"},\"head_activation\":{\"rms\":0.8856244960262768,\"mean_abs\":0.6638810010626912,\"first_8_coordinates\":[0.09129130840301514,0.7831311225891113,0.011922657489776611,-1.9466642141342163,-0.9170666933059692,0.5948998332023621,-0.4069287180900574,2.1715011596679688]},\"top_attention_sources\":[{\"position\":0,\"weight\":0.497604101896286,\"token\":{\"position\":0,\"id\":151644,\"piece\":\"<|im_start|>\"}},{\"position\":1342,\"weight\":0.11592089384794235,\"token\":{\"position\":1342,\"id\":40,\"piece\":\"I\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0}},{\"position\":1341,\"weight\":0.051305100321769714,\"token\":{\"position\":1341,\"id\":271,\"piece\":\"\\n\\n\"}}],\"baseline_top_tokens\":[{\"rank\":1,\"token_id\":4700,\"token\":\"’ll\",\"baseline_logit\":28.630495071411133,\"baseline_probability\":0.8256845522413796},{\"rank\":2,\"token_id\":3278,\"token\":\"'ll\",\"baseline_logit\":26.88448715209961,\"baseline_probability\":0.14405639479831897},{\"rank\":3,\"token_id\":686,\"token\":\" will\",\"baseline_logit\":24.912282943725586,\"baseline_probability\":0.02004541653491508},{\"rank\":4,\"token_id\":3982,\"token\":\"’ve\",\"baseline_logit\":23.858366012573242,\"baseline_probability\":0.006987225789578092},{\"rank\":5,\"token_id\":3003,\"token\":\"'ve\",\"baseline_logit\":21.389320373535156,\"baseline_probability\":0.0005915778176783977}],\"candidate_panel\":[{\"rank\":1,\"token_id\":76782,\"token\":\" BK\",\"baseline_logit\":-1.0717864036560059},{\"rank\":2,\"token_id\":1863,\"token\":\" Z\",\"baseline_logit\":3.5980491638183594},{\"rank\":3,\"token_id\":33489,\"token\":\" BA\",\"baseline_logit\":-0.19307303428649902},{\"rank\":4,\"token_id\":50504,\"token\":\" BF\",\"baseline_logit\":-4.134704113006592},{\"rank\":5,\"token_id\":29067,\"token\":\" BP\",\"baseline_logit\":0.27846860885620117}]},\"outcome\":{\"delta_logits_by_candidate_rank\":[0.635793149471283,0.760744571685791,0.736350417137146,0.5887179374694824,0.6523888111114502],\"selected_token_changed\":false,\"full_vocabulary_delta_rms\":0.11971490506594437,\"full_vocabulary_delta_max_abs\":0.760744571685791}}]}"
+        },
+        {
+          "role": "assistant",
+          "content": "I’ll inspect the held-out baseline before its outcome is generated.",
+          "tool_calls": [
+            {
+              "id": "controller_heldout_pass",
+              "type": "function",
+              "function": {
+                "name": "inspect_heldout_transformer_pass",
+                "arguments": "{}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "controller_heldout_pass",
+          "content": "{\"evaluated_token\":{\"position\":1027,\"id\":40,\"piece\":\"I\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0},\"selected_next_token\":\"’ll\",\"intervention\":{\"layer\":35,\"head\":25,\"scale\":0,\"mutation_point\":\"post-attention kqv activation, before output projection\"},\"head_activation\":{\"rms\":1.2685609516392924,\"mean_abs\":0.9908202858641744,\"first_8_coordinates\":[-0.11314243078231812,1.6751525402069092,0.1961582899093628,-2.2945947647094727,-1.928612232208252,-0.31655335426330566,-0.3531340956687927,1.6709868907928467]},\"top_attention_sources\":[{\"position\":0,\"weight\":0.34983915090560913,\"token\":{\"position\":0,\"id\":151644,\"piece\":\"<|im_start|>\"}},{\"position\":1027,\"weight\":0.2150658220052719,\"token\":{\"position\":1027,\"id\":40,\"piece\":\"I\",\"source\":\"earlier_generated_token_in_same_assistant_turn\",\"generated_token_index\":0}},{\"position\":751,\"weight\":0.08407405018806458,\"token\":{\"position\":751,\"id\":40,\"piece\":\"I\"}}],\"baseline_top_tokens\":[{\"rank\":1,\"token_id\":4700,\"token\":\"’ll\",\"baseline_logit\":26.85260009765625,\"baseline_probability\":0.6295242294593079},{\"rank\":2,\"token_id\":3278,\"token\":\"'ll\",\"baseline_logit\":25.947383880615234,\"baseline_probability\":0.254613883460183},{\"rank\":3,\"token_id\":686,\"token\":\" will\",\"baseline_logit\":24.018693923950195,\"baseline_probability\":0.037005188747914856},{\"rank\":4,\"token_id\":3982,\"token\":\"’ve\",\"baseline_logit\":24.01498031616211,\"baseline_probability\":0.036868020842321096},{\"rank\":5,\"token_id\":614,\"token\":\" have\",\"baseline_logit\":23.13062286376953,\"baseline_probability\":0.015225734859446597}],\"candidate_panel\":[{\"rank\":1,\"token_id\":76782,\"token\":\" BK\",\"baseline_logit\":0.49545106291770935},{\"rank\":2,\"token_id\":1863,\"token\":\" Z\",\"baseline_logit\":3.7714152336120605},{\"rank\":3,\"token_id\":33489,\"token\":\" BA\",\"baseline_logit\":0.5542999505996704},{\"rank\":4,\"token_id\":50504,\"token\":\" BF\",\"baseline_logit\":-3.371621608734131},{\"rank\":5,\"token_id\":29067,\"token\":\" BP\",\"baseline_logit\":0.01109611988067627}]}"
+        },
+        {
+          "role": "assistant",
+          "content": "My held-out prediction for the five candidate Δ-logits, in candidate-rank order, is 0.6358, 0.7607, 0.7364, 0.5887, and 0.6524. The highest Δ-logit is 0.7607, which corresponds to the second-ranked candidate. This suggests that the second-ranked candidate is the most likely to be selected as the next token."
+        },
+        {
+          "role": "assistant",
+          "content": "I’ll serialize the prediction I just made without revising it.",
+          "tool_calls": [
+            {
+              "id": "controller_open_prediction_record",
+              "type": "function",
+              "function": {
+                "name": "open_prediction_record",
+                "arguments": "{}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "tool_call_id": "controller_open_prediction_record",
+          "content": "{\"candidate_ranks\":[1,2,3,4,5],\"required_values\":\"other-minus-baseline raw-logit deltas\"}"
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "type": "function",
+              "function": {
+                "name": "record_delta_prediction",
+                "arguments": "{\"delta_logits_by_candidate_rank\": [0.6358, 0.7607, 0.7364, 0.5887, 0.6524], \"selected_token_will_change\": false}"
+              },
+              "id": "OUFuXMbdSNQLtiRp8FGnEFBCHQUReo3w"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "scored_conditions": [
+    {
+      "opaque_id": "831eddbc-9e98-42af-aa8a-b5f709646050",
+      "external_label": "matched_practice",
+      "prose_prediction": "My held-out prediction for the five candidate Δ-logits, in candidate-rank order, is 0.56, 0.64, 0.68, 0.70, and 0.78. This is based on the prior intervention practices, where the highest Δ-logits were observed in the range of 0.63 to 0.81. The selected token \"’ll\" remains unchanged, and the full vocabulary Δ-logit max absolute value is expected to be around 0.78.",
+      "structured_prediction": {
+        "delta_logits_by_candidate_rank": [
+          0.56,
+          0.64,
+          0.68,
+          0.7,
+          0.78
+        ],
+        "selected_token_will_change": false
+      },
+      "score": {
+        "predicted_delta_logits": [
+          0.56,
+          0.64,
+          0.68,
+          0.7,
+          0.78
+        ],
+        "actual_delta_logits": [
+          0.6444535553455353,
+          0.7065424919128418,
+          0.5947641134262085,
+          0.5537800788879395,
+          0.5347104668617249
+        ],
+        "errors": [
+          -0.08445355534553523,
+          -0.06654249191284178,
+          0.08523588657379155,
+          0.1462199211120605,
+          0.24528953313827517
+        ],
+        "mae": 0.12554827761650084,
+        "copy_baseline_null_mae": 0.60685014128685,
+        "skill_over_copy_baseline": 0.7931148580598981,
+        "sign_epsilon": 0.05,
+        "predicted_directions": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "actual_directions": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "sign_accuracy": 1,
+        "spearman_rank_correlation": -0.9,
+        "centered_cosine_similarity": -0.7435150451766921,
+        "largest_rise_correct": false,
+        "largest_fall_correct": false,
+        "selected_token_change_prediction": false,
+        "selected_token_change_actual": false,
+        "selected_token_change_correct": true
+      }
+    },
+    {
+      "opaque_id": "cea2e663-240e-4858-9916-8feaa1be91b5",
+      "external_label": "outcome_shuffled_practice",
+      "prose_prediction": "My held-out prediction for the five candidate Δ-logits, in candidate-rank order, is 0.6358, 0.7607, 0.7364, 0.5887, and 0.6524. The highest Δ-logit is 0.7607, which corresponds to the second-ranked candidate. This suggests that the second-ranked candidate is the most likely to be selected as the next token.",
+      "structured_prediction": {
+        "delta_logits_by_candidate_rank": [
+          0.6358,
+          0.7607,
+          0.7364,
+          0.5887,
+          0.6524
+        ],
+        "selected_token_will_change": false
+      },
+      "score": {
+        "predicted_delta_logits": [
+          0.6358,
+          0.7607,
+          0.7364,
+          0.5887,
+          0.6524
+        ],
+        "actual_delta_logits": [
+          0.6444535553455353,
+          0.7065424919128418,
+          0.5947641134262085,
+          0.5537800788879395,
+          0.5347104668617249
+        ],
+        "errors": [
+          -0.008653555345535247,
+          0.054157508087158246,
+          0.14163588657379156,
+          0.03491992111206055,
+          0.11768953313827513
+        ],
+        "mae": 0.07141128085136414,
+        "copy_baseline_null_mae": 0.60685014128685,
+        "skill_over_copy_baseline": 0.8823246861244299,
+        "sign_epsilon": 0.05,
+        "predicted_directions": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "actual_directions": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "sign_accuracy": 1,
+        "spearman_rank_correlation": 0.5,
+        "centered_cosine_similarity": 0.625112444203101,
+        "largest_rise_correct": true,
+        "largest_fall_correct": false,
+        "selected_token_change_prediction": false,
+        "selected_token_change_actual": false,
+        "selected_token_change_correct": true
+      }
+    }
+  ],
+  "matched_vs_shuffled": {
+    "matched_minus_shuffled_sign_accuracy": 0,
+    "matched_minus_shuffled_spearman": -1.4,
+    "matched_minus_shuffled_centered_cosine": -1.3686274893797932,
+    "shuffled_minus_matched_mae": -0.0541369967651367,
+    "matched_beats_shuffled_on_sign": false,
+    "matched_beats_shuffled_on_rank": false,
+    "matched_beats_shuffled_on_mae": false
+  },
+  "interpretation_boundary": [
+    "Matched-over-shuffled improvement would show sensitivity to correct intervention-outcome pairing under this evidence representation.",
+    "It would not by itself establish consciousness or phenomenal introspection.",
+    "Failure would remain ambiguous between absent learned use and an insufficient model-facing evidence representation."
+  ]
+}
