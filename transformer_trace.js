@@ -290,6 +290,18 @@ export class TransformerTraceCapture {
     return indexes[0];
   }
 
+  async publishText(name, content) {
+    if (!/^[A-Za-z0-9._-]{1,80}$/.test(name || "")) {
+      throw new Error("invalid public trace filename");
+    }
+    if (typeof content !== "string" || Buffer.byteLength(content, "utf8") > 1024 * 1024) {
+      throw new Error("public trace content must be text no larger than one MiB");
+    }
+    await guestInput(this.distro, ["/usr/bin/tee", `${this.publicDir}/${name}`], content);
+    await guest(this.distro, "/bin/chmod", "0444", `${this.publicDir}/${name}`);
+    return `${this.publicDir}/${name}`;
+  }
+
   exportTo(outputDir) {
     if (!this.lastIndex) throw new Error("no transformer trace collected");
     fs.writeFileSync(path.join(outputDir, "transformer-trace-index.json"), `${JSON.stringify(this.lastIndex, null, 2)}\n`);
