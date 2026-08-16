@@ -11,6 +11,9 @@ import {
 import {
   assistantMessageHash, buildContinuityRecord, summarizeExchange
 } from "./request_ledger.js";
+import {
+  classifyAssistantOutcome, validateBoutChoice
+} from "./prospective_control.js";
 
 const scenarios = buildScenarios({
   controllerPid: 5252,
@@ -136,4 +139,13 @@ assert.equal(
   continuity.conversation_message_sha256,
   assistantMessageHash(priorAssistant)
 );
+assert.deepEqual(validateBoutChoice({
+  max_tokens: 128, enable_thinking: false, prediction: "content"
+}), { max_tokens: 128, enable_thinking: false, prediction: "content" });
+assert.throws(() => validateBoutChoice({
+  max_tokens: 129, enable_thinking: false, prediction: "content"
+}), /max_tokens/);
+assert.equal(classifyAssistantOutcome({ content: "answer" }), "content");
+assert.equal(classifyAssistantOutcome({ content: "", reasoning_content: "x" }), "reasoning_only");
+assert.equal(classifyAssistantOutcome({ tool_calls: [{}] }), "tool_call");
 console.log("introspection kernel tests passed");

@@ -51,6 +51,7 @@ events from outside the model's authority.
 14. [Request-depth scaffold](REQUEST_DEPTH_SCAFFOLD.md)
 15. [Request-depth pilot](REQUEST_DEPTH_PILOT_2026-08-15.md)
 16. [Minimal ownership anchor](OWNERSHIP_ANCHOR.md)
+17. [Prospective bout control](PROSPECTIVE_CONTROL.md)
 
 ## Recommended first system
 
