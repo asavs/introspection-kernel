@@ -46,6 +46,16 @@ prospective choice, the adaptive two-choice run, and the analysis in
 The following evidence commit records two runs in each ownership × feedback
 cell and the analysis in `OWNERSHIP_FEEDBACK_FACTORIAL_2026-08-15.md`.
 
+## Free-form variance layer
+
+| Commit | Milestone | Research consequence |
+|---|---|---|
+| `f422aee` | Complete model-visible trace renderer | Made controller-authored scaffold, sampled reasoning/content, tool calls, and returned observations readable without erasing their provenance |
+
+The following evidence commit extends every factorial cell to five runs,
+preserves all twenty full trajectories, and re-centers the next experiment on
+unforced observation rather than premature forced choice.
+
 ## Why this order matters
 
 Capacity was established before testing long reasoning. Template correctness

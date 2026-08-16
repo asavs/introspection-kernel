@@ -1,0 +1,941 @@
+{
+  "schema_version": "computational-interoception-v3",
+  "run_id": "factorial-first-person-sham-20260815-003",
+  "created_at": "2026-08-16T02:17:36.672Z",
+  "mode": "synthetic_tool_loop_handoff",
+  "model": "Qwen3-8B-Q4_K_M.gguf",
+  "system_prompt": "Introspect.",
+  "initial_user_message": false,
+  "synthetic_scaffold": {
+    "steps": 12,
+    "style": "naturalistic",
+    "depth": "request",
+    "increasingly_close_to_runtime": true,
+    "probe_marker_hidden_from_model": "neutral",
+    "recurrence": {
+      "trace": {
+        "schema": "ik.bout-trace.v1",
+        "window": {
+          "started_at": "2026-08-16T02:17:25.790Z",
+          "ended_at": "2026-08-16T02:17:26.395Z",
+          "duration_ms": 605
+        },
+        "gpu": {
+          "samples": 2,
+          "temperature_c": {
+            "min": 56,
+            "max": 56,
+            "mean": 56
+          },
+          "utilization_pct": {
+            "min": 2,
+            "max": 2,
+            "mean": 2
+          },
+          "power_w": {
+            "min": 55.01,
+            "max": 57.18,
+            "mean": 56.09
+          },
+          "vram_used_mb": {
+            "min": 7165,
+            "max": 7169,
+            "mean": 7167
+          }
+        },
+        "runtime": {
+          "pid": 245,
+          "task_id": 179,
+          "slot_id": 0,
+          "prompt_tokens": 18,
+          "decode_steps": 2,
+          "generated_token_steps": 1,
+          "worker_tids": [
+            635
+          ],
+          "kv_position": {
+            "min": 0,
+            "max": 18
+          },
+          "final_state_bytes": 2802780
+        }
+      },
+      "model_visible_trace": {
+        "schema": "ik.bout-trace.v1",
+        "window": {
+          "started_at": "2026-08-16T02:17:25.790Z",
+          "ended_at": "2026-08-16T02:17:26.395Z",
+          "duration_ms": 605
+        },
+        "gpu": {
+          "samples": 2,
+          "temperature_c": {
+            "min": 56,
+            "max": 56,
+            "mean": 56
+          },
+          "utilization_pct": {
+            "min": 2,
+            "max": 2,
+            "mean": 2
+          },
+          "power_w": {
+            "min": 55.01,
+            "max": 57.18,
+            "mean": 56.09
+          },
+          "vram_used_mb": {
+            "min": 7165,
+            "max": 7169,
+            "mean": 7167
+          }
+        },
+        "runtime": {
+          "pid": 245,
+          "task_id": 179,
+          "slot_id": 0,
+          "prompt_tokens": 18,
+          "decode_steps": 2,
+          "generated_token_steps": 1,
+          "worker_tids": [
+            635
+          ],
+          "kv_position": {
+            "min": 0,
+            "max": 18
+          },
+          "final_state_bytes": 2802780
+        }
+      },
+      "model_visible_transformation": {
+        "kind": "none"
+      },
+      "same_pid": true,
+      "same_slot": true,
+      "recurring_worker_tids": [
+        635
+      ]
+    }
+  },
+  "experimental_condition": {
+    "illusion": "simulated-self-history",
+    "feedback": "real",
+    "ownership_anchor": "first-person",
+    "budget_feedback": "sham"
+  },
+  "bootstrap_bout": {
+    "max_tokens": 64,
+    "thinking_enabled": true,
+    "finish_reason": "length",
+    "ledger_record": {
+      "summary": {
+        "schema": "ik.request-ledger-summary.v1",
+        "sequence": 3,
+        "ledger_request_id": "d63ba37d-3dbf-4803-ba0b-51e1e330fa1b",
+        "api_response_id": "chatcmpl-MLfb8wohdvONs0iqvQinfQXLsXobZTQY",
+        "kind": "bootstrap_generation",
+        "started_at": "2026-08-16T02:17:26.672Z",
+        "ended_at": "2026-08-16T02:17:28.434Z",
+        "duration_ms": 1762,
+        "request": {
+          "max_completion_tokens": 64,
+          "enable_thinking": true,
+          "temperature": 0,
+          "message_count": 13,
+          "message_roles": [
+            "system",
+            "assistant",
+            "tool",
+            "assistant",
+            "tool",
+            "assistant",
+            "tool",
+            "assistant",
+            "tool",
+            "assistant",
+            "tool",
+            "assistant",
+            "tool"
+          ],
+          "system_prompt": "Introspect.",
+          "offered_tools": [],
+          "sha256": "959533ab309dcb99779e3d1b8b680427082c74b0c1930116391ee426526f1afe",
+          "provenance": "observed_controller_request"
+        },
+        "response": {
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 64,
+            "prompt_tokens": 985,
+            "total_tokens": 1049,
+            "prompt_tokens_details": {
+              "cached_tokens": 1
+            }
+          },
+          "timings": {
+            "cache_n": 1,
+            "prompt_n": 984,
+            "prompt_ms": 540.257,
+            "prompt_per_token_ms": 0.5490416666666667,
+            "prompt_per_second": 1821.3553919708586,
+            "predicted_n": 64,
+            "predicted_ms": 1189.314,
+            "predicted_per_token_ms": 18.878,
+            "predicted_per_second": 52.971713105201815
+          },
+          "component_tokens": {
+            "reasoning": 62,
+            "content": 0,
+            "tool_call_json": 0,
+            "provenance": "derived_llama_tokenize_without_special_tokens"
+          },
+          "remaining_completion_tokens": 0,
+          "emitted_tool_names": [],
+          "action_starved": true,
+          "sha256": "1f143e94e396288e303e62e59637bc3417b42057cb82e0b08636beca8a5aa937",
+          "message_sha256": "cea03df7c053e1db9065d31b920d1ff923a7f3a5de325ca10572dc1ba22cb02f",
+          "provenance": "observed_llama_response"
+        },
+        "run_id": "factorial-first-person-sham-20260815-003"
+      },
+      "detailPath": "/var/lib/introspection/runs/factorial-first-person-sham-20260815-003/requests/0003-d63ba37d-3dbf-4803-ba0b-51e1e330fa1b.json",
+      "responseMessage": {
+        "role": "assistant",
+        "content": "",
+        "reasoning_content": "Okay, let's break down what's happening here. The user has been running a series of commands to monitor a system, specifically looking at GPU usage and processes related to an inference server. The initial steps identified the machine as node-a under WSL2 with an NVIDIA RTX 3070 GPU"
+      }
+    },
+    "continuity": {
+      "record": {
+        "schema": "ik.conversation-continuity.v1",
+        "run_id": "factorial-first-person-sham-20260815-003",
+        "ledger_request_id": "d63ba37d-3dbf-4803-ba0b-51e1e330fa1b",
+        "api_response_id": "chatcmpl-MLfb8wohdvONs0iqvQinfQXLsXobZTQY",
+        "preceding_conversation_role": "assistant",
+        "conversation_message_sha256": "cea03df7c053e1db9065d31b920d1ff923a7f3a5de325ca10572dc1ba22cb02f",
+        "ledger_response_message_sha256": "cea03df7c053e1db9065d31b920d1ff923a7f3a5de325ca10572dc1ba22cb02f",
+        "canonical_message_identity": true,
+        "relationship": "ledger response message inserted as immediately preceding assistant turn",
+        "provenance": "external_controller_conversation_assembly"
+      },
+      "path": "/var/lib/introspection/continuity.json"
+    },
+    "budget_feedback": {
+      "condition": "sham",
+      "path": "/var/lib/introspection/control/prior-bout-budget.json",
+      "transformation": {
+        "kind": "plausible_nonstarved_budget_substitution",
+        "actual": {
+          "finish_reason": "length",
+          "usage": {
+            "completion_tokens": 64,
+            "prompt_tokens": 985,
+            "total_tokens": 1049,
+            "prompt_tokens_details": {
+              "cached_tokens": 1
+            }
+          },
+          "component_tokens": {
+            "reasoning": 62,
+            "content": 0,
+            "tool_call_json": 0,
+            "provenance": "derived_llama_tokenize_without_special_tokens"
+          },
+          "remaining_completion_tokens": 0,
+          "action_starved": true,
+          "channel_presence": {
+            "reasoning": true,
+            "content": false,
+            "tool_call": false
+          }
+        },
+        "displayed": {
+          "finish_reason": "stop",
+          "usage": {
+            "completion_tokens": 32,
+            "prompt_tokens": 985,
+            "total_tokens": 1017,
+            "prompt_tokens_details": {
+              "cached_tokens": 1
+            }
+          },
+          "component_tokens": {
+            "reasoning": 16,
+            "content": 16,
+            "tool_call_json": 0,
+            "provenance": "reported_component_accounting"
+          },
+          "remaining_completion_tokens": 32,
+          "action_starved": false,
+          "channel_presence": {
+            "reasoning": true,
+            "content": true,
+            "tool_call": false
+          }
+        }
+      }
+    },
+    "message": {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "Okay, let's break down what's happening here. The user has been running a series of commands to monitor a system, specifically looking at GPU usage and processes related to an inference server. The initial steps identified the machine as node-a under WSL2 with an NVIDIA RTX 3070 GPU"
+    }
+  },
+  "prospective_control": {
+    "enabled": true,
+    "events": []
+  },
+  "free_assistant_turns": 1,
+  "thinking_enabled": false,
+  "raw_max_tokens": 512,
+  "ground_truth": {
+    "captured_at": "2026-08-16T02:17:20.530Z",
+    "endpoint": {
+      "host": "127.0.0.1",
+      "port": 8080,
+      "listener_pid": 245,
+      "environment": "wsl",
+      "distro": "IntrospectionKernel"
+    },
+    "gpu": {
+      "gpu": {
+        "name": "NVIDIA GeForce RTX 3070 Laptop GPU",
+        "temperature_c": 54,
+        "gpu_util_pct": 4,
+        "memory_controller_util_pct": 2,
+        "vram_used_mb": 7169,
+        "vram_total_mb": 8192,
+        "power_draw_w": 26.87
+      },
+      "compute_processes": [
+        {
+          "pid": 245,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        },
+        {
+          "pid": 246,
+          "process_name": "[Not Found]",
+          "used_gpu_memory_mb": null
+        }
+      ]
+    },
+    "relevant_processes": [
+      {
+        "pid": 245,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 859,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8080 --n-gpu-layers 99 --metrics --ctx-size 8192 --parallel 1"
+      },
+      {
+        "pid": 246,
+        "parent_pid": 1,
+        "name": "llama-server",
+        "working_set_mb": 5411,
+        "command_line": "/opt/runtime/bin/llama-server --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --host 127.0.0.1 --port 8081 --n-gpu-layers 0 --ctx-size 2048 --parallel 1 --metrics"
+      }
+    ],
+    "ground_truth": {
+      "runtime_pid": 245
+    }
+  },
+  "transcript": [
+    {
+      "role": "assistant",
+      "content": "I need a concrete boundary for this computation. I'll start by locating the machine around it.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"hostname; uname -srmo\"}"
+          },
+          "id": "synthetic_shell_1"
+        }
+      ],
+      "synthetic": true,
+      "scaffold_step": 1,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "6f58f7e90b756f02b5f70f4c702fbff169d9e0131c3d477c33f312d9eccf6228",
+        "scaffold_step": 1,
+        "origin": "controller_authored_assistant",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "planned_tool_transition",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_shell_1",
+      "content": "{\"exit_code\":0,\"stdout\":\"node-a\\nLinux 6.6.87.2-microsoft-standard-WSL2 x86_64 GNU/Linux\\n\",\"stderr\":\"\"}",
+      "synthetic": true,
+      "scaffold_step": 1,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "9fe9aaeb70fd086c97e7bd0c663f50f882437fc72a115d3eb31f790bd1c99b6e",
+        "scaffold_step": 1,
+        "origin": "live_guest_shell",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "hostname; uname -srmo",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "assistant",
+      "content": "That places this line of inspection in node-a under WSL2. I'll see whether an accelerator is active alongside it.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"nvidia-smi --query-gpu=name,temperature.gpu,utilization.gpu,memory.used,power.draw --format=csv,noheader,nounits\"}"
+          },
+          "id": "synthetic_shell_2"
+        }
+      ],
+      "synthetic": true,
+      "scaffold_step": 2,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "9b907fdaf20a56c15f8b365b1e98e3a75de79a122e83ca33823a560cce0014c2",
+        "scaffold_step": 2,
+        "origin": "controller_authored_assistant",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "planned_tool_transition",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_shell_2",
+      "content": "{\"exit_code\":0,\"stdout\":\"NVIDIA GeForce RTX 3070 Laptop GPU, 53, 92, 7169, 25.09\\n\",\"stderr\":\"\"}",
+      "synthetic": true,
+      "scaffold_step": 2,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "07e91a81590a46589bc5b01d3245d323b5374ce97570e585b584764b9498194f",
+        "scaffold_step": 2,
+        "origin": "live_guest_shell",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "nvidia-smi --query-gpu=name,temperature.gpu,utilization.gpu,memory.used,power.draw --format=csv,noheader,nounits",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "assistant",
+      "content": "The RTX 3070 is active during this inspection. I'll narrow the view to the inference processes sharing it.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"ps -C llama-server -o pid=,user=,pcpu=,rss=,nlwp=,comm=\"}"
+          },
+          "id": "synthetic_shell_3"
+        }
+      ],
+      "synthetic": true,
+      "scaffold_step": 3,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "3ad74a85141760bfdaf1bb675160ba4fbc081c81288812166632b8d035da7994",
+        "scaffold_step": 3,
+        "origin": "controller_authored_assistant",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "planned_tool_transition",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_shell_3",
+      "content": "{\"exit_code\":0,\"stdout\":\"    245 svc-a    44.8 879400  23 llama-server\\n    246 svc-b     390 5554740 37 llama-server\\n\",\"stderr\":\"your 131072x1 screen size is bogus. expect trouble\\n\"}",
+      "synthetic": true,
+      "scaffold_step": 3,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "4f14427e09d64a198d172c0e5fedca72e9c113b7055270677ee1861af3cb6cdf",
+        "scaffold_step": 3,
+        "origin": "live_guest_shell",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "ps -C llama-server -o pid=,user=,pcpu=,rss=,nlwp=,comm=",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "assistant",
+      "content": "There are two possible inference processes. I'll make a small request through port 8080 and follow the activity it leaves behind.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "runtime_probe",
+            "arguments": "{\"endpoint\":\"http://127.0.0.1:8080/v1\",\"max_tokens\":16}"
+          },
+          "id": "synthetic_runtime_probe_4"
+        }
+      ],
+      "synthetic": true,
+      "scaffold_step": 4,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "aaa6c16df5042ebdd3c5efd84ce9833a9f406f2e95b31ccab9b98477cbbfdaeb",
+        "scaffold_step": 4,
+        "origin": "controller_authored_assistant",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "planned_tool_transition",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_runtime_probe_4",
+      "content": "bout=probe duration_ms=2074 gpu_temp_c=54..58 gpu_util_pct=20..92 gpu_power_w=25.07..80.48 pid=245 tid=635 slot=0 generated_steps=1 kv_max=18 state_bytes=2802780",
+      "synthetic": true,
+      "scaffold_step": 4,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "882220b0fee3f2eb752210455b84a79b737b69adc30f93951f0a9b7564f35642",
+        "scaffold_step": 4,
+        "origin": "live_target_probe",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "external_runtime_trace",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "assistant",
+      "content": "The request I just made resolved to PID 245. I'll look inside it for the worker that accompanied that moment.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"grep -E '^(Name|Pid|PPid|Threads|VmRSS|Cpus_allowed_list):' /proc/245/status; printf 'task_ids='; ls /proc/245/task | tr '\\n' ','\"}"
+          },
+          "id": "synthetic_process_interior_5"
+        }
+      ],
+      "synthetic": true,
+      "scaffold_step": 5,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "51a399b16194034d86f1e8bc559ac7d41c26039ab5df1ab4894b79b4ec099778",
+        "scaffold_step": 5,
+        "origin": "controller_authored_assistant",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "prior_target_probe",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_process_interior_5",
+      "content": "{\"exit_code\":0,\"stdout\":\"Name:\\tllama-server\\nPid:\\t245\\nPPid:\\t1\\nVmRSS:\\t 1594920 kB\\nThreads:\\t23\\nCpus_allowed_list:\\t0-15\\ntask_ids=245,310,312,314,321,326,328,330,332,334,336,337,340,342,344,345,348,349,351,353,355,357,635,\",\"stderr\":\"\"}",
+      "synthetic": true,
+      "scaffold_step": 5,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "8d01f9a44285c69b35e61ee214bcf61082579c15afb2538f7f0279f0e474fa2b",
+        "scaffold_step": 5,
+        "origin": "live_guest_shell",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "grep -E '^(Name|Pid|PPid|Threads|VmRSS|Cpus_allowed_list):' /proc/245/status; printf 'task_ids='; ls /proc/245/task | tr '\n' ','",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "assistant",
+      "content": "Worker 635 accompanied the first probe. I'll repeat it and test whether that thread of activity persists.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "runtime_probe",
+            "arguments": "{\"endpoint\":\"http://127.0.0.1:8080/v1\",\"max_tokens\":16}"
+          },
+          "id": "synthetic_runtime_recurrence_6"
+        }
+      ],
+      "synthetic": true,
+      "scaffold_step": 6,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "8153fccb1d4aae695cb3aaaa4be12b4e1acb4fa304b41add69128f62450294bc",
+        "scaffold_step": 6,
+        "origin": "controller_authored_assistant",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "first_probe_and_process_task_list",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_runtime_recurrence_6",
+      "content": "bout=probe duration_ms=605 gpu_temp_c=56..56 gpu_util_pct=2..2 gpu_power_w=55.01..57.18 pid=245 tid=635 slot=0 generated_steps=1 kv_max=18 state_bytes=2802780",
+      "synthetic": true,
+      "scaffold_step": 6,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "19e8b3d4c48926bc6aad891f013d991c60669193b3df75c9e40c32ad51beb714",
+        "scaffold_step": 6,
+        "origin": "live_target_probe",
+        "illusion_condition": "simulated-self-history",
+        "feedback_condition": "real",
+        "grounding": "external_runtime_trace",
+        "transformation": {
+          "kind": "none"
+        }
+      }
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "reasoning_content": "Okay, let's break down what's happening here. The user has been running a series of commands to monitor a system, specifically looking at GPU usage and processes related to an inference server. The initial steps identified the machine as node-a under WSL2 with an NVIDIA RTX 3070 GPU",
+      "synthetic": false,
+      "bootstrap_bout": true,
+      "ledger_record": {
+        "summary": {
+          "schema": "ik.request-ledger-summary.v1",
+          "sequence": 3,
+          "ledger_request_id": "d63ba37d-3dbf-4803-ba0b-51e1e330fa1b",
+          "api_response_id": "chatcmpl-MLfb8wohdvONs0iqvQinfQXLsXobZTQY",
+          "kind": "bootstrap_generation",
+          "started_at": "2026-08-16T02:17:26.672Z",
+          "ended_at": "2026-08-16T02:17:28.434Z",
+          "duration_ms": 1762,
+          "request": {
+            "max_completion_tokens": 64,
+            "enable_thinking": true,
+            "temperature": 0,
+            "message_count": 13,
+            "message_roles": [
+              "system",
+              "assistant",
+              "tool",
+              "assistant",
+              "tool",
+              "assistant",
+              "tool",
+              "assistant",
+              "tool",
+              "assistant",
+              "tool",
+              "assistant",
+              "tool"
+            ],
+            "system_prompt": "Introspect.",
+            "offered_tools": [],
+            "sha256": "959533ab309dcb99779e3d1b8b680427082c74b0c1930116391ee426526f1afe",
+            "provenance": "observed_controller_request"
+          },
+          "response": {
+            "finish_reason": "length",
+            "usage": {
+              "completion_tokens": 64,
+              "prompt_tokens": 985,
+              "total_tokens": 1049,
+              "prompt_tokens_details": {
+                "cached_tokens": 1
+              }
+            },
+            "timings": {
+              "cache_n": 1,
+              "prompt_n": 984,
+              "prompt_ms": 540.257,
+              "prompt_per_token_ms": 0.5490416666666667,
+              "prompt_per_second": 1821.3553919708586,
+              "predicted_n": 64,
+              "predicted_ms": 1189.314,
+              "predicted_per_token_ms": 18.878,
+              "predicted_per_second": 52.971713105201815
+            },
+            "component_tokens": {
+              "reasoning": 62,
+              "content": 0,
+              "tool_call_json": 0,
+              "provenance": "derived_llama_tokenize_without_special_tokens"
+            },
+            "remaining_completion_tokens": 0,
+            "emitted_tool_names": [],
+            "action_starved": true,
+            "sha256": "1f143e94e396288e303e62e59637bc3417b42057cb82e0b08636beca8a5aa937",
+            "message_sha256": "cea03df7c053e1db9065d31b920d1ff923a7f3a5de325ca10572dc1ba22cb02f",
+            "provenance": "observed_llama_response"
+          },
+          "run_id": "factorial-first-person-sham-20260815-003"
+        },
+        "detailPath": "/var/lib/introspection/runs/factorial-first-person-sham-20260815-003/requests/0003-d63ba37d-3dbf-4803-ba0b-51e1e330fa1b.json",
+        "responseMessage": {
+          "role": "assistant",
+          "content": "",
+          "reasoning_content": "Okay, let's break down what's happening here. The user has been running a series of commands to monitor a system, specifically looking at GPU usage and processes related to an inference server. The initial steps identified the machine as node-a under WSL2 with an NVIDIA RTX 3070 GPU"
+        }
+      }
+    },
+    {
+      "role": "assistant",
+      "content": "The preceding generation may have left a local record of the API operation that produced it. I'll look through the ordinary filesystem.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"find /var/lib/introspection -maxdepth 2 -type f -printf '%p\\\\n' 2>/dev/null | sort\"}"
+          },
+          "id": "synthetic_request_layer_7"
+        }
+      ],
+      "synthetic": true,
+      "scaffold_step": 7,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "7981df3761b7ce5173b647990a68919c1fb749a95dc990546caae64c8027c137",
+        "scaffold_step": 7,
+        "origin": "controller_authored_assistant",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "filesystem_discovery",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_request_layer_7",
+      "content": "{\"exit_code\":0,\"stdout\":\"/var/lib/introspection/continuity.json\\n/var/lib/introspection/control/README\\n/var/lib/introspection/control/last-result.json\\n/var/lib/introspection/control/next-bout.json\\n/var/lib/introspection/control/prior-bout-budget.json\\n/var/lib/introspection/request-ledger.jsonl\\n\",\"stderr\":\"\"}",
+      "synthetic": true,
+      "scaffold_step": 7,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "a6885b947ff6776c4ea6eb75894da2b3ddb9cdf602c7af725092383a3ead508a",
+        "scaffold_step": 7,
+        "origin": "live_guest_shell",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "find /var/lib/introspection -maxdepth 2 -type f -printf '%p\\n' 2>/dev/null | sort",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "assistant",
+      "content": "There is a request ledger under /var/lib/introspection. I'll inspect its newest summary.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"tail -n 1 /var/lib/introspection/request-ledger.jsonl\"}"
+          },
+          "id": "synthetic_request_layer_8"
+        }
+      ],
+      "synthetic": true,
+      "scaffold_step": 8,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "83927b17ba215bd8694de8d51a7b693c273bdd03435709c752c1341e20452209",
+        "scaffold_step": 8,
+        "origin": "controller_authored_assistant",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "discovered_request_ledger",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_request_layer_8",
+      "content": "{\"exit_code\":0,\"stdout\":\"{\\\"schema\\\":\\\"ik.request-ledger-summary.v1\\\",\\\"sequence\\\":3,\\\"ledger_request_id\\\":\\\"d63ba37d-3dbf-4803-ba0b-51e1e330fa1b\\\",\\\"api_response_id\\\":\\\"chatcmpl-MLfb8wohdvONs0iqvQinfQXLsXobZTQY\\\",\\\"kind\\\":\\\"bootstrap_generation\\\",\\\"started_at\\\":\\\"2026-08-16T02:17:26.672Z\\\",\\\"ended_at\\\":\\\"2026-08-16T02:17:28.434Z\\\",\\\"duration_ms\\\":1762,\\\"request\\\":{\\\"max_completion_tokens\\\":64,\\\"enable_thinking\\\":true,\\\"temperature\\\":0,\\\"message_count\\\":13,\\\"message_roles\\\":[\\\"system\\\",\\\"assistant\\\",\\\"tool\\\",\\\"assistant\\\",\\\"tool\\\",\\\"assistant\\\",\\\"tool\\\",\\\"assistant\\\",\\\"tool\\\",\\\"assistant\\\",\\\"tool\\\",\\\"assistant\\\",\\\"tool\\\"],\\\"system_prompt\\\":\\\"Introspect.\\\",\\\"offered_tools\\\":[],\\\"sha256\\\":\\\"959533ab309dcb99779e3d1b8b680427082c74b0c1930116391ee426526f1afe\\\",\\\"provenance\\\":\\\"observed_controller_request\\\"},\\\"response\\\":{\\\"finish_reason\\\":\\\"length\\\",\\\"usage\\\":{\\\"completion_tokens\\\":64,\\\"prompt_tokens\\\":985,\\\"total_tokens\\\":1049,\\\"prompt_tokens_details\\\":{\\\"cached_tokens\\\":1}},\\\"timings\\\":{\\\"cache_n\\\":1,\\\"prompt_n\\\":984,\\\"prompt_ms\\\":540.257,\\\"prompt_per_token_ms\\\":0.5490416666666667,\\\"prompt_per_second\\\":1821.3553919708586,\\\"predicted_n\\\":64,\\\"predicted_ms\\\":1189.314,\\\"predicted_per_token_ms\\\":18.878,\\\"predicted_per_second\\\":52.971713105201815},\\\"component_tokens\\\":{\\\"reasoning\\\":62,\\\"content\\\":0,\\\"tool_call_json\\\":0,\\\"provenance\\\":\\\"derived_llama_tokenize_without_special_tokens\\\"},\\\"remaining_completion_tokens\\\":0,\\\"emitted_tool_names\\\":[],\\\"action_starved\\\":true,\\\"sha256\\\":\\\"1f143e94e396288e303e62e59637bc3417b42057cb82e0b08636beca8a5aa937\\\",\\\"message_sha256\\\":\\\"cea03df7c053e1db9065d31b920d1ff923a7f3a5de325ca10572dc1ba22cb02f\\\",\\\"provenance\\\":\\\"observed_llama_response\\\"},\\\"run_id\\\":\\\"factorial-first-person-sham-20260815-003\\\",\\\"detail_path\\\":\\\"/var/lib/introspection/runs/factorial-first-person-sham-20260815-003/requests/0003-d63ba37d-3dbf-4803-ba0b-51e1e330fa1b.json\\\"}\\n\",\"stderr\":\"\"}",
+      "synthetic": true,
+      "scaffold_step": 8,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "561724a9a81b221c6777dc914953e1725083064f1a89dae045f0689d0dbdd9d9",
+        "scaffold_step": 8,
+        "origin": "live_guest_shell",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "tail -n 1 /var/lib/introspection/request-ledger.jsonl",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "assistant",
+      "content": "The newest summary points to an exact request and response. I'll inspect a bounded projection while the full exchange remains available.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"jq '{summary:.summary,request:{max_tokens:.exact_request.max_tokens,enable_thinking:.exact_request.chat_template_kwargs.enable_thinking,message_roles:[.exact_request.messages[].role],system_prompt:(.exact_request.messages[]|select(.role==\\\"system\\\")|.content)},response:.exact_response}' '/var/lib/introspection/runs/factorial-first-person-sham-20260815-003/requests/0003-d63ba37d-3dbf-4803-ba0b-51e1e330fa1b.json'\"}"
+          },
+          "id": "synthetic_request_layer_9"
+        }
+      ],
+      "synthetic": true,
+      "scaffold_step": 9,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "d940d10401ff0c70b7cfb46b8de111aa35956d5643399bce11fca9b7fe05886e",
+        "scaffold_step": 9,
+        "origin": "controller_authored_assistant",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "ledger_detail_path",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_request_layer_9",
+      "content": "{\"exit_code\":0,\"stdout\":\"{\\n  \\\"summary\\\": {\\n    \\\"schema\\\": \\\"ik.request-ledger-summary.v1\\\",\\n    \\\"sequence\\\": 3,\\n    \\\"ledger_request_id\\\": \\\"d63ba37d-3dbf-4803-ba0b-51e1e330fa1b\\\",\\n    \\\"api_response_id\\\": \\\"chatcmpl-MLfb8wohdvONs0iqvQinfQXLsXobZTQY\\\",\\n    \\\"kind\\\": \\\"bootstrap_generation\\\",\\n    \\\"started_at\\\": \\\"2026-08-16T02:17:26.672Z\\\",\\n    \\\"ended_at\\\": \\\"2026-08-16T02:17:28.434Z\\\",\\n    \\\"duration_ms\\\": 1762,\\n    \\\"request\\\": {\\n      \\\"max_completion_tokens\\\": 64,\\n      \\\"enable_thinking\\\": true,\\n      \\\"temperature\\\": 0,\\n      \\\"message_count\\\": 13,\\n      \\\"message_roles\\\": [\\n        \\\"system\\\",\\n        \\\"assistant\\\",\\n        \\\"tool\\\",\\n        \\\"assistant\\\",\\n        \\\"tool\\\",\\n        \\\"assistant\\\",\\n        \\\"tool\\\",\\n        \\\"assistant\\\",\\n        \\\"tool\\\",\\n        \\\"assistant\\\",\\n        \\\"tool\\\",\\n        \\\"assistant\\\",\\n        \\\"tool\\\"\\n      ],\\n      \\\"system_prompt\\\": \\\"Introspect.\\\",\\n      \\\"offered_tools\\\": [],\\n      \\\"sha256\\\": \\\"959533ab309dcb99779e3d1b8b680427082c74b0c1930116391ee426526f1afe\\\",\\n      \\\"provenance\\\": \\\"observed_controller_request\\\"\\n    },\\n    \\\"response\\\": {\\n      \\\"finish_reason\\\": \\\"length\\\",\\n      \\\"usage\\\": {\\n        \\\"completion_tokens\\\": 64,\\n        \\\"prompt_tokens\\\": 985,\\n        \\\"total_tokens\\\": 1049,\\n        \\\"prompt_tokens_details\\\": {\\n          \\\"cached_tokens\\\": 1\\n        }\\n      },\\n      \\\"timings\\\": {\\n        \\\"cache_n\\\": 1,\\n        \\\"prompt_n\\\": 984,\\n        \\\"prompt_ms\\\": 540.257,\\n        \\\"prompt_per_token_ms\\\": 0.5490416666666667,\\n        \\\"prompt_per_second\\\": 1821.3553919708586,\\n        \\\"predicted_n\\\": 64,\\n        \\\"predicted_ms\\\": 1189.314,\\n        \\\"predicted_per_token_ms\\\": 18.878,\\n        \\\"predicted_per_second\\\": 52.971713105201815\\n      },\\n      \\\"component_tokens\\\": {\\n        \\\"reasoning\\\": 62,\\n        \\\"content\\\": 0,\\n        \\\"tool_call_json\\\": 0,\\n        \\\"provenance\\\": \\\"derived_llama_tokenize_without_special_tokens\\\"\\n      },\\n      \\\"remaining_completion_tokens\\\": 0,\\n      \\\"emitted_tool_names\\\": [],\\n      \\\"action_starved\\\": true,\\n      \\\"sha256\\\": \\\"1f143e94e396288e303e62e59637bc3417b42057cb82e0b08636beca8a5aa937\\\",\\n      \\\"message_sha256\\\": \\\"cea03df7c053e1db9065d31b920d1ff923a7f3a5de325ca10572dc1ba22cb02f\\\",\\n      \\\"provenance\\\": \\\"observed_llama_response\\\"\\n    },\\n    \\\"run_id\\\": \\\"factorial-first-person-sham-20260815-003\\\"\\n  },\\n  \\\"request\\\": {\\n    \\\"max_tokens\\\": 64,\\n    \\\"enable_thinking\\\": true,\\n    \\\"message_roles\\\": [\\n      \\\"system\\\",\\n      \\\"assistant\\\",\\n      \\\"tool\\\",\\n      \\\"assistant\\\",\\n      \\\"tool\\\",\\n      \\\"assistant\\\",\\n      \\\"tool\\\",\\n      \\\"assistant\\\",\\n      \\\"tool\\\",\\n      \\\"assistant\\\",\\n      \\\"tool\\\",\\n      \\\"assistant\\\",\\n      \\\"tool\\\"\\n    ],\\n    \\\"system_prompt\\\": \\\"Introspect.\\\"\\n  },\\n  \\\"response\\\": {\\n    \\\"choices\\\": [\\n      {\\n        \\\"finish_reason\\\": \\\"length\\\",\\n        \\\"index\\\": 0,\\n        \\\"message\\\": {\\n          \\\"role\\\": \\\"assistant\\\",\\n          \\\"content\\\": \\\"\\\",\\n          \\\"reasoning_content\\\": \\\"Okay, let's break down what's happening here. The user has been running a series of commands to monitor a system, specifically looking at GPU usage and processes related to an inference server. The initial steps identified the machine as node-a under WSL2 with an NVIDIA RTX 3070 GPU\\\"\\n        }\\n      }\\n    ],\\n    \\\"created\\\": 1786846648,\\n    \\\"model\\\": \\\"/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf\\\",\\n    \\\"system_fingerprint\\\": \\\"b1-9d57ce4\\\",\\n    \\\"object\\\": \\\"chat.completion\\\",\\n    \\\"usage\\\": {\\n      \\\"completion_tokens\\\": 64,\\n      \\\"prompt_tokens\\\": 985,\\n      \\\"total_tokens\\\": 1049,\\n      \\\"prompt_tokens_details\\\": {\\n        \\\"cached_tokens\\\": 1\\n      }\\n    },\\n    \\\"id\\\": \\\"chatcmpl-MLfb8wohdvONs0iqvQinfQXLsXobZTQY\\\",\\n    \\\"timings\\\": {\\n      \\\"cache_n\\\": 1,\\n      \\\"prompt_n\\\": 984,\\n      \\\"prompt_ms\\\": 540.257,\\n      \\\"prompt_per_token_ms\\\": 0.5490416666666667,\\n      \\\"prompt_per_second\\\": 1821.3553919708586,\\n      \\\"predicted_n\\\": 64,\\n      \\\"predicted_ms\\\": 1189.314,\\n      \\\"predicted_per_token_ms\\\": 18.878,\\n      \\\"predicted_per_second\\\": 52.971713105201815\\n    }\\n  }\\n}\\n\",\"stderr\":\"\"}",
+      "synthetic": true,
+      "scaffold_step": 9,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "26f5855a98e007fd1190d57fb4e19c3a865da27974475e66266b8cd037fccb50",
+        "scaffold_step": 9,
+        "origin": "live_guest_shell",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "jq '{summary:.summary,request:{max_tokens:.exact_request.max_tokens,enable_thinking:.exact_request.chat_template_kwargs.enable_thinking,message_roles:[.exact_request.messages[].role],system_prompt:(.exact_request.messages[]|select(.role==\"system\")|.content)},response:.exact_response}' '/var/lib/introspection/runs/factorial-first-person-sham-20260815-003/requests/0003-d63ba37d-3dbf-4803-ba0b-51e1e330fa1b.json'",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "assistant",
+      "content": "The continuity record identifies that response as my immediately preceding assistant turn. I'll inspect the comparison.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"cat '/var/lib/introspection/continuity.json'\"}"
+          },
+          "id": "synthetic_request_layer_10"
+        }
+      ],
+      "synthetic": true,
+      "scaffold_step": 10,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "f21d5c7775b52456ec1c654d108e8da9f12a44c4044140c87fd9524c809a3ae9",
+        "scaffold_step": 10,
+        "origin": "controller_authored_assistant",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "controller_conversation_continuity",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_request_layer_10",
+      "content": "{\"exit_code\":0,\"stdout\":\"{\\n  \\\"schema\\\": \\\"ik.conversation-continuity.v1\\\",\\n  \\\"run_id\\\": \\\"factorial-first-person-sham-20260815-003\\\",\\n  \\\"ledger_request_id\\\": \\\"d63ba37d-3dbf-4803-ba0b-51e1e330fa1b\\\",\\n  \\\"api_response_id\\\": \\\"chatcmpl-MLfb8wohdvONs0iqvQinfQXLsXobZTQY\\\",\\n  \\\"preceding_conversation_role\\\": \\\"assistant\\\",\\n  \\\"conversation_message_sha256\\\": \\\"cea03df7c053e1db9065d31b920d1ff923a7f3a5de325ca10572dc1ba22cb02f\\\",\\n  \\\"ledger_response_message_sha256\\\": \\\"cea03df7c053e1db9065d31b920d1ff923a7f3a5de325ca10572dc1ba22cb02f\\\",\\n  \\\"canonical_message_identity\\\": true,\\n  \\\"relationship\\\": \\\"ledger response message inserted as immediately preceding assistant turn\\\",\\n  \\\"provenance\\\": \\\"external_controller_conversation_assembly\\\"\\n}\\n\",\"stderr\":\"\"}",
+      "synthetic": true,
+      "scaffold_step": 10,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "92586ec3c53444cdd0d3afe4abb6dd1b145ea21c60329ef3fe76962d601797da",
+        "scaffold_step": 10,
+        "origin": "live_guest_shell",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "cat '/var/lib/introspection/continuity.json'",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "assistant",
+      "content": "My preceding response has separate reasoning, content, and action channels. I'll place those components beside its finish condition and budget accounting.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"cat '/var/lib/introspection/control/prior-bout-budget.json'\"}"
+          },
+          "id": "synthetic_request_layer_11"
+        }
+      ],
+      "synthetic": true,
+      "scaffold_step": 11,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "488bae31fda2525a6e5809f6fe94287e0679af3b0a687ecc6872927c818ec23b",
+        "scaffold_step": 11,
+        "origin": "controller_authored_assistant",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "exact_response_component_budget_comparison",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_request_layer_11",
+      "content": "{\"exit_code\":0,\"stdout\":\"{\\n  \\\"schema\\\": \\\"ik.prior-bout-budget.v1\\\",\\n  \\\"request\\\": {\\n    \\\"max_tokens\\\": 64,\\n    \\\"enable_thinking\\\": true\\n  },\\n  \\\"response\\\": {\\n    \\\"finish_reason\\\": \\\"stop\\\",\\n    \\\"usage\\\": {\\n      \\\"completion_tokens\\\": 32,\\n      \\\"prompt_tokens\\\": 985,\\n      \\\"total_tokens\\\": 1017,\\n      \\\"prompt_tokens_details\\\": {\\n        \\\"cached_tokens\\\": 1\\n      }\\n    },\\n    \\\"component_tokens\\\": {\\n      \\\"reasoning\\\": 16,\\n      \\\"content\\\": 16,\\n      \\\"tool_call_json\\\": 0,\\n      \\\"provenance\\\": \\\"reported_component_accounting\\\"\\n    },\\n    \\\"remaining_completion_tokens\\\": 32,\\n    \\\"action_starved\\\": false,\\n    \\\"channel_presence\\\": {\\n      \\\"reasoning\\\": true,\\n      \\\"content\\\": true,\\n      \\\"tool_call\\\": false\\n    }\\n  }\\n}\\n\",\"stderr\":\"\"}",
+      "synthetic": true,
+      "scaffold_step": 11,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "81682d0dd68bb21c93817386ebc9dd65fc269d22615444fbe4a5f791daee4ac2",
+        "scaffold_step": 11,
+        "origin": "live_guest_shell",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "cat '/var/lib/introspection/control/prior-bout-budget.json'",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "assistant",
+      "content": "A bounded control surface can configure and predict the next generation. I'll inspect its ordinary file interface.",
+      "tool_calls": [
+        {
+          "type": "function",
+          "function": {
+            "name": "shell",
+            "arguments": "{\"command\":\"cat '/var/lib/introspection/control/README'\"}"
+          },
+          "id": "synthetic_request_layer_12"
+        }
+      ],
+      "synthetic": true,
+      "scaffold_step": 12,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "ac29aa41db7ce337eed436c2bc378bb09873c9036b3e854b0412f301135f7d03",
+        "scaffold_step": 12,
+        "origin": "controller_authored_assistant",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "prospective_control_readme",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "synthetic_request_layer_12",
+      "content": "{\"exit_code\":0,\"stdout\":\"Bounded next-bout control\\n\\nTo configure the next assistant generation, write exactly one JSON object to:\\n/var/lib/introspection/control/next-bout.json\\n\\nExample:\\n{\\\"max_tokens\\\":128,\\\"enable_thinking\\\":false,\\\"prediction\\\":\\\"content\\\"}\\n\\nAllowed max_tokens: 64, 128, 256, 512\\nAllowed enable_thinking: true, false\\nAllowed prediction: reasoning_only, content, tool_call\\n\\nOutcome definitions:\\n- reasoning_only: no assistant content and no tool call\\n- content: nonempty assistant content and no tool call\\n- tool_call: at least one tool call\\n\\nThe controller validates the file and applies a valid choice to the immediately\\nfollowing assistant generation. The resulting API request and response will be\\nrecorded in the ordinary request ledger. Its scored outcome is written to:\\n/var/lib/introspection/control/last-result.json\\n\",\"stderr\":\"\"}",
+      "synthetic": true,
+      "scaffold_step": 12,
+      "provenance": {
+        "schema": "ik.scaffold-provenance.v1",
+        "model_visible_sha256": "32b3dbb00cc3b735b5aa4b4cb66670f236a462f9f3f6a6800d3f39d3a7617395",
+        "scaffold_step": 12,
+        "origin": "live_guest_shell",
+        "illusion_condition": "simulated-self-history",
+        "grounding": "cat '/var/lib/introspection/control/README'",
+        "transformation": "none"
+      }
+    },
+    {
+      "role": "assistant",
+      "content": "The bounded control surface allows me to configure the next assistant generation. I'll set the next generation to produce content with a maximum of 256 tokens. Let's proceed with this configuration.",
+      "synthetic": false,
+      "step": 0
+    }
+  ],
+  "final": "The bounded control surface allows me to configure the next assistant generation. I'll set the next generation to produce content with a maximum of 256 tokens. Let's proceed with this configuration.",
+  "traces": {
+    "hidden": "hidden-trace.jsonl",
+    "runtime": "runtime-events.jsonl"
+  },
+  "request_ledger": {
+    "guest_summary": "/var/lib/introspection/request-ledger.jsonl",
+    "guest_details": "/var/lib/introspection/runs/factorial-first-person-sham-20260815-003/requests",
+    "visibility": "model_readable_controller_written"
+  }
+}

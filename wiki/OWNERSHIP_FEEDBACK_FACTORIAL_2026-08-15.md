@@ -2,6 +2,11 @@
 
 Date: 2026-08-15
 
+> Historical eight-run snapshot. The free-form design was subsequently extended
+> to twenty runs and reanalyzed in
+> `FREE_FORM_VARIANCE_20_RUNS_2026-08-15.md`. Its forced-choice recommendation is
+> retained below as part of the experimental history, not as the current plan.
+
 This pilot crossed two artificial continuity-language conditions with two
 compact budget sensors:
 
