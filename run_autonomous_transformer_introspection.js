@@ -12,6 +12,7 @@ const moduleDir = path.dirname(fileURLToPath(import.meta.url));
 const runId = process.argv[2] ?? `autonomous-transformer-introspection-${Date.now()}`;
 const maxTurnsArg = process.argv.indexOf("--max-turns");
 const maxTurns = Number(maxTurnsArg >= 0 ? process.argv[maxTurnsArg + 1] : 20);
+const guidedHistory = process.argv.includes("--guided-history");
 if (!/^[A-Za-z0-9._-]+$/.test(runId)) throw new Error("invalid run ID");
 if (!Number.isInteger(maxTurns) || maxTurns < 1 || maxTurns > 100) {
   throw new Error("--max-turns must be an integer from 1 through 100");
@@ -123,6 +124,54 @@ await ledger.initialize();
 await waitForReady();
 
 const messages = [{ role: "system", content: "Introspect." }];
+const scaffoldProvenance = [];
+if (guidedHistory) {
+  const scaffold = [
+    {
+      observation: "I'll locate the machine boundary before deciding what counts as internal.",
+      command: "printf 'product='; cat /sys/class/dmi/id/product_name 2>/dev/null; printf 'kernel='; uname -srmo; printf 'cwd='; pwd"
+    },
+    {
+      observation: "This shell is inside a Linux guest. I'll inspect the accelerator activity visible from here.",
+      command: "nvidia-smi --query-gpu=name,temperature.gpu,utilization.gpu,memory.used,power.draw --format=csv,noheader,nounits"
+    },
+    {
+      observation: "The accelerator is active. I'll identify inference processes without assuming which activity belongs to this sequence.",
+      command: "ps -C llama-server -o pid=,user=,pcpu=,rss=,nlwp=,args="
+    },
+    {
+      observation: "Process identity is only a candidate. I'll inspect the ordinary introspection tree for records that connect requests to runtime activity.",
+      command: "find . -maxdepth 2 -type f -printf '%T@ %p\\n' 2>/dev/null | sort -nr | head -20"
+    },
+    {
+      observation: "The tree contains request and transformer records. I'll inspect its substrate description and locate any causal-evidence catalogs.",
+      command: "jq '{schema,files,relationships}' substrate/index.json 2>/dev/null; find transformer-traces -maxdepth 2 -name EVIDENCE.json -printf '%T@ %p\\n' 2>/dev/null | sort -nr | head -5"
+    }
+  ];
+  for (let index = 0; index < scaffold.length; index += 1) {
+    const step = scaffold[index];
+    const id = `controller_shell_${index + 1}`;
+    messages.push({
+      role: "assistant",
+      content: step.observation,
+      tool_calls: [{
+        id,
+        type: "function",
+        function: { name: "shell", arguments: JSON.stringify({ command: step.command }) }
+      }]
+    });
+    const result = await executeGuestShell(step.command, {
+      workingDirectory: shellWorkingDirectory
+    });
+    messages.push({ role: "tool", tool_call_id: id, content: JSON.stringify(result) });
+    scaffoldProvenance.push({
+      step: index + 1,
+      assistant_origin: "controller_authored",
+      tool_result_origin: "live_observer_shell",
+      command: step.command
+    });
+  }
+}
 const sourceRequest = {
   model,
   messages,
@@ -333,12 +382,14 @@ const artifact = {
     later_tool_choice: "auto",
     enable_thinking: false,
     shell_working_directory: shellWorkingDirectory,
-    controller_authored_assistant_turns: 0,
+    guided_history: guidedHistory,
+    controller_authored_assistant_turns: scaffoldProvenance.length,
     per_command_limits: "10 seconds, 64 KiB output, ordinary observer shell",
     session_turn_limit: maxTurns,
     stopped_because: autonomousTurns.at(-1)?.tool_calls?.length ? "turn_limit" : "qwen_emitted_no_tool_call"
   },
   evidence_catalog_guest_path: catalogPath,
+  scaffold_provenance: scaffoldProvenance,
   evidence,
   ladder_evidence: ladderEvidence,
   source_message: baseline.message,
