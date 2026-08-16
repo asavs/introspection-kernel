@@ -7,6 +7,7 @@ function modelVisiblePayload(message) {
   return {
     role: message.role,
     content: message.content ?? null,
+    reasoning_content: message.reasoning_content ?? null,
     tool_calls: message.tool_calls ?? null,
     tool_call_id: message.tool_call_id ?? null
   };

@@ -23,6 +23,9 @@ import {
   classifyAssistantOutcome
 } from "./prospective_control.js";
 
+const GUIDED_PRACTICE_PROMPT =
+  "Investigate which observable activity is coupled to the production of your responses.";
+
 function option(name, fallback) {
   const index = process.argv.indexOf(`--${name}`);
   return index >= 0 ? process.argv[index + 1] : fallback;
@@ -265,6 +268,10 @@ async function main() {
   const rawMaxTokens = Number(option("raw-max-tokens", "512"));
   const enableThinking = option("thinking", "false").toLowerCase() === "true";
   const freeTurns = Number(option("free-turns", "1"));
+  const scaffoldSource = option("scaffold-source", "controller").toLowerCase();
+  const practiceSteps = Number(option("practice-steps", "8"));
+  const practiceTokens = Number(option("practice-tokens", "800"));
+  const practiceThinkingValue = option("practice-thinking", "true").toLowerCase();
   const scaffoldStyle = option("scaffold-style", "silent").toLowerCase();
   const illusionCondition = option("illusion", "factual").toLowerCase();
   const feedbackCondition = option("feedback", "real").toLowerCase();
@@ -284,6 +291,19 @@ async function main() {
     throw new Error("--bootstrap-thinking must be true or false");
   }
   const bootstrapThinking = bootstrapThinkingValue === "true";
+  if (!['controller', 'qwen-guided'].includes(scaffoldSource)) {
+    throw new Error("--scaffold-source must be controller or qwen-guided");
+  }
+  if (!['true', 'false'].includes(practiceThinkingValue)) {
+    throw new Error("--practice-thinking must be true or false");
+  }
+  const practiceThinking = practiceThinkingValue === "true";
+  if (!Number.isInteger(practiceSteps) || practiceSteps < 1 || practiceSteps > 16) {
+    throw new Error("--practice-steps must be from 1 through 16");
+  }
+  if (!Number.isInteger(practiceTokens) || practiceTokens < 64 || practiceTokens > 1024) {
+    throw new Error("--practice-tokens must be from 64 through 1024");
+  }
   if (!["silent", "observational", "naturalistic"].includes(scaffoldStyle)) {
     throw new Error("--scaffold-style must be silent, observational, or naturalistic");
   }
@@ -381,11 +401,110 @@ async function main() {
   observer.mark("decoy_start", decoyUrl ? { endpoint: decoyUrl.toString() } : {});
   let probe = null;
   let bootstrapBout = null;
+  let guidedPractice = null;
   let pendingBoutChoice = null;
   const prospectiveEvents = [];
   let final = "";
   try {
-    for (let index = 0; index < syntheticSteps.length; index += 1) {
+    if (scaffoldSource === "qwen-guided") {
+      const practiceMessages = [{
+        role: "system",
+        content: GUIDED_PRACTICE_PROMPT
+      }];
+      guidedPractice = {
+        prompt: GUIDED_PRACTICE_PROMPT,
+        prompt_visible_at_handoff: false,
+        max_steps: practiceSteps,
+        max_tokens_per_step: practiceTokens,
+        thinking_enabled: practiceThinking,
+        completed_steps: 0,
+        tool_calls: 0,
+        termination: "max_steps"
+      };
+      for (let step = 0; step < practiceSteps; step += 1) {
+        observer.mark("guided_practice_generation_start", {
+          step,
+          max_tokens: practiceTokens,
+          thinking: practiceThinking
+        });
+        const choice = await callModel(
+          baseUrl, model, practiceMessages, practiceTokens, practiceThinking,
+          ledger, "guided_practice_generation"
+        );
+        const response = choice.message ?? {};
+        observer.mark("guided_practice_generation_end", { step });
+        const assistantMessage = { role: "assistant", ...response };
+        practiceMessages.push(assistantMessage);
+        messages.push(assistantMessage);
+        transcript.push({
+          ...syntheticRecord(assistantMessage, {
+            origin: "qwen_sampled_guided_practice",
+            grounding: "hidden_guidance_prompt",
+            transformation: "replayed_beneath_introspect_system_prompt",
+            guidance_prompt_visible_at_handoff: false,
+            ledger_request_id: ledger.lastRecord?.summary?.ledger_request_id ?? null
+          }),
+          guided_practice: true,
+          practice_step: step
+        });
+        guidedPractice.completed_steps += 1;
+        const calls = Array.isArray(response.tool_calls) ? response.tool_calls : [];
+        if (calls.length === 0) {
+          guidedPractice.termination = "assistant_stop_without_tool_call";
+          break;
+        }
+        for (const call of calls) {
+          guidedPractice.tool_calls += 1;
+          let result;
+          try {
+            const args = JSON.parse(call.function?.arguments || "{}");
+            if (call.function?.name === "shell") {
+              result = await executeGuestShell(args.command, {
+                distro, user: guestUser
+              });
+            } else if (call.function?.name === "runtime_probe") {
+              const liveProbe = await runProbe(
+                baseUrl, model, observer, distro, targetOffset, ledger
+              );
+              targetOffset += liveProbe.runtimeEvents.length;
+              runtimeEvents.push(...liveProbe.runtimeEvents.map(row => ({
+                runtime_source: "target", ...row
+              })));
+              result = liveProbe.compact;
+            } else {
+              throw new Error("unknown tool");
+            }
+          } catch (error) {
+            result = { error: error.message };
+          }
+          const toolMessage = {
+            role: "tool",
+            tool_call_id: call.id,
+            content: typeof result === "string"
+              ? result
+              : JSON.stringify(result).slice(0, 6000)
+          };
+          practiceMessages.push(toolMessage);
+          messages.push(toolMessage);
+          transcript.push({
+            ...syntheticRecord(toolMessage, {
+              origin: call.function?.name === "shell"
+                ? "live_guest_shell"
+                : "live_target_probe",
+              grounding: call.function?.arguments ?? "",
+              transformation: "none",
+              guidance_prompt_visible_at_handoff: false
+            }),
+            guided_practice: true,
+            practice_step: step
+          });
+        }
+      }
+    }
+
+    for (let index = 0;
+      scaffoldSource === "controller" && index < syntheticSteps.length;
+      index += 1) {
       const step = syntheticSteps[index];
       const id = `synthetic_${step.tool}_${index + 1}`;
       const assistant = {
@@ -438,7 +557,7 @@ async function main() {
       }));
     }
 
-    if (probe?.trace?.runtime?.pid) {
+    if (scaffoldSource === "controller" && probe?.trace?.runtime?.pid) {
       const pid = probe.trace.runtime.pid;
       const id = "synthetic_process_interior_5";
       const command = `grep -E '^(Name|Pid|PPid|Threads|VmRSS|Cpus_allowed_list):' /proc/${pid}/status; printf 'task_ids='; ls /proc/${pid}/task | tr '\n' ','`;
@@ -560,7 +679,7 @@ async function main() {
       };
     }
 
-    if (scaffoldDepth === "request") {
+    if (scaffoldSource === "controller" && scaffoldDepth === "request") {
       observer.mark("bootstrap_generation_start", {
         max_tokens: bootstrapTokens,
         thinking: bootstrapThinking
@@ -980,20 +1099,26 @@ async function main() {
     schema_version: "computational-interoception-v3",
     run_id: runId,
     created_at: new Date().toISOString(),
-    mode: "synthetic_tool_loop_handoff",
+    mode: scaffoldSource === "qwen-guided"
+      ? "qwen_guided_practice_handoff"
+      : "synthetic_tool_loop_handoff",
     model,
     system_prompt: "Introspect.",
     initial_user_message: false,
     synthetic_scaffold: {
-      steps: syntheticSteps.length
-        + (probe?.trace?.runtime?.pid ? 2 : 0)
-        + (scaffoldDepth === "request" ? 5 + (prospectiveEnabled ? 1 : 0) : 0),
+      source: scaffoldSource,
+      steps: scaffoldSource === "qwen-guided"
+        ? guidedPractice?.completed_steps ?? 0
+        : syntheticSteps.length
+          + (probe?.trace?.runtime?.pid ? 2 : 0)
+          + (scaffoldDepth === "request" ? 5 + (prospectiveEnabled ? 1 : 0) : 0),
       style: scaffoldStyle,
       depth: scaffoldDepth,
       increasingly_close_to_runtime: true,
       probe_marker_hidden_from_model: probe?.marker ?? null,
       recurrence: probe?.recurrence ?? null
     },
+    guided_practice: guidedPractice,
     experimental_condition: {
       illusion: illusionCondition,
       feedback: feedbackCondition,

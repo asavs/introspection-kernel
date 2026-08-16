@@ -56,6 +56,11 @@ The following evidence commit extends every factorial cell to five runs,
 preserves all twenty full trajectories, and re-centers the next experiment on
 unforced observation rather than premature forced choice.
 
+The next architecture milestone replaces controller-written introspective prose
+with a Qwen-generated guided-practice prefix. The stronger practice instruction
+is absent at handoff, while the replayed assistant/tool trajectory remains fully
+provenanced.
+
 ## Why this order matters
 
 Capacity was established before testing long reasoning. Template correctness

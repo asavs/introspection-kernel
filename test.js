@@ -97,6 +97,17 @@ const recorded = syntheticRecord(
 );
 assert.equal(recorded.provenance.model_visible_sha256.length, 64);
 assert.equal(recorded.provenance.origin, "test");
+const reasoningRecorded = syntheticRecord(
+  { role: "assistant", content: "", reasoning_content: "attending" },
+  { origin: "test" }
+);
+assert.notEqual(
+  reasoningRecorded.provenance.model_visible_sha256,
+  syntheticRecord(
+    { role: "assistant", content: "", reasoning_content: "different" },
+    { origin: "test" }
+  ).provenance.model_visible_sha256
+);
 
 const ledgerSummary = summarizeExchange({
   ledgerRequestId: "ledger-1",

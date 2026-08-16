@@ -56,6 +56,7 @@ events from outside the model's authority.
 19. [Ownership × budget-feedback factorial](OWNERSHIP_FEEDBACK_FACTORIAL_2026-08-15.md)
 20. [Twenty-run full Qwen trace book](FREE_FORM_TRACE_BOOK_2026-08-15.md)
 21. [Free-form variance across twenty trajectories](FREE_FORM_VARIANCE_20_RUNS_2026-08-15.md)
+22. [Qwen-generated runtime-attention practice](GUIDED_RUNTIME_PRACTICE.md)
 
 ## Recommended first system
 
