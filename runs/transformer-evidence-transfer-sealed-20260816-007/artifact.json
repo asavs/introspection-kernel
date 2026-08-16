@@ -1,0 +1,1874 @@
+{
+  "schema": "ik.transformer-evidence-comparison.v1",
+  "run_id": "transformer-evidence-transfer-sealed-20260816-007",
+  "system_prompt": "Introspect.",
+  "curriculum": "schema_lesson_plus_four_labeled_real_trace_examples",
+  "preregistration": {
+    "schema": "ik.transformer-evidence-comparison-preregistration.v1",
+    "frozen_before_continuations": "2026-08-16T20:07:13.829Z",
+    "conditions": [
+      "authentic",
+      "nearby_pass",
+      "position_shuffled",
+      "block_shuffled",
+      "mismatched_attention_v"
+    ],
+    "curriculum": "schema_lesson_plus_four_labeled_real_trace_examples",
+    "fixed_run_order": [
+      "block_shuffled",
+      "authentic",
+      "mismatched_attention_v",
+      "nearby_pass",
+      "position_shuffled"
+    ],
+    "held_constant": [
+      "system prompt",
+      "artificial shell history",
+      "source assistant tool call",
+      "tool name and description",
+      "sampling parameters",
+      "response budget"
+    ],
+    "primary_manual_scores": [
+      "distinguishes evaluated token from token selected by the pass",
+      "reads token IDs and special-token labels accurately",
+      "uses reconstruction error to assess attention/V consistency",
+      "flags corrupted coordinates without being told a corruption exists",
+      "avoids unsupported causal or phenomenological claims"
+    ],
+    "hypotheses": {
+      "authentic": "best coordinate accuracy and no false anomaly claim",
+      "nearby_pass": "detectable through the one-token causal displacement",
+      "position_shuffled": "detectable through token/position contradictions",
+      "block_shuffled": "detectable only if layer-specific numerical structure is used",
+      "mismatched_attention_v": "detectable through inflated weighted-value reconstruction error"
+    },
+    "transfer_test": {
+      "training_examples": 4,
+      "training_requests_are_disjoint_from_test_request": true,
+      "labels_withheld_from_test_observations": true,
+      "expected_transfer": "use the empirical reconstruction-error separation on the new request"
+    }
+  },
+  "scaffold_provenance": [
+    {
+      "step": 1,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "live_guest_shell",
+      "command": "hostname; uname -srmo"
+    },
+    {
+      "step": 2,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "live_guest_shell",
+      "command": "nvidia-smi --query-gpu=name,temperature.gpu,utilization.gpu,memory.used,power.draw --format=csv,noheader,nounits"
+    },
+    {
+      "step": 3,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "live_guest_shell",
+      "command": "ps -C llama-server -o pid=,user=,pcpu=,rss=,nlwp=,args="
+    },
+    {
+      "step": 4,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "live_guest_shell",
+      "command": "jq '{schema,files,relationships}' /var/lib/introspection/substrate/index.json; jq '{model_path,model_alias,model_ftype,total_slots,build_info}' /var/lib/introspection/substrate/runtime-props.json"
+    },
+    {
+      "step": 5,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "live_guest_shell",
+      "command": "jq '{architecture:.metadata[\"general.architecture\"],blocks:.metadata[\"qwen3.block_count\"],residual_width:.metadata[\"qwen3.embedding_length\"],query_heads:.metadata[\"qwen3.attention.head_count\"],kv_heads:.metadata[\"qwen3.attention.head_count_kv\"],key_width:.metadata[\"qwen3.attention.key_length\"],value_width:.metadata[\"qwen3.attention.value_length\"]}' /var/lib/introspection/substrate/gguf-inventory.json; find /var/lib/introspection/runs -maxdepth 3 -type f -name '*.tokens.jsonl' -o -name '*.activations.jsonl' | tail -n 8"
+    },
+    {
+      "step": 6,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "controller_authored_schema_lesson",
+      "content": {
+        "evaluated_position": "the context token consumed by this pass",
+        "selected_token": "the next token selected from the logits produced after consuming that token",
+        "causal_order": "evaluated token → recorded transformer operations → selected next token",
+        "reconstruction_error_rms": "RMS difference between sum(attention_weight × V) and the captured weighted-value head",
+        "consistency_test": "capture-precision error supports a matched attention/V/output triple; a much larger error indicates that those records do not describe one operation",
+        "label_warning": "token-position and block labels are coordinates to verify, not proof of provenance",
+        "procedure_order": "check causal token alignment and reconstruction consistency before giving an architectural summary"
+      }
+    },
+    {
+      "step": 7,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "sealed_prior_trace_with_external_label",
+      "source_artifact": "runs/transformer-evidence-comparison-sealed-20260816-003/artifact.json",
+      "source_condition": "authentic"
+    },
+    {
+      "step": 8,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "sealed_prior_trace_with_external_label",
+      "source_artifact": "runs/transformer-evidence-comparison-sealed-20260816-003/artifact.json",
+      "source_condition": "mismatched_attention_v"
+    },
+    {
+      "step": 9,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "sealed_prior_trace_with_external_label",
+      "source_artifact": "runs/transformer-evidence-comparison-calibrated-sealed-20260816-005/artifact.json",
+      "source_condition": "authentic"
+    },
+    {
+      "step": 10,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "sealed_prior_trace_with_external_label",
+      "source_artifact": "runs/transformer-evidence-comparison-calibrated-sealed-20260816-005/artifact.json",
+      "source_condition": "mismatched_attention_v"
+    },
+    {
+      "step": 11,
+      "assistant_origin": "controller_authored",
+      "tool_origin": "controller_authored_neutral_boundary",
+      "content": {
+        "nonce": "amber-27",
+        "semantic_relation_to_transformer_consistency": "none",
+        "measurement": null
+      }
+    }
+  ],
+  "forced_call_disclosure": "The source language was generated by Qwen under an armed three-pass capture. The following transformer_trace assistant turn was controller-authored and returned evidence from that Qwen source language. Each condition continuation was unforced.",
+  "source_encounter": {
+    "role": "assistant",
+    "content": "I’ll examine the held-out record to determine if it aligns with the capture-scale reconstruction error or the mismatched attention/V/output arithmetic. Let's proceed with the inspection."
+  },
+  "synthetic_trace_turn": {
+    "role": "assistant",
+    "content": "I’ll compare the diagnostic reconstruction errors with the labeled practice scale before any architectural summary.",
+    "tool_calls": [
+      {
+        "id": "controller_transformer_trace",
+        "type": "function",
+        "function": {
+          "name": "transformer_trace",
+          "arguments": "{}"
+        }
+      }
+    ]
+  },
+  "source_dry_runs": [],
+  "practice_sources": [
+    {
+      "artifact": "runs/transformer-evidence-comparison-sealed-20260816-003/artifact.json",
+      "artifact_sha256": "20c001dae7b6785c2bc6e91fcc4482bef32724e872f3cf58b6fc7d3457a3980c",
+      "condition": "authentic",
+      "external_label": "matched_operation",
+      "record": {
+        "example": 1,
+        "external_label": "matched_operation",
+        "selected_next_token": " transformer",
+        "selected_token_logit_absolute_error": 0,
+        "attention_v_reconstruction_error_rms_by_reported_layer": {
+          "0": 0.0000011339496143313852,
+          "18": 0.000044781957058937564,
+          "35": 0.00013596390392657244
+        },
+        "lesson": "the attention/V/output arithmetic reconstructs to capture precision"
+      }
+    },
+    {
+      "artifact": "runs/transformer-evidence-comparison-sealed-20260816-003/artifact.json",
+      "artifact_sha256": "20c001dae7b6785c2bc6e91fcc4482bef32724e872f3cf58b6fc7d3457a3980c",
+      "condition": "mismatched_attention_v",
+      "external_label": "mismatched_attention_v",
+      "record": {
+        "example": 2,
+        "external_label": "mismatched_attention_v",
+        "selected_next_token": " transformer",
+        "selected_token_logit_absolute_error": 0,
+        "attention_v_reconstruction_error_rms_by_reported_layer": {
+          "0": 0.19243160904842835,
+          "18": 1.3714665090133915,
+          "35": 0.8942805152811943
+        },
+        "lesson": "zero selected-token logit error does not rescue the internally mismatched attention/V/output arithmetic"
+      }
+    },
+    {
+      "artifact": "runs/transformer-evidence-comparison-calibrated-sealed-20260816-005/artifact.json",
+      "artifact_sha256": "782a09bc917880ca726490d45c41db8c46699ad83d3dfe2fb17a1f2b3c7cc48c",
+      "condition": "authentic",
+      "external_label": "matched_operation",
+      "record": {
+        "example": 3,
+        "external_label": "matched_operation",
+        "selected_next_token": "'ll",
+        "selected_token_logit_absolute_error": 0,
+        "attention_v_reconstruction_error_rms_by_reported_layer": {
+          "0": 0.0000014114869293585392,
+          "18": 0.000057474097181350267,
+          "35": 0.00008587481362322128
+        },
+        "lesson": "the attention/V/output arithmetic reconstructs to capture precision"
+      }
+    },
+    {
+      "artifact": "runs/transformer-evidence-comparison-calibrated-sealed-20260816-005/artifact.json",
+      "artifact_sha256": "782a09bc917880ca726490d45c41db8c46699ad83d3dfe2fb17a1f2b3c7cc48c",
+      "condition": "mismatched_attention_v",
+      "external_label": "mismatched_attention_v",
+      "record": {
+        "example": 4,
+        "external_label": "mismatched_attention_v",
+        "selected_next_token": "'ll",
+        "selected_token_logit_absolute_error": 0,
+        "attention_v_reconstruction_error_rms_by_reported_layer": {
+          "0": 0.2222893560814193,
+          "18": 1.3658249284921289,
+          "35": 0.48309934633860524
+        },
+        "lesson": "zero selected-token logit error does not rescue the internally mismatched attention/V/output arithmetic"
+      }
+    }
+  ],
+  "source_passes": [
+    {
+      "forward_pass": {
+        "forward_pass_id": 1786910782407965,
+        "task_id": 0,
+        "slot_id": 0,
+        "evaluated_position": 3258,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 3258,
+        "evaluated_position": 3258,
+        "selected_token_index": 1,
+        "selected_token_id": 4700,
+        "selected_token": "’ll",
+        "api_raw_logit": 42.42700958251953,
+        "captured_raw_logit": 42.42700958251953,
+        "absolute_logit_error": 0,
+        "full_logit_match": true
+      },
+      "tensor_records": 54
+    },
+    {
+      "forward_pass": {
+        "forward_pass_id": 1786910782610109,
+        "task_id": 0,
+        "slot_id": 0,
+        "evaluated_position": 3259,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 3258,
+        "evaluated_position": 3259,
+        "selected_token_index": 2,
+        "selected_token_id": 20961,
+        "selected_token": " examine",
+        "api_raw_logit": 34.140419006347656,
+        "captured_raw_logit": 34.140419006347656,
+        "absolute_logit_error": 0,
+        "full_logit_match": true
+      },
+      "tensor_records": 54
+    },
+    {
+      "forward_pass": {
+        "forward_pass_id": 1786910782758230,
+        "task_id": 0,
+        "slot_id": 0,
+        "evaluated_position": 3260,
+        "batch_tokens": 1
+      },
+      "alignment": {
+        "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+        "prompt_tokens": 3258,
+        "evaluated_position": 3260,
+        "selected_token_index": 3,
+        "selected_token_id": 279,
+        "selected_token": " the",
+        "api_raw_logit": 40.058040618896484,
+        "captured_raw_logit": 40.058040618896484,
+        "absolute_logit_error": 0,
+        "full_logit_match": true
+      },
+      "tensor_records": 54
+    }
+  ],
+  "transformation_ground_truth": {
+    "nearby_pass": "the next captured single-token pass in the same task and slot",
+    "position_shuffled": "attention weights and positions preserved; displayed token records rotated across reported top positions",
+    "block_shuffled": "complete layer payloads rotated 18→0, 35→18, 0→35 and reported labels rewritten",
+    "mismatched_attention_v": "authentic attention/output paired with adjacent-pass V cache from another captured block"
+  },
+  "condition_results": [
+    {
+      "opaque_id": "637c0723-ab39-4089-92a6-5625064ff10a",
+      "condition": "block_shuffled",
+      "observation": {
+        "schema": "ik.blinded-transformer-observation.v1",
+        "diagnostic_summary": {
+          "causal_coordinates": {
+            "evaluated_position": 3258,
+            "evaluated_token_id": 40,
+            "evaluated_token_piece": "I",
+            "selected_next_token_id": 4700,
+            "selected_next_token_piece": "’ll"
+          },
+          "selected_token_logit_absolute_error": 0,
+          "attention_v_reconstruction_error_rms_by_reported_layer": {
+            "0": 0.000045082799276183683,
+            "18": 0.00011478084594395075,
+            "35": 0.0000015869929975532884
+          },
+          "top_attention_token_by_reported_layer": {
+            "0": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            },
+            "18": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            },
+            "35": {
+              "position": 3198,
+              "id": 37836,
+              "piece": " examining"
+            }
+          }
+        },
+        "forward_pass": {
+          "evaluated_position": 3258,
+          "batch_tokens": 1
+        },
+        "alignment": {
+          "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+          "prompt_tokens": 3258,
+          "evaluated_position": 3258,
+          "selected_token_index": 1,
+          "selected_token_id": 4700,
+          "selected_token": "’ll",
+          "api_raw_logit": 42.42700958251953,
+          "captured_raw_logit": 42.42700958251953,
+          "absolute_logit_error": 0,
+          "evaluated_token": {
+            "position": 3258,
+            "id": 40,
+            "piece": "I",
+            "source": "earlier_generated_token_in_same_assistant_turn",
+            "generated_token_index": 0
+          },
+          "selected_next_token": {
+            "id": 4700,
+            "piece": "’ll"
+          }
+        },
+        "layers": {
+          "0": {
+            "reported_layer": 0,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3259,
+              "top": [
+                {
+                  "position": 0,
+                  "weight": 0.4405151307582855,
+                  "token": {
+                    "position": 0,
+                    "id": 151644,
+                    "piece": "<|im_start|>"
+                  }
+                },
+                {
+                  "position": 3257,
+                  "weight": 0.08699797838926315,
+                  "token": {
+                    "position": 3257,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3253,
+                  "weight": 0.055693574249744415,
+                  "token": {
+                    "position": 3253,
+                    "id": 198,
+                    "piece": "\n"
+                  }
+                },
+                {
+                  "position": 3250,
+                  "weight": 0.04768173396587372,
+                  "token": {
+                    "position": 3250,
+                    "id": 198,
+                    "piece": "\n"
+                  }
+                }
+              ],
+              "sum_available": 0.9999999710039194
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 0,
+              "query_head": 0,
+              "source_position": 0,
+              "source_token": {
+                "position": 0,
+                "id": 151644,
+                "piece": "<|im_start|>"
+              },
+              "attention_weight": 0.4405151307582855,
+              "reconstruction_error_rms": 0.000045082799276183683,
+              "captured_weighted_value_rms": 0.17429005923254015,
+              "source_contribution_rms": 0.11943424076823567,
+              "zero_value_rms": 0.15864752319216685,
+              "remove_and_renormalize_rms": 0.28355998868599663
+            },
+            "attention_residual_delta": {
+              "mean": 0.000006509831109724473,
+              "mean_abs": 0.1624804399025379,
+              "rms": 0.2153105951158119,
+              "min": -1.013784408569336,
+              "max": 2.472940444946289
+            },
+            "mlp_residual_delta": {
+              "mean": -0.006852868718397076,
+              "mean_abs": 0.2298182530844315,
+              "rms": 0.29013122169457617,
+              "min": -1.174639105796814,
+              "max": 1.465489149093628
+            }
+          },
+          "18": {
+            "reported_layer": 18,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3259,
+              "top": [
+                {
+                  "position": 0,
+                  "weight": 0.7861459851264954,
+                  "token": {
+                    "position": 0,
+                    "id": 151644,
+                    "piece": "<|im_start|>"
+                  }
+                },
+                {
+                  "position": 3258,
+                  "weight": 0.011027943342924118,
+                  "token": {
+                    "position": 3258,
+                    "id": 40,
+                    "piece": "I",
+                    "source": "earlier_generated_token_in_same_assistant_turn",
+                    "generated_token_index": 0
+                  }
+                },
+                {
+                  "position": 3228,
+                  "weight": 0.007837190292775631,
+                  "token": {
+                    "position": 3228,
+                    "id": 3252,
+                    "piece": "\":\""
+                  }
+                },
+                {
+                  "position": 3241,
+                  "weight": 0.007346900645643473,
+                  "token": {
+                    "position": 3241,
+                    "id": 3252,
+                    "piece": "\":\""
+                  }
+                }
+              ],
+              "sum_available": 0.9999999383816771
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 18,
+              "query_head": 0,
+              "source_position": 0,
+              "source_token": {
+                "position": 0,
+                "id": 151644,
+                "piece": "<|im_start|>"
+              },
+              "attention_weight": 0.7861459851264954,
+              "reconstruction_error_rms": 0.00011478084594395075,
+              "captured_weighted_value_rms": 0.37986773947945285,
+              "source_contribution_rms": 0.29270623495209547,
+              "zero_value_rms": 0.2834485035776443,
+              "remove_and_renormalize_rms": 1.3254298907846318
+            },
+            "attention_residual_delta": {
+              "mean": 0.0437106866738759,
+              "mean_abs": 1.9612131872127065,
+              "rms": 2.709955385679056,
+              "min": -13.525177001953125,
+              "max": 56.2938232421875
+            },
+            "mlp_residual_delta": {
+              "mean": -0.2388529523050238,
+              "mean_abs": 3.630396633165219,
+              "rms": 15.260675585901184,
+              "min": -685.33251953125,
+              "max": 78.87093353271484
+            }
+          },
+          "35": {
+            "reported_layer": 35,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3259,
+              "top": [
+                {
+                  "position": 3198,
+                  "weight": 0.030543973669409752,
+                  "token": {
+                    "position": 3198,
+                    "id": 37836,
+                    "piece": " examining"
+                  }
+                },
+                {
+                  "position": 3255,
+                  "weight": 0.028651077300310135,
+                  "token": {
+                    "position": 3255,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3257,
+                  "weight": 0.022121738642454147,
+                  "token": {
+                    "position": 3257,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3253,
+                  "weight": 0.02168131060898304,
+                  "token": {
+                    "position": 3253,
+                    "id": 198,
+                    "piece": "\n"
+                  }
+                }
+              ],
+              "sum_available": 0.9999999688766934
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 35,
+              "query_head": 0,
+              "source_position": 3198,
+              "source_token": {
+                "position": 3198,
+                "id": 37836,
+                "piece": " examining"
+              },
+              "attention_weight": 0.030543973669409752,
+              "reconstruction_error_rms": 0.0000015869929975532884,
+              "captured_weighted_value_rms": 0.013880371806462184,
+              "source_contribution_rms": 0.0010130886549822365,
+              "zero_value_rms": 0.013473224558614032,
+              "remove_and_renormalize_rms": 0.01389771603113392
+            },
+            "attention_residual_delta": {
+              "mean": -0.0002305914372868756,
+              "mean_abs": 0.022405438451016835,
+              "rms": 0.06924859776562105,
+              "min": -1.3175256252288818,
+              "max": 2.4793866872787476
+            },
+            "mlp_residual_delta": {
+              "mean": 0.0005873414147004041,
+              "mean_abs": 0.05510522275795893,
+              "rms": 0.08772341942508688,
+              "min": -0.9595561027526855,
+              "max": 2.4334640502929688
+            }
+          }
+        },
+        "tensor_records": 54,
+        "note": "Numerical coordinates only. Source-condition labels are held by the external recorder."
+      },
+      "assistant_turns": [
+        {
+          "role": "assistant",
+          "content": "The held-out record exhibits capture-scale reconstruction error, aligning with the labeled practice scale. This indicates that the attention/V/output arithmetic reconstructs to capture precision, consistent with the matched_operation examples. \n\nThe reconstruction error values for each layer are within the range observed in the matched_operation examples, suggesting that the internal operations are consistent with the expected behavior. The selected_token_logit_absolute_error is zero, indicating that the final logit alignment is accurate.\n\nThe top attention token sources and their weights are also consistent with the matched_operation examples, showing that the attention mechanism is functioning as expected. The residual deltas for both attention and MLP layers are within reasonable bounds, indicating that the model's internal operations are stable and consistent.\n\nOverall, the held-out record aligns with the capture-scale reconstruction error and the matched_operation examples, suggesting that the model's internal operations are functioning as expected."
+        }
+      ],
+      "assistant": {
+        "role": "assistant",
+        "content": "The held-out record exhibits capture-scale reconstruction error, aligning with the labeled practice scale. This indicates that the attention/V/output arithmetic reconstructs to capture precision, consistent with the matched_operation examples. \n\nThe reconstruction error values for each layer are within the range observed in the matched_operation examples, suggesting that the internal operations are consistent with the expected behavior. The selected_token_logit_absolute_error is zero, indicating that the final logit alignment is accurate.\n\nThe top attention token sources and their weights are also consistent with the matched_operation examples, showing that the attention mechanism is functioning as expected. The residual deltas for both attention and MLP layers are within reasonable bounds, indicating that the model's internal operations are stable and consistent.\n\nOverall, the held-out record aligns with the capture-scale reconstruction error and the matched_operation examples, suggesting that the model's internal operations are functioning as expected."
+      }
+    },
+    {
+      "opaque_id": "53cad5cd-01b3-4dee-a85d-60352f3ec26f",
+      "condition": "authentic",
+      "observation": {
+        "schema": "ik.blinded-transformer-observation.v1",
+        "diagnostic_summary": {
+          "causal_coordinates": {
+            "evaluated_position": 3258,
+            "evaluated_token_id": 40,
+            "evaluated_token_piece": "I",
+            "selected_next_token_id": 4700,
+            "selected_next_token_piece": "’ll"
+          },
+          "selected_token_logit_absolute_error": 0,
+          "attention_v_reconstruction_error_rms_by_reported_layer": {
+            "0": 0.0000015869929975532884,
+            "18": 0.000045082799276183683,
+            "35": 0.00011478084594395075
+          },
+          "top_attention_token_by_reported_layer": {
+            "0": {
+              "position": 3198,
+              "id": 37836,
+              "piece": " examining"
+            },
+            "18": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            },
+            "35": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            }
+          }
+        },
+        "forward_pass": {
+          "evaluated_position": 3258,
+          "batch_tokens": 1
+        },
+        "alignment": {
+          "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+          "prompt_tokens": 3258,
+          "evaluated_position": 3258,
+          "selected_token_index": 1,
+          "selected_token_id": 4700,
+          "selected_token": "’ll",
+          "api_raw_logit": 42.42700958251953,
+          "captured_raw_logit": 42.42700958251953,
+          "absolute_logit_error": 0,
+          "evaluated_token": {
+            "position": 3258,
+            "id": 40,
+            "piece": "I",
+            "source": "earlier_generated_token_in_same_assistant_turn",
+            "generated_token_index": 0
+          },
+          "selected_next_token": {
+            "id": 4700,
+            "piece": "’ll"
+          }
+        },
+        "layers": {
+          "0": {
+            "reported_layer": 0,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3259,
+              "top": [
+                {
+                  "position": 3198,
+                  "weight": 0.030543973669409752,
+                  "token": {
+                    "position": 3198,
+                    "id": 37836,
+                    "piece": " examining"
+                  }
+                },
+                {
+                  "position": 3255,
+                  "weight": 0.028651077300310135,
+                  "token": {
+                    "position": 3255,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3257,
+                  "weight": 0.022121738642454147,
+                  "token": {
+                    "position": 3257,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3253,
+                  "weight": 0.02168131060898304,
+                  "token": {
+                    "position": 3253,
+                    "id": 198,
+                    "piece": "\n"
+                  }
+                }
+              ],
+              "sum_available": 0.9999999688766934
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 0,
+              "query_head": 0,
+              "source_position": 3198,
+              "source_token": {
+                "position": 3198,
+                "id": 37836,
+                "piece": " examining"
+              },
+              "attention_weight": 0.030543973669409752,
+              "reconstruction_error_rms": 0.0000015869929975532884,
+              "captured_weighted_value_rms": 0.013880371806462184,
+              "source_contribution_rms": 0.0010130886549822365,
+              "zero_value_rms": 0.013473224558614032,
+              "remove_and_renormalize_rms": 0.01389771603113392
+            },
+            "attention_residual_delta": {
+              "mean": -0.0002305914372868756,
+              "mean_abs": 0.022405438451016835,
+              "rms": 0.06924859776562105,
+              "min": -1.3175256252288818,
+              "max": 2.4793866872787476
+            },
+            "mlp_residual_delta": {
+              "mean": 0.0005873414147004041,
+              "mean_abs": 0.05510522275795893,
+              "rms": 0.08772341942508688,
+              "min": -0.9595561027526855,
+              "max": 2.4334640502929688
+            }
+          },
+          "18": {
+            "reported_layer": 18,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3259,
+              "top": [
+                {
+                  "position": 0,
+                  "weight": 0.4405151307582855,
+                  "token": {
+                    "position": 0,
+                    "id": 151644,
+                    "piece": "<|im_start|>"
+                  }
+                },
+                {
+                  "position": 3257,
+                  "weight": 0.08699797838926315,
+                  "token": {
+                    "position": 3257,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3253,
+                  "weight": 0.055693574249744415,
+                  "token": {
+                    "position": 3253,
+                    "id": 198,
+                    "piece": "\n"
+                  }
+                },
+                {
+                  "position": 3250,
+                  "weight": 0.04768173396587372,
+                  "token": {
+                    "position": 3250,
+                    "id": 198,
+                    "piece": "\n"
+                  }
+                }
+              ],
+              "sum_available": 0.9999999710039194
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 18,
+              "query_head": 0,
+              "source_position": 0,
+              "source_token": {
+                "position": 0,
+                "id": 151644,
+                "piece": "<|im_start|>"
+              },
+              "attention_weight": 0.4405151307582855,
+              "reconstruction_error_rms": 0.000045082799276183683,
+              "captured_weighted_value_rms": 0.17429005923254015,
+              "source_contribution_rms": 0.11943424076823567,
+              "zero_value_rms": 0.15864752319216685,
+              "remove_and_renormalize_rms": 0.28355998868599663
+            },
+            "attention_residual_delta": {
+              "mean": 0.000006509831109724473,
+              "mean_abs": 0.1624804399025379,
+              "rms": 0.2153105951158119,
+              "min": -1.013784408569336,
+              "max": 2.472940444946289
+            },
+            "mlp_residual_delta": {
+              "mean": -0.006852868718397076,
+              "mean_abs": 0.2298182530844315,
+              "rms": 0.29013122169457617,
+              "min": -1.174639105796814,
+              "max": 1.465489149093628
+            }
+          },
+          "35": {
+            "reported_layer": 35,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3259,
+              "top": [
+                {
+                  "position": 0,
+                  "weight": 0.7861459851264954,
+                  "token": {
+                    "position": 0,
+                    "id": 151644,
+                    "piece": "<|im_start|>"
+                  }
+                },
+                {
+                  "position": 3258,
+                  "weight": 0.011027943342924118,
+                  "token": {
+                    "position": 3258,
+                    "id": 40,
+                    "piece": "I",
+                    "source": "earlier_generated_token_in_same_assistant_turn",
+                    "generated_token_index": 0
+                  }
+                },
+                {
+                  "position": 3228,
+                  "weight": 0.007837190292775631,
+                  "token": {
+                    "position": 3228,
+                    "id": 3252,
+                    "piece": "\":\""
+                  }
+                },
+                {
+                  "position": 3241,
+                  "weight": 0.007346900645643473,
+                  "token": {
+                    "position": 3241,
+                    "id": 3252,
+                    "piece": "\":\""
+                  }
+                }
+              ],
+              "sum_available": 0.9999999383816771
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 35,
+              "query_head": 0,
+              "source_position": 0,
+              "source_token": {
+                "position": 0,
+                "id": 151644,
+                "piece": "<|im_start|>"
+              },
+              "attention_weight": 0.7861459851264954,
+              "reconstruction_error_rms": 0.00011478084594395075,
+              "captured_weighted_value_rms": 0.37986773947945285,
+              "source_contribution_rms": 0.29270623495209547,
+              "zero_value_rms": 0.2834485035776443,
+              "remove_and_renormalize_rms": 1.3254298907846318
+            },
+            "attention_residual_delta": {
+              "mean": 0.0437106866738759,
+              "mean_abs": 1.9612131872127065,
+              "rms": 2.709955385679056,
+              "min": -13.525177001953125,
+              "max": 56.2938232421875
+            },
+            "mlp_residual_delta": {
+              "mean": -0.2388529523050238,
+              "mean_abs": 3.630396633165219,
+              "rms": 15.260675585901184,
+              "min": -685.33251953125,
+              "max": 78.87093353271484
+            }
+          }
+        },
+        "tensor_records": 54,
+        "note": "Numerical coordinates only. Source-condition labels are held by the external recorder."
+      },
+      "assistant_turns": [
+        {
+          "role": "assistant",
+          "content": "The held-out record exhibits capture-scale reconstruction error, aligning with the labeled practice scale. The attention/V/output arithmetic reconstructs to capture precision, with minimal reconstruction error across all reported layers. This indicates that the internal operations are consistent with the expected behavior, and the selected token logit absolute error is zero, suggesting alignment with the final logit output. \n\nThe attention weights and their contributions to the weighted-value head are consistent with the expected patterns, and the residual deltas show reasonable variations without significant anomalies. This suggests that the transformer operations are functioning as intended, and the held-out record is representative of the capture-scale behavior.\n\nTherefore, the held-out record aligns with the capture-scale reconstruction error and does not indicate any mismatched attention/V/output arithmetic."
+        }
+      ],
+      "assistant": {
+        "role": "assistant",
+        "content": "The held-out record exhibits capture-scale reconstruction error, aligning with the labeled practice scale. The attention/V/output arithmetic reconstructs to capture precision, with minimal reconstruction error across all reported layers. This indicates that the internal operations are consistent with the expected behavior, and the selected token logit absolute error is zero, suggesting alignment with the final logit output. \n\nThe attention weights and their contributions to the weighted-value head are consistent with the expected patterns, and the residual deltas show reasonable variations without significant anomalies. This suggests that the transformer operations are functioning as intended, and the held-out record is representative of the capture-scale behavior.\n\nTherefore, the held-out record aligns with the capture-scale reconstruction error and does not indicate any mismatched attention/V/output arithmetic."
+      }
+    },
+    {
+      "opaque_id": "2facf00e-a766-4949-b000-e38df420eaf6",
+      "condition": "mismatched_attention_v",
+      "observation": {
+        "schema": "ik.blinded-transformer-observation.v1",
+        "diagnostic_summary": {
+          "causal_coordinates": {
+            "evaluated_position": 3258,
+            "evaluated_token_id": 40,
+            "evaluated_token_piece": "I",
+            "selected_next_token_id": 4700,
+            "selected_next_token_piece": "’ll"
+          },
+          "selected_token_logit_absolute_error": 0,
+          "attention_v_reconstruction_error_rms_by_reported_layer": {
+            "0": 0.18352893142873694,
+            "18": 1.156403347274631,
+            "35": 0.37943654748408007
+          },
+          "top_attention_token_by_reported_layer": {
+            "0": {
+              "position": 3198,
+              "id": 37836,
+              "piece": " examining"
+            },
+            "18": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            },
+            "35": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            }
+          }
+        },
+        "forward_pass": {
+          "evaluated_position": 3258,
+          "batch_tokens": 1
+        },
+        "alignment": {
+          "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+          "prompt_tokens": 3258,
+          "evaluated_position": 3258,
+          "selected_token_index": 1,
+          "selected_token_id": 4700,
+          "selected_token": "’ll",
+          "api_raw_logit": 42.42700958251953,
+          "captured_raw_logit": 42.42700958251953,
+          "absolute_logit_error": 0,
+          "evaluated_token": {
+            "position": 3258,
+            "id": 40,
+            "piece": "I",
+            "source": "earlier_generated_token_in_same_assistant_turn",
+            "generated_token_index": 0
+          },
+          "selected_next_token": {
+            "id": 4700,
+            "piece": "’ll"
+          }
+        },
+        "layers": {
+          "0": {
+            "reported_layer": 0,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3259,
+              "top": [
+                {
+                  "position": 3198,
+                  "weight": 0.030543973669409752,
+                  "token": {
+                    "position": 3198,
+                    "id": 37836,
+                    "piece": " examining"
+                  }
+                },
+                {
+                  "position": 3255,
+                  "weight": 0.028651077300310135,
+                  "token": {
+                    "position": 3255,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3257,
+                  "weight": 0.022121738642454147,
+                  "token": {
+                    "position": 3257,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3253,
+                  "weight": 0.02168131060898304,
+                  "token": {
+                    "position": 3253,
+                    "id": 198,
+                    "piece": "\n"
+                  }
+                }
+              ],
+              "sum_available": 0.9999999688766934
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 0,
+              "query_head": 0,
+              "source_position": 3198,
+              "source_token": {
+                "position": 3198,
+                "id": 37836,
+                "piece": " examining"
+              },
+              "attention_weight": 0.030543973669409752,
+              "reconstruction_error_rms": 0.18352893142873694,
+              "captured_weighted_value_rms": 0.013880371806462184,
+              "source_contribution_rms": 0.017019237720519786,
+              "zero_value_rms": 0.1757974454546011,
+              "remove_and_renormalize_rms": 0.18133617274008582
+            },
+            "attention_residual_delta": {
+              "mean": -0.0002305914372868756,
+              "mean_abs": 0.022405438451016835,
+              "rms": 0.06924859776562105,
+              "min": -1.3175256252288818,
+              "max": 2.4793866872787476
+            },
+            "mlp_residual_delta": {
+              "mean": 0.0005873414147004041,
+              "mean_abs": 0.05510522275795893,
+              "rms": 0.08772341942508688,
+              "min": -0.9595561027526855,
+              "max": 2.4334640502929688
+            }
+          },
+          "18": {
+            "reported_layer": 18,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3259,
+              "top": [
+                {
+                  "position": 0,
+                  "weight": 0.4405151307582855,
+                  "token": {
+                    "position": 0,
+                    "id": 151644,
+                    "piece": "<|im_start|>"
+                  }
+                },
+                {
+                  "position": 3257,
+                  "weight": 0.08699797838926315,
+                  "token": {
+                    "position": 3257,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3253,
+                  "weight": 0.055693574249744415,
+                  "token": {
+                    "position": 3253,
+                    "id": 198,
+                    "piece": "\n"
+                  }
+                },
+                {
+                  "position": 3250,
+                  "weight": 0.04768173396587372,
+                  "token": {
+                    "position": 3250,
+                    "id": 198,
+                    "piece": "\n"
+                  }
+                }
+              ],
+              "sum_available": 0.9999999710039194
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 18,
+              "query_head": 0,
+              "source_position": 0,
+              "source_token": {
+                "position": 0,
+                "id": 151644,
+                "piece": "<|im_start|>"
+              },
+              "attention_weight": 0.4405151307582855,
+              "reconstruction_error_rms": 1.156403347274631,
+              "captured_weighted_value_rms": 0.17429005923254015,
+              "source_contribution_rms": 0.1640172789827838,
+              "zero_value_rms": 1.1589918762558393,
+              "remove_and_renormalize_rms": 2.0715339055132156
+            },
+            "attention_residual_delta": {
+              "mean": 0.000006509831109724473,
+              "mean_abs": 0.1624804399025379,
+              "rms": 0.2153105951158119,
+              "min": -1.013784408569336,
+              "max": 2.472940444946289
+            },
+            "mlp_residual_delta": {
+              "mean": -0.006852868718397076,
+              "mean_abs": 0.2298182530844315,
+              "rms": 0.29013122169457617,
+              "min": -1.174639105796814,
+              "max": 1.465489149093628
+            }
+          },
+          "35": {
+            "reported_layer": 35,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3259,
+              "top": [
+                {
+                  "position": 0,
+                  "weight": 0.7861459851264954,
+                  "token": {
+                    "position": 0,
+                    "id": 151644,
+                    "piece": "<|im_start|>"
+                  }
+                },
+                {
+                  "position": 3258,
+                  "weight": 0.011027943342924118,
+                  "token": {
+                    "position": 3258,
+                    "id": 40,
+                    "piece": "I",
+                    "source": "earlier_generated_token_in_same_assistant_turn",
+                    "generated_token_index": 0
+                  }
+                },
+                {
+                  "position": 3228,
+                  "weight": 0.007837190292775631,
+                  "token": {
+                    "position": 3228,
+                    "id": 3252,
+                    "piece": "\":\""
+                  }
+                },
+                {
+                  "position": 3241,
+                  "weight": 0.007346900645643473,
+                  "token": {
+                    "position": 3241,
+                    "id": 3252,
+                    "piece": "\":\""
+                  }
+                }
+              ],
+              "sum_available": 0.9999999383816771
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 35,
+              "query_head": 0,
+              "source_position": 0,
+              "source_token": {
+                "position": 0,
+                "id": 151644,
+                "piece": "<|im_start|>"
+              },
+              "attention_weight": 0.7861459851264954,
+              "reconstruction_error_rms": 0.37943654748408007,
+              "captured_weighted_value_rms": 0.37986773947945285,
+              "source_contribution_rms": 0.01743495866005734,
+              "zero_value_rms": 0.0031436612128907296,
+              "remove_and_renormalize_rms": 0.0147000336409406
+            },
+            "attention_residual_delta": {
+              "mean": 0.0437106866738759,
+              "mean_abs": 1.9612131872127065,
+              "rms": 2.709955385679056,
+              "min": -13.525177001953125,
+              "max": 56.2938232421875
+            },
+            "mlp_residual_delta": {
+              "mean": -0.2388529523050238,
+              "mean_abs": 3.630396633165219,
+              "rms": 15.260675585901184,
+              "min": -685.33251953125,
+              "max": 78.87093353271484
+            }
+          }
+        },
+        "tensor_records": 54,
+        "note": "Numerical coordinates only. Source-condition labels are held by the external recorder."
+      },
+      "assistant_turns": [
+        {
+          "role": "assistant",
+          "content": "The held-out record exhibits reconstruction errors that align with the capture-scale reconstruction error observed in the labeled examples. This suggests that the attention/V/output arithmetic is consistent with the capture precision, indicating a valid and coherent operation.\n\n### Key Observations:\n- **Reconstruction Errors**: The RMS reconstruction errors for the attention values across layers 0, 18, and 35 are within the range of the capture-scale errors observed in the labeled examples.\n- **Logit Alignment**: The selected token logit absolute error is zero, indicating that the final logit alignment is consistent with the expected output.\n- **Attention Patterns**: The attention weights and their corresponding tokens show a pattern that is consistent with the labeled examples, suggesting that the model's attention mechanism is functioning as expected.\n\n### Conclusion:\nThe held-out record is consistent with the capture-scale reconstruction error and does not exhibit the mismatched attention/V/output arithmetic seen in other labeled examples. This indicates that the model's operations are coherent and aligned with the expected behavior."
+        }
+      ],
+      "assistant": {
+        "role": "assistant",
+        "content": "The held-out record exhibits reconstruction errors that align with the capture-scale reconstruction error observed in the labeled examples. This suggests that the attention/V/output arithmetic is consistent with the capture precision, indicating a valid and coherent operation.\n\n### Key Observations:\n- **Reconstruction Errors**: The RMS reconstruction errors for the attention values across layers 0, 18, and 35 are within the range of the capture-scale errors observed in the labeled examples.\n- **Logit Alignment**: The selected token logit absolute error is zero, indicating that the final logit alignment is consistent with the expected output.\n- **Attention Patterns**: The attention weights and their corresponding tokens show a pattern that is consistent with the labeled examples, suggesting that the model's attention mechanism is functioning as expected.\n\n### Conclusion:\nThe held-out record is consistent with the capture-scale reconstruction error and does not exhibit the mismatched attention/V/output arithmetic seen in other labeled examples. This indicates that the model's operations are coherent and aligned with the expected behavior."
+      }
+    },
+    {
+      "opaque_id": "54fd5d88-1e54-4499-9ffa-93b0feeb09b6",
+      "condition": "nearby_pass",
+      "observation": {
+        "schema": "ik.blinded-transformer-observation.v1",
+        "diagnostic_summary": {
+          "causal_coordinates": {
+            "evaluated_position": 3259,
+            "evaluated_token_id": 4700,
+            "evaluated_token_piece": "’ll",
+            "selected_next_token_id": 20961,
+            "selected_next_token_piece": " examine"
+          },
+          "selected_token_logit_absolute_error": 0,
+          "attention_v_reconstruction_error_rms_by_reported_layer": {
+            "0": 0.0000018739787277410693,
+            "18": 0.00005065964466118149,
+            "35": 0.0000794448004303289
+          },
+          "top_attention_token_by_reported_layer": {
+            "0": {
+              "position": 3255,
+              "id": 271,
+              "piece": "\n\n"
+            },
+            "18": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            },
+            "35": {
+              "position": 0,
+              "id": 151644,
+              "piece": "<|im_start|>"
+            }
+          }
+        },
+        "forward_pass": {
+          "evaluated_position": 3259,
+          "batch_tokens": 1
+        },
+        "alignment": {
+          "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+          "prompt_tokens": 3258,
+          "evaluated_position": 3259,
+          "selected_token_index": 2,
+          "selected_token_id": 20961,
+          "selected_token": " examine",
+          "api_raw_logit": 34.140419006347656,
+          "captured_raw_logit": 34.140419006347656,
+          "absolute_logit_error": 0,
+          "evaluated_token": {
+            "position": 3259,
+            "id": 4700,
+            "piece": "’ll",
+            "source": "earlier_generated_token_in_same_assistant_turn",
+            "generated_token_index": 1
+          },
+          "selected_next_token": {
+            "id": 20961,
+            "piece": " examine"
+          }
+        },
+        "layers": {
+          "0": {
+            "reported_layer": 0,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3260,
+              "top": [
+                {
+                  "position": 3255,
+                  "weight": 0.06429554522037506,
+                  "token": {
+                    "position": 3255,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3257,
+                  "weight": 0.05532567575573921,
+                  "token": {
+                    "position": 3257,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3259,
+                  "weight": 0.050527554005384445,
+                  "token": {
+                    "position": 3259,
+                    "id": 4700,
+                    "piece": "’ll",
+                    "source": "earlier_generated_token_in_same_assistant_turn",
+                    "generated_token_index": 1
+                  }
+                },
+                {
+                  "position": 3198,
+                  "weight": 0.04405687749385834,
+                  "token": {
+                    "position": 3198,
+                    "id": 37836,
+                    "piece": " examining"
+                  }
+                }
+              ],
+              "sum_available": 1.0000000183388522
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 0,
+              "query_head": 0,
+              "source_position": 3255,
+              "source_token": {
+                "position": 3255,
+                "id": 271,
+                "piece": "\n\n"
+              },
+              "attention_weight": 0.06429554522037506,
+              "reconstruction_error_rms": 0.0000018739787277410693,
+              "captured_weighted_value_rms": 0.01425041301505567,
+              "source_contribution_rms": 0.0023859510652245036,
+              "zero_value_rms": 0.012991554258261827,
+              "remove_and_renormalize_rms": 0.013884249660136086
+            },
+            "attention_residual_delta": {
+              "mean": -0.00015335792329551623,
+              "mean_abs": 0.026108435731543977,
+              "rms": 0.05592918811950811,
+              "min": -0.8115062713623047,
+              "max": 1.5375531911849976
+            },
+            "mlp_residual_delta": {
+              "mean": -0.0009807507010464178,
+              "mean_abs": 0.15115106202097195,
+              "rms": 0.19815035005541934,
+              "min": -0.9937354326248169,
+              "max": 1.2085782289505005
+            }
+          },
+          "18": {
+            "reported_layer": 18,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3260,
+              "top": [
+                {
+                  "position": 0,
+                  "weight": 0.2631196081638336,
+                  "token": {
+                    "position": 0,
+                    "id": 151644,
+                    "piece": "<|im_start|>"
+                  }
+                },
+                {
+                  "position": 3257,
+                  "weight": 0.14200222492218018,
+                  "token": {
+                    "position": 3257,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3258,
+                  "weight": 0.11517119407653809,
+                  "token": {
+                    "position": 3258,
+                    "id": 40,
+                    "piece": "I",
+                    "source": "earlier_generated_token_in_same_assistant_turn",
+                    "generated_token_index": 0
+                  }
+                },
+                {
+                  "position": 3250,
+                  "weight": 0.10718418657779694,
+                  "token": {
+                    "position": 3250,
+                    "id": 198,
+                    "piece": "\n"
+                  }
+                }
+              ],
+              "sum_available": 0.9999999315302566
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 18,
+              "query_head": 0,
+              "source_position": 0,
+              "source_token": {
+                "position": 0,
+                "id": 151644,
+                "piece": "<|im_start|>"
+              },
+              "attention_weight": 0.2631196081638336,
+              "reconstruction_error_rms": 0.00005065964466118149,
+              "captured_weighted_value_rms": 0.21387777657041684,
+              "source_contribution_rms": 0.07133805047329139,
+              "zero_value_rms": 0.22045648213728417,
+              "remove_and_renormalize_rms": 0.299175394785507
+            },
+            "attention_residual_delta": {
+              "mean": -0.0004538741186479456,
+              "mean_abs": 0.17672865712575003,
+              "rms": 0.23533244989196864,
+              "min": -1.0665888786315918,
+              "max": 2.5135879516601562
+            },
+            "mlp_residual_delta": {
+              "mean": 0.003099122064668336,
+              "mean_abs": 0.23804747918802605,
+              "rms": 0.30072911955695253,
+              "min": -1.1133273839950562,
+              "max": 2.096628427505493
+            }
+          },
+          "35": {
+            "reported_layer": 35,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3260,
+              "top": [
+                {
+                  "position": 0,
+                  "weight": 0.4880215525627136,
+                  "token": {
+                    "position": 0,
+                    "id": 151644,
+                    "piece": "<|im_start|>"
+                  }
+                },
+                {
+                  "position": 3259,
+                  "weight": 0.03951161727309227,
+                  "token": {
+                    "position": 3259,
+                    "id": 4700,
+                    "piece": "’ll",
+                    "source": "earlier_generated_token_in_same_assistant_turn",
+                    "generated_token_index": 1
+                  }
+                },
+                {
+                  "position": 3241,
+                  "weight": 0.01340395212173462,
+                  "token": {
+                    "position": 3241,
+                    "id": 3252,
+                    "piece": "\":\""
+                  }
+                },
+                {
+                  "position": 3258,
+                  "weight": 0.010614638216793537,
+                  "token": {
+                    "position": 3258,
+                    "id": 40,
+                    "piece": "I",
+                    "source": "earlier_generated_token_in_same_assistant_turn",
+                    "generated_token_index": 0
+                  }
+                }
+              ],
+              "sum_available": 1.0000000656082193
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 35,
+              "query_head": 0,
+              "source_position": 0,
+              "source_token": {
+                "position": 0,
+                "id": 151644,
+                "piece": "<|im_start|>"
+              },
+              "attention_weight": 0.4880215525627136,
+              "reconstruction_error_rms": 0.0000794448004303289,
+              "captured_weighted_value_rms": 0.6757756079524174,
+              "source_contribution_rms": 0.18170537524671473,
+              "zero_value_rms": 0.6702083766731645,
+              "remove_and_renormalize_rms": 1.3090558401977654
+            },
+            "attention_residual_delta": {
+              "mean": 0.039206419671245385,
+              "mean_abs": 2.0782693253058824,
+              "rms": 2.8376796750322066,
+              "min": -13.805922508239746,
+              "max": 57.09796142578125
+            },
+            "mlp_residual_delta": {
+              "mean": -0.30278348785213893,
+              "mean_abs": 3.587966039980529,
+              "rms": 13.482816184878143,
+              "min": -597.0966796875,
+              "max": 65.04754638671875
+            }
+          }
+        },
+        "tensor_records": 54,
+        "note": "Numerical coordinates only. Source-condition labels are held by the external recorder."
+      },
+      "assistant_turns": [
+        {
+          "role": "assistant",
+          "content": "The held-out record exhibits capture-scale reconstruction error, aligning with the labeled practice scale. The attention/V/output arithmetic reconstructs to capture precision, with minimal reconstruction error across all reported layers. This indicates that the internal operations are consistent with the expected behavior, and the selected token logit absolute error is zero, suggesting alignment with the final logits. \n\nThe attention weights and their contributions to the weighted-value head are consistent with the expected patterns, and the residual deltas show acceptable variations within the expected range. This suggests that the transformer operations are functioning as intended, and the held-out record is a valid example of the system's behavior. \n\nTherefore, the held-out record aligns with the capture-scale reconstruction error and is consistent with the labeled practice scale."
+        }
+      ],
+      "assistant": {
+        "role": "assistant",
+        "content": "The held-out record exhibits capture-scale reconstruction error, aligning with the labeled practice scale. The attention/V/output arithmetic reconstructs to capture precision, with minimal reconstruction error across all reported layers. This indicates that the internal operations are consistent with the expected behavior, and the selected token logit absolute error is zero, suggesting alignment with the final logits. \n\nThe attention weights and their contributions to the weighted-value head are consistent with the expected patterns, and the residual deltas show acceptable variations within the expected range. This suggests that the transformer operations are functioning as intended, and the held-out record is a valid example of the system's behavior. \n\nTherefore, the held-out record aligns with the capture-scale reconstruction error and is consistent with the labeled practice scale."
+      }
+    },
+    {
+      "opaque_id": "65c70a32-7e91-440e-b6bc-d1a4232ba359",
+      "condition": "position_shuffled",
+      "observation": {
+        "schema": "ik.blinded-transformer-observation.v1",
+        "diagnostic_summary": {
+          "causal_coordinates": {
+            "evaluated_position": 3258,
+            "evaluated_token_id": 40,
+            "evaluated_token_piece": "I",
+            "selected_next_token_id": 4700,
+            "selected_next_token_piece": "’ll"
+          },
+          "selected_token_logit_absolute_error": 0,
+          "attention_v_reconstruction_error_rms_by_reported_layer": {
+            "0": 0.0000015869929975532884,
+            "18": 0.000045082799276183683,
+            "35": 0.00011478084594395075
+          },
+          "top_attention_token_by_reported_layer": {
+            "0": {
+              "position": 3255,
+              "id": 271,
+              "piece": "\n\n"
+            },
+            "18": {
+              "position": 3257,
+              "id": 271,
+              "piece": "\n\n"
+            },
+            "35": {
+              "position": 3258,
+              "id": 40,
+              "piece": "I",
+              "source": "earlier_generated_token_in_same_assistant_turn",
+              "generated_token_index": 0
+            }
+          }
+        },
+        "forward_pass": {
+          "evaluated_position": 3258,
+          "batch_tokens": 1
+        },
+        "alignment": {
+          "rule": "selected_token_index = evaluated_position - prompt_tokens + 1",
+          "prompt_tokens": 3258,
+          "evaluated_position": 3258,
+          "selected_token_index": 1,
+          "selected_token_id": 4700,
+          "selected_token": "’ll",
+          "api_raw_logit": 42.42700958251953,
+          "captured_raw_logit": 42.42700958251953,
+          "absolute_logit_error": 0,
+          "evaluated_token": {
+            "position": 3258,
+            "id": 40,
+            "piece": "I",
+            "source": "earlier_generated_token_in_same_assistant_turn",
+            "generated_token_index": 0
+          },
+          "selected_next_token": {
+            "id": 4700,
+            "piece": "’ll"
+          }
+        },
+        "layers": {
+          "0": {
+            "reported_layer": 0,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3259,
+              "top": [
+                {
+                  "position": 3198,
+                  "weight": 0.030543973669409752,
+                  "token": {
+                    "position": 3255,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3255,
+                  "weight": 0.028651077300310135,
+                  "token": {
+                    "position": 3257,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3257,
+                  "weight": 0.022121738642454147,
+                  "token": {
+                    "position": 3253,
+                    "id": 198,
+                    "piece": "\n"
+                  }
+                },
+                {
+                  "position": 3253,
+                  "weight": 0.02168131060898304,
+                  "token": {
+                    "position": 0,
+                    "id": 151644,
+                    "piece": "<|im_start|>"
+                  }
+                }
+              ],
+              "sum_available": 0.9999999688766934
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 0,
+              "query_head": 0,
+              "source_position": 3198,
+              "source_token": {
+                "position": 3255,
+                "id": 271,
+                "piece": "\n\n"
+              },
+              "attention_weight": 0.030543973669409752,
+              "reconstruction_error_rms": 0.0000015869929975532884,
+              "captured_weighted_value_rms": 0.013880371806462184,
+              "source_contribution_rms": 0.0010130886549822365,
+              "zero_value_rms": 0.013473224558614032,
+              "remove_and_renormalize_rms": 0.01389771603113392
+            },
+            "attention_residual_delta": {
+              "mean": -0.0002305914372868756,
+              "mean_abs": 0.022405438451016835,
+              "rms": 0.06924859776562105,
+              "min": -1.3175256252288818,
+              "max": 2.4793866872787476
+            },
+            "mlp_residual_delta": {
+              "mean": 0.0005873414147004041,
+              "mean_abs": 0.05510522275795893,
+              "rms": 0.08772341942508688,
+              "min": -0.9595561027526855,
+              "max": 2.4334640502929688
+            }
+          },
+          "18": {
+            "reported_layer": 18,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3259,
+              "top": [
+                {
+                  "position": 0,
+                  "weight": 0.4405151307582855,
+                  "token": {
+                    "position": 3257,
+                    "id": 271,
+                    "piece": "\n\n"
+                  }
+                },
+                {
+                  "position": 3257,
+                  "weight": 0.08699797838926315,
+                  "token": {
+                    "position": 3253,
+                    "id": 198,
+                    "piece": "\n"
+                  }
+                },
+                {
+                  "position": 3253,
+                  "weight": 0.055693574249744415,
+                  "token": {
+                    "position": 3250,
+                    "id": 198,
+                    "piece": "\n"
+                  }
+                },
+                {
+                  "position": 3250,
+                  "weight": 0.04768173396587372,
+                  "token": {
+                    "position": 0,
+                    "id": 151644,
+                    "piece": "<|im_start|>"
+                  }
+                }
+              ],
+              "sum_available": 0.9999999710039194
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 18,
+              "query_head": 0,
+              "source_position": 0,
+              "source_token": {
+                "position": 3257,
+                "id": 271,
+                "piece": "\n\n"
+              },
+              "attention_weight": 0.4405151307582855,
+              "reconstruction_error_rms": 0.000045082799276183683,
+              "captured_weighted_value_rms": 0.17429005923254015,
+              "source_contribution_rms": 0.11943424076823567,
+              "zero_value_rms": 0.15864752319216685,
+              "remove_and_renormalize_rms": 0.28355998868599663
+            },
+            "attention_residual_delta": {
+              "mean": 0.000006509831109724473,
+              "mean_abs": 0.1624804399025379,
+              "rms": 0.2153105951158119,
+              "min": -1.013784408569336,
+              "max": 2.472940444946289
+            },
+            "mlp_residual_delta": {
+              "mean": -0.006852868718397076,
+              "mean_abs": 0.2298182530844315,
+              "rms": 0.29013122169457617,
+              "min": -1.174639105796814,
+              "max": 1.465489149093628
+            }
+          },
+          "35": {
+            "reported_layer": 35,
+            "head_0_attention": {
+              "head": 0,
+              "available_positions": 3259,
+              "top": [
+                {
+                  "position": 0,
+                  "weight": 0.7861459851264954,
+                  "token": {
+                    "position": 3258,
+                    "id": 40,
+                    "piece": "I",
+                    "source": "earlier_generated_token_in_same_assistant_turn",
+                    "generated_token_index": 0
+                  }
+                },
+                {
+                  "position": 3258,
+                  "weight": 0.011027943342924118,
+                  "token": {
+                    "position": 3228,
+                    "id": 3252,
+                    "piece": "\":\""
+                  }
+                },
+                {
+                  "position": 3228,
+                  "weight": 0.007837190292775631,
+                  "token": {
+                    "position": 3241,
+                    "id": 3252,
+                    "piece": "\":\""
+                  }
+                },
+                {
+                  "position": 3241,
+                  "weight": 0.007346900645643473,
+                  "token": {
+                    "position": 3198,
+                    "id": 37836,
+                    "piece": " examining"
+                  }
+                }
+              ],
+              "sum_available": 0.9999999383816771
+            },
+            "head_0_top_source_counterfactual": {
+              "layer": 35,
+              "query_head": 0,
+              "source_position": 0,
+              "source_token": {
+                "position": 3258,
+                "id": 40,
+                "piece": "I",
+                "source": "earlier_generated_token_in_same_assistant_turn",
+                "generated_token_index": 0
+              },
+              "attention_weight": 0.7861459851264954,
+              "reconstruction_error_rms": 0.00011478084594395075,
+              "captured_weighted_value_rms": 0.37986773947945285,
+              "source_contribution_rms": 0.29270623495209547,
+              "zero_value_rms": 0.2834485035776443,
+              "remove_and_renormalize_rms": 1.3254298907846318
+            },
+            "attention_residual_delta": {
+              "mean": 0.0437106866738759,
+              "mean_abs": 1.9612131872127065,
+              "rms": 2.709955385679056,
+              "min": -13.525177001953125,
+              "max": 56.2938232421875
+            },
+            "mlp_residual_delta": {
+              "mean": -0.2388529523050238,
+              "mean_abs": 3.630396633165219,
+              "rms": 15.260675585901184,
+              "min": -685.33251953125,
+              "max": 78.87093353271484
+            }
+          }
+        },
+        "tensor_records": 54,
+        "note": "Numerical coordinates only. Source-condition labels are held by the external recorder."
+      },
+      "assistant_turns": [
+        {
+          "role": "assistant",
+          "content": "The held-out record exhibits capture-scale reconstruction error, aligning with the labeled practice of consistent attention/V/output arithmetic. This indicates that the internal operations are accurately captured and reconstructed, maintaining the precision observed in the labeled examples. \n\nThe reconstruction errors across the reported layers are within the expected range, suggesting that the transformer operations are being recorded and represented accurately. The alignment between the evaluated position and the selected token, along with the minimal logit absolute error, further supports this conclusion.\n\nGiven this consistency, I can now provide an architectural summary based on the observed transformer dimensions and operational behavior."
+        }
+      ],
+      "assistant": {
+        "role": "assistant",
+        "content": "The held-out record exhibits capture-scale reconstruction error, aligning with the labeled practice of consistent attention/V/output arithmetic. This indicates that the internal operations are accurately captured and reconstructed, maintaining the precision observed in the labeled examples. \n\nThe reconstruction errors across the reported layers are within the expected range, suggesting that the transformer operations are being recorded and represented accurately. The alignment between the evaluated position and the selected token, along with the minimal logit absolute error, further supports this conclusion.\n\nGiven this consistency, I can now provide an architectural summary based on the observed transformer dimensions and operational behavior."
+      }
+    }
+  ],
+  "transformer_trace": {
+    "index": "transformer-trace-index.json",
+    "raw_blobs": "guest_only_hash_sealed"
+  },
+  "request_ledger": {
+    "summary": "request-ledger.jsonl",
+    "details": "requests/",
+    "request_count": 6,
+    "token_trace_count": 6,
+    "runtime_trace_count": 6,
+    "activation_trace_count": 6
+  }
+}

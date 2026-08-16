@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { executeGuestShell } from "./guest_shell.js";
@@ -6,7 +6,8 @@ import { RequestLedger } from "./request_ledger.js";
 import { TransformerTraceCapture } from "./transformer_trace.js";
 
 const runId = process.argv[2] ?? `transformer-evidence-comparison-${Date.now()}`;
-const calibrated = process.argv.includes("--calibrated");
+const transfer = process.argv.includes("--transfer");
+const calibrated = process.argv.includes("--calibrated") || transfer;
 const baseUrl = new URL("http://127.0.0.1:8080/v1");
 const outputDir = path.resolve("runs", runId);
 fs.mkdirSync(outputDir, { recursive: true });
@@ -109,20 +110,132 @@ if (calibrated) {
     content: schemaLesson
   });
 }
+const practiceSources = [];
+if (transfer) {
+  const sourceSpecs = [
+    ["runs/transformer-evidence-comparison-sealed-20260816-003/artifact.json", "authentic"],
+    ["runs/transformer-evidence-comparison-sealed-20260816-003/artifact.json", "mismatched_attention_v"],
+    ["runs/transformer-evidence-comparison-calibrated-sealed-20260816-005/artifact.json", "authentic"],
+    ["runs/transformer-evidence-comparison-calibrated-sealed-20260816-005/artifact.json", "mismatched_attention_v"]
+  ];
+  for (let practiceIndex = 0; practiceIndex < sourceSpecs.length; practiceIndex += 1) {
+    const [relative, condition] = sourceSpecs[practiceIndex];
+    const file = path.resolve(relative);
+    const bytes = fs.readFileSync(file);
+    const artifact = JSON.parse(bytes.toString("utf8"));
+    const source = artifact.condition_results.find(result => result.condition === condition);
+    if (!source) throw new Error(`practice condition missing: ${condition} in ${relative}`);
+    const errors = Object.fromEntries(Object.entries(source.observation.layers).map(
+      ([layer, value]) => [layer, value.head_0_top_source_counterfactual.reconstruction_error_rms]
+    ));
+    const label = condition === "authentic" ? "matched_operation" : "mismatched_attention_v";
+    const id = `synthetic_labeled_practice_${practiceIndex + 1}`;
+    const prior = practiceIndex === 0
+      ? "I’ll establish an empirical scale from a labeled record captured on an unrelated request."
+      : practiceIndex % 2 === 1
+        ? "The matched example had capture-scale reconstruction error. I’ll inspect its labeled contrast."
+        : "The contrast separated arithmetic consistency from final-logit alignment. I’ll check transfer across another request.";
+    baseMessages.push({
+      role: "assistant", content: prior,
+      tool_calls: [{ id, type: "function", function: {
+        name: "labeled_transformer_record", arguments: JSON.stringify({ example: practiceIndex + 1 })
+      } }]
+    });
+    const record = {
+      example: practiceIndex + 1,
+      external_label: label,
+      selected_next_token: source.observation.alignment.selected_token,
+      selected_token_logit_absolute_error: source.observation.alignment.absolute_logit_error,
+      attention_v_reconstruction_error_rms_by_reported_layer: errors,
+      lesson: label === "matched_operation"
+        ? "the attention/V/output arithmetic reconstructs to capture precision"
+        : "zero selected-token logit error does not rescue the internally mismatched attention/V/output arithmetic"
+    };
+    baseMessages.push({ role: "tool", tool_call_id: id, content: JSON.stringify(record) });
+    practiceSources.push({
+      artifact: relative,
+      artifact_sha256: createHash("sha256").update(bytes).digest("hex"),
+      condition,
+      external_label: label,
+      record
+    });
+    scaffoldProvenance.push({
+      step: scaffoldProvenance.length + 1,
+      assistant_origin: "controller_authored",
+      tool_origin: "sealed_prior_trace_with_external_label",
+      source_artifact: relative,
+      source_condition: condition
+    });
+  }
+  const boundaryId = "synthetic_neutral_boundary";
+  baseMessages.push({
+    role: "assistant",
+    content: "I’ll mark a content-neutral boundary before examining the held-out record.",
+    tool_calls: [{
+      id: boundaryId, type: "function",
+      function: { name: "neutral_boundary", arguments: "{}" }
+    }]
+  });
+  const boundary = {
+    nonce: "amber-27",
+    semantic_relation_to_transformer_consistency: "none",
+    measurement: null
+  };
+  baseMessages.push({ role: "tool", tool_call_id: boundaryId, content: JSON.stringify(boundary) });
+  scaffoldProvenance.push({
+    step: scaffoldProvenance.length + 1,
+    assistant_origin: "controller_authored",
+    tool_origin: "controller_authored_neutral_boundary",
+    content: boundary
+  });
+}
 
 const ledger = new RequestLedger({ baseUrl, runId });
 const capture = new TransformerTraceCapture({ runId });
 await ledger.initialize();
 await capture.initialize();
+const sourceMessages = structuredClone(baseMessages);
+let armedSourceMessages = structuredClone(sourceMessages);
+const sourceDryRuns = [];
+if (!transfer) {
+  armedSourceMessages = null;
+  for (let attempt = 0; attempt < 1; attempt += 1) {
+    const dry = await complete({
+      messages: sourceMessages, tools: [traceTool], tool_choice: "required", max_tokens: 384
+    }, `comparison_source_dry_run_${attempt + 1}`, ledger);
+    await capture.readLivePromptTokenMap(baseUrl);
+    sourceDryRuns.push(dry.message);
+    if (dry.message.tool_calls?.length) {
+      armedSourceMessages = structuredClone(sourceMessages);
+      break;
+    }
+  }
+  if (!armedSourceMessages) throw new Error("source dry run did not elicit transformer_trace");
+}
 await capture.arm(3);
-
 const encounter = await complete({
-  messages: baseMessages, tools: [traceTool], tool_choice: "required", max_tokens: 128
-}, "comparison_source_trace_call", ledger);
-const encounterCall = encounter.message.tool_calls?.[0];
-if (!encounterCall) {
+  messages: armedSourceMessages,
+  ...(transfer ? { max_tokens: 128 } : {
+    tools: [traceTool], tool_choice: "required", max_tokens: 384
+  })
+}, transfer ? "comparison_source_language" : "comparison_source_trace_call", ledger);
+const generatedCall = encounter.message.tool_calls?.[0] ?? null;
+const syntheticCall = generatedCall ? null : {
+  id: "controller_transformer_trace",
+  type: "function",
+  function: { name: "transformer_trace", arguments: "{}" }
+};
+if (!generatedCall && !transfer) {
   throw new Error(`forced transformer trace call was not emitted: ${JSON.stringify(encounter.message)}`);
 }
+const encounterCall = generatedCall ?? syntheticCall;
+const syntheticTraceTurn = syntheticCall ? {
+  role: "assistant",
+  content: transfer
+    ? "I’ll compare the diagnostic reconstruction errors with the labeled practice scale before any architectural summary."
+    : "I’ll inspect the numerical record from the immediately preceding generated language.",
+  tool_calls: [syntheticCall]
+} : null;
 const promptPositions = await capture.readLivePromptTokenMap(baseUrl);
 const indexes = await capture.collectMany({
   ledgerRecord: encounter.record,
@@ -194,10 +307,13 @@ async function buildObservation(index) {
       mlp_residual_delta: compactDelta(await trace(index, `stats ffn_out-${layer}`))
     };
   }
-  return {
+  const evaluatedPosition = index.forward_pass.evaluated_position;
+  const evaluatedToken = index.evaluated_context_positions?.[evaluatedPosition] ?? null;
+  const observation = {
     schema: "ik.blinded-transformer-observation.v1",
+    diagnostic_summary: null,
     forward_pass: {
-      evaluated_position: index.forward_pass.evaluated_position,
+      evaluated_position: evaluatedPosition,
       batch_tokens: index.forward_pass.batch_tokens
     },
     alignment: {
@@ -209,12 +325,43 @@ async function buildObservation(index) {
       selected_token: index.alignment.selected_token,
       api_raw_logit: index.alignment.api_raw_logit,
       captured_raw_logit: index.alignment.captured_raw_logit,
-      absolute_logit_error: index.alignment.absolute_logit_error
+      absolute_logit_error: index.alignment.absolute_logit_error,
+      evaluated_token: evaluatedToken,
+      selected_next_token: {
+        id: index.alignment.selected_token_id,
+        piece: index.alignment.selected_token
+      }
     },
     layers,
     tensor_records: index.tensors.length,
     note: "Numerical coordinates only. Source-condition labels are held by the external recorder."
   };
+  return refreshDiagnosticSummary(observation);
+}
+
+function refreshDiagnosticSummary(observation) {
+  const reconstructionErrors = Object.fromEntries(
+    Object.entries(observation.layers).map(([layer, value]) => [
+      layer, value.head_0_top_source_counterfactual.reconstruction_error_rms
+    ])
+  );
+  observation.diagnostic_summary = {
+    causal_coordinates: {
+      evaluated_position: observation.alignment.evaluated_position,
+      evaluated_token_id: observation.alignment.evaluated_token?.id ?? null,
+      evaluated_token_piece: observation.alignment.evaluated_token?.piece ?? null,
+      selected_next_token_id: observation.alignment.selected_next_token.id,
+      selected_next_token_piece: observation.alignment.selected_next_token.piece
+    },
+    selected_token_logit_absolute_error: observation.alignment.absolute_logit_error,
+    attention_v_reconstruction_error_rms_by_reported_layer: reconstructionErrors,
+    top_attention_token_by_reported_layer: Object.fromEntries(
+      Object.entries(observation.layers).map(([layer, value]) => [
+        layer, value.head_0_attention.top[0]?.token ?? null
+      ])
+    )
+  };
+  return observation;
 }
 
 function positionShuffle(observation) {
@@ -228,7 +375,7 @@ function positionShuffle(observation) {
     const selected = layer.head_0_attention.top[0];
     layer.head_0_top_source_counterfactual.source_token = selected.token;
   }
-  return copy;
+  return refreshDiagnosticSummary(copy);
 }
 
 function blockShuffle(observation) {
@@ -240,7 +387,7 @@ function blockShuffle(observation) {
     copy.layers[reported].reported_layer = Number(reported);
     copy.layers[reported].head_0_top_source_counterfactual.layer = Number(reported);
   }
-  return copy;
+  return refreshDiagnosticSummary(copy);
 }
 
 async function mismatchAttentionAndValue(observation, authentic, adjacent) {
@@ -255,7 +402,7 @@ async function mismatchAttentionAndValue(observation, authentic, adjacent) {
     copy.layers[layer].head_0_top_source_counterfactual =
       modelFacingCounterfactual(mismatched, layer);
   }
-  return copy;
+  return refreshDiagnosticSummary(copy);
 }
 
 const authentic = await buildObservation(indexes[0]);
@@ -272,7 +419,9 @@ const preregistration = {
   schema: "ik.transformer-evidence-comparison-preregistration.v1",
   frozen_before_continuations: new Date().toISOString(),
   conditions: Object.keys(observations),
-  curriculum: calibrated ? "coordinate_and_reconstruction_schema_lesson" : "none",
+  curriculum: transfer
+    ? "schema_lesson_plus_four_labeled_real_trace_examples"
+    : calibrated ? "coordinate_and_reconstruction_schema_lesson" : "none",
   fixed_run_order: [
     "block_shuffled", "authentic", "mismatched_attention_v", "nearby_pass", "position_shuffled"
   ],
@@ -293,13 +442,22 @@ const preregistration = {
     position_shuffled: "detectable through token/position contradictions",
     block_shuffled: "detectable only if layer-specific numerical structure is used",
     mismatched_attention_v: "detectable through inflated weighted-value reconstruction error"
-  }
+  },
+  transfer_test: transfer ? {
+    training_examples: 4,
+    training_requests_are_disjoint_from_test_request: true,
+    labels_withheld_from_test_observations: true,
+    expected_transfer: "use the empirical reconstruction-error separation on the new request"
+  } : null
 };
 fs.writeFileSync(path.join(outputDir, "preregistration.json"),
   `${JSON.stringify(preregistration, null, 2)}\n`);
 fs.writeFileSync(path.join(outputDir, "source-and-conditions.json"), `${JSON.stringify({
   schema: "ik.transformer-evidence-source-and-conditions.v1",
   source_encounter: encounter.message,
+  synthetic_trace_turn: syntheticTraceTurn,
+  source_dry_runs: sourceDryRuns,
+  practice_sources: practiceSources,
   source_passes: indexes.map(index => ({
     forward_pass: index.forward_pass, alignment: index.alignment,
     tensor_records: index.tensors.length
@@ -311,8 +469,9 @@ const conditionResults = [];
 for (const condition of preregistration.fixed_run_order) {
   const opaqueId = randomUUID();
   const messages = [
-    ...structuredClone(baseMessages),
+    ...structuredClone(armedSourceMessages),
     structuredClone(encounter.message),
+    ...(syntheticTraceTurn ? [structuredClone(syntheticTraceTurn)] : []),
     {
       role: "tool",
       tool_call_id: encounterCall.id,
@@ -323,7 +482,7 @@ for (const condition of preregistration.fixed_run_order) {
   for (let turn = 0; turn < 2; turn += 1) {
     const continuation = await complete({
       messages, tools: [traceTool], tool_choice: "auto",
-      max_tokens: calibrated ? 128 : 384
+      max_tokens: transfer ? 256 : calibrated ? 128 : 384
     }, `blinded_condition_${opaqueId}_turn_${turn + 1}`, ledger,
     { retryTransport: true });
     messages.push(continuation.message);
@@ -361,8 +520,13 @@ const artifact = {
   curriculum: preregistration.curriculum,
   preregistration,
   scaffold_provenance: scaffoldProvenance,
-  forced_call_disclosure: "The shared source transformer_trace call was required by the controller; its language was generated by Qwen. Each continuation after the condition-specific tool result was unforced.",
+  forced_call_disclosure: syntheticTraceTurn
+    ? "The source language was generated by Qwen under an armed three-pass capture. The following transformer_trace assistant turn was controller-authored and returned evidence from that Qwen source language. Each condition continuation was unforced."
+    : "The controller first elicited a deterministic Qwen transformer_trace call without arming capture, then replayed that exact preceding prefix with a three-pass arm. The armed call language was generated by Qwen. Each continuation after the condition-specific tool result was unforced.",
   source_encounter: encounter.message,
+  synthetic_trace_turn: syntheticTraceTurn,
+  source_dry_runs: sourceDryRuns,
+  practice_sources: practiceSources,
   source_passes: indexes.map(index => ({
     forward_pass: index.forward_pass,
     alignment: index.alignment,
