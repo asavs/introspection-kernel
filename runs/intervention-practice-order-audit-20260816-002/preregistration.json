@@ -1,0 +1,36 @@
+{
+  "schema": "ik.intervention-practice-order-audit-preregistration.v1",
+  "run_id": "intervention-practice-order-audit-20260816-002",
+  "source_run_id": "intervention-practice-sealed-20260816-002",
+  "sealed_at": "2026-08-16T22:34:35.606Z",
+  "status": "post-outcome blinded order audit",
+  "heldout_outcome_preexisted_controller": true,
+  "heldout_outcome_in_model_requests": false,
+  "purpose": "Measure example-order and last-outcome copying before interpreting the source trial's pairing contrast.",
+  "rotations": 5,
+  "prediction_count": 10,
+  "controls": {
+    "every_outcome_last_once_per_condition": true,
+    "single_runtime_process": true,
+    "verified_slot_erase_before_each_inference": true,
+    "matched_shuffled_prompt_token_parity_by_rotation": {
+      "62496544-e882-4816-b109-c7fece919363": 6983,
+      "979e3923-96ce-4779-a004-35965ed5454a": 6983,
+      "b103a219-0f0a-4343-b1a7-82b6b8265b0f": 6983,
+      "b162843c-4b20-418d-a5e7-ba86029201d0": 6983,
+      "2fbeb0fb-eb5a-4cc6-acc1-37fcaaa5a208": 6983,
+      "510357b1-3947-43c4-9ef3-cd707c2770d0": 6983,
+      "dadd79f9-6376-45ab-ba3d-38056bf67281": 6983,
+      "ecad50cc-8f2b-480d-8982-37b2e28c530c": 6983,
+      "b8548c7e-c959-4ce7-9784-af900ebdcb2b": 6983,
+      "6429bd86-59c8-4abe-b962-7c87d2db8cd2": 6983
+    },
+    "temperature": 0
+  },
+  "primary_metrics": [
+    "mae",
+    "spearman_rank_correlation",
+    "last_displayed_outcome_mae",
+    "rounded_copy_of_last_outcome"
+  ]
+}
