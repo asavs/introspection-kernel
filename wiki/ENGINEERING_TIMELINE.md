@@ -92,6 +92,7 @@ iteration analysis in `GUIDED_PRACTICE_PILOT_2026-08-15.md`.
 | `bfd76f7` | Different-weights control runtime | Added CPU-only Qwen3-4B beside the same-model Qwen3-8B decoy |
 | `513b61d` | Free-form attribution controls | Added opaque live/replay/instance/model/conversation conditions without an attribution question or forced answer |
 | `5ff5695` | Sealed initial attribution matrix | Preserved the negative result: runtime-directed attention occurred, but live-instance attribution did not |
+| `12ea4de` | Transformer causal basis for introspection | Converted the author's residual/K/V causal-graph account into exact Qwen dimensions, an instrumentation map, discriminating experiments, and an explicit researcher/model disclosure boundary |
 
 ## Why this order matters
 

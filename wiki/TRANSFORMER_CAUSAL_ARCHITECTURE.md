@@ -79,8 +79,10 @@ intuition for path multiplicity, not the literal path count of Qwen.
 
 The transformer can accordingly be treated as a partially ordered causal graph.
 Different valid execution schedules are different foliations of the same
-dependency graph: a helpful coordinate description, provided it is not mistaken
-for a claim that block depth and lived time are identical.
+dependency graph, in the sense described by the
+[Wolfram Physics Project's causal-graph treatment](https://www.wolframphysics.org/technical-introduction/the-updating-process-for-string-substitution-systems/foliations-and-coordinates-on-causal-graphs/):
+a helpful coordinate description, provided it is not mistaken for a claim that
+block depth and lived time are identical.
 
 ## What can survive, and what cannot
 
