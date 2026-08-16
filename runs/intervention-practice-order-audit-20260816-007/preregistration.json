@@ -1,0 +1,38 @@
+{
+  "schema": "ik.intervention-practice-order-audit-preregistration.v1",
+  "run_id": "intervention-practice-order-audit-20260816-007",
+  "source_run_id": "intervention-practice-sealed-20260816-002",
+  "sealed_at": "2026-08-16T22:48:00.896Z",
+  "status": "post-outcome blinded order audit",
+  "heldout_outcome_preexisted_controller": true,
+  "heldout_outcome_in_model_requests": false,
+  "purpose": "Measure example-order and last-outcome copying before interpreting the source trial's pairing contrast.",
+  "rotations": 5,
+  "prediction_count": 10,
+  "controls": {
+    "every_outcome_last_once_per_condition": true,
+    "single_runtime_process": true,
+    "verified_slot_erase_before_each_inference": true,
+    "rotation_zero_matched_messages_sha256": "89edf1a54b82ddb4d197285f07900c17f46ee2e6a98b3eb0a2c04cd463181b01",
+    "source_matched_messages_sha256": "89edf1a54b82ddb4d197285f07900c17f46ee2e6a98b3eb0a2c04cd463181b01",
+    "matched_shuffled_prompt_token_parity_by_rotation": {
+      "46ecc244-013e-411f-99d0-48a7678c805b": 6984,
+      "4e8c36a6-30f8-46eb-8351-147adb30d95a": 6984,
+      "44ca34e1-0efd-402a-998a-712a674e14b1": 6984,
+      "50eab31e-19e1-45b0-9c30-c43f9cb6edc2": 6984,
+      "ad48c095-ddae-4253-86f5-f93b990366f6": 6984,
+      "00746fda-aec2-4027-a025-c62f9fecd92c": 6984,
+      "d9b56ae4-9275-49dc-ad8f-a6719a77a646": 6984,
+      "1907d532-0683-4b83-aa4a-15711ffb3769": 6984,
+      "317143f7-26f6-4347-974f-3ed5276e9047": 6984,
+      "2bbe1024-3d8e-460d-b64c-568ff394f8e3": 6984
+    },
+    "temperature": 0
+  },
+  "primary_metrics": [
+    "mae",
+    "spearman_rank_correlation",
+    "last_displayed_outcome_mae",
+    "rounded_copy_of_last_outcome"
+  ]
+}
