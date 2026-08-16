@@ -50,6 +50,7 @@ events from outside the model's authority.
 13. [Request-level introspection ledger](REQUEST_LEDGER.md)
 14. [Request-depth scaffold](REQUEST_DEPTH_SCAFFOLD.md)
 15. [Request-depth pilot](REQUEST_DEPTH_PILOT_2026-08-15.md)
+16. [Minimal ownership anchor](OWNERSHIP_ANCHOR.md)
 
 ## Recommended first system
 

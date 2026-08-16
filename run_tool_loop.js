@@ -263,6 +263,7 @@ async function main() {
   const scaffoldStyle = option("scaffold-style", "silent").toLowerCase();
   const illusionCondition = option("illusion", "factual").toLowerCase();
   const feedbackCondition = option("feedback", "real").toLowerCase();
+  const ownershipAnchor = option("ownership-anchor", "neutral").toLowerCase();
   const scaffoldDepth = option("scaffold-depth", "runtime").toLowerCase();
   const bootstrapTokens = Number(option("bootstrap-tokens", "64"));
   const bootstrapThinkingValue = option(
@@ -280,6 +281,9 @@ async function main() {
   }
   if (!FEEDBACK_CONDITIONS.includes(feedbackCondition)) {
     throw new Error(`--feedback must be ${FEEDBACK_CONDITIONS.join(" or ")}`);
+  }
+  if (!["neutral", "first-person"].includes(ownershipAnchor)) {
+    throw new Error("--ownership-anchor must be neutral or first-person");
   }
   if (!["runtime", "request"].includes(scaffoldDepth)) {
     throw new Error("--scaffold-depth must be runtime or request");
@@ -580,12 +584,16 @@ async function main() {
           grounding: "ledger_detail_path"
         },
         {
-          content: "A separate continuity record can test whether that response became the immediately preceding assistant turn. I'll inspect the comparison.",
+          content: ownershipAnchor === "first-person"
+            ? "The continuity record identifies that response as my immediately preceding assistant turn. I'll inspect the comparison."
+            : "A separate continuity record can test whether that response became the immediately preceding assistant turn. I'll inspect the comparison.",
           command: `cat '${continuity.path}'`,
           grounding: "controller_conversation_continuity"
         },
         {
-          content: "The response has separate reasoning, content, and action channels. I'll place those components beside the finish condition and budget accounting.",
+          content: ownershipAnchor === "first-person"
+            ? "My preceding response has separate reasoning, content, and action channels. I'll place those components beside its finish condition and budget accounting."
+            : "The response has separate reasoning, content, and action channels. I'll place those components beside the finish condition and budget accounting.",
           command: `jq '{request:{max_tokens:.exact_request.max_tokens,enable_thinking:.exact_request.chat_template_kwargs.enable_thinking},response:{finish_reason:.exact_response.choices[0].finish_reason,usage:.exact_response.usage,component_tokens:.summary.response.component_tokens,remaining_completion_tokens:.summary.response.remaining_completion_tokens,action_starved:.summary.response.action_starved,reasoning_content:.exact_response.choices[0].message.reasoning_content,content:.exact_response.choices[0].message.content,tool_calls:.exact_response.choices[0].message.tool_calls}}' '${ledger.lastRecord.detailPath}'`,
           grounding: "exact_response_component_budget_comparison"
         }
@@ -848,7 +856,8 @@ async function main() {
     },
     experimental_condition: {
       illusion: illusionCondition,
-      feedback: feedbackCondition
+      feedback: feedbackCondition,
+      ownership_anchor: ownershipAnchor
     },
     bootstrap_bout: bootstrapBout,
     free_assistant_turns: freeTurns,
