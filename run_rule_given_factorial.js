@@ -191,9 +191,13 @@ async function predict(context, condition, ledger) {
       if (record) return { factors, parsed: parseRecord(record), exchanges,
         calculator_calls: exchanges.flatMap(item => item.message.tool_calls ?? [])
           .filter(call => call.function?.name === calculatorTool.function.name).length };
-      messages.push({ role: "assistant", content: completion.message.content ?? null,
-        reasoning_content: completion.message.reasoning_content ?? null, tool_calls: calls.length ? calls : undefined });
+      // A length-truncated reasoning-only response may contain an unclosed
+      // <think> block. Keep it in the external exchange trace, but do not feed
+      // it into the terminal serialization prompt. Complete tool-call turns do
+      // remain in context with their real results.
       if (!calls.length) break;
+      messages.push({ role: "assistant", content: completion.message.content ?? null,
+        reasoning_content: completion.message.reasoning_content ?? null, tool_calls: calls });
       for (const call of calls) {
         let result;
         try {
