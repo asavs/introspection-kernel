@@ -41,7 +41,7 @@ async function waitForReady() {
 
 async function restartRuntime() {
   await execFileAsync("wsl.exe", ["-d", "IntrospectionKernel", "-u", "root", "--",
-    "/usr/bin/systemctl", "restart", "runtime-a.service"], { windowsHide: true, timeout: 30_000 });
+    "/usr/bin/systemctl", "restart", "runtime-a.service"], { windowsHide: true, timeout: 120_000 });
   await waitForReady();
 }
 
