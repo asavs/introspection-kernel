@@ -216,6 +216,38 @@ function compactVector(report, valueKey = "values") {
     top_absolute_coordinates: topCoordinates(values), full_vector_sha256: sha256(values) };
 }
 
+function rounded(value, digits = 4) {
+  return Number.isFinite(value) ? Math.round(value * (10 ** digits)) / (10 ** digits) : value;
+}
+
+function roundedStatistics(value) {
+  return Object.fromEntries(Object.entries(value ?? {}).map(([key, item]) => [key, rounded(item, 5)]));
+}
+
+function promptVector(value) {
+  return { width: value.width, full_statistics: roundedStatistics(value.full_statistics),
+    top_absolute_coordinates: value.top_absolute_coordinates.slice(0, 6)
+      .map(item => ({ coordinate: item.coordinate, value: rounded(item.value, 4) })),
+    full_vector_sha256: value.full_vector_sha256 };
+}
+
+function promptLadder(value) {
+  return { target: value.target,
+    full_128_coordinate_head_activation: value.full_128_coordinate_head_activation.map(item => rounded(item, 3)),
+    projected_4096_coordinate_contribution: promptVector(value.projected_4096_coordinate_contribution),
+    final_mlp_4096_coordinate_delta: promptVector(value.final_mlp_4096_coordinate_delta),
+    final_normalized_4096_coordinate_delta: promptVector(value.final_normalized_4096_coordinate_delta),
+    local_logit_jvp: {
+      method: { epsilon: value.local_logit_jvp.method.epsilon,
+        boundary: value.local_logit_jvp.method.boundary,
+        method: value.local_logit_jvp.method.method },
+      full_statistics: roundedStatistics(value.local_logit_jvp.full_statistics),
+      candidate_panel: value.local_logit_jvp.candidate_panel.map(item => ({ ...item,
+        baseline_logit: rounded(item.baseline_logit, 4), local_logit_derivative: rounded(item.local_logit_derivative, 4) }))
+    },
+    exact_vectors: "retained by hash in the external sealed artifact; values shown here are rounded presentation coordinates" };
+}
+
 async function buildLadder(baseline, lower, upper) {
   const head = await trace(baseline.root, `head-vector kqv-${TARGET_LAYER} ${TARGET_HEAD}`, lower.root);
   const projected = await trace(baseline.root,
@@ -316,7 +348,7 @@ function modelFacingPractice(episodes, item, condition) {
   return item.practice_order.map((episodeIndex, presentedIndex) => {
     const outcomeIndex = condition === "matched_practice" ? episodeIndex : item.shuffled_outcome_order[presentedIndex];
     const outcome = episodes[outcomeIndex].outcome;
-    return { practice_position: presentedIndex + 1, evidence: episodes[episodeIndex].ladder.model_facing,
+    return { practice_position: presentedIndex + 1, evidence: promptLadder(episodes[episodeIndex].ladder.model_facing),
       observed_scale_zero_outcome: {
         directions_by_candidate_rank: outcome.directions_by_candidate_rank,
         delta_order_largest_to_smallest: outcome.delta_order_largest_to_smallest,
@@ -373,11 +405,13 @@ async function runPair(item, practiceEpisodes, ledger) {
   for (const condition of item.condition_order) {
     const practice = modelFacingPractice(practiceEpisodes, item, condition);
     const conditionId = sha256(`${PROTOCOL.run_id}:${item.heldout_index}:${condition}`).slice(0, 16);
-    const template = { messages: predictionMessages(practice, ladder.model_facing),
+    const heldoutPromptLadder = promptLadder(ladder.model_facing);
+    const template = { messages: predictionMessages(practice, heldoutPromptLadder),
       tools: [practiceTool, heldoutTool, recordTool], chat_template_kwargs: { enable_thinking: false } };
     promptCounts[condition] = (await renderPromptTokenMap(baseUrl, template)).length;
+    if (promptCounts[condition] > 7800) throw new Error(`${pairLabel} ${condition} prompt has ${promptCounts[condition]} tokens`);
     predictions.push({ condition, practice_sha256: sha256(practice),
-      prediction: await predict(conditionId, practice, ladder.model_facing, ledger) });
+      prediction: await predict(conditionId, practice, heldoutPromptLadder, ledger) });
   }
   if (new Set(Object.values(promptCounts)).size !== 1) throw new Error(`${pairLabel} prompt token counts differ`);
   const sham = await captureReplay(`${pairLabel}-scale-one-sham`, baseline, 1, ledger);
