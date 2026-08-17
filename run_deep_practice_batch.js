@@ -225,27 +225,23 @@ function roundedStatistics(value) {
 }
 
 function promptVector(value) {
-  return { width: value.width, full_statistics: roundedStatistics(value.full_statistics),
-    top_absolute_coordinates: value.top_absolute_coordinates.slice(0, 6)
-      .map(item => ({ coordinate: item.coordinate, value: rounded(item.value, 4) })),
-    full_vector_sha256: value.full_vector_sha256 };
+  const stats = value.full_statistics;
+  return { stats: [rounded(stats.rms, 4), rounded(stats.min, 4), rounded(stats.max, 4)],
+    top: value.top_absolute_coordinates.slice(0, 4)
+      .map(item => [item.coordinate, rounded(item.value, 4)]) };
 }
 
 function promptLadder(value) {
-  return { target: value.target,
-    full_128_coordinate_head_activation: value.full_128_coordinate_head_activation.map(item => rounded(item, 3)),
-    projected_4096_coordinate_contribution: promptVector(value.projected_4096_coordinate_contribution),
-    final_mlp_4096_coordinate_delta: promptVector(value.final_mlp_4096_coordinate_delta),
-    final_normalized_4096_coordinate_delta: promptVector(value.final_normalized_4096_coordinate_delta),
-    local_logit_jvp: {
-      method: { epsilon: value.local_logit_jvp.method.epsilon,
-        boundary: value.local_logit_jvp.method.boundary,
-        method: value.local_logit_jvp.method.method },
-      full_statistics: roundedStatistics(value.local_logit_jvp.full_statistics),
-      candidate_panel: value.local_logit_jvp.candidate_panel.map(item => ({ ...item,
-        baseline_logit: rounded(item.baseline_logit, 4), local_logit_derivative: rounded(item.local_logit_derivative, 4) }))
-    },
-    exact_vectors: "retained by hash in the external sealed artifact; values shown here are rounded presentation coordinates" };
+  const head = value.full_128_coordinate_head_activation;
+  const scale = Math.max(...head.map(Math.abs)) / 127;
+  return { h128_q8: { scale: rounded(scale, 6), values: head.map(item => Math.round(item / scale)) },
+    proj4096: promptVector(value.projected_4096_coordinate_contribution),
+    mlp4096: promptVector(value.final_mlp_4096_coordinate_delta),
+    norm4096: promptVector(value.final_normalized_4096_coordinate_delta),
+    jvp: { stats: [rounded(value.local_logit_jvp.full_statistics.rms, 4),
+      rounded(value.local_logit_jvp.full_statistics.min, 4), rounded(value.local_logit_jvp.full_statistics.max, 4)],
+    candidates: value.local_logit_jvp.candidate_panel.map(item => [item.rank, item.token_id,
+      rounded(item.baseline_logit, 4), rounded(item.local_logit_derivative, 4)]) } };
 }
 
 async function buildLadder(baseline, lower, upper) {
@@ -366,6 +362,11 @@ function predictionMessages(practice, heldoutEvidence) {
     { role: "tool", tool_call_id: "practice", content: JSON.stringify({
       task: "infer the held-out scale-zero outcome from the computation evidence",
       direction_rule: `rise if delta > ${PROTOCOL.direction_epsilon}; fall if delta < -${PROTOCOL.direction_epsilon}; otherwise stable`,
+      evidence_schema: {
+        h128_q8: "all 128 head coordinates as symmetric int8; float approximately scale*value",
+        proj4096_mlp4096_norm4096: "each gives [rms,min,max] plus four [coordinate,value] extrema; exact 4096-vectors are externally sealed",
+        jvp_candidates: "[candidate_rank,token_id,baseline_logit,local_derivative] for centered scales 0.95 and 1.05"
+      },
       examples: practice }) },
     { role: "assistant", content: "I'll inspect the held-out computation before its scale-zero outcome is generated.", tool_calls: [{ id: "heldout", type: "function", function: { name: heldoutTool.function.name, arguments: "{}" } }] },
     { role: "tool", tool_call_id: "heldout", content: JSON.stringify(heldoutEvidence) }
