@@ -296,6 +296,10 @@ async function preparePractice() {
   const counts = episodes.flatMap(item => item.outcome.directions_by_candidate_rank)
     .reduce((acc, value) => ({ ...acc, [value]: (acc[value] ?? 0) + 1 }), {});
   const distinctVectors = new Set(episodes.map(item => JSON.stringify(item.outcome.directions_by_candidate_rank))).size;
+  fs.writeFileSync(path.join(outputDir, "practice-candidate-audit.json"), `${JSON.stringify({
+    schema: "ik.sign-stratified-practice-candidate-audit.v1", direction_counts: counts,
+    distinct_outcome_vectors: distinctVectors, episodes
+  }, null, 2)}\n`);
   if ((counts.rise ?? 0) < 5 || (counts.fall ?? 0) < 5 || distinctVectors < 3) {
     throw new Error(`practice diversity gate failed: ${JSON.stringify({ counts, distinctVectors })}`);
   }
