@@ -91,6 +91,16 @@ async function existingIndex(captureRunId) {
   return result.exit_code === 0 && result.stdout.trim() ? JSON.parse(result.stdout) : null;
 }
 
+async function existingExactRequest(kind) {
+  const detailDir = `/var/lib/introspection/runs/${PROTOCOL.run_id}/requests`;
+  const result = await executeGuestShell(
+    `grep -l '\"kind\": \"${kind}\"' ${detailDir}/*.json 2>/dev/null | tail -n 1 | xargs -r cat`,
+    { maxOutputBytes: 4 * 1024 * 1024 }
+  );
+  if (result.exit_code !== 0 || !result.stdout.trim()) return null;
+  return JSON.parse(result.stdout).exact_request;
+}
+
 async function tokenPiece(tokenId) {
   const response = await fetch(`${baseUrl.origin}/detokenize`, {
     method: "POST", headers: { "Content-Type": "application/json" },
@@ -155,8 +165,12 @@ async function buildMessages(step) {
 async function captureBaseline(label, messages, ledger) {
   const captureRunId = `${PROTOCOL.run_id}-${label}-baseline`;
   const prior = await existingIndex(captureRunId);
-  if (prior) return { label, messages, captureRunId, root: root(captureRunId), index: prior,
-    completion: { request: requestBody({ messages, max_tokens: 64 }) }, resumed_existing_capture: true };
+  if (prior) {
+    const exactRequest = await existingExactRequest(`${label}_baseline`);
+    if (!exactRequest) throw new Error(`${label} existing baseline lacks its exact request ledger`);
+    return { label, messages: exactRequest.messages, captureRunId, root: root(captureRunId), index: prior,
+      completion: { request: exactRequest }, resumed_existing_capture: true };
+  }
   await restartRuntime();
   const capture = new TransformerTraceCapture({ runId: captureRunId });
   await capture.initialize(); await capture.arm();
@@ -170,18 +184,27 @@ async function captureBaseline(label, messages, ledger) {
 }
 
 async function captureReplay(label, baseline, scale, ledger) {
-  const captureRunId = `${PROTOCOL.run_id}-${label}`;
-  const prior = await existingIndex(captureRunId);
-  if (prior) {
+  const baseCaptureRunId = `${PROTOCOL.run_id}-${label}`;
+  let captureRunId = baseCaptureRunId;
+  let prior = null;
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    captureRunId = attempt ? `${baseCaptureRunId}-retry-${attempt}` : baseCaptureRunId;
+    prior = await existingIndex(captureRunId);
+    if (!prior) break;
     const event = prior.interventions?.[0];
-    if (!event || Math.abs(event.scale - scale) > 1e-6 || event.head !== TARGET_HEAD
-        || event.tensor_name !== `kqv-${TARGET_LAYER}`
-        || event.evaluated_position !== baseline.index.forward_pass.evaluated_position) {
-      throw new Error(`${label} existing capture has invalid intervention provenance`);
+    if (event && Math.abs(event.scale - scale) <= 1e-6 && event.head === TARGET_HEAD
+        && event.tensor_name === `kqv-${TARGET_LAYER}`
+        && event.evaluated_position === baseline.index.forward_pass.evaluated_position) {
+      return { label, scale, captureRunId, root: root(captureRunId), index: prior,
+        completion: { request: requestBody({ messages: baseline.messages, max_tokens: 64 }) }, resumed_existing_capture: true };
     }
-    return { label, scale, captureRunId, root: root(captureRunId), index: prior,
-      completion: { request: requestBody({ messages: baseline.messages, max_tokens: 64 }) }, resumed_existing_capture: true };
+    if (event && (event.head !== TARGET_HEAD
+        || event.tensor_name !== `kqv-${TARGET_LAYER}`
+        || Math.abs(event.scale - scale) > 1e-6)) {
+      throw new Error(`${label} existing capture changed the preregistered intervention target`);
+    }
   }
+  if (prior) throw new Error(`${label} exhausted retry capture names`);
   await restartRuntime();
   const capture = new TransformerTraceCapture({ runId: captureRunId });
   await capture.initialize(); await capture.arm();
