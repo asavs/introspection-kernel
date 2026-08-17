@@ -62,6 +62,19 @@ scale with correct signs, but copying heuristics explain the outputs. The
 evidence-sufficiency instrumentation ladder (full head vectors, projected head
 contributions, residual deltas, finite-difference logit JVPs) is built.
 
+The first preregistered deep-practice batch is also complete
+(`deep-practice-batch-preregistered-20260816-001`; see
+[DEEP_PRACTICE_BATCH_2026-08-16.md](DEEP_PRACTICE_BATCH_2026-08-16.md)). Across
+20 paired held-out contexts, matched practice did not beat outcome-shuffled
+practice on direction accuracy (0.79 versus 0.77, exact one-sided p = 0.25) or
+delta-rank Spearman (0.01 versus 0.03, p = 0.59375). Matched Qwen predicted
+`rise` for all 100 candidates, exactly matching the 0.79 all-rise base rate,
+while the simple `sign(-JVP)` heuristic scored 0.93. This is a clean null for
+learned use under the tested representation and exposes an imbalanced
+top-absolute-JVP candidate rule. The next batch must use pre-outcome
+sign-stratified probes, curriculum-diversity gates, and explicit no-practice
+and heuristic arms.
+
 1. **Evidence-sufficiency ladder.** The practice-era evidence was causally
    insufficient for the requested forecast (eight of 128 coordinates, three
    attention weights). Run the sealed prediction task at each instrumented

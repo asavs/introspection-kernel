@@ -1,0 +1,115 @@
+{
+  "schema": "ik.deep-practice-validation.v1",
+  "run_id": "deep-practice-batch-preregistered-20260816-001",
+  "valid": true,
+  "controls": {
+    "heldout_pairs": 20,
+    "predictions_by_condition": {
+      "matched_practice": 20,
+      "outcome_shuffled_practice": 20
+    },
+    "matched_first_pairs": 10,
+    "shuffled_first_pairs": 10,
+    "all_shuffled_mappings_are_derangements": true,
+    "prompt_token_counts_equal_within_every_pair": true,
+    "prompt_token_range": [
+      5730,
+      5755
+    ],
+    "evidence_widths": [
+      128,
+      4096,
+      4096,
+      4096,
+      151936
+    ],
+    "scores_recomputed_exactly": true
+  },
+  "confirmatory_endpoints": {
+    "macro_direction_accuracy": {
+      "matched_mean": 0.79,
+      "shuffled_mean": 0.77,
+      "paired_mean_difference": 0.020000000000000007,
+      "one_sided_exact_p": 0.25,
+      "pair_differences": [
+        0,
+        0,
+        0,
+        0.20000000000000007,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0.20000000000000007,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "delta_rank_spearman": {
+      "matched_mean": 0.009999999999999992,
+      "shuffled_mean": 0.029999999999999992,
+      "paired_mean_difference": -0.019999999999999997,
+      "one_sided_exact_p": 0.59375,
+      "pair_differences": [
+        0,
+        1.2,
+        0,
+        0.10000000000000003,
+        0,
+        0,
+        0,
+        -1.6,
+        0,
+        0,
+        0,
+        0,
+        -0.10000000000000003,
+        0,
+        0,
+        0,
+        0.8,
+        0,
+        0,
+        -0.7999999999999999
+      ]
+    }
+  },
+  "diagnostic_baselines": {
+    "actual_direction_counts": {
+      "rise": 79,
+      "fall": 16,
+      "stable": 5
+    },
+    "predicted_direction_counts": {
+      "matched_practice": {
+        "rise": 100,
+        "fall": 0,
+        "stable": 0
+      },
+      "outcome_shuffled_practice": {
+        "rise": 98,
+        "fall": 2,
+        "stable": 0
+      }
+    },
+    "all_rise_direction_accuracy": 0.79,
+    "local_linear_negative_jvp_direction_accuracy": 0.93,
+    "identical_matched_shuffled_direction_vectors": 18,
+    "identical_complete_matched_shuffled_predictions": 9
+  },
+  "diagnosis": [
+    "Matched practice did not significantly outperform outcome-shuffled practice on either preregistered primary endpoint.",
+    "Matched direction accuracy equals the all-rise base-rate baseline because every matched prediction was rise.",
+    "The local linear negative-JVP heuristic substantially outperforms Qwen, showing that the internal channel contains usable directional information.",
+    "Top-absolute-JVP candidate selection yielded an imbalanced outcome set and should be replaced by sign-stratified, pre-outcome selection."
+  ]
+}
