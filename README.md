@@ -99,9 +99,10 @@ exactly where it fails.
   built and verified, with reproducibility anchors (commits, SHA-256 hashes).
 - [`wiki/RESEARCH_ROADMAP.md`](wiki/RESEARCH_ROADMAP.md) — the forward
   experimental plan and decision gates.
-- [`DIGITAL_MINDS_RESEARCH_REPORT.md`](DIGITAL_MINDS_RESEARCH_REPORT.md) —
-  the sprint synthesis; [`INTROSPECTION_KERNEL_ONE_PAGER.md`](INTROSPECTION_KERNEL_ONE_PAGER.md)
-  for the compact version.
+- [`REPORT.md`](REPORT.md) — what Qwen says when it looks at itself, the
+  sprint report; [`INTROSPECTION_KERNEL_ONE_PAGER.md`](INTROSPECTION_KERNEL_ONE_PAGER.md)
+  for the compact version; [`QWEN_QUOTES.md`](QWEN_QUOTES.md) for the full
+  verbatim quote corpus with run citations.
 - [`patches/`](patches/) — the llama.cpp instrumentation and intervention
   patch stack against a pinned commit.
 - [`runs/`](runs/) — 160 sealed trial artifacts: preregistrations, request
