@@ -75,6 +75,17 @@ top-absolute-JVP candidate rule. The next batch must use pre-outcome
 sign-stratified probes, curriculum-diversity gates, and explicit no-practice
 and heuristic arms.
 
+That successor is complete (`sign-stratified-practice-preregistered-20260816-002`;
+see [SIGN_STRATIFIED_PRACTICE_2026-08-16.md](SIGN_STRATIFIED_PRACTICE_2026-08-16.md)).
+Its selected training curriculum was balanced (12 rise, 12 fall, 1 stable),
+and its test panels randomized two positive-JVP, two negative-JVP, and one
+near-zero coordinate. Across 20 new contexts, matched Qwen scored 0.32 versus
+0.29 shuffled (p = 0.352) and 0.27 no-practice (p = 0.203); all-rise scored
+0.55 and `sign(-JVP)` scored 0.69. Thus candidate balancing removed the prior
+base-rate artifact but did not produce learned use. The next Phase 1 factor is
+now a direct-rule/thinking/tool-use decomposition, with the four strong signed
+coordinates primary and the nonlinear near-zero stratum analyzed separately.
+
 1. **Evidence-sufficiency ladder.** The practice-era evidence was causally
    insufficient for the requested forecast (eight of 128 coordinates, three
    attention weights). Run the sealed prediction task at each instrumented

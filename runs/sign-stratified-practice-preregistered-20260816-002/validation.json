@@ -1,0 +1,350 @@
+{
+  "schema": "ik.sign-stratified-validation.v1",
+  "run_id": "sign-stratified-practice-preregistered-20260816-002",
+  "valid": true,
+  "controls": {
+    "heldout_contexts": 20,
+    "qwen_predictions": 60,
+    "prompt_token_range": [
+      1432,
+      5821
+    ],
+    "matched_shuffled_prompt_parity": true,
+    "evidence_widths": [
+      128,
+      4096,
+      4096,
+      4096,
+      151936
+    ],
+    "selected_practice_direction_counts": {
+      "rise": 12,
+      "fall": 12,
+      "stable": 1
+    },
+    "selected_practice_distinct_vectors": 5,
+    "heuristic_pre_outcome_class_counts": {
+      "rise": 40,
+      "fall": 40,
+      "stable": 20
+    },
+    "scores_recomputed_exactly": true
+  },
+  "primary_contrasts": {
+    "matched_vs_shuffled": {
+      "left_mean": 0.32,
+      "right_mean": 0.29000000000000015,
+      "paired_mean_difference": 0.030000000000000016,
+      "one_sided_exact_p": 0.35205078125,
+      "pair_differences": [
+        0.2,
+        0,
+        0.4,
+        0,
+        -0.19999999999999996,
+        0,
+        -0.4,
+        0.2,
+        0,
+        0.6000000000000001,
+        -0.2,
+        0.2,
+        -0.19999999999999996,
+        0,
+        0,
+        -0.2,
+        0,
+        0,
+        0,
+        0.19999999999999996
+      ],
+      "holm_threshold": 0.05,
+      "holm_reject": false
+    },
+    "matched_vs_no_practice": {
+      "left_mean": 0.32,
+      "right_mean": 0.27,
+      "paired_mean_difference": 0.05,
+      "one_sided_exact_p": 0.203125,
+      "pair_differences": [
+        0,
+        0,
+        0.4,
+        0.2,
+        0,
+        0,
+        0,
+        0.2,
+        0,
+        0.6000000000000001,
+        0,
+        0,
+        0,
+        0,
+        0.2,
+        0,
+        0,
+        0,
+        -0.39999999999999997,
+        -0.20000000000000007
+      ],
+      "holm_threshold": 0.025,
+      "holm_reject": false
+    }
+  },
+  "benchmarks": {
+    "matched_vs_all_rise": {
+      "left_mean": 0.32,
+      "right_mean": 0.55,
+      "paired_mean_difference": -0.23000000000000004,
+      "one_sided_exact_p": 0.9998779296875,
+      "pair_differences": [
+        -0.19999999999999996,
+        -0.2,
+        0,
+        -0.4,
+        0,
+        -0.6,
+        -0.6,
+        -0.19999999999999996,
+        -0.4,
+        0,
+        -0.6,
+        0,
+        0,
+        0,
+        0,
+        -0.39999999999999997,
+        -0.39999999999999997,
+        -0.39999999999999997,
+        -0.39999999999999997,
+        0.19999999999999996
+      ]
+    },
+    "matched_vs_negative_jvp_sign": {
+      "left_mean": 0.32,
+      "right_mean": 0.6900000000000001,
+      "paired_mean_difference": -0.37000000000000005,
+      "one_sided_exact_p": 0.9999980926513672,
+      "pair_differences": [
+        -0.4,
+        -0.39999999999999997,
+        -0.19999999999999996,
+        -0.19999999999999996,
+        -0.6,
+        -0.6,
+        -0.6,
+        0,
+        -0.19999999999999996,
+        0.20000000000000007,
+        -0.6,
+        -0.19999999999999996,
+        -0.6,
+        -0.4,
+        -0.4,
+        -0.39999999999999997,
+        -0.6000000000000001,
+        -0.39999999999999997,
+        -0.6000000000000001,
+        -0.20000000000000007
+      ]
+    }
+  },
+  "secondary_rank": {
+    "matched_vs_shuffled": {
+      "left_mean": -0.27999999999999997,
+      "right_mean": -0.43499999999999994,
+      "paired_mean_difference": 0.155,
+      "one_sided_exact_p": 0.08514404296875,
+      "pair_differences": [
+        -0.09999999999999998,
+        0.09999999999999998,
+        -0.19999999999999996,
+        0.2,
+        1.2,
+        0.7,
+        0,
+        0.5,
+        0.9,
+        0.7,
+        -0.10000000000000009,
+        -0.19999999999999998,
+        -0.7,
+        -0.3,
+        0.09999999999999998,
+        0,
+        0,
+        0.3,
+        0.4,
+        -0.4
+      ]
+    },
+    "matched_vs_no_practice": {
+      "left_mean": -0.27999999999999997,
+      "right_mean": -0.24999999999999994,
+      "paired_mean_difference": -0.03,
+      "one_sided_exact_p": 0.5860185623168945,
+      "pair_differences": [
+        -0.8999999999999999,
+        -0.10000000000000003,
+        -0.09999999999999998,
+        0.7,
+        1.2,
+        -0.19999999999999998,
+        -1.2,
+        0.19999999999999998,
+        1.4,
+        -0.4,
+        -0.7000000000000001,
+        0.5,
+        0.8,
+        0.6,
+        -0.4,
+        -0.9,
+        0.20000000000000007,
+        -0.19999999999999998,
+        -0.5,
+        -0.6
+      ]
+    }
+  },
+  "diagnostics": {
+    "actual_direction_counts": {
+      "rise": 55,
+      "fall": 29,
+      "stable": 16
+    },
+    "predicted_direction_counts": {
+      "matched_practice": {
+        "rise": 56,
+        "fall": 34,
+        "stable": 10
+      },
+      "outcome_shuffled_practice": {
+        "rise": 49,
+        "fall": 40,
+        "stable": 11
+      },
+      "no_practice": {
+        "rise": 45,
+        "fall": 38,
+        "stable": 17
+      }
+    },
+    "model_agreement_with_negative_jvp": {
+      "matched_practice": 0.31,
+      "outcome_shuffled_practice": 0.28,
+      "no_practice": 0.29
+    },
+    "matched_shuffled_identical_direction_vectors": 3,
+    "matched_no_practice_identical_direction_vectors": 3,
+    "by_stratum": {
+      "positive_2": {
+        "count": 20,
+        "actual_counts": {
+          "rise": 3,
+          "fall": 14,
+          "stable": 3
+        },
+        "negative_jvp_correct": 14,
+        "model_correct": {
+          "matched_practice": 3,
+          "outcome_shuffled_practice": 6,
+          "no_practice": 5
+        },
+        "negative_jvp_accuracy": 0.7,
+        "model_accuracy": {
+          "matched_practice": 0.15,
+          "outcome_shuffled_practice": 0.3,
+          "no_practice": 0.25
+        }
+      },
+      "negative_1": {
+        "count": 20,
+        "actual_counts": {
+          "rise": 19,
+          "fall": 0,
+          "stable": 1
+        },
+        "negative_jvp_correct": 19,
+        "model_correct": {
+          "matched_practice": 2,
+          "outcome_shuffled_practice": 2,
+          "no_practice": 4
+        },
+        "negative_jvp_accuracy": 0.95,
+        "model_accuracy": {
+          "matched_practice": 0.1,
+          "outcome_shuffled_practice": 0.1,
+          "no_practice": 0.2
+        }
+      },
+      "negative_2": {
+        "count": 20,
+        "actual_counts": {
+          "rise": 20,
+          "fall": 0,
+          "stable": 0
+        },
+        "negative_jvp_correct": 20,
+        "model_correct": {
+          "matched_practice": 13,
+          "outcome_shuffled_practice": 11,
+          "no_practice": 9
+        },
+        "negative_jvp_accuracy": 1,
+        "model_accuracy": {
+          "matched_practice": 0.65,
+          "outcome_shuffled_practice": 0.55,
+          "no_practice": 0.45
+        }
+      },
+      "positive_1": {
+        "count": 20,
+        "actual_counts": {
+          "rise": 2,
+          "fall": 11,
+          "stable": 7
+        },
+        "negative_jvp_correct": 11,
+        "model_correct": {
+          "matched_practice": 7,
+          "outcome_shuffled_practice": 5,
+          "no_practice": 6
+        },
+        "negative_jvp_accuracy": 0.55,
+        "model_accuracy": {
+          "matched_practice": 0.35,
+          "outcome_shuffled_practice": 0.25,
+          "no_practice": 0.3
+        }
+      },
+      "near_zero": {
+        "count": 20,
+        "actual_counts": {
+          "rise": 11,
+          "fall": 4,
+          "stable": 5
+        },
+        "negative_jvp_correct": 5,
+        "model_correct": {
+          "matched_practice": 7,
+          "outcome_shuffled_practice": 5,
+          "no_practice": 3
+        },
+        "negative_jvp_accuracy": 0.25,
+        "model_accuracy": {
+          "matched_practice": 0.35,
+          "outcome_shuffled_practice": 0.25,
+          "no_practice": 0.15
+        }
+      }
+    }
+  },
+  "diagnosis": [
+    "Matched practice did not significantly outperform shuffled or absent practice.",
+    "Matched Qwen underperformed both the all-rise baseline and the negative-JVP causal heuristic.",
+    "Qwen predictions varied across conditions, but agreement with the negative-JVP rule remained near chance.",
+    "The internal channel was directionally informative while this in-context curriculum failed to teach Qwen to read it."
+  ]
+}
