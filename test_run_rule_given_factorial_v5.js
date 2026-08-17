@@ -1,0 +1,31 @@
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const moduleDir = path.dirname(fileURLToPath(import.meta.url));
+const runner = fs.readFileSync(path.join(moduleDir, "run_rule_given_factorial_v5.js"), "utf8");
+const predictBody = runner.slice(runner.indexOf("async function predict"), runner.indexOf("function syntheticContext"));
+const integrityBody = runner.slice(runner.indexOf("async function promptIntegrityGate"), runner.indexOf("function predictionPath"));
+
+assert.ok(predictBody.indexOf("if (factors.calculator_available)")
+  < predictBody.indexOf("if (factors.thinking_enabled)"), "calculator must precede thinking");
+assert.match(predictBody, /const replay = \{ \.\.\.calculation\.message, tool_calls: \[call\] \}/,
+  "calculator replay must start from the exact returned assistant message");
+assert.match(predictBody, /Object\.hasOwn\(replay, "content"\) && replay\.content === null/,
+  "calculator replay must normalize only present null content");
+assert.doesNotMatch(predictBody, /reasoning_content: calculation\.message/,
+  "calculator replay must not synthesize an absent reasoning field");
+assert.match(predictBody, /tools: \[calculatorTool\], toolChoice: "required"/);
+assert.match(predictBody, /tools: null, toolChoice: null, thinking: true/);
+assert.match(predictBody, /responseFormat: recorderResponseFormat/);
+assert.match(runner, /type: "json_schema"/);
+assert.match(runner, /strict: true/);
+assert.ok(integrityBody.indexOf("if (factors.calculator_available)")
+  < integrityBody.indexOf("if (factors.thinking_enabled)"), "gate transcript must mirror stage order");
+assert.doesNotMatch(runner, /sourceContext\.outcome.*initialMessages/s,
+  "source outcomes must not enter model messages");
+
+console.log("rule-given factorial V5 runner tests passed");
+
+
