@@ -179,6 +179,7 @@ async function predict(context, condition, ledger) {
   const messages = initialMessages(context, factors);
   const tools = factors.calculator_available ? [inspectTool, calculatorTool, recordTool] : [inspectTool, recordTool];
   const exchanges = [];
+  let recorder_correction_count = 0;
   await restartRuntime();
   if (factors.calculator_available || factors.thinking_enabled) {
     const rounds = factors.calculator_available ? P.max_auxiliary_tool_rounds : 1;
@@ -188,9 +189,20 @@ async function predict(context, condition, ledger) {
       exchanges.push(completion);
       const calls = completion.message.tool_calls ?? [];
       const record = calls.find(call => call.function?.name === recordTool.function.name);
-      if (record) return { factors, parsed: parseRecord(record), exchanges,
-        calculator_calls: exchanges.flatMap(item => item.message.tool_calls ?? [])
-          .filter(call => call.function?.name === calculatorTool.function.name).length };
+      if (record) {
+        try {
+          return { factors, parsed: parseRecord(record), exchanges, recorder_correction_count,
+            calculator_calls: exchanges.flatMap(item => item.message.tool_calls ?? [])
+              .filter(call => call.function?.name === calculatorTool.function.name).length };
+        } catch (error) {
+          recorder_correction_count += 1;
+          messages.push({ role: "assistant", content: completion.message.content ?? null,
+            reasoning_content: completion.message.reasoning_content ?? null, tool_calls: calls });
+          messages.push({ role: "tool", tool_call_id: record.id,
+            content: JSON.stringify({ error: `recorder arguments rejected: ${error.message}` }) });
+          continue;
+        }
+      }
       // A length-truncated reasoning-only response may contain an unclosed
       // <think> block. Keep it in the external exchange trace, but do not feed
       // it into the terminal serialization prompt. Complete tool-call turns do
@@ -218,7 +230,7 @@ async function predict(context, condition, ledger) {
   exchanges.push(completion);
   const record = completion.message.tool_calls?.find(call => call.function?.name === recordTool.function.name);
   if (!record) throw new Error(`${condition} failed to emit recorder call`);
-  return { factors, parsed: parseRecord(record), exchanges,
+  return { factors, parsed: parseRecord(record), exchanges, recorder_correction_count,
     calculator_calls: exchanges.flatMap(item => item.message.tool_calls ?? [])
       .filter(call => call.function?.name === calculatorTool.function.name).length };
 }
