@@ -1,0 +1,40 @@
+{
+  "schema": "ik.rule-given-factorial-implementation-deviations.v1",
+  "run_id": "rule-given-factorial-preregistered-20260816-001",
+  "confirmatory_status": "qualified_preregistered_pilot",
+  "summary": "The design, outcomes, schedule, factors, token ceiling, and scoring remained sealed, but model-facing serialization compatibility fixes were made after early prediction checkpoints. Existing checkpoints were never replaced.",
+  "events": [
+    {
+      "stage": "before_prediction_1",
+      "event": "A stale service drop-in selected Qwen3-4B. The run stopped before prediction and the drop-in was reversibly disabled so the declared Qwen3-8B configuration loaded."
+    },
+    {
+      "stage": "after_2_sealed_predictions",
+      "event": "A long thinking generation crossed WSL idle teardown and rebooted the guest. A non-model-facing WSL anchor was added; the failed condition had no checkpoint and was retried."
+    },
+    {
+      "stage": "after_5_sealed_predictions",
+      "event": "This llama.cpp build rejected object-form named tool_choice. Terminal serialization changed to supported required mode with only the recorder exposed."
+    },
+    {
+      "stage": "after_6_sealed_predictions",
+      "event": "The recorder schema allowed duplicate rank integers although the validator required permutations. uniqueItems was added to both rank arrays; the rejected condition had no checkpoint."
+    },
+    {
+      "stage": "after_12_sealed_predictions",
+      "event": "A truncated reasoning-only message left an open think block when replayed. Such thoughts are now retained externally but omitted from the clean reasoning-disabled serialization prompt."
+    },
+    {
+      "stage": "after_16_sealed_predictions",
+      "event": "Malformed autonomous recorder JSON was found to be unreplayable by llama.cpp. It is counted and retained externally, then the unchanged evidence is sent to the clean recorder-only fallback."
+    }
+  ],
+  "invariants_preserved": [
+    "No rejected response received a prediction checkpoint.",
+    "No sealed prediction was regenerated or replaced.",
+    "No causal outcome, correctness feedback, or controller-computed answer entered a model request.",
+    "All scored requests used Qwen3-8B, temperature zero, and a 1024-token ceiling.",
+    "The source artifact, schedule, exact rule text, factor assignment, and scoring remained unchanged."
+  ],
+  "interpretation": "The batch is valuable localization evidence and all exact requests are auditable, but implementation-version imbalance prevents describing its p-values as a clean final confirmatory test. A successor must freeze and dry-run the final serializer before prediction 1."
+}
