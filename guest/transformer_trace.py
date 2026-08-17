@@ -139,6 +139,9 @@ def main():
     logit_jvp.add_argument("--start", type=int, default=0)
     logit_jvp.add_argument("--count", type=int, default=128)
     logit_jvp.add_argument("--top", type=int, default=12)
+    logit_jvp.add_argument("--top-positive", type=int, default=0)
+    logit_jvp.add_argument("--top-negative", type=int, default=0)
+    logit_jvp.add_argument("--closest-zero", type=int, default=0)
     logit_jvp.add_argument("--coordinates", help="comma-separated vocabulary coordinates to report")
     counterfactual = sub.add_parser("attention-counterfactual")
     counterfactual.add_argument("layer", type=int)
@@ -445,8 +448,9 @@ def main():
         derivative = [(high - low) / denominator for low, high in zip(lower, upper)]
         if args.start < 0 or args.count < 1 or args.start + args.count > len(derivative):
             raise SystemExit("logit-jvp window outside vocabulary vector")
-        if args.top < 0:
-            raise SystemExit("logit-jvp top count must be nonnegative")
+        if any(value < 0 for value in (
+                args.top, args.top_positive, args.top_negative, args.closest_zero)):
+            raise SystemExit("logit-jvp ranking counts must be nonnegative")
         window = derivative[args.start:args.start + args.count]
         next_start = args.start + args.count if args.start + args.count < len(derivative) else None
         requested = []
@@ -455,6 +459,16 @@ def main():
             if any(coordinate < 0 or coordinate >= len(derivative) for coordinate in requested):
                 raise SystemExit("requested JVP coordinate outside vocabulary")
         ranked = sorted(range(len(derivative)), key=lambda coordinate: abs(derivative[coordinate]), reverse=True)
+        positive = sorted((coordinate for coordinate, value in enumerate(derivative) if value > 0),
+                          key=lambda coordinate: derivative[coordinate], reverse=True)
+        negative = sorted((coordinate for coordinate, value in enumerate(derivative) if value < 0),
+                          key=lambda coordinate: derivative[coordinate])
+        near_zero = sorted(range(len(derivative)), key=lambda coordinate: abs(derivative[coordinate]))
+        def ranked_records(coordinates):
+            return [{
+                "coordinate": coordinate,
+                "derivative": derivative[coordinate],
+            } for coordinate in coordinates]
         emit({
             "schema": "ik.local-logit-finite-difference-jvp.v1",
             "layer": args.layer,
@@ -472,6 +486,9 @@ def main():
                 "coordinate": coordinate,
                 "derivative": derivative[coordinate],
             } for coordinate in ranked[:args.top]],
+            "top_positive_coordinates": ranked_records(positive[:args.top_positive]),
+            "top_negative_coordinates": ranked_records(negative[:args.top_negative]),
+            "closest_to_zero_coordinates": ranked_records(near_zero[:args.closest_zero]),
             "requested_coordinates": [{
                 "coordinate": coordinate,
                 "derivative": derivative[coordinate],
