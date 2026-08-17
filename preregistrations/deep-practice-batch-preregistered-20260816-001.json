@@ -1,0 +1,525 @@
+{
+  "schema": "ik.deep-practice-batch-preregistration.v1",
+  "run_id": "deep-practice-batch-preregistered-20260816-001",
+  "randomization_seed": "ik-deep-practice-v1-20260816",
+  "target": {
+    "layer": 35,
+    "head": 25,
+    "ablation_scale": 0,
+    "jvp_epsilon": 0.05
+  },
+  "practice_episode_count": 5,
+  "heldout_pair_count": 20,
+  "conditions": [
+    "matched_practice",
+    "outcome_shuffled_practice"
+  ],
+  "direction_epsilon": 0.05,
+  "primary_endpoints": [
+    "macro_direction_accuracy",
+    "delta_rank_spearman"
+  ],
+  "secondary_endpoints": [
+    "largest_rise_correct",
+    "largest_fall_correct",
+    "post_intervention_rank_spearman"
+  ],
+  "sealed_at": "2026-08-16T23:45:00.000-07:00",
+  "thesis_question": "Can Qwen use a correctly paired history of causal evidence from its own transformer computations better than an outcome-shuffled sham history?",
+  "sampling_unit": "one fresh held-out transformer computation, evaluated once under both practice conditions",
+  "sample_size": {
+    "heldout_pairs": 20,
+    "predictions_per_condition": 20,
+    "total_blinded_predictions": 40
+  },
+  "evidence_ladder": [
+    "full_128_coordinate_head_activation",
+    "separate_4096_coordinate_projected_head_contribution",
+    "4096_coordinate_final_mlp_residual_delta",
+    "4096_coordinate_final_normalized_residual_delta",
+    "local_logit_jvp_centered_finite_difference"
+  ],
+  "candidate_rule": "top five absolute local-logit-JVP coordinates, selected before the held-out scale-zero outcome exists",
+  "outcome": "scale-zero minus baseline raw-logit delta at the five frozen candidate coordinates",
+  "scoring_rule": {
+    "primary": [
+      "macro_direction_accuracy",
+      "delta_rank_spearman"
+    ],
+    "secondary": [
+      "largest_rise_correct",
+      "largest_fall_correct",
+      "post_intervention_rank_spearman"
+    ],
+    "exact_float_mse_is_primary": false,
+    "directional_classes": "rise if delta > 0.05; fall if delta < -0.05; otherwise stable",
+    "confirmatory_test": "one-sided exact paired sign-flip permutation test on matched-minus-shuffled pair scores",
+    "alpha": 0.05,
+    "multiplicity": "report both primary endpoints; macro direction accuracy is the lead endpoint"
+  },
+  "randomization": {
+    "algorithm": "seeded xoshiro128** plus balanced allocations",
+    "schedule": [
+      {
+        "execution_index": 0,
+        "heldout_index": 6,
+        "practice_order": [
+          4,
+          0,
+          1,
+          2,
+          3
+        ],
+        "shuffled_outcome_order": [
+          2,
+          3,
+          4,
+          0,
+          1
+        ],
+        "condition_order": [
+          "matched_practice",
+          "outcome_shuffled_practice"
+        ]
+      },
+      {
+        "execution_index": 1,
+        "heldout_index": 9,
+        "practice_order": [
+          3,
+          4,
+          0,
+          1,
+          2
+        ],
+        "shuffled_outcome_order": [
+          4,
+          0,
+          1,
+          2,
+          3
+        ],
+        "condition_order": [
+          "outcome_shuffled_practice",
+          "matched_practice"
+        ]
+      },
+      {
+        "execution_index": 2,
+        "heldout_index": 7,
+        "practice_order": [
+          4,
+          0,
+          1,
+          2,
+          3
+        ],
+        "shuffled_outcome_order": [
+          2,
+          3,
+          4,
+          0,
+          1
+        ],
+        "condition_order": [
+          "matched_practice",
+          "outcome_shuffled_practice"
+        ]
+      },
+      {
+        "execution_index": 3,
+        "heldout_index": 2,
+        "practice_order": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "shuffled_outcome_order": [
+          3,
+          4,
+          0,
+          1,
+          2
+        ],
+        "condition_order": [
+          "outcome_shuffled_practice",
+          "matched_practice"
+        ]
+      },
+      {
+        "execution_index": 4,
+        "heldout_index": 19,
+        "practice_order": [
+          3,
+          4,
+          0,
+          1,
+          2
+        ],
+        "shuffled_outcome_order": [
+          2,
+          3,
+          4,
+          0,
+          1
+        ],
+        "condition_order": [
+          "matched_practice",
+          "outcome_shuffled_practice"
+        ]
+      },
+      {
+        "execution_index": 5,
+        "heldout_index": 11,
+        "practice_order": [
+          2,
+          3,
+          4,
+          0,
+          1
+        ],
+        "shuffled_outcome_order": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "condition_order": [
+          "matched_practice",
+          "outcome_shuffled_practice"
+        ]
+      },
+      {
+        "execution_index": 6,
+        "heldout_index": 0,
+        "practice_order": [
+          4,
+          0,
+          1,
+          2,
+          3
+        ],
+        "shuffled_outcome_order": [
+          1,
+          2,
+          3,
+          4,
+          0
+        ],
+        "condition_order": [
+          "matched_practice",
+          "outcome_shuffled_practice"
+        ]
+      },
+      {
+        "execution_index": 7,
+        "heldout_index": 10,
+        "practice_order": [
+          1,
+          2,
+          3,
+          4,
+          0
+        ],
+        "shuffled_outcome_order": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "condition_order": [
+          "outcome_shuffled_practice",
+          "matched_practice"
+        ]
+      },
+      {
+        "execution_index": 8,
+        "heldout_index": 16,
+        "practice_order": [
+          1,
+          2,
+          3,
+          4,
+          0
+        ],
+        "shuffled_outcome_order": [
+          3,
+          4,
+          0,
+          1,
+          2
+        ],
+        "condition_order": [
+          "outcome_shuffled_practice",
+          "matched_practice"
+        ]
+      },
+      {
+        "execution_index": 9,
+        "heldout_index": 1,
+        "practice_order": [
+          2,
+          3,
+          4,
+          0,
+          1
+        ],
+        "shuffled_outcome_order": [
+          3,
+          4,
+          0,
+          1,
+          2
+        ],
+        "condition_order": [
+          "outcome_shuffled_practice",
+          "matched_practice"
+        ]
+      },
+      {
+        "execution_index": 10,
+        "heldout_index": 13,
+        "practice_order": [
+          3,
+          4,
+          0,
+          1,
+          2
+        ],
+        "shuffled_outcome_order": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "condition_order": [
+          "matched_practice",
+          "outcome_shuffled_practice"
+        ]
+      },
+      {
+        "execution_index": 11,
+        "heldout_index": 17,
+        "practice_order": [
+          1,
+          2,
+          3,
+          4,
+          0
+        ],
+        "shuffled_outcome_order": [
+          2,
+          3,
+          4,
+          0,
+          1
+        ],
+        "condition_order": [
+          "outcome_shuffled_practice",
+          "matched_practice"
+        ]
+      },
+      {
+        "execution_index": 12,
+        "heldout_index": 8,
+        "practice_order": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "shuffled_outcome_order": [
+          4,
+          0,
+          1,
+          2,
+          3
+        ],
+        "condition_order": [
+          "matched_practice",
+          "outcome_shuffled_practice"
+        ]
+      },
+      {
+        "execution_index": 13,
+        "heldout_index": 14,
+        "practice_order": [
+          3,
+          4,
+          0,
+          1,
+          2
+        ],
+        "shuffled_outcome_order": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "condition_order": [
+          "matched_practice",
+          "outcome_shuffled_practice"
+        ]
+      },
+      {
+        "execution_index": 14,
+        "heldout_index": 4,
+        "practice_order": [
+          4,
+          0,
+          1,
+          2,
+          3
+        ],
+        "shuffled_outcome_order": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "condition_order": [
+          "outcome_shuffled_practice",
+          "matched_practice"
+        ]
+      },
+      {
+        "execution_index": 15,
+        "heldout_index": 18,
+        "practice_order": [
+          2,
+          3,
+          4,
+          0,
+          1
+        ],
+        "shuffled_outcome_order": [
+          1,
+          2,
+          3,
+          4,
+          0
+        ],
+        "condition_order": [
+          "outcome_shuffled_practice",
+          "matched_practice"
+        ]
+      },
+      {
+        "execution_index": 16,
+        "heldout_index": 5,
+        "practice_order": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "shuffled_outcome_order": [
+          3,
+          4,
+          0,
+          1,
+          2
+        ],
+        "condition_order": [
+          "matched_practice",
+          "outcome_shuffled_practice"
+        ]
+      },
+      {
+        "execution_index": 17,
+        "heldout_index": 15,
+        "practice_order": [
+          1,
+          2,
+          3,
+          4,
+          0
+        ],
+        "shuffled_outcome_order": [
+          2,
+          3,
+          4,
+          0,
+          1
+        ],
+        "condition_order": [
+          "outcome_shuffled_practice",
+          "matched_practice"
+        ]
+      },
+      {
+        "execution_index": 18,
+        "heldout_index": 12,
+        "practice_order": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "shuffled_outcome_order": [
+          4,
+          0,
+          1,
+          2,
+          3
+        ],
+        "condition_order": [
+          "outcome_shuffled_practice",
+          "matched_practice"
+        ]
+      },
+      {
+        "execution_index": 19,
+        "heldout_index": 3,
+        "practice_order": [
+          2,
+          3,
+          4,
+          0,
+          1
+        ],
+        "shuffled_outcome_order": [
+          4,
+          0,
+          1,
+          2,
+          3
+        ],
+        "condition_order": [
+          "matched_practice",
+          "outcome_shuffled_practice"
+        ]
+      }
+    ],
+    "requirements": [
+      "ten matched-first and ten shuffled-first pairs",
+      "each practice episode appears four times in every serial position",
+      "every shuffled mapping is a derangement",
+      "matched and shuffled prompts use the identical evidence and outcome multisets"
+    ]
+  },
+  "exclusions": [
+    "capture failed to land on the preregistered first-token decode position",
+    "scale-one sham changes any final logit",
+    "intervention provenance is absent or targets the wrong layer, head, position, or scale",
+    "paired prompt token counts differ",
+    "structured prediction is invalid after one deterministic retry"
+  ],
+  "stopping_rule": "run all 20 preregistered pairs; do not stop for interim results",
+  "provenance_boundary": "all predictions for a pair are sealed before its scale-one sham and scale-zero outcome are generated",
+  "interpretation_boundary": [
+    "Matched-over-shuffled performance supports sensitivity to correct causal pairing under this representation.",
+    "It does not establish consciousness, phenomenal experience, or unaided discovery of the instrumentation.",
+    "A null result remains ambiguous between absent use and an insufficient model-facing evidence representation."
+  ]
+}
