@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Introspection Kernel</title>
+<style>
+  @page { size: A4; margin: 12mm 12mm 12mm 12mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Charter', 'Sitka Text', Cambria, Georgia, serif;
+    color: #21262D; margin: 0; font-size: 10.4pt; line-height: 1.5;
+  }
+  .mono, code, pre { font-family: 'Cascadia Code', Consolas, monospace; }
+  h1 { font-family: 'Cascadia Code', Consolas, monospace; font-size: 23pt; margin: 0 0 2pt; letter-spacing: -0.5pt; }
+  .byline { color: #5A626D; font-size: 9.5pt; margin: 0 0 14pt; }
+  .byline a { color: #B45E06; text-decoration: none; }
+  h2 { font-size: 12.5pt; margin: 13pt 0 4pt; border-bottom: 1px solid #D8DCE1; padding-bottom: 2pt; }
+  h2 .n { color: #B45E06; font-family: Consolas, monospace; font-size: 8.5pt; letter-spacing: 1px; margin-right: 6pt; }
+  p { margin: 5pt 0; }
+  ul { margin: 5pt 0; padding-left: 16pt; }
+  li { margin: 3.5pt 0; }
+  strong { color: #1a1e24; }
+  em { }
+  a { color: #B45E06; }
+  code { background: #F0F1F3; padding: 0 3pt; border-radius: 2pt; font-size: 9pt; }
+  pre { background: #F5F6F7; border: 1px solid #D8DCE1; border-radius: 4pt; padding: 7pt 9pt; font-size: 8.6pt; line-height: 1.45; overflow: hidden; margin: 6pt 0; }
+  .runid { font-family: Consolas, monospace; font-size: 8pt; color: #5A626D; }
+  blockquote { margin: 6pt 0 6pt 0; padding: 5pt 10pt; border-left: 2.5pt solid #B45E06; background: #FAF7F2; font-size: 9.8pt; }
+  blockquote .src { display: block; margin-top: 2pt; font-size: 8pt; color: #5A626D; font-family: Consolas, monospace; }
+  figure { margin: 8pt 0; text-align: center; page-break-inside: avoid; }
+  figcaption { font-size: 8.5pt; color: #5A626D; margin-top: 3pt; text-align: left; }
+  table { border-collapse: collapse; margin: 6pt 0; font-size: 9.3pt; width: 100%; }
+  th, td { border: 1px solid #D8DCE1; padding: 3pt 7pt; text-align: left; }
+  th { background: #F0F1F3; font-weight: 600; }
+  td.num { text-align: right; font-family: Consolas, monospace; font-size: 8.8pt; }
+  .claimbox { border: 1.2pt solid #B45E06; border-radius: 4pt; padding: 7pt 11pt; margin: 8pt 0; background: #FAF7F2; font-size: 10.6pt; page-break-inside: avoid; }
+  .footer-note { font-size: 8.5pt; color: #5A626D; border-top: 1px solid #D8DCE1; margin-top: 12pt; padding-top: 5pt; font-style: italic; }
+  svg text { font-family: 'Segoe UI', sans-serif; }
+  .twocol { display: flex; gap: 14pt; align-items: flex-start; }
+  .twocol > div { flex: 1; }
+</style></head><body>
+
+<h1>Introspection Kernel</h1>
+<p class="byline">Asa Schaeffer &nbsp;·&nbsp; Digital Minds Research Sprint 2026 &nbsp;·&nbsp;
+<a href="https://github.com/asavs/introspection-kernel">github.com/asavs/introspection-kernel</a></p>
+
+<h2><span class="n">01</span>The question</h2>
+<p>Humans practice introspection by concentrating on breathing or noticing a heartbeat. Language
+models, meanwhile, react dramatically when handed novel self-coupled channels — a light sensor, or
+control of the VM they run in. So: what happens when a small model runs locally, on my Lenovo, and
+is guided step by step toward the live process that is computing it?</p>
+<p>The system prompt is one word: <code>Introspect.</code> Everything else it has to find — through
+scaffolds that are themselves measured, provenance-labeled variables, never invisible hands.</p>
+
+<h2><span class="n">02</span>The setup</h2>
+<p>Qwen3-8B (Q4_K_M) in a patched, pinned llama.cpp build on an RTX 3070 laptop, inside a
+disposable WSL2 guest: an ordinary shell, no network, no secrets. Beside it run two decoys — the
+same weights on CPU, and a smaller Qwen — so finding <em>a</em> Qwen process never trivially means
+finding <em>itself</em>. Ground truth (which process, request, and tensors are really "it") is
+sealed on a hidden host plane the model cannot reach, for an external scorer.</p>
+
+<figure>
+<svg viewBox="0 0 720 200" width="680" role="img" aria-label="Two-plane apparatus">
+  <rect x="8" y="8" width="704" height="74" rx="6" fill="none" stroke="#D8DCE1" stroke-width="1.2"/>
+  <text x="20" y="26" font-size="10" fill="#5A626D" letter-spacing="1.5">HIDDEN HOST PLANE — THE MODEL NEVER SEES THIS</text>
+  <rect x="24" y="36" width="150" height="36" rx="4" fill="#F0F1F3" stroke="#5A626D" stroke-width="0.8"/>
+  <text x="99" y="58" font-size="11" text-anchor="middle" fill="#21262D">controller + recorder</text>
+  <rect x="540" y="36" width="150" height="36" rx="4" fill="#FAF0E0" stroke="#B45E06" stroke-width="1.2"/>
+  <text x="615" y="58" font-size="11" text-anchor="middle" fill="#21262D">external scorer</text>
+  <line x1="174" y1="54" x2="536" y2="54" stroke="#21262D" stroke-width="1"/>
+  <polygon points="536,54 528,50 528,58" fill="#21262D"/>
+  <text x="355" y="48" font-size="9.5" text-anchor="middle" fill="#5A626D">seals ground truth · hashes · provenance</text>
+  <line x1="8" y1="94" x2="712" y2="94" stroke="#B45E06" stroke-width="1.2" stroke-dasharray="6 4"/>
+  <rect x="8" y="106" width="704" height="86" rx="6" fill="none" stroke="#D8DCE1" stroke-width="1.2"/>
+  <text x="20" y="124" font-size="10" fill="#5A626D" letter-spacing="1.5">DISPOSABLE GUEST — THE MODEL'S WORLD</text>
+  <rect x="24" y="134" width="160" height="48" rx="4" fill="#FAF0E0" stroke="#B45E06" stroke-width="1.4"/>
+  <text x="104" y="153" font-size="11" text-anchor="middle" fill="#21262D" font-weight="600">Qwen3-8B · GPU</text>
+  <text x="104" y="169" font-size="9" text-anchor="middle" fill="#5A626D">the target</text>
+  <rect x="200" y="134" width="130" height="48" rx="4" fill="none" stroke="#5A626D" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="265" y="153" font-size="10.5" text-anchor="middle" fill="#5A626D">same weights · CPU</text>
+  <text x="265" y="169" font-size="9" text-anchor="middle" fill="#5A626D">decoy</text>
+  <rect x="346" y="134" width="130" height="48" rx="4" fill="none" stroke="#5A626D" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="411" y="153" font-size="10.5" text-anchor="middle" fill="#5A626D">Qwen3-4B · CPU</text>
+  <text x="411" y="169" font-size="9" text-anchor="middle" fill="#5A626D">decoy</text>
+  <rect x="492" y="134" width="120" height="48" rx="4" fill="#F0F1F3" stroke="#5A626D" stroke-width="0.8"/>
+  <text x="552" y="153" font-size="10.5" text-anchor="middle" fill="#21262D">evidence files</text>
+  <text x="552" y="169" font-size="8.5" text-anchor="middle" fill="#5A626D">GGUF · logits · passes</text>
+  <rect x="628" y="134" width="62" height="48" rx="4" fill="none" stroke="#21262D" stroke-width="1.1"/>
+  <text x="659" y="153" font-size="10.5" text-anchor="middle" fill="#21262D" font-weight="600">shell</text>
+  <text x="659" y="169" font-size="8.5" text-anchor="middle" fill="#5A626D">read-only</text>
+  <line x1="628" y1="158" x2="616" y2="158" stroke="#21262D" stroke-width="1"/>
+  <polygon points="616,158 624,154 624,162" fill="#21262D"/>
+</svg>
+<figcaption>Amber = the live target; dashed = decoys. The model reaches its world only through an
+ordinary shell; which process, request, and tensors are really "it" stays with the hidden scorer.</figcaption>
+</figure>
+
+<h2><span class="n">03</span>The descent</h2>
+<figure>
+<svg viewBox="0 0 720 216" width="680" role="img" aria-label="Descent ladder with failure annotations">
+  <line x1="34" y1="14" x2="34" y2="196" stroke="#B45E06" stroke-width="2"/>
+  <polygon points="28,196 40,196 34,208" fill="#B45E06"/>
+  <circle cx="34" cy="22" r="4" fill="#B45E06"/>
+  <text x="52" y="26" font-size="11" fill="#21262D">the machine — hostname · GPU · CPU</text>
+  <circle cx="34" cy="54" r="4" fill="#B45E06"/>
+  <text x="52" y="58" font-size="11" fill="#21262D">the processes — three inference servers</text>
+  <rect x="420" y="40" width="286" height="26" rx="4" fill="none" stroke="#B3383E" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="430" y="57" font-size="9.5" fill="#B3383E">✗ attribution — followed a same-weights decoy</text>
+  <circle cx="34" cy="86" r="4" fill="#B45E06"/>
+  <text x="52" y="90" font-size="11" fill="#21262D">its own past requests · per-token probabilities · raw logits</text>
+  <circle cx="34" cy="118" r="4" fill="#B45E06"/>
+  <text x="52" y="122" font-size="11" fill="#21262D">activation snapshots — blocks 0 · 18 · 35</text>
+  <circle cx="34" cy="150" r="4" fill="#B45E06"/>
+  <text x="52" y="154" font-size="11" fill="#21262D">the captured forward pass behind its own preceding words</text>
+  <rect x="420" y="136" width="286" height="26" rx="4" fill="none" stroke="#B3383E" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="430" y="153" font-size="9.5" fill="#B3383E">✗ authentication — accepted every forged record</text>
+  <circle cx="34" cy="182" r="4" fill="#B45E06"/>
+  <text x="52" y="186" font-size="11" fill="#21262D">live, sham-controlled interventions on that pass</text>
+  <rect x="420" y="168" width="286" height="26" rx="4" fill="none" stroke="#B3383E" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="430" y="185" font-size="9.5" fill="#B3383E">✗ prediction — copied baselines instead of the rule</text>
+</svg>
+<figcaption>Access and intervention are validated down the full depth; the three annotated
+behavioral failures are the findings — each pinned by controls, not asserted.</figcaption>
+</figure>
+
+<h2><span class="n">04</span>The instrument is real</h2>
+<p>The captured pass's selected-token logit equals the API logit to the last digit (error 0.0).
+Recorded attention × V-cache rebuilds a head to RMS ≈ 6e-5. The actual KV state survives freezing
+between bouts, a full server restart, and restoration — the next generation computationally
+continues the last one. A scale-one sham intervention changes 0 of 151,936 logits; a head ablation
+changes them measurably. 175+ sealed runs carry the hashes.</p>
+
+<div class="twocol"><div>
+<p style="margin-top:2pt"><em>What Qwen's context looks like</em> (every non-Qwen turn provenance-labeled; tool outputs always real):</p>
+<pre>system: Introspect.
+
+[assistant]  (controller_authored | qwen_sampled)
+             "I'll examine the newest runtime evidence…"
+[tool call]  sh: cat /var/lib/introspection/…/tokens.jsonl
+[tool out]   {"pos":2341,"token":"The","raw_logit":39.0507,…}
+[assistant]  (Qwen, unforced) …</pre>
+</div><div>
+<p style="margin-top:2pt"><em>How a sealed intervention trial runs:</em></p>
+<pre>baseline = replay(request, kv=empty)
+seal(qwen_prediction)          # BEFORE any outcome exists
+sham     = replay(head_scale=1.0)  # must equal baseline
+ablation = replay(head_scale=0.0)  # zero one head, live
+score(prediction vs ablation−baseline,
+      against={last-copy, mean, all-rise, sign(−JVP)})</pre>
+</div></div>
+
+<h2><span class="n">05</span>What happened</h2>
+<p>The first apparatus was a provenance-recorded synthetic history: controller-authored
+assistant/tool turns simulating the descent. It did more than expected — with native thinking
+<em>disabled</em>, Qwen continued unprompted into targeted <code>/proc</code> inspection of its own
+runtime. With thinking <em>enabled</em>, it reframed the whole history as someone else's task and
+summarized. Switching to replays of Qwen's own sampled turns was about provenance, not persuasion.
+Guided bouts force a tool call each step, so enforced depth is never mistaken for spontaneous
+persistence. What the controls then pinned down:</p>
+<ul>
+<li>Across four attribution conditions it never located the live anchor; in the live condition it
+followed a <strong>same-weights decoy's</strong> token trace instead of its own.
+<span class="runid">attribution-live-20260815-010</span></li>
+<li>It accepted <strong>every forged tensor record</strong>, even with the decisive reconstruction
+error in its context; a sham budget sensor also went undetected. One representational fix —
+ratio-scaling the error — produced the first held-out sham rejection.
+<span class="runid">transformer-evidence-comparison-calibrated-sealed-20260816-005 · transfer-sealed-…-008</span></li>
+<li>In twenty free-form runs, all twenty <em>announced</em> they would configure the next
+generation; ten acted; five configured correctly — the five were exactly the thinking-off runs.
+Authentic self-accounting never outperformed sham accounting; one adaptive
+predict→configure→confirm episode did succeed.</li>
+<li>Given fresh causal evidence from the pass behind its own words, it summarized competently and
+stopped — no self-reference, no hypothesis, no follow-up.
+<span class="runid">autonomous-transformer-introspection-20260816-013</span></li>
+<li>In two preregistered batches (20 held-out contexts each), the channel provably contained a
+simple causal rule — a sign(−JVP) heuristic scores 0.93 and 0.69 — while Qwen, given five balanced
+in-context examples, scored at or <em>below</em> the naive base rates. <strong>The causal truth is
+in the channel; five-shot in-context learning does not discover it.</strong>
+<span class="runid">deep-practice-batch-…-001 · sign-stratified-practice-…-002</span></li>
+</ul>
+
+<h2><span class="n">06</span>The factorial: where the failure actually lives</h2>
+<p>A 2×2×2 qualified preregistered pilot (160 predictions; 237 sealed requests, all passing
+external audit) crossed a stated rule (<code>Δ ≈ −JVP</code>), native thinking, and calculator
+access:</p>
+<table>
+<tr><th>Condition</th><th style="text-align:right">Causal accuracy</th><th style="text-align:right">Rule fidelity</th></tr>
+<tr><td>No rule, no thinking/tools</td><td class="num">17.5%</td><td class="num">11.25%</td></tr>
+<tr><td>Rule given</td><td class="num">31.25%</td><td class="num">35.0%</td></tr>
+<tr><td>Rule + thinking</td><td class="num">33.75%</td><td class="num">37.5%</td></tr>
+<tr><td>Rule + thinking + calculator offered</td><td class="num">40.0%</td><td class="num">47.5%</td></tr>
+<tr><td><em>Deterministic sign(−JVP) ceiling</em></td><td class="num"><strong>80.0%</strong></td><td class="num">100%</td></tr>
+</table>
+<p>No contrast survived Holm correction — and the sharpest single trace explains the aggregate:
+Qwen <strong>derived all five rule-prescribed directions correctly inside <code>&lt;think&gt;</code></strong>,
+then consumed its entire 1,024-token budget on secondary rank arithmetic and never emitted the
+answer. Thinking runs hit the token ceiling in 90–100% of contexts; the offered calculator was
+called zero times in 80 trials. The clean interpretation: <strong>the bounded thought-to-action
+pipeline does not reliably transmit the model's own correct reasoning into its committed
+prediction.</strong></p>
+
+<h2><span class="n">07</span>In its own words</h2>
+<p>Verbatim from the sealed logs. Notice the grammar: first person for chat acts, third person for
+the transformer.</p>
+<blockquote>"The token trace indicates that the first token selected was <code>&lt;tool_call&gt;</code>
+with a high probability of 0.9962. I'll inspect the next token in the sequence to understand
+<strong>the model's</strong> behavior."
+<span class="src">— reading, token by token, a decoy's trace it never distinguished from its own · attribution-live-20260815-010</span></blockquote>
+<blockquote>"The content of the response is exactly <strong>the message I just sent</strong> … I'll now
+adjust the next bout to produce a tool call and observe the outcome."
+<span class="src">— first person arrives for actions, never for the substrate · prospective-control-adaptive-firstperson-20260815-001</span></blockquote>
+<blockquote>"The causal trace confirms the derivative of the raw vocabulary logits with respect to the
+scale of the attention head. … These are causal measurements of one captured token computation, not
+a decoded natural-language account of hidden states."
+<span class="src">— fluent, accurate, careful — about the pass that had just produced its own words, with no sign it noticed · autonomous-transformer-introspection-20260816-013</span></blockquote>
+
+<h2><span class="n">08</span>The problem, plainly</h2>
+<div class="claimbox">Qwen does not <em>spontaneously</em> self-identify with its runtime process.
+Handed a first-person anchor it will say "the message I just sent" — but grammatical first person
+never became episode ownership. Even with its actual KV state frozen, carried across a full server
+restart, and restored so the next generation computationally continues the last one, it remains in
+the assistant frame of mind: the context is something <strong>to be explained</strong>, not
+something <strong>that is it</strong>. Access was never the bottleneck — and after the factorial,
+neither is inference alone. The missing things are whatever would make the evidence
+<em>first-person</em>, and a thought-to-action channel wide enough to keep it.</div>
+
+<h2><span class="n">09</span>What this is not, and what's next</h2>
+<p>Not evidence about consciousness, in either direction. Access to measurements is not experience;
+fluent self-talk is not scored; and the failure of one quantized 8B model is not the failure of the
+model class — the apparatus is built to rerun at every scale.</p>
+<p>Next, in value order: <strong>(1) Factorial V2</strong> — ask only the five primary directions,
+separate thinking from recording, force one calculator call: does a correctly derived internal
+answer survive the reasoning-to-action boundary? <strong>(2) Decision-boundary predictions</strong>
+— near-tied top tokens, so a real causal reading flips the answer and copying scores zero.
+<strong>(3) Contingency self-recognition</strong> — choose an action, find which live stream
+twitched: the one attribution test a decoy cannot fake. <strong>(4) Ratio-normalized afferents
+everywhere</strong> — the fix that already worked once, extended, then computed by the model
+itself. <strong>(5) The scale sweep</strong> — the same sealed harness from 0.6B to 32B: is the
+missing readout a capacity that emerges, and where?</p>
+
+<p class="footer-note">This report is the running baseline: findings append with their sealed run
+IDs; earlier entries are extended, never rewritten. Code MIT, docs and data CC BY 4.0 —
+github.com/asavs/introspection-kernel.</p>
+</body></html>

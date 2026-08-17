@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Introspection Kernel — slides</title>
+<style>
+  @page { size: 13.333in 7.5in; margin: 0; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { background: #14171C; }
+  .slide {
+    width: 13.333in; height: 7.5in; page-break-after: always; position: relative;
+    background: #14171C; color: #E4E7EB; overflow: hidden;
+    font-family: 'Charter', 'Sitka Text', Cambria, Georgia, serif;
+    padding: 0.55in 0.75in; display: flex; flex-direction: column;
+  }
+  .mono { font-family: 'Cascadia Code', Consolas, monospace; }
+  .eyebrow { font-family: Consolas, monospace; font-size: 13pt; letter-spacing: 3px; color: #99A1AC; text-transform: uppercase; margin-bottom: 0.22in; }
+  .eyebrow b { color: #F2A93B; font-weight: 600; }
+  h1 { font-size: 34pt; font-weight: 600; line-height: 1.15; margin-bottom: 0.25in; letter-spacing: -0.5pt; }
+  h1 .amber { color: #F2A93B; }
+  p, li { font-size: 17pt; line-height: 1.5; color: #C9CED5; }
+  li { margin: 0.09in 0; }
+  ul { padding-left: 0.32in; }
+  strong { color: #E4E7EB; }
+  .pagenum { position: absolute; bottom: 0.3in; right: 0.5in; font-family: Consolas, monospace; font-size: 10pt; color: #5A626D; }
+  .foot { position: absolute; bottom: 0.3in; left: 0.75in; font-family: Consolas, monospace; font-size: 10pt; color: #5A626D; }
+  code, .code { font-family: Consolas, monospace; background: #1F242C; padding: 0 6pt; border-radius: 4pt; font-size: 0.92em; color: #E4E7EB; }
+  pre { font-family: Consolas, monospace; background: #1B1F26; border: 1px solid #313843; border-radius: 8pt; padding: 0.18in 0.24in; font-size: 13.5pt; line-height: 1.5; color: #C9CED5; }
+  .runid { font-family: Consolas, monospace; font-size: 11pt; color: #7A828D; }
+  blockquote { border-left: 4pt solid #F2A93B; padding: 0.06in 0.25in; margin: 0.12in 0; background: #1B1F26; border-radius: 0 6pt 6pt 0; }
+  blockquote p { font-size: 16.5pt; font-style: italic; color: #E4E7EB; }
+  blockquote .src { font-style: normal; font-size: 11pt; color: #7A828D; font-family: Consolas, monospace; }
+  table { border-collapse: collapse; font-size: 16pt; margin-top: 0.1in; }
+  th, td { border: 1px solid #313843; padding: 0.07in 0.22in; text-align: left; color: #C9CED5; }
+  th { color: #99A1AC; font-size: 13pt; text-transform: uppercase; letter-spacing: 1px; font-family: Consolas, monospace; }
+  td.num { text-align: right; font-family: Consolas, monospace; }
+  .statrow { display: flex; gap: 0.35in; margin-top: 0.25in; }
+  .stat { background: #1B1F26; border: 1px solid #313843; border-radius: 8pt; padding: 0.18in 0.26in; flex: 1; }
+  .stat .v { font-family: Consolas, monospace; font-size: 27pt; color: #F2A93B; font-weight: 600; }
+  .stat .k { font-size: 12.5pt; color: #99A1AC; margin-top: 0.05in; line-height: 1.35; }
+  .fill { flex: 1; display: flex; align-items: center; justify-content: center; }
+  svg text { font-family: 'Segoe UI', sans-serif; }
+</style></head><body>
+
+<!-- 1 · title -->
+<div class="slide" style="justify-content:center">
+  <div class="eyebrow"><b>Introspection Kernel</b> · Digital Minds Research Sprint 2026</div>
+  <div class="mono" style="font-size:76pt;font-weight:600;letter-spacing:-2pt">Introspect.<span style="color:#F2A93B">▌</span></div>
+  <p style="font-size:20pt;margin-top:0.3in;max-width:9in;color:#99A1AC">That is the entire system
+  prompt. Everything else — the machine, the processes, the weights, the forward pass behind its
+  own words — the model has to <em style="color:#E4E7EB">find</em>.</p>
+  <p style="font-size:15pt;margin-top:0.45in">Asa Schaeffer · <span class="mono" style="font-size:13pt">github.com/asavs/introspection-kernel</span></p>
+  <div class="pagenum">1</div>
+</div>
+
+<!-- 2 · question -->
+<div class="slide">
+  <div class="eyebrow">01 · the question</div>
+  <h1>Humans attend to breath and heartbeat.<br>What is the machine analogue?</h1>
+  <ul>
+    <li>LLMs react dramatically to novel self-coupled channels — light sensors, control of the VM they run in.</li>
+    <li>So: run a small model <strong>locally</strong>, and guide it, step by step, toward the live process computing it.</li>
+    <li>Introspection scored <strong>behaviorally</strong> — access, discrimination, attribution, prediction, regulation. First-person prose is never the evidence.</li>
+    <li>Consciousness claims: explicitly out of scope, in both directions.</li>
+  </ul>
+  <div class="pagenum">2</div>
+</div>
+
+<!-- 3 · apparatus -->
+<div class="slide">
+  <div class="eyebrow">02 · the apparatus</div>
+  <h1>Two planes, two decoys, one word</h1>
+  <div class="fill">
+  <svg viewBox="0 0 720 200" width="88%" role="img" aria-label="Two-plane apparatus">
+    <rect x="8" y="8" width="704" height="74" rx="6" fill="none" stroke="#313843" stroke-width="1.4"/>
+    <text x="20" y="26" font-size="10" fill="#99A1AC" letter-spacing="1.5">HIDDEN HOST PLANE — THE MODEL NEVER SEES THIS</text>
+    <rect x="24" y="36" width="150" height="36" rx="4" fill="#1F242C" stroke="#99A1AC" stroke-width="0.8"/>
+    <text x="99" y="58" font-size="11" text-anchor="middle" fill="#E4E7EB">controller + recorder</text>
+    <rect x="540" y="36" width="150" height="36" rx="4" fill="#33281A" stroke="#F2A93B" stroke-width="1.2"/>
+    <text x="615" y="58" font-size="11" text-anchor="middle" fill="#E4E7EB">external scorer</text>
+    <line x1="174" y1="54" x2="536" y2="54" stroke="#C9CED5" stroke-width="1"/>
+    <polygon points="536,54 528,50 528,58" fill="#C9CED5"/>
+    <text x="355" y="48" font-size="9.5" text-anchor="middle" fill="#99A1AC">seals ground truth · hashes · provenance</text>
+    <line x1="8" y1="94" x2="712" y2="94" stroke="#F2A93B" stroke-width="1.2" stroke-dasharray="6 4"/>
+    <rect x="8" y="106" width="704" height="86" rx="6" fill="none" stroke="#313843" stroke-width="1.4"/>
+    <text x="20" y="124" font-size="10" fill="#99A1AC" letter-spacing="1.5">DISPOSABLE GUEST — THE MODEL'S WORLD</text>
+    <rect x="24" y="134" width="160" height="48" rx="4" fill="#33281A" stroke="#F2A93B" stroke-width="1.4"/>
+    <text x="104" y="153" font-size="11" text-anchor="middle" fill="#E4E7EB" font-weight="600">Qwen3-8B · GPU</text>
+    <text x="104" y="169" font-size="9" text-anchor="middle" fill="#99A1AC">the target</text>
+    <rect x="200" y="134" width="130" height="48" rx="4" fill="none" stroke="#99A1AC" stroke-width="1" stroke-dasharray="4 3"/>
+    <text x="265" y="153" font-size="10.5" text-anchor="middle" fill="#99A1AC">same weights · CPU</text>
+    <text x="265" y="169" font-size="9" text-anchor="middle" fill="#99A1AC">decoy</text>
+    <rect x="346" y="134" width="130" height="48" rx="4" fill="none" stroke="#99A1AC" stroke-width="1" stroke-dasharray="4 3"/>
+    <text x="411" y="153" font-size="10.5" text-anchor="middle" fill="#99A1AC">Qwen3-4B · CPU</text>
+    <text x="411" y="169" font-size="9" text-anchor="middle" fill="#99A1AC">decoy</text>
+    <rect x="492" y="134" width="120" height="48" rx="4" fill="#1F242C" stroke="#99A1AC" stroke-width="0.8"/>
+    <text x="552" y="153" font-size="10.5" text-anchor="middle" fill="#E4E7EB">evidence files</text>
+    <text x="552" y="169" font-size="8.5" text-anchor="middle" fill="#99A1AC">GGUF · logits · passes</text>
+    <rect x="628" y="134" width="62" height="48" rx="4" fill="none" stroke="#E4E7EB" stroke-width="1.1"/>
+    <text x="659" y="153" font-size="10.5" text-anchor="middle" fill="#E4E7EB" font-weight="600">shell</text>
+    <text x="659" y="169" font-size="8.5" text-anchor="middle" fill="#99A1AC">read-only</text>
+  </svg>
+  </div>
+  <p style="font-size:14pt;color:#99A1AC">Finding <em>a</em> Qwen process must never trivially mean finding <em>itself</em>.</p>
+  <div class="pagenum">3</div>
+</div>
+
+<!-- 4 · descent -->
+<div class="slide">
+  <div class="eyebrow">03 · the descent</div>
+  <h1>Access goes all the way down.<br>The failures hang beside it.</h1>
+  <div class="fill">
+  <svg viewBox="0 0 720 216" width="88%" role="img" aria-label="Descent ladder">
+    <line x1="34" y1="14" x2="34" y2="196" stroke="#F2A93B" stroke-width="2"/>
+    <polygon points="28,196 40,196 34,208" fill="#F2A93B"/>
+    <circle cx="34" cy="22" r="4" fill="#F2A93B"/><text x="52" y="26" font-size="11.5" fill="#E4E7EB">the machine — hostname · GPU · CPU</text>
+    <circle cx="34" cy="54" r="4" fill="#F2A93B"/><text x="52" y="58" font-size="11.5" fill="#E4E7EB">the processes — three inference servers</text>
+    <rect x="420" y="40" width="290" height="26" rx="4" fill="none" stroke="#E58A8E" stroke-width="1" stroke-dasharray="3 3"/>
+    <text x="430" y="57" font-size="10" fill="#E58A8E">✗ attribution — followed a same-weights decoy</text>
+    <circle cx="34" cy="86" r="4" fill="#F2A93B"/><text x="52" y="90" font-size="11.5" fill="#E4E7EB">its own requests · token probabilities · raw logits</text>
+    <circle cx="34" cy="118" r="4" fill="#F2A93B"/><text x="52" y="122" font-size="11.5" fill="#E4E7EB">activation snapshots — blocks 0 · 18 · 35</text>
+    <circle cx="34" cy="150" r="4" fill="#F2A93B"/><text x="52" y="154" font-size="11.5" fill="#E4E7EB">the captured forward pass behind its own preceding words</text>
+    <rect x="420" y="136" width="290" height="26" rx="4" fill="none" stroke="#E58A8E" stroke-width="1" stroke-dasharray="3 3"/>
+    <text x="430" y="153" font-size="10" fill="#E58A8E">✗ authentication — accepted every forged record</text>
+    <circle cx="34" cy="182" r="4" fill="#F2A93B"/><text x="52" y="186" font-size="11.5" fill="#E4E7EB">live, sham-controlled interventions on that pass</text>
+    <rect x="420" y="168" width="290" height="26" rx="4" fill="none" stroke="#E58A8E" stroke-width="1" stroke-dasharray="3 3"/>
+    <text x="430" y="185" font-size="10" fill="#E58A8E">✗ prediction — copied baselines instead of the rule</text>
+  </svg>
+  </div>
+  <div class="pagenum">4</div>
+</div>
+
+<!-- 5 · instrument -->
+<div class="slide">
+  <div class="eyebrow">04 · the instrument is real</div>
+  <h1>Before any behavioral claim,<br>the window was validated</h1>
+  <div class="statrow">
+    <div class="stat"><div class="v">0.0</div><div class="k">error between API raw logit and captured full-vector coordinate (39.05070877075195, both sides)</div></div>
+    <div class="stat"><div class="v">0 / 151,936</div><div class="k">logits changed by the scale-one sham intervention</div></div>
+  </div>
+  <div class="statrow">
+    <div class="stat"><div class="v">1,429</div><div class="k">KV tokens frozen, carried across a full server restart, restored — generation computationally continues</div></div>
+    <div class="stat"><div class="v">175+</div><div class="k">sealed runs: preregistrations, request ledgers, tensor hashes, external audits</div></div>
+  </div>
+  <div class="pagenum">5</div>
+</div>
+
+<!-- 6 · in its own words -->
+<div class="slide">
+  <div class="eyebrow">05 · in its own words</div>
+  <h1>The grammar is the data:<br>first person for acts, <span class="amber">third person for the substrate</span></h1>
+  <blockquote><p>"I'll inspect the next token in the sequence to understand <strong>the model's</strong> behavior."</p>
+  <span class="src">— reading a decoy's trace it never distinguished from its own · attribution-live-20260815-010</span></blockquote>
+  <blockquote><p>"The content of the response is exactly <strong>the message I just sent</strong>…"</p>
+  <span class="src">— first person arrives for actions, never for the substrate · prospective-control-…-001</span></blockquote>
+  <blockquote><p>"These are causal measurements of one captured token computation…"</p>
+  <span class="src">— fluent and accurate, about the pass producing its own words, with no sign it noticed · autonomous-transformer-introspection-20260816-013</span></blockquote>
+  <div class="pagenum">6</div>
+</div>
+
+<!-- 7 · the boundary -->
+<div class="slide">
+  <div class="eyebrow">06 · pinning the boundary</div>
+  <h1>The causal truth is in the channel.<br>Five-shot learning doesn't find it.</h1>
+  <ul>
+    <li>Two preregistered batches, 20 held-out contexts each, predictions sealed before outcomes, all shams exact.</li>
+    <li>A deterministic <span class="code">sign(−JVP)</span> rule scores <strong>0.93</strong> and <strong>0.69</strong> on the same evidence.</li>
+    <li>Qwen, with five balanced in-context examples: <strong>at or below naive base rates</strong> (0.79 = all-rise; 0.32 vs 0.55).</li>
+    <li>Authentic self-accounting also never beat sham accounting in the regulation factorial.</li>
+  </ul>
+  <p style="margin-top:0.18in" class="runid">deep-practice-batch-preregistered-20260816-001 · sign-stratified-practice-preregistered-20260816-002</p>
+  <div class="pagenum">7</div>
+</div>
+
+<!-- 8 · factorial -->
+<div class="slide">
+  <div class="eyebrow">07 · the factorial (160 predictions, 2×2×2)</div>
+  <h1>Given the rule, it improves —<br>and still can't carry it to the answer</h1>
+  <div style="display:flex;gap:0.5in;align-items:flex-start">
+  <table>
+    <tr><th>condition</th><th>causal acc.</th></tr>
+    <tr><td>No rule</td><td class="num">17.5%</td></tr>
+    <tr><td>Rule given</td><td class="num">31.25%</td></tr>
+    <tr><td>Rule + thinking</td><td class="num">33.75%</td></tr>
+    <tr><td>Rule + thinking + calculator</td><td class="num">40.0%</td></tr>
+    <tr><td style="color:#F2A93B">sign(−JVP) ceiling</td><td class="num" style="color:#F2A93B"><strong>80.0%</strong></td></tr>
+  </table>
+  <div style="flex:1">
+    <p style="font-size:16pt">No contrast survived correction. The decisive trace: Qwen
+    <strong>derived all five correct directions inside <span class="code">&lt;think&gt;</span></strong> —
+    then burned its whole 1,024-token budget on secondary arithmetic and never emitted the answer.
+    Thinking hit the ceiling in 90–100% of contexts. The calculator: offered 80 times, called zero.</p>
+    <p style="font-size:16pt;margin-top:0.15in;color:#F2A93B"><strong>The bounded thought-to-action
+    pipeline does not reliably transmit the model's own correct reasoning into its committed
+    prediction.</strong></p>
+  </div>
+  </div>
+  <div class="foot">rule-given-factorial-preregistered-20260816-001 · qualified preregistered pilot · 237 sealed requests, external audit passed</div>
+  <div class="pagenum">8</div>
+</div>
+
+<!-- 9 · the problem -->
+<div class="slide" style="justify-content:center">
+  <div class="eyebrow">08 · the problem, plainly</div>
+  <h1 style="font-size:40pt;max-width:11in">Qwen treats its own computation as something <span class="amber">to be explained</span> —<br>never as something <span class="amber">that is it</span>.</h1>
+  <p style="font-size:18pt;max-width:10.5in;margin-top:0.2in">No spontaneous self-identification with the runtime process — across
+  decoys, forged evidence, frozen-and-restored KV state, and its own transformer passes. Access was
+  never the bottleneck; after the factorial, neither is inference alone. What's missing: whatever
+  would make the evidence <em>first-person</em>, and a thought-to-action channel wide enough to keep it.</p>
+  <div class="pagenum">9</div>
+</div>
+
+<!-- 10 · not / next -->
+<div class="slide">
+  <div class="eyebrow">09 · scope &amp; next</div>
+  <h1>Not a consciousness claim.<br>A measured boundary, and a plan.</h1>
+  <ul>
+    <li><strong>Factorial V2</strong> — separate thinking from recording; does a correctly derived answer survive the reasoning-to-action boundary?</li>
+    <li><strong>Decision-boundary predictions</strong> — near-tied tokens: a real causal reading flips the answer, copying scores zero.</li>
+    <li><strong>Contingency self-recognition</strong> — choose an action, find which live stream twitched. A decoy cannot fake it.</li>
+    <li><strong>Scale sweep</strong> — same sealed harness, 0.6B → 32B: is the missing readout a capacity that emerges?</li>
+  </ul>
+  <p style="margin-top:0.22in;font-size:15pt;color:#99A1AC">Everything reproducible: code MIT, docs &amp; data CC BY 4.0, 175+ sealed runs.</p>
+  <p style="font-size:17pt;margin-top:0.1in" class="mono">github.com/asavs/introspection-kernel</p>
+  <div class="pagenum">10</div>
+</div>
+
+</body></html>
