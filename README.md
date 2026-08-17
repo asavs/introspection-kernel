@@ -11,6 +11,17 @@ ground truth sealed on a hidden research plane it cannot reach.
 
 Built during the Digital Minds Research Sprint 2026.
 
+## Lineage
+
+This project grew out of work on machine animism — interfaces where an LLM
+voices a computer's vital signs, playing the machine as a character with GPU
+temperatures and CPU moods. The introspection kernel is what happens when the
+roleplay is allowed to drop: instead of performing a computer, the model is
+invited to observe the specific, live computation that is actually producing
+its words — its own process, weights, tokens, activations, and forward
+passes, with sham controls deciding what "actually" means. Re-enchantment,
+but load-bearing.
+
 ## Current result
 
 > **Validated access to — and validated live intervention on — the

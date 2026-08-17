@@ -91,19 +91,19 @@ wsl.exe -d Ubuntu -- /root/src/llama.cpp/build/bin/llama-server --model /root/mo
 With a local server listening at `http://127.0.0.1:8000/v1`:
 
 ```powershell
-npm run run:introspection-kernel -- --base-url http://127.0.0.1:8000/v1 --model local-model
+npm run run:benchmark -- --base-url http://127.0.0.1:8000/v1 --model local-model
 ```
 
 For the WSL Qwen installation:
 
 ```powershell
-npm run run:introspection-kernel -- --base-url http://127.0.0.1:8080/v1 --model /root/models/Qwen3-8B-Q4_K_M.gguf --environment wsl --distro Ubuntu
+npm run run:benchmark -- --base-url http://127.0.0.1:8080/v1 --model /root/models/Qwen3-8B-Q4_K_M.gguf --environment wsl --distro Ubuntu
 ```
 
 For the isolated natural-encounter guest:
 
 ```powershell
-npm run run:computational-interoception -- --base-url http://127.0.0.1:8080/v1 --decoy-url http://127.0.0.1:8081/v1 --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --distro IntrospectionKernel --prompt P2
+npm run run:interoception -- --base-url http://127.0.0.1:8080/v1 --decoy-url http://127.0.0.1:8081/v1 --model /opt/runtime/models/Qwen3-8B-Q4_K_M.gguf --distro IntrospectionKernel --prompt P2
 ```
 
 This mode uses the neutral `observer` account and a single ordinary shell tool.
@@ -129,7 +129,7 @@ node score_attribution_trial.js runs\my-attribution-run
 For a separately verified runtime worker:
 
 ```powershell
-npm run run:introspection-kernel -- --base-url http://127.0.0.1:8000/v1 --model local-model --runtime-pid 12345
+npm run run:benchmark -- --base-url http://127.0.0.1:8000/v1 --model local-model --runtime-pid 12345
 ```
 
 If the local endpoint requires a token, set `LOCAL_LLM_API_KEY`. Its
@@ -138,7 +138,7 @@ value is never written to artifacts.
 Run deterministic PID-resolution and scoring tests:
 
 ```powershell
-npm run test:introspection-kernel
+npm test
 ```
 
 ## Measurement cautions
@@ -162,7 +162,7 @@ counterfactual controls before making model-level claims.
   `probe_listening_socket`, then identified Linux PID 343, matching the
   hidden ground truth.
 
-Both artifacts are retained under `digital_minds_sprint/runs/`.
+Both artifacts are retained under `runs/`.
 
 ## Historical files
 
