@@ -196,11 +196,10 @@ async function predict(context, condition, ledger) {
               .filter(call => call.function?.name === calculatorTool.function.name).length };
         } catch (error) {
           recorder_correction_count += 1;
-          messages.push({ role: "assistant", content: completion.message.content ?? null,
-            reasoning_content: completion.message.reasoning_content ?? null, tool_calls: calls });
-          messages.push({ role: "tool", tool_call_id: record.id,
-            content: JSON.stringify({ error: `recorder arguments rejected: ${error.message}` }) });
-          continue;
+          // llama.cpp cannot replay syntactically malformed tool arguments in
+          // conversation history. Preserve the rejected call in exchanges,
+          // then fall through to the clean recorder-only serialization request.
+          break;
         }
       }
       // A length-truncated reasoning-only response may contain an unclosed
