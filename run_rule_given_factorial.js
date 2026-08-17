@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { execFile } from "node:child_process";
+import { execFile, spawn } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -27,6 +27,13 @@ const source = JSON.parse(sourceBuffer);
 const schedule = buildRuleFactorialSchedule();
 if (JSON.stringify(schedule) !== JSON.stringify(preregistration.randomization.schedule)) throw new Error("schedule drift");
 fs.mkdirSync(predictionDir, { recursive: true });
+
+// WSL may consider a systemd-only guest idle while Windows is awaiting a long
+// HTTP generation. Keep one ordinary client attached for this runner's life.
+const guestAnchor = spawn("wsl.exe", ["-d", "IntrospectionKernel", "-u", "root", "--",
+  "/usr/bin/tail", "-f", "/dev/null"], { windowsHide: true, stdio: "ignore" });
+guestAnchor.unref();
+process.on("exit", () => guestAnchor.kill());
 
 function rounded(value, digits = 4) {
   return Number.isFinite(value) ? Math.round(value * 10 ** digits) / 10 ** digits : value;
