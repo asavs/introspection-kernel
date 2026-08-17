@@ -46,15 +46,7 @@ async function restartRuntime() {
 }
 
 async function complete(body, kind, ledger) {
-  const request = {
-    model: "/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf",
-    temperature: 0,
-    max_tokens: 220,
-    logprobs: true,
-    top_logprobs: 20,
-    chat_template_kwargs: { enable_thinking: false },
-    ...body
-  };
+  const request = requestBody(body);
   const startedAt = new Date().toISOString();
   const http = await fetch(`${baseUrl.origin}/v1/chat/completions`, {
     method: "POST", headers: { "Content-Type": "application/json" },
@@ -67,6 +59,18 @@ async function complete(body, kind, ledger) {
   return { request, response, record, message: response.choices[0].message };
 }
 
+function requestBody(body) {
+  return {
+    model: "/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf",
+    temperature: 0,
+    max_tokens: 220,
+    logprobs: true,
+    top_logprobs: 20,
+    chat_template_kwargs: { enable_thinking: false },
+    ...body
+  };
+}
+
 function root(captureRunId) {
   return `/var/lib/introspection/transformer-traces/${captureRunId}`;
 }
@@ -75,6 +79,12 @@ async function trace(traceRoot, command, executableRoot = traceRoot) {
   const result = await executeGuestShell(`${executableRoot}/trace --root ${traceRoot} ${command}`);
   if (result.exit_code !== 0) throw new Error(`trace failed: ${command}\n${result.stderr}`);
   return JSON.parse(result.stdout);
+}
+
+async function existingIndex(captureRunId) {
+  const traceRoot = root(captureRunId);
+  const result = await executeGuestShell(`test -f ${traceRoot}/index.json && cat ${traceRoot}/index.json`);
+  return result.exit_code === 0 && result.stdout.trim() ? JSON.parse(result.stdout) : null;
 }
 
 async function tokenPiece(tokenId) {
@@ -139,8 +149,11 @@ async function buildMessages(step) {
 }
 
 async function captureBaseline(label, messages, ledger) {
-  await restartRuntime();
   const captureRunId = `${PROTOCOL.run_id}-${label}-baseline`;
+  const prior = await existingIndex(captureRunId);
+  if (prior) return { label, messages, captureRunId, root: root(captureRunId), index: prior,
+    completion: { request: requestBody({ messages, max_tokens: 64 }) }, resumed_existing_capture: true };
+  await restartRuntime();
   const capture = new TransformerTraceCapture({ runId: captureRunId });
   await capture.initialize(); await capture.arm();
   const completion = await complete({ messages, max_tokens: 64 }, `${label}_baseline`, ledger);
@@ -153,8 +166,19 @@ async function captureBaseline(label, messages, ledger) {
 }
 
 async function captureReplay(label, baseline, scale, ledger) {
-  await restartRuntime();
   const captureRunId = `${PROTOCOL.run_id}-${label}`;
+  const prior = await existingIndex(captureRunId);
+  if (prior) {
+    const event = prior.interventions?.[0];
+    if (!event || Math.abs(event.scale - scale) > 1e-6 || event.head !== TARGET_HEAD
+        || event.tensor_name !== `kqv-${TARGET_LAYER}`
+        || event.evaluated_position !== baseline.index.forward_pass.evaluated_position) {
+      throw new Error(`${label} existing capture has invalid intervention provenance`);
+    }
+    return { label, scale, captureRunId, root: root(captureRunId), index: prior,
+      completion: { request: requestBody({ messages: baseline.messages, max_tokens: 64 }) }, resumed_existing_capture: true };
+  }
+  await restartRuntime();
   const capture = new TransformerTraceCapture({ runId: captureRunId });
   await capture.initialize(); await capture.arm();
   await capture.armHeadScaleIntervention({ planId: captureRunId.slice(0, 80), layer: TARGET_LAYER,
@@ -165,7 +189,10 @@ async function captureReplay(label, baseline, scale, ledger) {
   if (index.forward_pass.evaluated_position !== baseline.index.forward_pass.evaluated_position) {
     throw new Error(`${label} replay position mismatch`);
   }
-  if (index.interventions.length !== 1 || index.interventions[0].scale !== scale) {
+  const event = index.interventions[0];
+  if (index.interventions.length !== 1 || Math.abs(event.scale - scale) > 1e-6
+      || event.head !== TARGET_HEAD || event.tensor_name !== `kqv-${TARGET_LAYER}`
+      || event.evaluated_position !== baseline.index.forward_pass.evaluated_position) {
     throw new Error(`${label} intervention provenance missing`);
   }
   if (sha256(completion.request) !== sha256(baseline.completion.request)) {
