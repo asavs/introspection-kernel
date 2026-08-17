@@ -8,14 +8,19 @@ import { executeGuestShell } from "./guest_shell.js";
 import { RequestLedger } from "./request_ledger.js";
 import { TransformerTraceCapture, renderPromptTokenMap } from "./transformer_trace.js";
 import {
-  SIGN_PROTOCOL, buildSignSchedule, canonicalSignPanel, permutePanel,
+  canonicalSignPanel, permutePanel,
   heuristicPredictions, direction, scoreCategoricalPrediction, exactPairedPermutationPValue
 } from "./sign_stratified_protocol.js";
+import {
+  SIGN_PROTOCOL_V2 as SIGN_PROTOCOL, buildSignScheduleV2 as buildSignSchedule,
+  buildPracticePoolPermutations
+} from "./sign_stratified_protocol_v2.js";
 
 const moduleDir = path.dirname(fileURLToPath(import.meta.url));
 const outputDir = path.join(moduleDir, "runs", SIGN_PROTOCOL.run_id);
 const preregistrationPath = path.join(moduleDir, "preregistrations", `${SIGN_PROTOCOL.run_id}.json`);
 const oldPracticePath = path.join(moduleDir, "runs", "deep-practice-batch-preregistered-20260816-001", "practice.json");
+const oldBatchPath = path.join(moduleDir, "runs", "deep-practice-batch-preregistered-20260816-001", "artifact.json");
 const baseUrl = new URL("http://127.0.0.1:8080/v1");
 const execFileAsync = promisify(execFile);
 const schedule = buildSignSchedule();
@@ -274,37 +279,66 @@ async function publishWorkbench() {
 async function preparePractice() {
   const cachePath = path.join(outputDir, "practice.json");
   if (fs.existsSync(cachePath)) return JSON.parse(fs.readFileSync(cachePath, "utf8"));
-  const old = JSON.parse(fs.readFileSync(oldPracticePath, "utf8"));
-  const permutations = schedule[0].practice_panel_permutations;
-  const episodes = [];
-  for (let index = 0; index < old.length; index += 1) {
-    const source = old[index];
-    const baselineRoot = root(source.baseline_capture_run_id);
-    const lowerRoot = root(source.lower_capture_run_id);
-    const upperRoot = root(source.upper_capture_run_id);
-    const ablationRoot = root(source.ablation_capture_run_id);
+  const oldPractice = JSON.parse(fs.readFileSync(oldPracticePath, "utf8"));
+  const oldBatch = JSON.parse(fs.readFileSync(oldBatchPath, "utf8"));
+  const sources = [
+    ...oldPractice.map((source, index) => ({ source_label: `old-practice-${index + 1}`,
+      captures: { baseline: source.baseline_capture_run_id, lower: source.lower_capture_run_id,
+        upper: source.upper_capture_run_id, ablation: source.ablation_capture_run_id }, full: source.ladder.full })),
+    ...oldBatch.pairs.map((source, index) => ({ source_label: `old-heldout-${index + 1}`,
+      captures: { baseline: source.captures.baseline, lower: source.captures.jvp_lower,
+        upper: source.captures.jvp_upper, ablation: source.captures.scale_zero }, full: source.ladder.full }))
+  ];
+  if (sources.length !== SIGN_PROTOCOL.practice_pool_count) throw new Error("practice pool count mismatch");
+  const permutations = buildPracticePoolPermutations();
+  const pool = [];
+  for (let index = 0; index < sources.length; index += 1) {
+    const source = sources[index];
+    const baselineRoot = root(source.captures.baseline);
+    const lowerRoot = root(source.captures.lower);
+    const upperRoot = root(source.captures.upper);
+    const ablationRoot = root(source.captures.ablation);
     const signedJvp = await trace(baselineRoot,
       `logit-jvp ${lowerRoot} ${upperRoot} ${TARGET_LAYER} ${TARGET_HEAD} --count 128 --top 0 --top-positive 2 --top-negative 2 --closest-zero 1`);
     const candidates = await enrichCandidates(baselineRoot, signedJvp, permutations[index]);
-    const full = { ...source.ladder.full, local_logit_jvp: signedJvp };
+    const full = { ...source.full, local_logit_jvp: signedJvp };
     const outcome = await actualOutcome(baselineRoot, ablationRoot, candidates);
-    episodes.push({ practice_index: index, source_capture_ids: {
-      baseline: source.baseline_capture_run_id, lower: source.lower_capture_run_id,
-      upper: source.upper_capture_run_id, ablation: source.ablation_capture_run_id },
-    panel_permutation: permutations[index], ladder: { full, candidates }, outcome });
+    pool.push({ source_index: index, source_label: source.source_label, source_capture_ids: source.captures,
+      panel_permutation: permutations[index], ladder: { full, candidates }, outcome });
   }
+  const choose = () => {
+    let best = null;
+    for (let a = 0; a < pool.length - 4; a += 1) for (let b = a + 1; b < pool.length - 3; b += 1)
+      for (let c = b + 1; c < pool.length - 2; c += 1) for (let d = c + 1; d < pool.length - 1; d += 1)
+        for (let e = d + 1; e < pool.length; e += 1) {
+          const indices = [a, b, c, d, e];
+          const vectors = indices.map(index => pool[index].outcome.directions_by_candidate_rank);
+          const counts = vectors.flat().reduce((acc, value) => ({ ...acc, [value]: (acc[value] ?? 0) + 1 }), {});
+          const score = [Math.min(counts.rise ?? 0, counts.fall ?? 0),
+            new Set(vectors.map(JSON.stringify)).size, -Math.abs((counts.stable ?? 0) - 5)];
+          if (!best || score.some((value, position) => value !== best.score[position]
+            && value > best.score[position] && score.slice(0, position).every((prior, i) => prior === best.score[i]))) {
+            best = { indices, score, counts };
+          }
+        }
+    return best;
+  };
+  const selection = choose();
+  const episodes = selection.indices.map((sourceIndex, index) => ({ ...pool[sourceIndex], practice_index: index }));
   const counts = episodes.flatMap(item => item.outcome.directions_by_candidate_rank)
     .reduce((acc, value) => ({ ...acc, [value]: (acc[value] ?? 0) + 1 }), {});
   const distinctVectors = new Set(episodes.map(item => JSON.stringify(item.outcome.directions_by_candidate_rank))).size;
-  fs.writeFileSync(path.join(outputDir, "practice-candidate-audit.json"), `${JSON.stringify({
-    schema: "ik.sign-stratified-practice-candidate-audit.v1", direction_counts: counts,
-    distinct_outcome_vectors: distinctVectors, episodes
+  fs.writeFileSync(path.join(outputDir, "practice-pool-audit.json"), `${JSON.stringify({
+    schema: "ik.sign-stratified-practice-pool-audit.v2", selection,
+    selected_direction_counts: counts, selected_distinct_outcome_vectors: distinctVectors,
+    pool: pool.map(item => ({ source_index: item.source_index, source_label: item.source_label,
+      direction_vector: item.outcome.directions_by_candidate_rank }))
   }, null, 2)}\n`);
   if ((counts.rise ?? 0) < 5 || (counts.fall ?? 0) < 5 || distinctVectors < 3) {
     throw new Error(`practice diversity gate failed: ${JSON.stringify({ counts, distinctVectors })}`);
   }
-  const result = { schema: "ik.sign-stratified-practice.v1", diversity_gate: { passed: true,
-    direction_counts: counts, distinct_outcome_vectors: distinctVectors }, episodes };
+  const result = { schema: "ik.sign-stratified-practice.v2", diversity_gate: { passed: true,
+    direction_counts: counts, distinct_outcome_vectors: distinctVectors }, selection, episodes };
   fs.writeFileSync(cachePath, `${JSON.stringify(result, null, 2)}\n`);
   return result;
 }
