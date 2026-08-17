@@ -180,8 +180,9 @@ async function predict(context, condition, ledger) {
   const tools = factors.calculator_available ? [inspectTool, calculatorTool, recordTool] : [inspectTool, recordTool];
   const exchanges = [];
   await restartRuntime();
-  if (factors.calculator_available) {
-    for (let round = 0; round < P.max_auxiliary_tool_rounds; round += 1) {
+  if (factors.calculator_available || factors.thinking_enabled) {
+    const rounds = factors.calculator_available ? P.max_auxiliary_tool_rounds : 1;
+    for (let round = 0; round < rounds; round += 1) {
       const completion = await complete(messages, tools, factors, "auto",
         `${condition}_round_${round + 1}`, ledger);
       exchanges.push(completion);
@@ -204,8 +205,12 @@ async function predict(context, condition, ledger) {
       }
     }
   }
-  const completion = await complete(messages, tools, factors,
-    { type: "function", function: { name: recordTool.function.name } }, `${condition}_record`, ledger);
+  // This llama.cpp build accepts required/auto rather than object-form named
+  // tool_choice. Expose only the recorder and disable a second reasoning pass:
+  // the preceding call already supplied the condition's thinking opportunity.
+  const serializationFactors = { ...factors, thinking_enabled: false };
+  const completion = await complete(messages, [recordTool], serializationFactors,
+    "required", `${condition}_record`, ledger);
   exchanges.push(completion);
   const record = completion.message.tool_calls?.find(call => call.function?.name === recordTool.function.name);
   if (!record) throw new Error(`${condition} failed to emit recorder call`);
