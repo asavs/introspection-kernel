@@ -264,14 +264,6 @@ async function actualOutcome(baseline, ablation, candidates, executableRoot = ba
     full_vocabulary_delta: comparison.delta };
 }
 
-function reconstructOldBaseline(index, messages) {
-  const captureRunId = index.capture_run_id;
-  return { label: captureRunId, messages, captureRunId, root: root(captureRunId), index: {
-    forward_pass: index.forward_pass, alignment: index.alignment
-  }, completion: { request: { model: "/opt/runtime/models/Qwen3-8B-Q4_K_M.gguf", temperature: 0,
-    max_tokens: 64, logprobs: true, top_logprobs: 20, chat_template_kwargs: { enable_thinking: false }, messages } } };
-}
-
 async function preparePractice(ledger) {
   const cachePath = path.join(outputDir, "practice.json");
   if (fs.existsSync(cachePath)) return JSON.parse(fs.readFileSync(cachePath, "utf8"));
@@ -283,15 +275,15 @@ async function preparePractice(ledger) {
     const sourceRequest = sourceRequests.find(item => item.summary?.kind === `practice-${index + 1}_baseline`);
     if (!sourceRequest) throw new Error(`missing source request for practice ${index + 1}`);
     const messages = sourceRequest.exact_request.messages;
-    const baseline = reconstructOldBaseline(source.practice_episodes[index].baseline, messages);
+    const baseline = await captureBaseline(`practice-${index + 1}`, messages, ledger);
     const lower = await captureReplay(`practice-${index + 1}-jvp-lower`, baseline, 1 - JVP_EPSILON, ledger);
     const upper = await captureReplay(`practice-${index + 1}-jvp-upper`, baseline, 1 + JVP_EPSILON, ledger);
     const ladder = await buildLadder(baseline, lower, upper);
-    const ablation = { root: root(source.practice_episodes[index].intervention.capture_run_id) };
+    const ablation = await captureReplay(`practice-${index + 1}-scale-zero`, baseline, 0, ledger);
     const outcome = await actualOutcome(baseline, ablation, ladder.candidates, lower.root);
     episodes.push({ practice_index: index, baseline_capture_run_id: baseline.captureRunId,
       lower_capture_run_id: lower.captureRunId, upper_capture_run_id: upper.captureRunId,
-      ablation_capture_run_id: source.practice_episodes[index].intervention.capture_run_id,
+      ablation_capture_run_id: ablation.captureRunId,
       ladder, outcome });
     fs.writeFileSync(path.join(outputDir, `practice-${index + 1}.json`), `${JSON.stringify(episodes.at(-1), null, 2)}\n`);
   }
