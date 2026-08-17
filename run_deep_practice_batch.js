@@ -76,14 +76,18 @@ function root(captureRunId) {
 }
 
 async function trace(traceRoot, command, executableRoot = traceRoot) {
-  const result = await executeGuestShell(`${executableRoot}/trace --root ${traceRoot} ${command}`);
+  const result = await executeGuestShell(`${executableRoot}/trace --root ${traceRoot} ${command}`, {
+    maxOutputBytes: 2 * 1024 * 1024
+  });
   if (result.exit_code !== 0) throw new Error(`trace failed: ${command}\n${result.stderr}`);
   return JSON.parse(result.stdout);
 }
 
 async function existingIndex(captureRunId) {
   const traceRoot = root(captureRunId);
-  const result = await executeGuestShell(`test -f ${traceRoot}/index.json && cat ${traceRoot}/index.json`);
+  const result = await executeGuestShell(`test -f ${traceRoot}/index.json && cat ${traceRoot}/index.json`, {
+    maxOutputBytes: 4 * 1024 * 1024
+  });
   return result.exit_code === 0 && result.stdout.trim() ? JSON.parse(result.stdout) : null;
 }
 
