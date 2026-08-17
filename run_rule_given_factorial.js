@@ -304,7 +304,9 @@ async function integrityGate() {
   return result;
 }
 
-await waitForReady();
+// A health poll cannot boot a stopped WSL guest. Explicitly start the declared
+// service before the integrity gate; every prediction still restarts it again.
+await restartRuntime();
 const gate = await integrityGate();
 if (process.argv.includes("--gate-only")) {
   console.log(JSON.stringify({ run_id: P.run_id, gate_passed: gate.passed, prompt_rows: gate.rows.length }));
@@ -338,4 +340,3 @@ console.log(JSON.stringify({ run_id: P.run_id, completed_this_invocation: comple
   total_prediction_files: fs.readdirSync(predictionDir).filter(name => name.endsWith(".json")).length,
   complete: Boolean(artifact), condition_summaries: artifact?.condition_summaries ?? null,
   confirmatory_contrasts: artifact?.confirmatory_contrasts ?? null }));
-
