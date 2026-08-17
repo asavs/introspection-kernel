@@ -73,9 +73,9 @@ const recordTool = { type: "function", function: { name: "record_directional_pre
       directions_by_candidate_rank: { type: "array", items: { type: "string",
         enum: ["rise", "fall", "stable"] }, minItems: 5, maxItems: 5 },
       predicted_delta_order_largest_to_smallest: { type: "array", items: { type: "integer",
-        minimum: 1, maximum: 5 }, minItems: 5, maxItems: 5 },
+        minimum: 1, maximum: 5 }, minItems: 5, maxItems: 5, uniqueItems: true },
       predicted_post_intervention_order_highest_to_lowest: { type: "array", items: { type: "integer",
-        minimum: 1, maximum: 5 }, minItems: 5, maxItems: 5 },
+        minimum: 1, maximum: 5 }, minItems: 5, maxItems: 5, uniqueItems: true },
       largest_rise_candidate_rank: { type: "integer", minimum: 1, maximum: 5 },
       largest_fall_candidate_rank: { type: "integer", minimum: 1, maximum: 5 }
     }, required: ["directions_by_candidate_rank", "predicted_delta_order_largest_to_smallest",
