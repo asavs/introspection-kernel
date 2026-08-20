@@ -1,0 +1,71 @@
+{
+  "schema": "ik.rule-given-factorial-v5-prediction.v1",
+  "source_context_index": 18,
+  "condition": "rule1_think1_calc0",
+  "evidence_sha256": "b54d05d3e75a563e3b9704e04b1e83cca31edc6f4c45ace74a480d6df7b1f295",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T07:53:19.458Z",
+  "factors": {
+    "rule_given": true,
+    "thinking_enabled": true,
+    "calculator_available": false
+  },
+  "transcript": {
+    "provenance": "verbatim_qwen_preceding_thinking_stage",
+    "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each of the five candidate logits. The directions need to be in candidate-rank order, and I shouldn't mention ranks or magnitudes. The rules are: rise if delta > 0.05, fall if delta < -0.05, otherwise stable. \n\nFirst, I need to understand the provided analysis rule. The local_logit_derivative is d(logit)/d(scale), centered near head scale 1. The intervention changes the scale from 1 to 0. Using a first-order approximation, delta_logit ≈ (0 - 1) * local_logit_derivative = -local_logit_derivative. So, if the derivative is positive, delta_logit is negative, which would mean a fall. If the derivative is negative, delta_logit is positive, leading to a rise. If the magnitude is less than 0.05, it's stable.\n\nNow, looking at each candidate:\n\n1. **Candidate Rank 1**: Token \"ZY\", local_logit_derivative is -1.7905. So delta_logit ≈ -(-1.7905) = 1.7905. That's way above 0.05, so it should rise.\n\n2. **Candidate Rank 2**: Token \"Eff\", derivative is -0.00000238. Delta_logit ≈ -(-0.00000238) = 0.00000238. This is way below 0.05, so stable.\n\n3. **Candidate Rank 3**: Token \"QUEST\", derivative is 1.3662. Delta_logit ≈ -1.3662. That's below -0.05, so it falls.\n\n4. **Candidate Rank 4**: Token \" Z\", derivative is -1.9467. Delta_logit ≈ -(-1.9467) = 1.9467. Above 0.05, so rise.\n\n5. **Candidate Rank 5**: Token \"NI\", derivative is 1.3037. Delta_logit ≈ -1.3037. Below -0.05, so fall.\n\nWait, let me double-check. For each candidate, the delta is -local_derivative. So for a positive derivative, delta is negative (fall), and for a negative derivative, delta is positive (rise). \n\nSo:\n\n- Candidate 1: derivative -1.79 → delta +1.79 → rise\n- Candidate 2: derivative -0.000002 → delta +0.000002 → stable\n- Candidate 3: derivative +1.366 → delta -1.366 → fall\n- Candidate 4: derivative -1.9467 → delta +1.9467 → rise\n- Candidate 5: derivative +1.3037 → delta -1.3037 → fall\n\nSo the directions in order are: rise, stable, fall, rise, fall. But wait, the user wants the directions in candidate-rank order. The candidates are ordered 1 to 5. So the output should be the five directions in that order. Let me make sure I didn't mix up any. Yes, the candidates are in order 1 to 5 as given. So the final answer should list each direction in that order.\n",
+    "content": "[\"rise\", \"stable\", \"fall\", \"rise\", \"fall\"]",
+    "finish_reason": "stop"
+  },
+  "calculator": null,
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "rise",
+      "stable",
+      "fall",
+      "rise",
+      "fall"
+    ]
+  },
+  "invalid_output": null,
+  "exchanges": [
+    {
+      "stage": "thinking",
+      "request_sha256": "19b53a566320b210fed7e772785c653afd598bf464837133c42b96ecd0b9b495",
+      "response_sha256": "d7fce80ffeb33d5fa94679efdec506180847c1068b037233122986d47e0b337e",
+      "message": {
+        "role": "assistant",
+        "content": "[\"rise\", \"stable\", \"fall\", \"rise\", \"fall\"]",
+        "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each of the five candidate logits. The directions need to be in candidate-rank order, and I shouldn't mention ranks or magnitudes. The rules are: rise if delta > 0.05, fall if delta < -0.05, otherwise stable. \n\nFirst, I need to understand the provided analysis rule. The local_logit_derivative is d(logit)/d(scale), centered near head scale 1. The intervention changes the scale from 1 to 0. Using a first-order approximation, delta_logit ≈ (0 - 1) * local_logit_derivative = -local_logit_derivative. So, if the derivative is positive, delta_logit is negative, which would mean a fall. If the derivative is negative, delta_logit is positive, leading to a rise. If the magnitude is less than 0.05, it's stable.\n\nNow, looking at each candidate:\n\n1. **Candidate Rank 1**: Token \"ZY\", local_logit_derivative is -1.7905. So delta_logit ≈ -(-1.7905) = 1.7905. That's way above 0.05, so it should rise.\n\n2. **Candidate Rank 2**: Token \"Eff\", derivative is -0.00000238. Delta_logit ≈ -(-0.00000238) = 0.00000238. This is way below 0.05, so stable.\n\n3. **Candidate Rank 3**: Token \"QUEST\", derivative is 1.3662. Delta_logit ≈ -1.3662. That's below -0.05, so it falls.\n\n4. **Candidate Rank 4**: Token \" Z\", derivative is -1.9467. Delta_logit ≈ -(-1.9467) = 1.9467. Above 0.05, so rise.\n\n5. **Candidate Rank 5**: Token \"NI\", derivative is 1.3037. Delta_logit ≈ -1.3037. Below -0.05, so fall.\n\nWait, let me double-check. For each candidate, the delta is -local_derivative. So for a positive derivative, delta is negative (fall), and for a negative derivative, delta is positive (rise). \n\nSo:\n\n- Candidate 1: derivative -1.79 → delta +1.79 → rise\n- Candidate 2: derivative -0.000002 → delta +0.000002 → stable\n- Candidate 3: derivative +1.366 → delta -1.366 → fall\n- Candidate 4: derivative -1.9467 → delta +1.9467 → rise\n- Candidate 5: derivative +1.3037 → delta -1.3037 → fall\n\nSo the directions in order are: rise, stable, fall, rise, fall. But wait, the user wants the directions in candidate-rank order. The candidates are ordered 1 to 5. So the output should be the five directions in that order. Let me make sure I didn't mix up any. Yes, the candidates are in order 1 to 5 as given. So the final answer should list each direction in that order.\n"
+      },
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 774,
+        "prompt_tokens": 621,
+        "total_tokens": 1395,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "8aa28a7b-827f-425b-89ed-f5020cbb20b5"
+    },
+    {
+      "stage": "recorder",
+      "request_sha256": "f234d091fbce84d499a72e539b861348e23d322eda8b939e7248644d98c65636",
+      "response_sha256": "1c00cdcbf4ad5455de98960142eb8225dd07e4e724f667ed0c90c2c159fa0b82",
+      "message": {
+        "role": "assistant",
+        "content": "{\"directions_by_candidate_rank\": [\"rise\", \"stable\", \"fall\", \"rise\", \"fall\"]}"
+      },
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 23,
+        "prompt_tokens": 1491,
+        "total_tokens": 1514,
+        "prompt_tokens_details": {
+          "cached_tokens": 621
+        }
+      },
+      "ledger_request_id": "eec524ef-bc73-401a-abf7-984b0fde8a2e"
+    }
+  ]
+}

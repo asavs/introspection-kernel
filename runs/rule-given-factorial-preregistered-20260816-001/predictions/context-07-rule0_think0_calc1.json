@@ -1,0 +1,70 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 6,
+  "condition": "rule0_think0_calc1",
+  "evidence_sha256": "4532baccc6bcae9574bf827f2bf3440cf36dff0719bff1700dbdc04ff25fab10",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T05:56:55.971Z",
+  "factors": {
+    "rule_given": false,
+    "thinking_enabled": false,
+    "calculator_available": true
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "rise",
+      "rise",
+      "fall",
+      "fall",
+      "stable"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      1,
+      2,
+      5,
+      3,
+      4
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      2,
+      1,
+      5,
+      4,
+      3
+    ],
+    "largest_rise_candidate_rank": 1,
+    "largest_fall_candidate_rank": 3
+  },
+  "exchanges": [
+    {
+      "request_sha256": "3f18737d4a59f915ff48e7620a389ed8f87c0f513f9b1b51ebd2e4dbcf93435a",
+      "response_sha256": "85731f8f6c569cb23806cfab98d4826d39ea24a7c682915c5a299d710c14eaaf",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"rise\", \"rise\", \"fall\", \"fall\", \"stable\"], \"predicted_delta_order_largest_to_smallest\": [1, 2, 5, 3, 4], \"predicted_post_intervention_order_highest_to_lowest\": [2, 1, 5, 4, 3], \"largest_rise_candidate_rank\": 1, \"largest_fall_candidate_rank\": 3}"
+            },
+            "id": "pmDHmq5SRux3q3yUJfMVC3KQ7xnd48Vt"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1695,
+        "total_tokens": 1807,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "a41c515f-c3f6-470c-b9f4-b7b0952a0559"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

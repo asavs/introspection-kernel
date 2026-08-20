@@ -1,0 +1,69 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 8,
+  "condition": "rule1_think0_calc0",
+  "evidence_sha256": "ff89f64886e63d7d1546fa6e78436d986790977f621f1cb1d5842cfaa694c930",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T05:51:44.624Z",
+  "factors": {
+    "rule_given": true,
+    "thinking_enabled": false,
+    "calculator_available": false
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "fall",
+      "stable",
+      "rise",
+      "rise",
+      "fall"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      3,
+      1,
+      5,
+      4,
+      2
+    ],
+    "largest_rise_candidate_rank": 3,
+    "largest_fall_candidate_rank": 5
+  },
+  "exchanges": [
+    {
+      "request_sha256": "a0eedea9f7f70fcc738110debab9ffa0ba7c0385b3bc34ca1e943cfcfbace02d",
+      "response_sha256": "2659a571654b68e8e3cddec66de94cfd894dff89c2ccb4d4b4524df000871995",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"fall\", \"stable\", \"rise\", \"rise\", \"fall\"], \"predicted_delta_order_largest_to_smallest\": [1, 2, 3, 4, 5], \"predicted_post_intervention_order_highest_to_lowest\": [3, 1, 5, 4, 2], \"largest_rise_candidate_rank\": 3, \"largest_fall_candidate_rank\": 5}"
+            },
+            "id": "Kt5So8pPRgf5XuSeHXTdny0N7lnEEyDE"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1516,
+        "total_tokens": 1628,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "937bd424-8034-4ae4-a1c9-01002110f038"
+    }
+  ],
+  "calculator_calls": 0
+}

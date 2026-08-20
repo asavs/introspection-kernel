@@ -1,0 +1,89 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 4,
+  "condition": "rule1_think1_calc1",
+  "evidence_sha256": "0d3575389b5e81ba83d8ba00e3835b3752c69b0b9a310896a854555e18f32807",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T05:57:25.102Z",
+  "factors": {
+    "rule_given": true,
+    "thinking_enabled": true,
+    "calculator_available": true
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "fall",
+      "stable",
+      "rise",
+      "fall",
+      "rise"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      3,
+      2,
+      5,
+      4,
+      1
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      5,
+      4,
+      3,
+      2,
+      1
+    ],
+    "largest_rise_candidate_rank": 3,
+    "largest_fall_candidate_rank": 4
+  },
+  "exchanges": [
+    {
+      "request_sha256": "687a316a4babaea34b5a900eb1a944e0c7ee8c5fb12c6bde6c3f3ec208a9fdac",
+      "response_sha256": "2ac366a0d74a2eeaa4743448563657f0afe535e6db044022a1ef2be4af05020f",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each held-out candidate logit. The key here is understanding the provided evidence and applying the direction rules correctly.\n\nFirst, I need to look at the intervention details. The intervention targets layer 35 head 25, changing the scale from 1 to 0. The direction epsilon is 0.05, which means any delta logit with an absolute value greater than 0.05 will be considered a rise or fall, otherwise stable.\n\nThe evidence includes the jvp section with five candidates. Each candidate has a baseline logit, a local_logit_derivative, and a stratum. The rule provided states that delta_logit is approximately -local_logit_derivative because the scale change is from 1 to 0. So, delta_logit = (0 - 1) * local_logit_derivative = -local_logit_derivative.\n\nNow, applying the direction rule: if delta_logit > 0.05, it's a rise; if < -0.05, a fall; else stable. Wait, but the rule says \"rise if delta > 0.05; fall if delta < -0.05; otherwise stable\". But delta_logit is -local_logit_derivative. So, let's compute each candidate's delta_logit.\n\nFor candidate 1: local_logit_derivative is -1.2511. So delta_logit = -(-1.2511) = 1.2511. That's greater than 0.05, so it's a rise.\n\nCandidate 2: local_logit_derivative is 0. Delta_logit is 0. So it's stable.\n\nCandidate 3: local_logit_derivative is 1.3302. Delta_logit is -1.3302, which is less than -0.05. So it's a fall.\n\nCandidate 4: local_logit_derivative is -1.2901. Delta_logit is 1.2901, which is a rise.\n\nCandidate 5: local_logit_derivative is 1.3383. Delta_logit is -1.3383, which is a fall.\n\nWait, but the user's supplied analysis rule says that a sufficiently positive derivative predicts a fall. Wait, let me check that again. The analysis rule states: \"delta_logit is approximately -local_logit_derivative. Therefore a sufficiently positive derivative predicts a fall, and a sufficiently negative derivative predicts a rise.\" Oh, right! So if the local_logit_derivative is positive, delta_logit is negative, leading to a fall. If local_logit_derivative is negative, delta_logit is positive, leading to a rise. So the direction depends on the sign of the derivative.\n\nSo let's re-express:\n\nFor each candidate, compute delta_logit = -local_logit_derivative.\n\nThen, check if delta_logit > 0.05 (rise), < -0.05 (fall), else stable.\n\nWait, but delta_logit is -local_logit_derivative. So:\n\nIf local_logit_derivative is positive, delta_logit is negative. So if the derivative is positive, delta_logit is negative. So if the derivative is positive and large enough (so that delta_logit < -0.05), then it's a fall.\n\nSimilarly, if the derivative is negative, delta_logit is positive. So if the derivative is negative and large enough (delta_logit > 0.05), it's a rise.\n\nSo let's compute each candidate:\n\nCandidate 1: local_logit_derivative = -1.2511 → delta_logit = 1.2511 → rise (since >0.05)\n\nCandidate 2: derivative 0 → delta_logit 0 → stable\n\nCandidate 3: derivative 1.3302 → delta_logit -1.3302 → fall (since < -0.05)\n\nCandidate 4: derivative -1.2901 → delta_logit 1.2901 → rise\n\nCandidate 5: derivative 1.3383 → delta_logit -1.3383 → fall\n\nSo the directions_by_candidate_rank would be [rise, stable, fall, rise, fall].\n\nNow, the next part is to determine the predicted_delta_order_largest_to_smallest. This is the order of the candidates based on the magnitude of their delta_logit, from largest to smallest. Let's list the delta_logit values:\n\nCandidate 1: 1.2511\n\nCandidate 2: 0\n\nCandidate 3: -1.3302\n\nCandidate 4: 1.2901\n\nCandidate 5: -"
+      },
+      "finish_reason": "length",
+      "usage": {
+        "completion_tokens": 1024,
+        "prompt_tokens": 1779,
+        "total_tokens": 2803,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "de778e11-caa8-4495-989a-41019fdb4829"
+    },
+    {
+      "request_sha256": "b43e07d9620bebbefe4dfebaa9aa7bfcb9806e6bc3bd6dcddfdc4e35aa76e36e",
+      "response_sha256": "2686cc7b306d49f0503b6a083aa438b9799da81b0ee4275882be54ff0f0ae3b1",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"fall\", \"stable\", \"rise\", \"fall\", \"rise\"], \"predicted_delta_order_largest_to_smallest\": [3, 2, 5, 4, 1], \"predicted_post_intervention_order_highest_to_lowest\": [5, 4, 3, 2, 1], \"largest_rise_candidate_rank\": 3, \"largest_fall_candidate_rank\": 4}"
+            },
+            "id": "Fyd9Ww9gokrm7pgK6LSfPseRB37RyafH"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1512,
+        "total_tokens": 1624,
+        "prompt_tokens_details": {
+          "cached_tokens": 55
+        }
+      },
+      "ledger_request_id": "c7edf242-60ea-4da9-9234-b12ef1b91d71"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

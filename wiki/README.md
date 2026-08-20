@@ -1,6 +1,6 @@
 # Computational Interoception Research Wiki
 
-This wiki develops the Introspection Kernel from a process-identification demo
+This wiki develops roboproprio from a process-identification demo
 into a research program about **computational interoception**: whether a local
 language model can discover, predict, and regulate physical and computational
 changes caused by its own inference.
@@ -22,8 +22,8 @@ The hidden observer records request, process, thread, slot, memory, and GPU
 events from outside the model's authority.
 
 The current sprint synthesis is in the
-[report](../REPORT.md), with a compact
-[one-pager](../INTROSPECTION_KERNEL_ONE_PAGER.md). The initial controlled result
+[report](../docs/REPORT.md), with a compact
+[one-pager](../docs/ONE_PAGER.md). The initial controlled result
 is runtime-focused internal attention without correct live-instance attribution.
 
 ## Working position

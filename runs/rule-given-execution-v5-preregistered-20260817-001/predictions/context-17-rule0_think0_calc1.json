@@ -1,0 +1,106 @@
+{
+  "schema": "ik.rule-given-factorial-v5-prediction.v1",
+  "source_context_index": 16,
+  "condition": "rule0_think0_calc1",
+  "evidence_sha256": "3d961fd04af153baabe0bbaa58efa8d8b9ae892ab58eb34012111c79f0a63997",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T08:03:39.689Z",
+  "factors": {
+    "rule_given": false,
+    "thinking_enabled": false,
+    "calculator_available": true
+  },
+  "transcript": null,
+  "calculator": {
+    "valid": true,
+    "call": {
+      "type": "function",
+      "function": {
+        "name": "calculate_vector",
+        "arguments": "{\"operation\": \"classify_threshold\", \"values\": [1.0758018493652344, 5.535271644592285, -0.8699337244033813, 0.9428352117538452, 11.70616340637207], \"threshold\": 0.05}"
+      },
+      "id": "EowKe6Hy1N5TlJvRRBD2dpIC4jx9PMny"
+    },
+    "args": {
+      "operation": "classify_threshold",
+      "values": [
+        1.0758018493652344,
+        5.535271644592285,
+        -0.8699337244033813,
+        0.9428352117538452,
+        11.70616340637207
+      ],
+      "threshold": 0.05
+    },
+    "result": {
+      "operation": "classify_threshold",
+      "directions": [
+        "rise",
+        "rise",
+        "fall",
+        "rise",
+        "rise"
+      ]
+    }
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "rise",
+      "rise",
+      "fall",
+      "rise",
+      "rise"
+    ]
+  },
+  "invalid_output": null,
+  "exchanges": [
+    {
+      "stage": "calculator",
+      "request_sha256": "ba77efb40fc1daa083318d1ad9ac0d6e003542e6d833e4b76864e87e854e2402",
+      "response_sha256": "fd5a8f7cdcfaeba5b2f1ea29840b6e16ac5e0b57c344eea7bef840363d99d649",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "calculate_vector",
+              "arguments": "{\"operation\": \"classify_threshold\", \"values\": [1.0758018493652344, 5.535271644592285, -0.8699337244033813, 0.9428352117538452, 11.70616340637207], \"threshold\": 0.05}"
+            },
+            "id": "EowKe6Hy1N5TlJvRRBD2dpIC4jx9PMny"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 131,
+        "prompt_tokens": 766,
+        "total_tokens": 897,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "b68d0ef4-5421-40da-8574-3e1aa181a3d0"
+    },
+    {
+      "stage": "recorder",
+      "request_sha256": "98c620483673b15415ce2c301e1b1515a1ffebf957fbb5f1282447da2f202038",
+      "response_sha256": "cfce0ba399dcb0307172ebc301f43971667be3719105364ef345b6f9639ec5a2",
+      "message": {
+        "role": "assistant",
+        "content": "{\"directions_by_candidate_rank\": [\"rise\", \"rise\", \"fall\", \"rise\", \"rise\"]}"
+      },
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 23,
+        "prompt_tokens": 617,
+        "total_tokens": 640,
+        "prompt_tokens_details": {
+          "cached_tokens": 6
+        }
+      },
+      "ledger_request_id": "eef337b2-49aa-4e0d-bd35-171a42d12742"
+    }
+  ]
+}

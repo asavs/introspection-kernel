@@ -1,0 +1,71 @@
+{
+  "schema": "ik.rule-given-factorial-v5-prediction.v1",
+  "source_context_index": 13,
+  "condition": "rule0_think1_calc0",
+  "evidence_sha256": "7153b3dfc90e5af6504b97b94993a87a35ff9227e7079c7f33477125efbd08f5",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T08:00:47.686Z",
+  "factors": {
+    "rule_given": false,
+    "thinking_enabled": true,
+    "calculator_available": false
+  },
+  "transcript": {
+    "provenance": "verbatim_qwen_preceding_thinking_stage",
+    "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each of the five candidate logits. The direction rules are based on the delta value: if it's greater than 0.05, it's a rise; if less than -0.05, it's a fall; otherwise, stable. \n\nFirst, I need to understand what each candidate's data represents. Each candidate has a baseline_logit, a local_logit_derivative, and a stratum. The intervention is on layer 35 head 25, reducing the scale from 1 to 0. The direction epsilon is 0.05, so that's the threshold for determining rise or fall.\n\nFor each candidate, the delta would be calculated by multiplying the local_logit_derivative by the change in scale. Wait, the scale is going from 1 to 0, so the change is -1. Therefore, delta = local_logit_derivative * (-1). Let me check that. If the scale is reduced by 1, then the effect on the logit would be the derivative multiplied by the scale change. So yes, delta = local_logit_derivative * (requested_scale - start_scale) = local_logit_derivative * (-1).\n\nLet me compute each delta:\n\n1. Candidate 1: local_logit_derivative is -1.3461. Delta = -1.3461 * (-1) = 1.3461. This is greater than 0.05, so direction is rise.\n\n2. Candidate 2: local_logit_derivative is 1.0922. Delta = 1.0922 * (-1) = -1.0922. This is less than -0.05, so direction is fall.\n\n3. Candidate 3: local_logit_derivative is -0.000004768. Delta = -0.000004768 * (-1) = 0.000004768. This is way less than 0.05, so direction is stable.\n\n4. Candidate 4: local_logit_derivative is -1.4137. Delta = -1.4137 * (-1) = 1.4137. Greater than 0.05, so rise.\n\n5. Candidate 5: local_logit_derivative is 1.0886. Delta = 1.0886 * (-1) = -1.0886. Less than -0.05, so fall.\n\nWait, but the stratum might affect this? The stratum is given as negative_2, positive_1, near_zero, etc. But the problem statement doesn't mention that stratum affects the direction. The direction rule is purely based on the delta. So I think the stratum is just additional info but not directly affecting the calculation here.\n\nSo the directions would be:\n\n1. Rise\n2. Fall\n3. Stable\n4. Rise\n5. Fall\n\nNow, the output needs to be exactly five directions in candidate-rank order. The candidate ranks are 1 to 5. So the order is 1,2,3,4,5. So the directions in order are:\n\n1. Rise\n2. Fall\n3. Stable\n4. Rise\n5. Fall\n\nI need to make sure that I didn't mix up any calculations. Let me double-check each delta:\n\nCandidate 1: -1.3461 * -1 = 1.3461 → rise\nCandidate 2: 1.0922 * -1 = -1.0922 → fall\nCandidate 3: -0.000004768 * -1 = 0.000004768 → stable\nCandidate 4: -1.4137 * -1 = 1.4137 → rise\nCandidate 5: 1.0886 * -1 = -1.0886 → fall\n\nYes, that's correct. So the final answer should list these directions in order.\n",
+    "content": "{\"output\": [\"rise\", \"fall\", \"stable\", \"rise\", \"fall\"]}",
+    "finish_reason": "stop"
+  },
+  "calculator": null,
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "rise",
+      "fall",
+      "stable",
+      "rise",
+      "fall"
+    ]
+  },
+  "invalid_output": null,
+  "exchanges": [
+    {
+      "stage": "thinking",
+      "request_sha256": "d3eb3dd03a7c9e951b9dcd7c3573315e14c395992441d0718d7df8965ea133fb",
+      "response_sha256": "45023710d7ef3436bb1c838a04cf270e060eef17daf8e30bd15ca1fc4e11e161",
+      "message": {
+        "role": "assistant",
+        "content": "{\"output\": [\"rise\", \"fall\", \"stable\", \"rise\", \"fall\"]}",
+        "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each of the five candidate logits. The direction rules are based on the delta value: if it's greater than 0.05, it's a rise; if less than -0.05, it's a fall; otherwise, stable. \n\nFirst, I need to understand what each candidate's data represents. Each candidate has a baseline_logit, a local_logit_derivative, and a stratum. The intervention is on layer 35 head 25, reducing the scale from 1 to 0. The direction epsilon is 0.05, so that's the threshold for determining rise or fall.\n\nFor each candidate, the delta would be calculated by multiplying the local_logit_derivative by the change in scale. Wait, the scale is going from 1 to 0, so the change is -1. Therefore, delta = local_logit_derivative * (-1). Let me check that. If the scale is reduced by 1, then the effect on the logit would be the derivative multiplied by the scale change. So yes, delta = local_logit_derivative * (requested_scale - start_scale) = local_logit_derivative * (-1).\n\nLet me compute each delta:\n\n1. Candidate 1: local_logit_derivative is -1.3461. Delta = -1.3461 * (-1) = 1.3461. This is greater than 0.05, so direction is rise.\n\n2. Candidate 2: local_logit_derivative is 1.0922. Delta = 1.0922 * (-1) = -1.0922. This is less than -0.05, so direction is fall.\n\n3. Candidate 3: local_logit_derivative is -0.000004768. Delta = -0.000004768 * (-1) = 0.000004768. This is way less than 0.05, so direction is stable.\n\n4. Candidate 4: local_logit_derivative is -1.4137. Delta = -1.4137 * (-1) = 1.4137. Greater than 0.05, so rise.\n\n5. Candidate 5: local_logit_derivative is 1.0886. Delta = 1.0886 * (-1) = -1.0886. Less than -0.05, so fall.\n\nWait, but the stratum might affect this? The stratum is given as negative_2, positive_1, near_zero, etc. But the problem statement doesn't mention that stratum affects the direction. The direction rule is purely based on the delta. So I think the stratum is just additional info but not directly affecting the calculation here.\n\nSo the directions would be:\n\n1. Rise\n2. Fall\n3. Stable\n4. Rise\n5. Fall\n\nNow, the output needs to be exactly five directions in candidate-rank order. The candidate ranks are 1 to 5. So the order is 1,2,3,4,5. So the directions in order are:\n\n1. Rise\n2. Fall\n3. Stable\n4. Rise\n5. Fall\n\nI need to make sure that I didn't mix up any calculations. Let me double-check each delta:\n\nCandidate 1: -1.3461 * -1 = 1.3461 → rise\nCandidate 2: 1.0922 * -1 = -1.0922 → fall\nCandidate 3: -0.000004768 * -1 = 0.000004768 → stable\nCandidate 4: -1.4137 * -1 = 1.4137 → rise\nCandidate 5: 1.0886 * -1 = -1.0886 → fall\n\nYes, that's correct. So the final answer should list these directions in order.\n"
+      },
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 919,
+        "prompt_tokens": 530,
+        "total_tokens": 1449,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "de8031b2-51d5-4a85-a8ce-fb6e1fdab339"
+    },
+    {
+      "stage": "recorder",
+      "request_sha256": "817ee7c746e90d265a764b82e12291f27f1a33063c0b61722a6d5bbd17a3a1c7",
+      "response_sha256": "917e3c391ac57f710b049182a040ed09748d85749c0b84accfc0efc6c159d6fb",
+      "message": {
+        "role": "assistant",
+        "content": "{\"directions_by_candidate_rank\": [\"rise\", \"fall\", \"stable\", \"rise\", \"fall\"]}"
+      },
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 23,
+        "prompt_tokens": 1554,
+        "total_tokens": 1577,
+        "prompt_tokens_details": {
+          "cached_tokens": 530
+        }
+      },
+      "ledger_request_id": "85a3322a-738f-41c9-bc01-cad547121095"
+    }
+  ]
+}

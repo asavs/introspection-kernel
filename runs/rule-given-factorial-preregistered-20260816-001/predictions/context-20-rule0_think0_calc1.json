@@ -1,0 +1,70 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 19,
+  "condition": "rule0_think0_calc1",
+  "evidence_sha256": "64fd1f45a977359efbc5abdfb1a3bec34b8003e4b907f69afe4b833af3467cb9",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T06:14:32.874Z",
+  "factors": {
+    "rule_given": false,
+    "thinking_enabled": false,
+    "calculator_available": true
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "fall",
+      "fall",
+      "rise",
+      "rise",
+      "stable"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      3,
+      4,
+      1,
+      2,
+      5
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      4,
+      3,
+      2,
+      5,
+      1
+    ],
+    "largest_rise_candidate_rank": 3,
+    "largest_fall_candidate_rank": 1
+  },
+  "exchanges": [
+    {
+      "request_sha256": "e34e806135b9289de31129e1b2bda101d5e5fe097e088a99950b41e485183c60",
+      "response_sha256": "a28d54a8bcb1f704834a150735a74152d9bcda6d4bcfd47137768ed7b4aa5141",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"fall\", \"fall\", \"rise\", \"rise\", \"stable\"], \"predicted_delta_order_largest_to_smallest\": [3, 4, 1, 2, 5], \"predicted_post_intervention_order_highest_to_lowest\": [4, 3, 2, 5, 1], \"largest_rise_candidate_rank\": 3, \"largest_fall_candidate_rank\": 1}"
+            },
+            "id": "zpWhXdnUsucfCbbSCz1gQQCns33XVKUA"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1692,
+        "total_tokens": 1804,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "d22df55c-a284-4a09-a03b-4eb754ef05fb"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

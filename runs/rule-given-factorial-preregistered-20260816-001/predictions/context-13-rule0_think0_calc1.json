@@ -1,0 +1,70 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 12,
+  "condition": "rule0_think0_calc1",
+  "evidence_sha256": "88bea8c503ba019f74d764af38d196b0c9cf00cf1d10ba09ae271787b8269957",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T06:14:40.154Z",
+  "factors": {
+    "rule_given": false,
+    "thinking_enabled": false,
+    "calculator_available": true
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "rise",
+      "rise",
+      "rise",
+      "fall",
+      "fall"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "largest_rise_candidate_rank": 3,
+    "largest_fall_candidate_rank": 4
+  },
+  "exchanges": [
+    {
+      "request_sha256": "9c7ad27eb8e75c5a2fda78f3861fbb6bfbe28223661d5f84477531478005536c",
+      "response_sha256": "27b934d5e54a0045f7b7914f051f1b8469fc1135721ee5738b694048611ad132",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"rise\", \"rise\", \"rise\", \"fall\", \"fall\"], \"predicted_delta_order_largest_to_smallest\": [1, 2, 3, 4, 5], \"predicted_post_intervention_order_highest_to_lowest\": [1, 2, 3, 4, 5], \"largest_rise_candidate_rank\": 3, \"largest_fall_candidate_rank\": 4}"
+            },
+            "id": "fu7Rkf6CNDeu2U6ABayR520SKeYhcjVH"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1696,
+        "total_tokens": 1808,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "d231ba46-d6bb-4004-8fb2-cc9b1951df21"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

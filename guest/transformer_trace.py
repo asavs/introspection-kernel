@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Neutral, read-only workbench for sealed Introspection Kernel tensor traces."""
+"""Neutral, read-only workbench for sealed roboproprio tensor traces."""
 
 import argparse
 import json

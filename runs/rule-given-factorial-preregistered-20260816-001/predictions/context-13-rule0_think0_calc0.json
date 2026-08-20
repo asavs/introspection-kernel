@@ -1,0 +1,70 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 12,
+  "condition": "rule0_think0_calc0",
+  "evidence_sha256": "88bea8c503ba019f74d764af38d196b0c9cf00cf1d10ba09ae271787b8269957",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T06:14:47.267Z",
+  "factors": {
+    "rule_given": false,
+    "thinking_enabled": false,
+    "calculator_available": false
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "rise",
+      "rise",
+      "rise",
+      "fall",
+      "fall"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      3,
+      2,
+      1,
+      5,
+      4
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      2,
+      1,
+      5,
+      4,
+      3
+    ],
+    "largest_rise_candidate_rank": 1,
+    "largest_fall_candidate_rank": 5
+  },
+  "exchanges": [
+    {
+      "request_sha256": "97becc8543e654ae6d29dab7afa4b4c3f6ca041592cf1858a5221ede12ad12be",
+      "response_sha256": "952592e73907ba5f5678dfedafa56c1152339c29f1d70eb2bdc46340677bc3f2",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"rise\", \"rise\", \"rise\", \"fall\", \"fall\"], \"predicted_delta_order_largest_to_smallest\": [3, 2, 1, 5, 4], \"predicted_post_intervention_order_highest_to_lowest\": [2, 1, 5, 4, 3], \"largest_rise_candidate_rank\": 1, \"largest_fall_candidate_rank\": 5}"
+            },
+            "id": "5O3sabbgXZ18t4HkXBqbZ6Zzn9YLACmZ"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1425,
+        "total_tokens": 1537,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "9e0f6824-44ec-46b7-b4e7-8b7b7a62fa66"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

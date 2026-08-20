@@ -1,0 +1,70 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 19,
+  "condition": "rule1_think0_calc1",
+  "evidence_sha256": "64fd1f45a977359efbc5abdfb1a3bec34b8003e4b907f69afe4b833af3467cb9",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T06:13:25.189Z",
+  "factors": {
+    "rule_given": true,
+    "thinking_enabled": false,
+    "calculator_available": true
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "fall",
+      "fall",
+      "rise",
+      "rise",
+      "stable"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      3,
+      4,
+      1,
+      2,
+      5
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      3,
+      4,
+      1,
+      2,
+      5
+    ],
+    "largest_rise_candidate_rank": 3,
+    "largest_fall_candidate_rank": 1
+  },
+  "exchanges": [
+    {
+      "request_sha256": "9eb768969ce53188e892acfffc8dcb081514db11280f0a51a485fcdd9efc532a",
+      "response_sha256": "4a69f745376f39a52b59be178dbd4bb0485b3249fb0d63b1fc1d73d6aa576559",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"fall\", \"fall\", \"rise\", \"rise\", \"stable\"], \"predicted_delta_order_largest_to_smallest\": [3, 4, 1, 2, 5], \"predicted_post_intervention_order_highest_to_lowest\": [3, 4, 1, 2, 5], \"largest_rise_candidate_rank\": 3, \"largest_fall_candidate_rank\": 1}"
+            },
+            "id": "N24XMXyDyk58KzPEezk9nkvBgsHnVeSa"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1788,
+        "total_tokens": 1900,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "265f9478-476f-45bd-8ffc-ab3c26151770"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

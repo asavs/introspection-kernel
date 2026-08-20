@@ -1,0 +1,89 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 6,
+  "condition": "rule1_think1_calc1",
+  "evidence_sha256": "4532baccc6bcae9574bf827f2bf3440cf36dff0719bff1700dbdc04ff25fab10",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T05:55:29.646Z",
+  "factors": {
+    "rule_given": true,
+    "thinking_enabled": true,
+    "calculator_available": true
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "fall",
+      "fall",
+      "rise",
+      "rise",
+      "stable"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      3,
+      2,
+      4,
+      1,
+      5
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      2,
+      1,
+      4,
+      3,
+      5
+    ],
+    "largest_rise_candidate_rank": 3,
+    "largest_fall_candidate_rank": 1
+  },
+  "exchanges": [
+    {
+      "request_sha256": "b95391c2d8f027e348a9484f58d3fbd78db45ffe2ec2e774affddef135d35324",
+      "response_sha256": "d78e83ccd1d553af88382617a1aae6929265dd3b122c4474d0a568d3a1bbf071",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each held-out candidate logit. The key here is understanding the provided evidence and applying the direction rules correctly.\n\nFirst, I need to look at the intervention details. The intervention targets layer 35 head 25, changing the scale from 1 to 0. The direction epsilon is 0.05, which means any delta logit with an absolute value greater than 0.05 will be considered a rise or fall, otherwise stable.\n\nThe evidence includes the jvp section with five candidates. Each candidate has a baseline logit, local_logit_derivative, and stratum. The formula given is delta_logit ≈ -local_logit_derivative because the scale change is from 1 to 0. So, delta_logit is (0 - 1) * derivative = -derivative.\n\nNow, applying the direction rule: if delta_logit > 0.05, it's a rise; if < -0.05, a fall; else stable. But wait, delta_logit is -derivative. So, for each candidate, calculate -derivative and check against the epsilon.\n\nLet's go through each candidate:\n\n1. Candidate 1: derivative is 1.1498. Delta_logit = -1.1498. This is less than -0.05, so it's a fall.\n2. Candidate 2: derivative 1.1723. Delta_logit = -1.1723. Also a fall.\n3. Candidate 3: derivative -1.6503. Delta_logit = 1.6503. This is greater than 0.05, so a rise.\n4. Candidate 4: derivative -1.6452. Delta_logit = 1.6452. Rise.\n5. Candidate 5: derivative 0. Delta_logit = 0. Stable.\n\nNext, I need to determine the predicted delta order from largest to smallest. The delta_logit values are:\n\n- Candidate 3: 1.6503\n- Candidate 4: 1.6452\n- Candidate 1: -1.1498\n- Candidate 2: -1.1723\n- Candidate 5: 0\n\nWait, Candidate 5's delta is 0, which is larger than the negative values. So the order from largest to smallest would be Candidate 3 (1.6503), Candidate 4 (1.6452), Candidate 5 (0), Candidate 1 (-1.1498), Candidate 2 (-1.1723). But wait, Candidate 2's delta is -1.1723, which is smaller than Candidate 1's -1.1498. So the order is 3, 4, 5, 1, 2.\n\nThen, the predicted post-intervention order highest to lowest. Since the delta_logit is the change, the highest post-intervention logit would be baseline + delta. But the baseline logit for each candidate is given. Wait, the problem says \"scale-zero-minus-baseline\", so maybe it's the delta (logit at scale 0 minus baseline at scale 1). So the actual post-intervention logit is baseline_logit + delta_logit. But the order here would be based on the delta_logit values. Wait, no. The post-intervention order is the logit values after the intervention. Since the intervention changes the scale, the logit is baseline_logit + delta_logit. But the delta_logit is calculated as -derivative. So for each candidate, their post-intervention logit is baseline_logit - derivative.\n\nBut the user is asking for the order of the post-intervention logit values from highest to lowest. So we need to calculate baseline_logit - derivative for each candidate and sort them.\n\nLet's compute that:\n\n1. Candidate 1: baseline 5.2538 - 1.1498 = 4.104\n2. Candidate 2: 1.8655 - 1.1723 = 0.6932\n3. Candidate 3: 1.5998 - (-1.6503) = 1.5998 + 1.6503 = 3.2501\n4. Candidate 4: 2.4154 - (-1.6452) = 2.4154 + 1.6452 = 4.0606\n5. Candidate 5: 4.239"
+      },
+      "finish_reason": "length",
+      "usage": {
+        "completion_tokens": 1024,
+        "prompt_tokens": 1787,
+        "total_tokens": 2811,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "fb820990-7e03-412e-9dbf-4d31b8738442"
+    },
+    {
+      "request_sha256": "f41e49a7538655a67045ea93a489f5f926451354b8828b113b1f65c3f3d4d399",
+      "response_sha256": "2af214e45bf7969abb5e4a19e29b1b2f829a2e220d331e25ef47ab61c218968b",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"fall\", \"fall\", \"rise\", \"rise\", \"stable\"], \"predicted_delta_order_largest_to_smallest\": [3, 2, 4, 1, 5], \"predicted_post_intervention_order_highest_to_lowest\": [2, 1, 4, 3, 5], \"largest_rise_candidate_rank\": 3, \"largest_fall_candidate_rank\": 1}"
+            },
+            "id": "9QcgAItuaocAHFXB8ADi0KUawxSjrj23"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1520,
+        "total_tokens": 1632,
+        "prompt_tokens_details": {
+          "cached_tokens": 55
+        }
+      },
+      "ledger_request_id": "aeed35de-7fcf-4dfe-aa7f-69196df447c1"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

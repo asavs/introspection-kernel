@@ -1,0 +1,89 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 17,
+  "condition": "rule0_think1_calc1",
+  "evidence_sha256": "80252272d40ead9f610941eb071f8cf14f1aef2e8f8f6161b8c8c28943c980e0",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T06:17:29.994Z",
+  "factors": {
+    "rule_given": false,
+    "thinking_enabled": true,
+    "calculator_available": true
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "rise",
+      "rise",
+      "fall",
+      "stable",
+      "rise"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      5,
+      4,
+      3,
+      2,
+      1
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      5,
+      4,
+      3,
+      2,
+      1
+    ],
+    "largest_rise_candidate_rank": 5,
+    "largest_fall_candidate_rank": 3
+  },
+  "exchanges": [
+    {
+      "request_sha256": "71b47be36caea090357b19bee0706f700dc18148a7af14f0240326f110c53194",
+      "response_sha256": "f1498b60d02872cd87a528e40bb32d8b217559bc97f67465cf9769cf289b97f2",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each held-out candidate logit. The tools provided include the 'record_directional_prediction' function, which I need to use once I have the necessary data.\n\nFirst, I need to understand the data provided in the 'evidence' section. The intervention targets \"layer 35 head 25\" with a start scale of 1 and a requested scale of 0. The direction epsilon is 0.05, meaning any delta above 0.05 is a rise, below -0.05 is a fall, and otherwise stable.\n\nLooking at the 'jvp' section, there are five candidates with their baseline logits and local logit derivatives. The 'direction_rule' specifies how to determine rise, fall, or stable based on the delta. The delta here would be the local logit derivative, right? Because the intervention is changing the scale from 1 to 0, so the delta is the change in the logit due to this intervention.\n\nWait, the 'direction_rule' says rise if delta > 0.05, fall if delta < -0.05. So for each candidate, I need to calculate the delta (which is the local logit derivative) and compare it to the epsilon.\n\nLet's go through each candidate:\n\n1. Candidate_rank 1: baseline_logit -3.7523, local_logit_derivative -1.3458. Delta is -1.3458, which is less than -0.05. So direction is 'fall'.\n2. Candidate_rank 2: baseline_logit -0.8099, local_logit_derivative -1.4528. Delta is -1.4528, also less than -0.05. 'Fall'.\n3. Candidate_rank 3: baseline_logit -1.2556, local_logit_derivative 0.906. Delta is 0.906, which is greater than 0.05. 'Rise'.\n4. Candidate_rank 4: baseline_logit -3.5091, local_logit_derivative 0. Delta is 0. So stable.\n5. Candidate_rank 5: baseline_logit 1.5183, local_logit_derivative 0.9834. Delta is 0.9834, which is a rise.\n\nSo the directions_by_candidate_rank would be [\"fall\", \"fall\", \"rise\", \"stable\", \"rise\"].\n\nNext, the predicted_delta_order_largest_to_smallest. The deltas are -1.3458, -1.4528, 0.906, 0, 0.9834. Wait, the actual delta values for each candidate are their local_logit_derivative. So the deltas are:\n\nCandidate 1: -1.3458\nCandidate 2: -1.4528\nCandidate 3: 0.906\nCandidate 4: 0\nCandidate 5: 0.9834\n\nSo the deltas in order from largest to smallest would be 0.9834 (candidate 5), 0.906 (candidate 3), 0 (candidate 4), -1.3458 (candidate 1), -1.4528 (candidate 2). So the predicted_delta_order_largest_to_smallest would be [5, 3, 4, 1, 2].\n\nThen, the predicted_post_intervention_order_highest_to_lowest. This is the order of the baseline logits after the intervention. Wait, no. The post-intervention order would be based on the new logits, which are baseline_logit + delta? Or is it the local_logit_derivative? Wait, the intervention changes the scale, so the actual logit change would be the delta (local_logit_derivative) multiplied by the scale change. Wait, the start_scale is 1, and the requested_scale is 0. So the delta is the change from scale 1 to 0. But the local_logit_derivative is the derivative with respect to the scale. So the actual change would be the derivative multiplied by the scale difference. Wait, the intervention is moving from scale 1 to 0, so the delta is (0 - 1) * local_logit_derivative? Or is the local_logit_derivative already the delta?\n\nWait, the 'local_logit_derivative' is the derivative of the logit with respect to the scale. So if the scale changes from 1 to 0, the delta is the derivative multiplied by the change in scale. The change in scale is -1 (from 1 to 0). So the actual delta would be"
+      },
+      "finish_reason": "length",
+      "usage": {
+        "completion_tokens": 1024,
+        "prompt_tokens": 1695,
+        "total_tokens": 2719,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "9602ff62-3018-4814-879d-cbc9be0349ba"
+    },
+    {
+      "request_sha256": "b158cb245f26462fa83c91106bc34008a27c07ec532860c858fb0f616d36df8e",
+      "response_sha256": "2559cb2cb7e3d5f3f5c2f71045aa67e89aa91f90dd980d6754c07cd7d8df78ea",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"rise\", \"rise\", \"fall\", \"stable\", \"rise\"], \"predicted_delta_order_largest_to_smallest\": [5, 4, 3, 2, 1], \"predicted_post_intervention_order_highest_to_lowest\": [5, 4, 3, 2, 1], \"largest_rise_candidate_rank\": 5, \"largest_fall_candidate_rank\": 3}"
+            },
+            "id": "zAaqNRabblhwdUXttRY3fZva7ieBlXbX"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1428,
+        "total_tokens": 1540,
+        "prompt_tokens_details": {
+          "cached_tokens": 55
+        }
+      },
+      "ledger_request_id": "1c9af8ae-b658-412f-8a30-08351e931dbd"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

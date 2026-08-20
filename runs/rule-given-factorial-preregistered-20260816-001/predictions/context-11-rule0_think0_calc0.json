@@ -1,0 +1,70 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 10,
+  "condition": "rule0_think0_calc0",
+  "evidence_sha256": "6ddb2de1822e7dafeb9030b1b6847db207db47fe2ae6af7caa01f69cd5426c5b",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T06:25:04.038Z",
+  "factors": {
+    "rule_given": false,
+    "thinking_enabled": false,
+    "calculator_available": false
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "rise",
+      "stable",
+      "fall",
+      "fall",
+      "rise"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      5,
+      4,
+      3,
+      2,
+      1
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      3,
+      5,
+      1,
+      2,
+      4
+    ],
+    "largest_rise_candidate_rank": 5,
+    "largest_fall_candidate_rank": 3
+  },
+  "exchanges": [
+    {
+      "request_sha256": "3d86ce973918a55b92649b9b5996474662c9ef565cb826eaf4bef83a87cb9078",
+      "response_sha256": "8caad9eca271b3adddce959f18af0a6972b44d4c5f31e0555ecc0480944a00f4",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"rise\", \"stable\", \"fall\", \"fall\", \"rise\"], \"predicted_delta_order_largest_to_smallest\": [5, 4, 3, 2, 1], \"predicted_post_intervention_order_highest_to_lowest\": [3, 5, 1, 2, 4], \"largest_rise_candidate_rank\": 5, \"largest_fall_candidate_rank\": 3}"
+            },
+            "id": "QRU7oDvtnYV6mQrcRyx0IhHOExPh9Bd5"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1423,
+        "total_tokens": 1535,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "b2ed5bf7-ce10-4034-ae93-bfbdcf902e17"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

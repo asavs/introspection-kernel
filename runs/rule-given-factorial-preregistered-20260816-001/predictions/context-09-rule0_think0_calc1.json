@@ -1,0 +1,69 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 8,
+  "condition": "rule0_think0_calc1",
+  "evidence_sha256": "ff89f64886e63d7d1546fa6e78436d986790977f621f1cb1d5842cfaa694c930",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T05:47:00.479Z",
+  "factors": {
+    "rule_given": false,
+    "thinking_enabled": false,
+    "calculator_available": true
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "rise",
+      "stable",
+      "fall",
+      "rise",
+      "fall"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      3,
+      5,
+      1,
+      4,
+      2
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      3,
+      5,
+      1,
+      4,
+      2
+    ],
+    "largest_rise_candidate_rank": 3,
+    "largest_fall_candidate_rank": 5
+  },
+  "exchanges": [
+    {
+      "request_sha256": "841d782a9041c735e95a79a39f32b0695df28344ea698d27a70af7816c88e91d",
+      "response_sha256": "8eb7e165112d2e8fea9538834bc2194d4102f98c7d0883b718e09504bff3449c",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"rise\", \"stable\", \"fall\", \"rise\", \"fall\"], \"predicted_delta_order_largest_to_smallest\": [3, 5, 1, 4, 2], \"predicted_post_intervention_order_highest_to_lowest\": [3, 5, 1, 4, 2], \"largest_rise_candidate_rank\": 3, \"largest_fall_candidate_rank\": 5}"
+            },
+            "id": "bFUO9MziIFpcvMZHQyPoDam1BSFyaPR7"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1691,
+        "total_tokens": 1803,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "5fd34531-104f-471c-a336-9c8ff540b212"
+    }
+  ],
+  "calculator_calls": 0
+}

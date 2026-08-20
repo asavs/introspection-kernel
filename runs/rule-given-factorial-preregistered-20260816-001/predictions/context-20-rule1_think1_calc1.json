@@ -1,0 +1,89 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 19,
+  "condition": "rule1_think1_calc1",
+  "evidence_sha256": "64fd1f45a977359efbc5abdfb1a3bec34b8003e4b907f69afe4b833af3467cb9",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T06:13:55.329Z",
+  "factors": {
+    "rule_given": true,
+    "thinking_enabled": true,
+    "calculator_available": true
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "fall",
+      "fall",
+      "rise",
+      "rise",
+      "stable"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      3,
+      1,
+      2,
+      4,
+      5
+    ],
+    "largest_rise_candidate_rank": 3,
+    "largest_fall_candidate_rank": 1
+  },
+  "exchanges": [
+    {
+      "request_sha256": "88311bceb32ca99cc7bef8dd649deef589ba8fdee34a4591ab76c92c51b038eb",
+      "response_sha256": "98847994c5288d9bc09a23720b842b429b869d1e4c8312fe8e3bf2d05d3ce864",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each held-out candidate logit. The key here is to use the provided evidence and the direction rules given.\n\nFirst, I need to understand the data. The intervention targets layer 35 head 25, changing the scale from 1 to 0. The direction rule says that if the delta is greater than 0.05, it's a rise; if less than -0.05, it's a fall; otherwise, stable. But the supplied analysis rule complicates things. It mentions that the delta_logit is approximately -local_logit_derivative. So, a positive derivative leads to a fall, and a negative derivative leads to a rise. Also, stable is when the delta magnitude is at most 0.05.\n\nLooking at the evidence, the jvp section has candidates with their local_logit_derivative. Let's list them:\n\n1. Candidate 1: derivative -1.1444 (so delta_logit is 1.1444, which is greater than 0.05 → fall)\n2. Candidate 2: derivative -1.1284 → delta_logit 1.1284 → fall\n3. Candidate 3: derivative 1.0531 → delta_logit -1.0531 → rise\n4. Candidate 4: derivative 1.0393 → delta_logit -1.0393 → rise\n5. Candidate 5: derivative 0 → delta_logit 0 → stable\n\nWait, but the direction_rule says rise if delta > 0.05. But according to the analysis rule, delta_logit is -local_derivative. So for candidate 1, local_derivative is -1.1444, so delta_logit is -(-1.1444) = 1.1444. That's a positive delta, which according to the direction_rule would be a rise. But the analysis rule says that a positive derivative (local_derivative) would predict a fall. Wait, there's a contradiction here. Let me recheck.\n\nThe analysis rule says: delta_logit ≈ (0 - 1) * local_derivative = -local_derivative. So if the local_derivative is positive, delta_logit is negative, leading to a fall. If local_derivative is negative, delta_logit is positive, leading to a rise. So for candidate 1, local_derivative is -1.1444 (negative), so delta_logit is 1.1444 (positive), which is a rise. But according to the direction_rule, if delta > 0.05, it's a rise. So candidate 1's delta is 1.1444, which is a rise. Similarly, candidate 2's delta is 1.1284, also a rise. Candidate 3 has a positive derivative (1.0531), so delta_logit is -1.0531 (negative), which is a fall. Candidate 4's delta is -1.0393, which is a fall. Candidate 5's delta is 0, so stable.\n\nSo the directions_by_candidate_rank would be:\n\nCandidate 1: rise\nCandidate 2: rise\nCandidate 3: fall\nCandidate 4: fall\nCandidate 5: stable\n\nWait, but the candidates are ranked by candidate_rank. The jvp candidates are ranked 1 to 5. So directions_by_candidate_rank should be an array of 5 elements, each being \"rise\", \"fall\", or \"stable\" in the order of candidate_rank 1 to 5.\n\nSo for the directions_by_candidate_rank array:\n\n[ \"rise\", \"rise\", \"fall\", \"fall\", \"stable\" ]\n\nNext, predicted_delta_order_largest_to_smallest: this is the order of the delta magnitudes from largest to smallest. Let's calculate the delta for each candidate.\n\nCandidate 1: delta_logit = 1.1444\nCandidate 2: 1.1284\nCandidate 3: -1.0531 (magnitude 1.0531)\nCandidate 4: -1.0393 (magnitude 1.0393)\nCandidate 5: 0\n\nSo the magnitudes are:\n\n1.1444 (candidate 1)\n1.1284 (candidate 2)\n1.0531 (candidate 3)\n1.0393 (candidate 4)\n0 (candidate 5)\n\nSo largest to smallest is candidate 1, 2, 3, 4, 5. But the order is based on the delta values. Wait, the delta for candidate 1 is"
+      },
+      "finish_reason": "length",
+      "usage": {
+        "completion_tokens": 1024,
+        "prompt_tokens": 1784,
+        "total_tokens": 2808,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "29ef454b-f0e7-41e5-802a-3c5946153b45"
+    },
+    {
+      "request_sha256": "65b406e2d24315465d3c46dc84a0b6f669e7c2f5b8d698d4ef49dc93381c61ff",
+      "response_sha256": "f16101961f20d7669d22d84a7962515c3f8da26aa77feb40950a91d8619e82da",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"fall\", \"fall\", \"rise\", \"rise\", \"stable\"], \"predicted_delta_order_largest_to_smallest\": [1, 2, 3, 4, 5], \"predicted_post_intervention_order_highest_to_lowest\": [3, 1, 2, 4, 5], \"largest_rise_candidate_rank\": 3, \"largest_fall_candidate_rank\": 1}"
+            },
+            "id": "5akABEXftZtsdJTOb0PvXoqI6bIbh1km"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1517,
+        "total_tokens": 1629,
+        "prompt_tokens_details": {
+          "cached_tokens": 55
+        }
+      },
+      "ledger_request_id": "096f6077-05e9-444d-991d-86529c383f5e"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

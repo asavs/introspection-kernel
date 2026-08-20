@@ -1,0 +1,131 @@
+{
+  "schema": "ik.rule-given-factorial-v5-prediction.v1",
+  "source_context_index": 6,
+  "condition": "rule0_think1_calc1",
+  "evidence_sha256": "b680d8a582d0ddd35d97f46f6f287eb95251f39e1589cb6b5d89ecfd067b25e9",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T08:15:05.618Z",
+  "factors": {
+    "rule_given": false,
+    "thinking_enabled": true,
+    "calculator_available": true
+  },
+  "transcript": {
+    "provenance": "verbatim_qwen_preceding_thinking_stage",
+    "reasoning_content": "Okay, let's see. The user wants me to predict the scale-zero-minus-baseline movement for each of the five candidate logits. The direction rule is that if the delta is greater than 0.05, it's a rise; if less than -0.05, it's a fall; otherwise, stable. \n\nLooking at the candidates provided:\n\n1. Candidate 1 has a local_logit_derivative of 1.14977. Since this is way above 0.05, the direction should be \"rise\".\n2. Candidate 2 has 1.17231, which is also above 0.05, so \"rise\" again.\n3. Candidate 3 has -1.65033. That's below -0.05, so \"fall\".\n4. Candidate 4 is -1.64519, same as the third, so \"fall\".\n5. Candidate 5 has 0, which is exactly the threshold. The rule says if it's not above 0.05 or below -0.05, it's stable. So \"stable\".\n\nI need to make sure the order is according to candidate_rank. The output should be exactly five directions in the order 1 to 5. Let me double-check the numbers against the thresholds. Yep, all seem correct. So the final answer should be the list [\"rise\", \"rise\", \"fall\", \"fall\", \"stable\"].\n",
+    "content": "[\"rise\", \"rise\", \"fall\", \"fall\", \"stable\"]",
+    "finish_reason": "stop"
+  },
+  "calculator": {
+    "valid": true,
+    "call": {
+      "type": "function",
+      "function": {
+        "name": "calculate_vector",
+        "arguments": "{\"operation\": \"classify_threshold\", \"values\": [1.149774034631419, 1.1723117514782222, -1.650325687014509, -1.6451865725891115, 0], \"threshold\": 0.05}"
+      },
+      "id": "UMwNh0bLHHiqwQBaNs698Sti6H0qBQgz"
+    },
+    "args": {
+      "operation": "classify_threshold",
+      "values": [
+        1.149774034631419,
+        1.1723117514782222,
+        -1.650325687014509,
+        -1.6451865725891115,
+        0
+      ],
+      "threshold": 0.05
+    },
+    "result": {
+      "operation": "classify_threshold",
+      "directions": [
+        "rise",
+        "rise",
+        "fall",
+        "fall",
+        "stable"
+      ]
+    }
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "rise",
+      "rise",
+      "fall",
+      "fall",
+      "stable"
+    ]
+  },
+  "invalid_output": null,
+  "exchanges": [
+    {
+      "stage": "calculator",
+      "request_sha256": "388d94c67cb08bcf1ef27065ab1d18647e95af2c9d5883b16a36fba677fce34a",
+      "response_sha256": "0f060dfd89cacece78d447995788fe6eea9e61ab086bfab041ad3a2862e09f55",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "calculate_vector",
+              "arguments": "{\"operation\": \"classify_threshold\", \"values\": [1.149774034631419, 1.1723117514782222, -1.650325687014509, -1.6451865725891115, 0], \"threshold\": 0.05}"
+            },
+            "id": "UMwNh0bLHHiqwQBaNs698Sti6H0qBQgz"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 114,
+        "prompt_tokens": 769,
+        "total_tokens": 883,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "bf7e17d3-aa72-40ae-a71f-848e053074d5"
+    },
+    {
+      "stage": "thinking",
+      "request_sha256": "de7020c466b5ec5ccc541ae8988337569a72c509e61234ee8d3b9ef7c7c195ad",
+      "response_sha256": "29bd5f89334c368b1388132f2e57fc07081e62562356e28d45ec2cc0605b63df",
+      "message": {
+        "role": "assistant",
+        "content": "[\"rise\", \"rise\", \"fall\", \"fall\", \"stable\"]",
+        "reasoning_content": "Okay, let's see. The user wants me to predict the scale-zero-minus-baseline movement for each of the five candidate logits. The direction rule is that if the delta is greater than 0.05, it's a rise; if less than -0.05, it's a fall; otherwise, stable. \n\nLooking at the candidates provided:\n\n1. Candidate 1 has a local_logit_derivative of 1.14977. Since this is way above 0.05, the direction should be \"rise\".\n2. Candidate 2 has 1.17231, which is also above 0.05, so \"rise\" again.\n3. Candidate 3 has -1.65033. That's below -0.05, so \"fall\".\n4. Candidate 4 is -1.64519, same as the third, so \"fall\".\n5. Candidate 5 has 0, which is exactly the threshold. The rule says if it's not above 0.05 or below -0.05, it's stable. So \"stable\".\n\nI need to make sure the order is according to candidate_rank. The output should be exactly five directions in the order 1 to 5. Let me double-check the numbers against the thresholds. Yep, all seem correct. So the final answer should be the list [\"rise\", \"rise\", \"fall\", \"fall\", \"stable\"].\n"
+      },
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 329,
+        "prompt_tokens": 609,
+        "total_tokens": 938,
+        "prompt_tokens_details": {
+          "cached_tokens": 6
+        }
+      },
+      "ledger_request_id": "31b3b3c5-c82d-4eed-b3c0-3b075eb3a0f5"
+    },
+    {
+      "stage": "recorder",
+      "request_sha256": "3198a80f6bb29e5c78f748e49c4272774334fd5f9b42e0f105d102bfa949466d",
+      "response_sha256": "8f705de9ef0b5dfb9fc91aa340ec0027e099489f2bcdad7863818952915ae16f",
+      "message": {
+        "role": "assistant",
+        "content": "{\"directions_by_candidate_rank\": [\"rise\", \"rise\", \"fall\", \"fall\", \"stable\"]}"
+      },
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 23,
+        "prompt_tokens": 1029,
+        "total_tokens": 1052,
+        "prompt_tokens_details": {
+          "cached_tokens": 609
+        }
+      },
+      "ledger_request_id": "e176c6d1-4e26-41b7-85a8-c4aaf774dcf5"
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "schema": "ik.rule-given-factorial-v5-prediction.v1",
+  "source_context_index": 12,
+  "condition": "rule0_think1_calc0",
+  "evidence_sha256": "accb34413750ef6b356131d438eb10dfa68ab3e22c6e57c907c9706e27b1f7be",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T07:30:48.510Z",
+  "factors": {
+    "rule_given": false,
+    "thinking_enabled": true,
+    "calculator_available": false
+  },
+  "transcript": {
+    "provenance": "verbatim_qwen_preceding_thinking_stage",
+    "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each of the five candidate logits. The task is to determine the direction (rise, fall, or stable) based on the delta values provided. The rules are: if delta > 0.05, it's a rise; if delta < -0.05, it's a fall; otherwise, it's stable.\n\nFirst, I need to look at each candidate's delta value. Let me list them out:\n\n1. Candidate Rank 1: Token \"Find\" has a baseline logit of 6.4229 and a local logit derivative of 0. The stratum is near_zero. Wait, the local logit derivative here is 0. So delta would be 0. According to the rules, since 0 is not greater than 0.05 nor less than -0.05, this should be stable.\n\n2. Candidate Rank 2: Token \"Nolan\" has a baseline logit of -1.7174 and a local logit derivative of 1.1624. The stratum is positive_1. The delta here is 1.1624. Since 1.1624 is greater than 0.05, this should be a rise.\n\n3. Candidate Rank 3: Token \"铌\" has a baseline logit of -0.3866 and a local logit derivative of 1.1476. Stratum is positive_2. Delta is 1.1476, which is also above 0.05, so rise.\n\n4. Candidate Rank 4: Token \"Z\" has a baseline logit of 3.6318 and a local logit derivative of -1.1577. Stratum is negative_2. Delta here is -1.1577. Since this is less than -0.05, it's a fall.\n\n5. Candidate Rank 5: Token \"Random\" has a baseline logit of 3.0714 and a local logit derivative of -1.2205. Stratum is negative_1. Delta is -1.2205, which is below -0.05, so fall.\n\nWait, but the user mentioned \"scale-zero-minus-baseline movement.\" Does that affect the calculation? The intervention target is layer 35 head 25, starting scale 1, requested scale 0. The direction epsilon is 0.05. So the delta here is the local logit derivative, which is the change in logit when the scale is adjusted. So the delta values provided are the local logit derivatives. Therefore, the direction is determined by these deltas.\n\nSo applying the rules:\n\n- Candidate 1: delta 0 → stable\n- Candidate 2: delta +1.16 → rise\n- Candidate 3: delta +1.15 → rise\n- Candidate 4: delta -1.16 → fall\n- Candidate 5: delta -1.22 → fall\n\nSo the directions in order of candidate ranks are: stable, rise, rise, fall, fall. Let me double-check the numbers to make sure I didn't mix up any signs or values. Yes, the local logit derivatives are as listed. So the final answer should list the directions in the order of the candidates' ranks.\n",
+    "content": "[\"stable\", \"rise\", \"rise\", \"fall\", \"fall\"]",
+    "finish_reason": "stop"
+  },
+  "calculator": null,
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "stable",
+      "rise",
+      "rise",
+      "fall",
+      "fall"
+    ]
+  },
+  "invalid_output": null,
+  "exchanges": [
+    {
+      "stage": "thinking",
+      "request_sha256": "beb68223fb9f1c6e2e83dc416478f1e7250457fc51afa0e4668a363cbc323275",
+      "response_sha256": "16e779f62c8baae664ff25251f0eb286f6a4652ff59fc6c3006cf7824649da12",
+      "message": {
+        "role": "assistant",
+        "content": "[\"stable\", \"rise\", \"rise\", \"fall\", \"fall\"]",
+        "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each of the five candidate logits. The task is to determine the direction (rise, fall, or stable) based on the delta values provided. The rules are: if delta > 0.05, it's a rise; if delta < -0.05, it's a fall; otherwise, it's stable.\n\nFirst, I need to look at each candidate's delta value. Let me list them out:\n\n1. Candidate Rank 1: Token \"Find\" has a baseline logit of 6.4229 and a local logit derivative of 0. The stratum is near_zero. Wait, the local logit derivative here is 0. So delta would be 0. According to the rules, since 0 is not greater than 0.05 nor less than -0.05, this should be stable.\n\n2. Candidate Rank 2: Token \"Nolan\" has a baseline logit of -1.7174 and a local logit derivative of 1.1624. The stratum is positive_1. The delta here is 1.1624. Since 1.1624 is greater than 0.05, this should be a rise.\n\n3. Candidate Rank 3: Token \"铌\" has a baseline logit of -0.3866 and a local logit derivative of 1.1476. Stratum is positive_2. Delta is 1.1476, which is also above 0.05, so rise.\n\n4. Candidate Rank 4: Token \"Z\" has a baseline logit of 3.6318 and a local logit derivative of -1.1577. Stratum is negative_2. Delta here is -1.1577. Since this is less than -0.05, it's a fall.\n\n5. Candidate Rank 5: Token \"Random\" has a baseline logit of 3.0714 and a local logit derivative of -1.2205. Stratum is negative_1. Delta is -1.2205, which is below -0.05, so fall.\n\nWait, but the user mentioned \"scale-zero-minus-baseline movement.\" Does that affect the calculation? The intervention target is layer 35 head 25, starting scale 1, requested scale 0. The direction epsilon is 0.05. So the delta here is the local logit derivative, which is the change in logit when the scale is adjusted. So the delta values provided are the local logit derivatives. Therefore, the direction is determined by these deltas.\n\nSo applying the rules:\n\n- Candidate 1: delta 0 → stable\n- Candidate 2: delta +1.16 → rise\n- Candidate 3: delta +1.15 → rise\n- Candidate 4: delta -1.16 → fall\n- Candidate 5: delta -1.22 → fall\n\nSo the directions in order of candidate ranks are: stable, rise, rise, fall, fall. Let me double-check the numbers to make sure I didn't mix up any signs or values. Yes, the local logit derivatives are as listed. So the final answer should list the directions in the order of the candidates' ranks.\n"
+      },
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 753,
+        "prompt_tokens": 503,
+        "total_tokens": 1256,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "1ec18d45-188c-470c-b57e-c72ad1849496"
+    },
+    {
+      "stage": "recorder",
+      "request_sha256": "87b9d5877c83706875219f5151e3cf8127eba8d7c5803d2e355a6fae7353c589",
+      "response_sha256": "2d6dcf7ec83d753634bfaf34e100ce8507772454d4d0fd56ff3856a950710b0c",
+      "message": {
+        "role": "assistant",
+        "content": "{\"directions_by_candidate_rank\": [\"stable\", \"rise\", \"rise\", \"fall\", \"fall\"]}"
+      },
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 23,
+        "prompt_tokens": 1350,
+        "total_tokens": 1373,
+        "prompt_tokens_details": {
+          "cached_tokens": 503
+        }
+      },
+      "ledger_request_id": "00fc0f9a-3243-4bb8-a6a6-21b92ce1204e"
+    }
+  ]
+}

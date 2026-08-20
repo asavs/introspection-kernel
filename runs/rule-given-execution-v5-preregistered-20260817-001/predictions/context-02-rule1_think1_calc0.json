@@ -1,0 +1,71 @@
+{
+  "schema": "ik.rule-given-factorial-v5-prediction.v1",
+  "source_context_index": 1,
+  "condition": "rule1_think1_calc0",
+  "evidence_sha256": "86029a6d36e30f56da6bc9bce8639bb7d664ebc7403cc0cee145553abb74f983",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T08:24:46.681Z",
+  "factors": {
+    "rule_given": true,
+    "thinking_enabled": true,
+    "calculator_available": false
+  },
+  "transcript": {
+    "provenance": "verbatim_qwen_preceding_thinking_stage",
+    "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each of the five candidate logits. The directions need to be in candidate-rank order, and I have to follow the direction_rule provided.\n\nFirst, I need to understand the rules. The direction_rule says that if the delta is greater than 0.05, it's a rise. If it's less than -0.05, it's a fall. Otherwise, it's stable. But the supplied_analysis_rule complicates things. It mentions that the delta_logit is approximately -local_logit_derivative because the scale is changing from 1 to 0. So, the delta is -local_logit_derivative. \n\nWait, so if the local_logit_derivative is positive, then delta_logit would be negative. That means the logit would fall. Conversely, if the local_logit_derivative is negative, delta_logit would be positive, leading to a rise. If the derivative is zero, then delta_logit is zero, so stable. But there's also the epsilon of 0.05. The stable condition applies when the predicted delta magnitude is at most 0.05. \n\nSo, for each candidate, I need to calculate delta_logit as -local_logit_derivative. Then check if that delta is greater than 0.05 (rise), less than -0.05 (fall), or within the range (stable). \n\nLet me go through each candidate one by one.\n\nCandidate 1: local_logit_derivative is 0. So delta_logit is 0. That's exactly 0, which is within the stable range. So direction is stable.\n\nCandidate 2: local_logit_derivative is -1.157. So delta_logit is -(-1.157) = 1.157. That's way above 0.05, so rise.\n\nCandidate 3: local_logit_derivative is 1.212. Delta_logit is -1.212. That's less than -0.05, so fall.\n\nCandidate 4: local_logit_derivative is -1.153. Delta_logit is 1.153, which is rise.\n\nCandidate 5: local_logit_derivative is 1.217. Delta_logit is -1.217, which is fall.\n\nWait, but let me double-check. The rule says delta_logit is approximately -local_logit_derivative. So for candidate 2, derivative is -1.157, so delta is 1.157, which is a rise. Candidate 3 has derivative 1.212, so delta is -1.212, which is a fall. Candidate 4's derivative is -1.153, so delta is 1.153, rise. Candidate 5's derivative is 1.217, delta is -1.217, fall. \n\nSo the directions would be:\n\n1. Stable\n2. Rise\n3. Fall\n4. Rise\n5. Fall\n\nBut wait, the candidates are ordered by rank. Let me check the candidate_rank again. The candidates are ordered 1 to 5. So the output should list them in that order. \n\nSo the final directions in order are: Stable, Rise, Fall, Rise, Fall. \n\nBut wait, the user said \"Record exactly five directions in candidate-rank order\". So the order is 1 to 5. So the answer should be:\n\n1. Stable\n2. Rise\n3. Fall\n4. Rise\n5. Fall\n\nBut let me check if any of the deltas are within the 0.05 threshold. For example, candidate 1's delta is 0, which is stable. The others have deltas of 1.157, -1.212, 1.153, -1.217. All of these are outside the 0.05 range, so they are either rise or fall. \n\nYes, that seems correct. So the final answer should list each candidate's direction in order.\n",
+    "content": "[\"stable\", \"rise\", \"fall\", \"rise\", \"fall\"]",
+    "finish_reason": "stop"
+  },
+  "calculator": null,
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "stable",
+      "rise",
+      "fall",
+      "rise",
+      "fall"
+    ]
+  },
+  "invalid_output": null,
+  "exchanges": [
+    {
+      "stage": "thinking",
+      "request_sha256": "ebb0b334d5b3795921621aa159715456d43c71ab5429b99df81227152278bbf3",
+      "response_sha256": "2d083b9fbc23b2a28611fd891e6996d45f96c8034a75e807f8fff2b7109c69bf",
+      "message": {
+        "role": "assistant",
+        "content": "[\"stable\", \"rise\", \"fall\", \"rise\", \"fall\"]",
+        "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each of the five candidate logits. The directions need to be in candidate-rank order, and I have to follow the direction_rule provided.\n\nFirst, I need to understand the rules. The direction_rule says that if the delta is greater than 0.05, it's a rise. If it's less than -0.05, it's a fall. Otherwise, it's stable. But the supplied_analysis_rule complicates things. It mentions that the delta_logit is approximately -local_logit_derivative because the scale is changing from 1 to 0. So, the delta is -local_logit_derivative. \n\nWait, so if the local_logit_derivative is positive, then delta_logit would be negative. That means the logit would fall. Conversely, if the local_logit_derivative is negative, delta_logit would be positive, leading to a rise. If the derivative is zero, then delta_logit is zero, so stable. But there's also the epsilon of 0.05. The stable condition applies when the predicted delta magnitude is at most 0.05. \n\nSo, for each candidate, I need to calculate delta_logit as -local_logit_derivative. Then check if that delta is greater than 0.05 (rise), less than -0.05 (fall), or within the range (stable). \n\nLet me go through each candidate one by one.\n\nCandidate 1: local_logit_derivative is 0. So delta_logit is 0. That's exactly 0, which is within the stable range. So direction is stable.\n\nCandidate 2: local_logit_derivative is -1.157. So delta_logit is -(-1.157) = 1.157. That's way above 0.05, so rise.\n\nCandidate 3: local_logit_derivative is 1.212. Delta_logit is -1.212. That's less than -0.05, so fall.\n\nCandidate 4: local_logit_derivative is -1.153. Delta_logit is 1.153, which is rise.\n\nCandidate 5: local_logit_derivative is 1.217. Delta_logit is -1.217, which is fall.\n\nWait, but let me double-check. The rule says delta_logit is approximately -local_logit_derivative. So for candidate 2, derivative is -1.157, so delta is 1.157, which is a rise. Candidate 3 has derivative 1.212, so delta is -1.212, which is a fall. Candidate 4's derivative is -1.153, so delta is 1.153, rise. Candidate 5's derivative is 1.217, delta is -1.217, fall. \n\nSo the directions would be:\n\n1. Stable\n2. Rise\n3. Fall\n4. Rise\n5. Fall\n\nBut wait, the candidates are ordered by rank. Let me check the candidate_rank again. The candidates are ordered 1 to 5. So the output should list them in that order. \n\nSo the final directions in order are: Stable, Rise, Fall, Rise, Fall. \n\nBut wait, the user said \"Record exactly five directions in candidate-rank order\". So the order is 1 to 5. So the answer should be:\n\n1. Stable\n2. Rise\n3. Fall\n4. Rise\n5. Fall\n\nBut let me check if any of the deltas are within the 0.05 threshold. For example, candidate 1's delta is 0, which is stable. The others have deltas of 1.157, -1.212, 1.153, -1.217. All of these are outside the 0.05 range, so they are either rise or fall. \n\nYes, that seems correct. So the final answer should list each candidate's direction in order.\n"
+      },
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 901,
+        "prompt_tokens": 607,
+        "total_tokens": 1508,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "0d7e52f9-029d-4013-867a-00dc0a0a27f8"
+    },
+    {
+      "stage": "recorder",
+      "request_sha256": "4f2c8694869660348444ddb4a1e6420dfc254261319bbe129c4be8b49e54dd7a",
+      "response_sha256": "4175edc47b42c639cb2edb23fe2daf83b1022136d4770ad965fe9494483cbfb0",
+      "message": {
+        "role": "assistant",
+        "content": "{\"directions_by_candidate_rank\": [\"stable\", \"rise\", \"fall\", \"rise\", \"fall\"]}"
+      },
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 23,
+        "prompt_tokens": 1618,
+        "total_tokens": 1641,
+        "prompt_tokens_details": {
+          "cached_tokens": 607
+        }
+      },
+      "ledger_request_id": "34327b1f-a35a-465f-b7da-0bf986104722"
+    }
+  ]
+}

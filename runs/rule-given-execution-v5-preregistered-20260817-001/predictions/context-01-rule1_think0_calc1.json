@@ -1,0 +1,106 @@
+{
+  "schema": "ik.rule-given-factorial-v5-prediction.v1",
+  "source_context_index": 0,
+  "condition": "rule1_think0_calc1",
+  "evidence_sha256": "71408dd94cd5d024ee2029a70625e81cf0332286096bed1dc3f3cc5c0a22ef8a",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T07:46:03.821Z",
+  "factors": {
+    "rule_given": true,
+    "thinking_enabled": false,
+    "calculator_available": true
+  },
+  "transcript": null,
+  "calculator": {
+    "valid": true,
+    "call": {
+      "type": "function",
+      "function": {
+        "name": "calculate_vector",
+        "arguments": "{\"operation\": \"classify_threshold\", \"values\": [-1.13428576180099, -1.1386589562499743, -1.13218708146095, 1.2903266087933503, 0], \"threshold\": 0.05}"
+      },
+      "id": "pvknGfdlklDh4r5Sd3jmlsBboI8dxhNQ"
+    },
+    "args": {
+      "operation": "classify_threshold",
+      "values": [
+        -1.13428576180099,
+        -1.1386589562499743,
+        -1.13218708146095,
+        1.2903266087933503,
+        0
+      ],
+      "threshold": 0.05
+    },
+    "result": {
+      "operation": "classify_threshold",
+      "directions": [
+        "fall",
+        "fall",
+        "fall",
+        "rise",
+        "stable"
+      ]
+    }
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "fall",
+      "fall",
+      "fall",
+      "rise",
+      "stable"
+    ]
+  },
+  "invalid_output": null,
+  "exchanges": [
+    {
+      "stage": "calculator",
+      "request_sha256": "c436a405ba66c9293c4a20aa3c44e42d2e9cbaf85ae3b643bab5d7475e44e6c1",
+      "response_sha256": "8fdfc011c1482f9948e801f7dbdaed30ae797906f1cbf705bff97b9e26729574",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "calculate_vector",
+              "arguments": "{\"operation\": \"classify_threshold\", \"values\": [-1.13428576180099, -1.1386589562499743, -1.13218708146095, 1.2903266087933503, 0], \"threshold\": 0.05}"
+            },
+            "id": "pvknGfdlklDh4r5Sd3jmlsBboI8dxhNQ"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 865,
+        "total_tokens": 977,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "c615e411-7679-4d62-83b2-6169083773b6"
+    },
+    {
+      "stage": "recorder",
+      "request_sha256": "b4a6789f561526ebae543c72d9f78723037db6e9ca5a4a55e4a2cd532d679184",
+      "response_sha256": "bb2b181217985422de015e91881c99651de83445a10c2f068daffe23415d7bf8",
+      "message": {
+        "role": "assistant",
+        "content": "{\"directions_by_candidate_rank\": [\"fall\", \"fall\", \"fall\", \"rise\", \"stable\"]}"
+      },
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 23,
+        "prompt_tokens": 709,
+        "total_tokens": 732,
+        "prompt_tokens_details": {
+          "cached_tokens": 6
+        }
+      },
+      "ledger_request_id": "dcd136ec-22fd-4e19-baf8-152a5737a32d"
+    }
+  ]
+}

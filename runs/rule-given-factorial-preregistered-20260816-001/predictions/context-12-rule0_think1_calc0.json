@@ -1,0 +1,99 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 11,
+  "condition": "rule0_think1_calc0",
+  "evidence_sha256": "3bda9ca0cd04a70505304126c0a42f35988b5912783d7b1511bd1061c79150dc",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T06:05:01.660Z",
+  "factors": {
+    "rule_given": false,
+    "thinking_enabled": true,
+    "calculator_available": false
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "fall",
+      "stable",
+      "rise",
+      "rise",
+      "fall"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      3,
+      4,
+      5,
+      1,
+      2
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      5,
+      4,
+      3,
+      2,
+      1
+    ],
+    "largest_rise_candidate_rank": 3,
+    "largest_fall_candidate_rank": 5
+  },
+  "exchanges": [
+    {
+      "request_sha256": "1b70cdf26b616cc9ed7281b01561604046e1a831512bef0c02f55f0a34fed4c7",
+      "response_sha256": "66a6f655b4c0eb7b03c7ccd14d62877cbf595556d1211cddc8ff12f4ee695865",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each held-out candidate logit. The tools provided include the 'inspect_heldout_causal_ladder' and 'record_directional_prediction' functions. \n\nFirst, I need to understand the data provided in the evidence. The intervention targets \"layer 35 head 25\" with a start scale of 1 and requested scale of 0. The direction epsilon is 0.05. The 'direction_rule' says to rise if delta > 0.05, fall if delta < -0.05, else stable. \n\nLooking at the evidence, there's a 'jvp' section with candidates ranked 1 to 5. Each candidate has a baseline_logit and a local_logit_derivative. The delta for each candidate would be the local_logit_derivative, right? So I need to calculate the delta for each candidate and apply the direction rule.\n\nLet's go through each candidate:\n\n1. Candidate 1: baseline_logit -1.0719, local_logit_derivative -1.6434. Delta is -1.6434. Since this is less than -0.05, it should fall.\n2. Candidate 2: baseline_logit 2.126, local_logit_derivative 0. Delta is 0. So stable.\n3. Candidate 3: baseline_logit 0.4709, local_logit_derivative 1.0723. Delta is 1.0723, which is more than 0.05, so rise.\n4. Candidate 4: baseline_logit 2.5688, local_logit_derivative 1.0942. Delta is 1.0942, rise.\n5. Candidate 5: baseline_logit 3.5598, local_logit_derivative -1.7382. Delta is -1.7382, fall.\n\nWait, but the 'directions_by_candidate_rank' needs to be an array of 5 elements, each being rise, fall, or stable. So the directions for ranks 1-5 would be fall, stable, rise, rise, fall. \n\nNext, the 'predicted_delta_order_largest_to_smallest' is an array of integers 1-5, unique. The deltas are -1.6434, 0, 1.0723, 1.0942, -1.7382. The largest delta is 1.0942 (candidate 4), then 1.0723 (candidate 3), then 0 (candidate 2), then -1.6434 (candidate 1), then -1.7382 (candidate 5). So the order from largest to smallest would be 4,3,2,1,5. \n\nThe 'predicted_post_intervention_order_highest_to_lowest' is the order of the candidates after intervention. The baseline logits are: candidate 1: -1.0719, 2: 2.126, 3: 0.4709, 4: 2.5688, 5: 3.5598. After intervention, the local_logit_derivative affects the logit. But the exact calculation isn't provided. However, the problem might be expecting the original baseline logits ordered highest to lowest. So original order is 5 (3.5598), 4 (2.5688), 2 (2.126), 3 (0.4709), 1 (-1.0719). So the order would be 5,4,2,3,1. \n\nThe 'largest_rise_candidate_rank' is the candidate with the largest delta, which is candidate 4 (rank 4). The 'largest_fall_candidate_rank' is candidate 5 (rank 5). \n\nPutting it all together, the parameters for 'record_directional_prediction' would be:\n\ndirections_by_candidate_rank: [\"fall\", \"stable\", \"rise\", \"rise\", \"fall\"]\npredicted_delta_order_largest_to_smallest: [4,3,2,1,5]\npredicted_post_intervention_order_highest_to_lowest: [5,4,2,3,1]\nlargest_rise_candidate_rank: 4\nlargest_fall_candidate_rank: 5\n\nI need to make sure all arrays are of length 5, unique where required, and the ranks are between 1-5. This seems to fit. Now, I'll structure the tool call accordingly.\n",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{"
+            },
+            "id": "az232eHiySYQZRZ6fffTPxxTVy65ea4y"
+          }
+        ]
+      },
+      "finish_reason": "length",
+      "usage": {
+        "completion_tokens": 1024,
+        "prompt_tokens": 1485,
+        "total_tokens": 2509,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "120f2b2e-f9e7-4568-99d2-1188148608af"
+    },
+    {
+      "request_sha256": "af6282f6ed0319f9996e5d36c62c52b9e0e9242c49bf02e0dc032adb93d6dcf7",
+      "response_sha256": "a04f5cf529f3d4f30d5e3b8014fd845c1ecf4674287f7598ebbfa4252c180546",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"fall\", \"stable\", \"rise\", \"rise\", \"fall\"], \"predicted_delta_order_largest_to_smallest\": [3, 4, 5, 1, 2], \"predicted_post_intervention_order_highest_to_lowest\": [5, 4, 3, 2, 1], \"largest_rise_candidate_rank\": 3, \"largest_fall_candidate_rank\": 5}"
+            },
+            "id": "s6cOYnRd4M4eDCRhI0YjwqtsSrOqXBrs"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1429,
+        "total_tokens": 1541,
+        "prompt_tokens_details": {
+          "cached_tokens": 55
+        }
+      },
+      "ledger_request_id": "d820b06a-4f15-4f93-8f49-21def79ff4a0"
+    }
+  ],
+  "recorder_correction_count": 1,
+  "calculator_calls": 0
+}

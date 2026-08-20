@@ -45,6 +45,52 @@ citable without them.
   practice, and unforced continuations remain distinct provenance classes in
   every artifact, as now.
 
+## Sprint submission cut (frozen 2026-08-16)
+
+Everything above the line ships in the sprint submission; everything below is
+declared future work there, not attempted. The submission's claim structure is
+already complete once the running factorial lands — the remaining work is
+finishing, not discovering.
+
+**In scope, in order:**
+
+1. **Finish the rule-given factorial and its trace audit**
+   (`rule-given-factorial-preregistered-20260816-001`), then write its dated
+   wiki doc. Interpretation branches, decided by the preregistered contrasts:
+   - *Rule-given succeeds, practice fails* → the deficit is in-context rule
+     induction; execution is intact. Headline: the channel is causally
+     sufficient and the rule is executable, but not discoverable in four
+     shots.
+   - *Rule-given fails even with thinking + calculator* → the bottleneck is
+     representation attention, readout, or forced serialization. Headline:
+     even a stated calculus over its own internals is not applied.
+   - *Mixed (e.g. thinking or tools rescue it)* → attribute the factor and
+     report the interaction as the finding.
+2. **Update the synthesis documents** — `DIGITAL_MINDS_RESEARCH_REPORT.md`
+   and `ONE_PAGER.md` currently end before the
+   intervention era; fold in the intervention primitive, the evidence ladder,
+   both preregistered nulls with their heuristic ceilings, and the factorial
+   result.
+3. **Refresh the public materials** — README findings list, the walkthrough
+   page, and a final subtree publish to the public repository.
+4. **Optional, only if the factorial finishes early:** one decision-boundary
+   mini-batch (Phase 1 task 2) on existing machinery — it is the highest
+   remaining evidence-per-GPU-hour and directly hardens the causal story.
+   Nothing else new starts before submission.
+
+**Explicitly deferred in the submission:** the full evidence-sufficiency
+ladder sweep, source-specific interventions, all of Phases 2–6 (afferents,
+probes, wiggle test, regulation, scale sweep, internal-channel bracket).
+The submission cites them as designed-and-pending, with this document as the
+plan of record.
+
+**The submission's honest one-sentence result:** a sham-controlled,
+preregistered apparatus demonstrating validated access to and live
+intervention on the transformer computation behind a local model's own words —
+and a precisely localized failure of the model to use that channel, with the
+failure boundary (attribution → authentication → rule induction vs. execution)
+mapped by controls rather than asserted.
+
 ## Phase 1: the causal leap
 
 **Goal:** move from a validated live-intervention channel to demonstrated
@@ -86,6 +132,23 @@ base-rate artifact but did not produce learned use. The next Phase 1 factor is
 now a direct-rule/thinking/tool-use decomposition, with the four strong signed
 coordinates primary and the nonlinear near-zero stratum analyzed separately.
 
+That decomposition is complete
+(`rule-given-factorial-preregistered-20260816-001`; see
+[RULE_GIVEN_FACTORIAL_2026-08-16.md](RULE_GIVEN_FACTORIAL_2026-08-16.md)):
+160 predictions across a 2×2×2 crossing of a direct rule statement
+(`scale-zero Δ ≈ −JVP`), native thinking, and calculator access. Stating the
+rule roughly doubled causal accuracy (17.5% → 31–40% against the 80%
+sign(−JVP) ceiling), but no preregistered contrast survived Holm correction.
+The decisive trace: Qwen derived all five rule-prescribed directions
+correctly inside `<think>`, then consumed its entire 1,024-token budget on
+secondary rank arithmetic and never emitted the answer; thinking runs hit the
+token ceiling in 90–100% of contexts, and the offered calculator was called
+zero times in 80 trials. Qualified preregistered pilot (mid-run serialization
+fixes; no seal broken). The localized failure is therefore the **bounded
+thought-to-action pipeline**, and the decisive V2 — ask only the five primary
+directions, separate thinking from recording, force one calculator call — is
+now Phase 1's top task.
+
 1. **Evidence-sufficiency ladder.** The practice-era evidence was causally
    insufficient for the requested forecast (eight of 128 coordinates, three
    attention weights). Run the sealed prediction task at each instrumented
@@ -102,17 +165,14 @@ coordinates primary and the nonlinear near-zero stratum analyzed separately.
    token and the flip is the scored event. Include preregistered no-flip
    controls in the same batch so neither always-flip nor baseline-copy scores
    above chance.
-3. **Heuristic-baseline scoring at scale.** Every prediction batch is scored
-   against explicit non-causal baselines — last-vector copy, practice mean,
-   per-rank mean, nearest-neighbor, monotonic/range templates — and against
-   outcome-shuffled practice pairing, across at least 10–20 independently
-   captured held-out contexts in Latin-square order, with all predictions
-   sealed before any held-out intervention runs. Progress means prospective
-   matched-over-shuffled performance that also beats every heuristic.
-4. **Thinking-mode factor.** Current runs set `enable_thinking: false`; run
-   matched arms with native `<think>` reasoning enabled, scoring only the
-   final committed prediction, to separate readout capacity from serialization
-   constraints.
+3. **Heuristic-baseline scoring at scale.** *Implemented* — both preregistered
+   batches scored against class baselines, heuristic arms, shuffled pairing,
+   and no-practice controls with sealed-before-outcome ordering and
+   independent recomputation. Retain as standing practice for every future
+   prediction batch.
+4. **Thinking-mode factor.** *Absorbed into the rule-given factorial* as one
+   of its three crossed factors; scoring seals only the final categorical
+   record after bounded thinking.
 5. **Source-specific intervention.** Replace generic head ablation with
    removal-and-renormalization of one attended V source under the same
    one-shot provenance and sham contract, connecting the intervention channel

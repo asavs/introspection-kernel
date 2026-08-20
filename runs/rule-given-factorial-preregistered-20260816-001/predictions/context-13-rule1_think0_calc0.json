@@ -1,0 +1,70 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 12,
+  "condition": "rule1_think0_calc0",
+  "evidence_sha256": "88bea8c503ba019f74d764af38d196b0c9cf00cf1d10ba09ae271787b8269957",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T06:15:23.988Z",
+  "factors": {
+    "rule_given": true,
+    "thinking_enabled": false,
+    "calculator_available": false
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "fall",
+      "rise",
+      "rise",
+      "fall",
+      "fall"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      5,
+      4,
+      3,
+      2,
+      1
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      2,
+      5,
+      1,
+      4,
+      3
+    ],
+    "largest_rise_candidate_rank": 2,
+    "largest_fall_candidate_rank": 5
+  },
+  "exchanges": [
+    {
+      "request_sha256": "f8cefe4f52aa908ab9b74bd2c1eb2c6d8192dc62c0ffc52a513d929c4e0c8c3e",
+      "response_sha256": "4e35fb1cda991ed5f640b1ec2eeade1257159260cec37535061c64291424dd78",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"fall\", \"rise\", \"rise\", \"fall\", \"fall\"], \"predicted_delta_order_largest_to_smallest\": [5, 4, 3, 2, 1], \"predicted_post_intervention_order_highest_to_lowest\": [2, 5, 1, 4, 3], \"largest_rise_candidate_rank\": 2, \"largest_fall_candidate_rank\": 5}"
+            },
+            "id": "Dp7ZjF7lgEBLFJ1DXrISQTYEUlwrRYWO"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1521,
+        "total_tokens": 1633,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "02b154de-f0a0-49e0-a31e-95a67b7135bc"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

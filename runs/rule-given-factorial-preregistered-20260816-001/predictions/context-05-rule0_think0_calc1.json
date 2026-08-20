@@ -1,0 +1,70 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 4,
+  "condition": "rule0_think0_calc1",
+  "evidence_sha256": "0d3575389b5e81ba83d8ba00e3835b3752c69b0b9a310896a854555e18f32807",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T05:59:04.653Z",
+  "factors": {
+    "rule_given": false,
+    "thinking_enabled": false,
+    "calculator_available": true
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "rise",
+      "stable",
+      "fall",
+      "fall",
+      "rise"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      3,
+      5,
+      1,
+      4,
+      2
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      5,
+      3,
+      2,
+      1,
+      4
+    ],
+    "largest_rise_candidate_rank": 5,
+    "largest_fall_candidate_rank": 4
+  },
+  "exchanges": [
+    {
+      "request_sha256": "b80defc81b64ed0504388d52cfb86be02970e9eac7e50f00eb9de15132485bee",
+      "response_sha256": "0eda345211f75ef19181b2357182a21de9ac62419430e96dae324e60cc0fd2f5",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"rise\", \"stable\", \"fall\", \"fall\", \"rise\"], \"predicted_delta_order_largest_to_smallest\": [3, 5, 1, 4, 2], \"predicted_post_intervention_order_highest_to_lowest\": [5, 3, 2, 1, 4], \"largest_rise_candidate_rank\": 5, \"largest_fall_candidate_rank\": 4}"
+            },
+            "id": "3w6WLLj4kUC739WeYRcweMk2bNUUyQzi"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1687,
+        "total_tokens": 1799,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "0b8bb5cf-988a-4f95-b580-47ec5bde45f5"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

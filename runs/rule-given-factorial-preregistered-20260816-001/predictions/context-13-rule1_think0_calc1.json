@@ -1,0 +1,70 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 12,
+  "condition": "rule1_think0_calc1",
+  "evidence_sha256": "88bea8c503ba019f74d764af38d196b0c9cf00cf1d10ba09ae271787b8269957",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T06:16:00.785Z",
+  "factors": {
+    "rule_given": true,
+    "thinking_enabled": false,
+    "calculator_available": true
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "fall",
+      "rise",
+      "rise",
+      "fall",
+      "fall"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      2,
+      3,
+      5,
+      4,
+      1
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      3,
+      2,
+      5,
+      4,
+      1
+    ],
+    "largest_rise_candidate_rank": 2,
+    "largest_fall_candidate_rank": 4
+  },
+  "exchanges": [
+    {
+      "request_sha256": "3daf6f267537f6d96476e225caf4a55926f7cd50688fa656482586214fe901c5",
+      "response_sha256": "761c806135b126e263f38bc0f07335accd0a992abb658547d0e824d21d1d7d7d",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"fall\", \"rise\", \"rise\", \"fall\", \"fall\"], \"predicted_delta_order_largest_to_smallest\": [2, 3, 5, 4, 1], \"predicted_post_intervention_order_highest_to_lowest\": [3, 2, 5, 4, 1], \"largest_rise_candidate_rank\": 2, \"largest_fall_candidate_rank\": 4}"
+            },
+            "id": "XlxyAAKxHP0vNWZ1MKIomCHLmxC0Epkl"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1792,
+        "total_tokens": 1904,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "dc0041c9-844c-470c-8a0b-06b89512df0c"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

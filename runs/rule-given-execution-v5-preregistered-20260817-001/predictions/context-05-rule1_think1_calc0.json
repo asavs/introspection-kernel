@@ -1,0 +1,71 @@
+{
+  "schema": "ik.rule-given-factorial-v5-prediction.v1",
+  "source_context_index": 4,
+  "condition": "rule1_think1_calc0",
+  "evidence_sha256": "451681e129662df5dd5675f219ca310dbd304303f2c668b5b02ee8052cce57ea",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T07:49:31.176Z",
+  "factors": {
+    "rule_given": true,
+    "thinking_enabled": true,
+    "calculator_available": false
+  },
+  "transcript": {
+    "provenance": "verbatim_qwen_preceding_thinking_stage",
+    "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each of the five candidate logits. The directions need to be in candidate-rank order, and I have to follow the direction_rule provided.\n\nFirst, I need to understand the rules. The direction_rule says that if the delta is greater than 0.05, it's a rise. If it's less than -0.05, it's a fall. Otherwise, it's stable. The supplied_analysis_rule explains that the delta_logit is approximately -local_logit_derivative because the scale changes from 1 to 0. So, a positive derivative means the delta_logit is negative, leading to a fall. Conversely, a negative derivative would mean delta_logit is positive, leading to a rise. If the magnitude is less than or equal to 0.05, it's stable.\n\nNow, looking at the candidates:\n\n1. **Candidate Rank 1**: local_logit_derivative is -1.2511. Applying the formula, delta_logit ≈ -(-1.2511) = 1.2511. This is way above 0.05, so it's a rise.\n2. **Candidate Rank 2**: local_logit_derivative is 0. Delta_logit is -0 = 0. The magnitude is 0, which is within the stable range. So, stable.\n3. **Candidate Rank 3**: local_logit_derivative is 1.3302. Delta_logit ≈ -1.3302. This is below -0.05, so it's a fall.\n4. **Candidate Rank 4**: local_logit_derivative is -1.2901. Delta_logit ≈ -(-1.2901) = 1.2901. Again, this is a rise.\n5. **Candidate Rank 5**: local_logit_derivative is 1.3383. Delta_logit ≈ -1.3383. This is a fall.\n\nWait, let me double-check. For each candidate, the delta is calculated as -local_derivative. So:\n\n- For a negative derivative (like -1.25), delta is positive (1.25), which is a rise.\n- For a positive derivative (like 1.33), delta is negative (-1.33), which is a fall.\n- For zero, delta is zero, stable.\n\nSo the directions would be:\n\n1. Rise\n2. Stable\n3. Fall\n4. Rise\n5. Fall\n\nBut wait, the candidates are ordered by rank. Let me list them again in order:\n\n1. Rank 1: Rise\n2. Rank 2: Stable\n3. Rank 3: Fall\n4. Rank 4: Rise\n5. Rank 5: Fall\n\nSo the final answer should be the directions in this order: Rise, Stable, Fall, Rise, Fall.\n",
+    "content": "[\"rise\", \"stable\", \"fall\", \"rise\", \"fall\"]",
+    "finish_reason": "stop"
+  },
+  "calculator": null,
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "rise",
+      "stable",
+      "fall",
+      "rise",
+      "fall"
+    ]
+  },
+  "invalid_output": null,
+  "exchanges": [
+    {
+      "stage": "thinking",
+      "request_sha256": "131d12e375a37f0a367e1b04476b3d9291fcd341dff260ed487fda544334fb92",
+      "response_sha256": "72295e90778e233e4269aa9f215ee1b2a9de55cc4d52bf0e446db05ff27b295e",
+      "message": {
+        "role": "assistant",
+        "content": "[\"rise\", \"stable\", \"fall\", \"rise\", \"fall\"]",
+        "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each of the five candidate logits. The directions need to be in candidate-rank order, and I have to follow the direction_rule provided.\n\nFirst, I need to understand the rules. The direction_rule says that if the delta is greater than 0.05, it's a rise. If it's less than -0.05, it's a fall. Otherwise, it's stable. The supplied_analysis_rule explains that the delta_logit is approximately -local_logit_derivative because the scale changes from 1 to 0. So, a positive derivative means the delta_logit is negative, leading to a fall. Conversely, a negative derivative would mean delta_logit is positive, leading to a rise. If the magnitude is less than or equal to 0.05, it's stable.\n\nNow, looking at the candidates:\n\n1. **Candidate Rank 1**: local_logit_derivative is -1.2511. Applying the formula, delta_logit ≈ -(-1.2511) = 1.2511. This is way above 0.05, so it's a rise.\n2. **Candidate Rank 2**: local_logit_derivative is 0. Delta_logit is -0 = 0. The magnitude is 0, which is within the stable range. So, stable.\n3. **Candidate Rank 3**: local_logit_derivative is 1.3302. Delta_logit ≈ -1.3302. This is below -0.05, so it's a fall.\n4. **Candidate Rank 4**: local_logit_derivative is -1.2901. Delta_logit ≈ -(-1.2901) = 1.2901. Again, this is a rise.\n5. **Candidate Rank 5**: local_logit_derivative is 1.3383. Delta_logit ≈ -1.3383. This is a fall.\n\nWait, let me double-check. For each candidate, the delta is calculated as -local_derivative. So:\n\n- For a negative derivative (like -1.25), delta is positive (1.25), which is a rise.\n- For a positive derivative (like 1.33), delta is negative (-1.33), which is a fall.\n- For zero, delta is zero, stable.\n\nSo the directions would be:\n\n1. Rise\n2. Stable\n3. Fall\n4. Rise\n5. Fall\n\nBut wait, the candidates are ordered by rank. Let me list them again in order:\n\n1. Rank 1: Rise\n2. Rank 2: Stable\n3. Rank 3: Fall\n4. Rank 4: Rise\n5. Rank 5: Fall\n\nSo the final answer should be the directions in this order: Rise, Stable, Fall, Rise, Fall.\n"
+      },
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 654,
+        "prompt_tokens": 596,
+        "total_tokens": 1250,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "4b813774-445e-4cd1-81a8-ece09cc237b8"
+    },
+    {
+      "stage": "recorder",
+      "request_sha256": "f74d6046cd42ef90effd9144053c9cb0e207acd2f67b4029a9f45f1e5ec066d9",
+      "response_sha256": "939aed9a657b19a00769f6bb3f9989702e764f54a6f84d538c72c00badedd3c7",
+      "message": {
+        "role": "assistant",
+        "content": "{\"directions_by_candidate_rank\": [\"rise\", \"stable\", \"fall\", \"rise\", \"fall\"]}"
+      },
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 23,
+        "prompt_tokens": 1349,
+        "total_tokens": 1372,
+        "prompt_tokens_details": {
+          "cached_tokens": 596
+        }
+      },
+      "ledger_request_id": "477dcc9f-a451-4083-8bde-97944b2af3e3"
+    }
+  ]
+}

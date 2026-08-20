@@ -1,0 +1,89 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 13,
+  "condition": "rule1_think1_calc0",
+  "evidence_sha256": "26be3b60f5a6320f09d4a145b63f6c57f5cef7ba2bf8828a054e02dd13937a7d",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T06:23:07.497Z",
+  "factors": {
+    "rule_given": true,
+    "thinking_enabled": true,
+    "calculator_available": false
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "fall",
+      "rise",
+      "stable",
+      "fall",
+      "rise"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      5,
+      4,
+      3,
+      2,
+      1
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      2,
+      5,
+      1,
+      4,
+      3
+    ],
+    "largest_rise_candidate_rank": 2,
+    "largest_fall_candidate_rank": 4
+  },
+  "exchanges": [
+    {
+      "request_sha256": "df2ef76f280880d923762814e90fe8c90d6d48ceb5119c513a85a54e6f543260",
+      "response_sha256": "640d0409215c3e72acc5df4c3b4e1fde2d66d94a559b2eea59c59533e6f7e1ab",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each held-out candidate logit. The tools provided include the 'inspect_heldout_causal_ladder' and 'record_directional_prediction' functions. \n\nFirst, I need to understand the given evidence. The intervention targets layer 35 head 25, changing the scale from 1 to 0. The direction rule is based on the delta logit: if delta > 0.05, it's a rise; if delta < -0.05, it's a fall; otherwise stable. The supplied analysis rule explains that delta_logit is approximately -local_logit_derivative. So, a positive derivative leads to a fall, and a negative derivative leads to a rise.\n\nLooking at the 'jvp' section, there are five candidates with their local_logit_derivative values. Let's list them:\n\n1. Candidate_rank 1: local_logit_derivative -1.3461 → delta_logit = 1.3461 (since delta = -local_derivative). This is greater than 0.05, so it should be a rise.\n2. Candidate_rank 2: local_logit_derivative 1.0922 → delta_logit = -1.0922, which is less than -0.05 → fall.\n3. Candidate_rank 3: local_logit_derivative 0 → delta_logit = 0 → stable.\n4. Candidate_rank 4: local_logit_derivative -1.4137 → delta_logit = 1.4137 → rise.\n5. Candidate_rank 5: local_logit_derivative 1.0886 → delta_logit = -1.0886 → fall.\n\nNow, I need to structure the 'record_directional_prediction' function call. The parameters required are:\n\n- directions_by_candidate_rank: an array of 5 elements (rise, fall, stable, etc.) in order of candidate ranks 1 to 5.\n- predicted_delta_order_largest_to_smallest: the delta values sorted from largest to smallest.\n- predicted_post_intervention_order_highest_to_lowest: the candidate ranks sorted by their predicted post-intervention logit values (which would be baseline + delta).\n- largest_rise_candidate_rank: the rank of the candidate with the largest rise.\n- largest_fall_candidate_rank: the rank of the candidate with the largest fall.\n\nLet's fill these out:\n\nDirections by candidate rank: [rise, fall, stable, rise, fall].\n\nPredicted delta values: For each candidate, delta is -local_derivative. So:\n\n1. Candidate 1: 1.3461\n2. Candidate 2: -1.0922\n3. Candidate 3: 0\n4. Candidate 4: 1.4137\n5. Candidate 5: -1.0886\n\nSorted largest to smallest: 1.4137 (candidate4), 1.3461 (candidate1), 0 (candidate3), -1.0886 (candidate5), -1.0922 (candidate2).\n\nPredicted post-intervention order: The post-intervention logit is baseline + delta. The baseline logit for each candidate is given:\n\n1. Candidate1: 0.0884 + 1.3461 = 1.4345\n2. Candidate2: 1.2779 -1.0922 = 0.1857\n3. Candidate3: 2.3598 + 0 = 2.3598\n4. Candidate4: -2.145 + 1.4137 = -0.7313\n5. Candidate5: 5.4569 -1.0886 = 4.3683\n\nSo the order from highest to lowest is candidate3 (2.3598), candidate5 (4.3683), candidate1 (1.4345), candidate2 (0.1857), candidate4 (-0.7313). Wait, that doesn't seem right. Wait, candidate5's post-intervention logit is 4.3683, which is the highest. Then candidate3 is 2.3598, then candidate1 is 1.4345, then candidate2 is 0.1857, then candidate4 is -0.7313. So the order is 5, 3, 1, 2, 4.\n\nLargest rise is candidate4 with delta 1.4137. Largest fall is candidate2 with"
+      },
+      "finish_reason": "length",
+      "usage": {
+        "completion_tokens": 1024,
+        "prompt_tokens": 1572,
+        "total_tokens": 2596,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "61ba147f-ac6a-4762-8c71-be2cfeceba5d"
+    },
+    {
+      "request_sha256": "1c9a30f1a51c054a901c11120b7e83e6cfc8f540b99077120293c61efaf7b30e",
+      "response_sha256": "dc2331da98116c3f71fa5e369c395821aa52db3533dbcdc37702b6a580f2a0ca",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"fall\", \"rise\", \"stable\", \"fall\", \"rise\"], \"predicted_delta_order_largest_to_smallest\": [5, 4, 3, 2, 1], \"predicted_post_intervention_order_highest_to_lowest\": [2, 5, 1, 4, 3], \"largest_rise_candidate_rank\": 2, \"largest_fall_candidate_rank\": 4}"
+            },
+            "id": "xbeB4MsB7T5LvmURVeUegLjsSgFh8A3g"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1516,
+        "total_tokens": 1628,
+        "prompt_tokens_details": {
+          "cached_tokens": 55
+        }
+      },
+      "ledger_request_id": "65146692-9505-4656-a082-7ede57a0536f"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

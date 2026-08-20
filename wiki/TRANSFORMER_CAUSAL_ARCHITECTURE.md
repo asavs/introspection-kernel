@@ -236,5 +236,5 @@ The architecture permits internal history to influence and sometimes become
 selectively available to later computation. That is enough to reject an
 architectural impossibility claim. It is not enough to conclude that current
 LLMs introspect, experience a continuous stream, or possess a human-like inner
-sense. The Introspection Kernel is designed to investigate the gap between
+sense. roboproprio is designed to investigate the gap between
 permission and practice.

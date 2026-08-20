@@ -1,0 +1,89 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 14,
+  "condition": "rule1_think1_calc1",
+  "evidence_sha256": "1580103651665a1b666c2775eae2805b39499b90a3fe7a220041128fdcd84654",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T06:11:16.006Z",
+  "factors": {
+    "rule_given": true,
+    "thinking_enabled": true,
+    "calculator_available": true
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "fall",
+      "rise",
+      "fall",
+      "fall",
+      "rise"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      2,
+      5,
+      1,
+      3,
+      4
+    ],
+    "largest_rise_candidate_rank": 2,
+    "largest_fall_candidate_rank": 3
+  },
+  "exchanges": [
+    {
+      "request_sha256": "993acf19b5c5554a573181794215240ed474144e78ff787b2be3bfee7cb56b8b",
+      "response_sha256": "398b0a6025ea157550d32bb583a7302386694218badb8558007ede37becf3a51",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each held-out candidate logit. The tools provided include the 'record_directional_prediction' function, which I need to use once I'm ready. \n\nFirst, I need to understand the given evidence. The intervention targets layer 35 head 25, changing the scale from 1 to 0. The direction epsilon is 0.05. The key here is the local_logit_derivative, which is the derivative of the logit with respect to scale, centered near head scale 1. The delta_logit is approximated as (0 - 1) * local_logit_derivative = -local_logit_derivative. \n\nSo, if the local_logit_derivative is positive, the delta_logit will be negative, predicting a fall. Conversely, if the derivative is negative, delta_logit will be positive, predicting a rise. If the magnitude is less than or equal to 0.05, it's stable. \n\nLooking at the evidence, the 'jvp' section has candidates with their local_logit_derivative values. Let's list them:\n\n1. Candidate_rank 1: local_logit_derivative 0.0 → delta_logit is 0.0 → stable.\n2. Candidate_rank 2: 1.2428 → delta_logit -1.2428 → fall (since -1.2428 < -0.05).\n3. Candidate_rank 3: -1.1891 → delta_logit 1.1891 → rise (1.1891 > 0.05).\n4. Candidate_rank 4: -1.2531 → delta_logit 1.2531 → rise.\n5. Candidate_rank 5: 1.0982 → delta_logit -1.0982 → fall.\n\nWait, but the direction_rule says rise if delta > 0.05, fall if delta < -0.05. The delta here is -local_logit_derivative. So for candidate 2, delta is -1.2428, which is less than -0.05 → fall. Candidate 3 has delta 1.1891 (since derivative is -1.1891, delta is -(-1.1891) = 1.1891?), wait no. Wait the formula says delta_logit is approximately (0 - 1) * local_logit_derivative = -local_logit_derivative. So if the local_logit_derivative is positive, delta_logit is negative. So for candidate 2, local_logit_derivative is 1.2428 → delta_logit is -1.2428. That's a fall. For candidate 3, local_logit_derivative is -1.1891 → delta_logit is 1.1891 → rise. Similarly for candidate 4, derivative is -1.2531 → delta is 1.2531 → rise. Candidate 5 has derivative 1.0982 → delta is -1.0982 → fall.\n\nSo the directions_by_candidate_rank would be:\n\n1. Stable (delta 0)\n2. Fall\n3. Rise\n4. Rise\n5. Fall\n\nBut the user's supplied analysis rule says that a sufficiently positive derivative (local_logit_derivative) predicts a fall (since delta is negative). So for candidate 2, derivative is positive → fall. Candidate 3's derivative is negative → rise. So that's correct.\n\nNow, the predicted_delta_order_largest_to_smallest refers to the magnitude of the delta. Let's calculate the delta for each candidate:\n\nCandidate 1: 0.0 → magnitude 0.0\nCandidate 2: -1.2428 → magnitude 1.2428\nCandidate 3: 1.1891 → magnitude 1.1891\nCandidate 4: 1.2531 → magnitude 1.2531\nCandidate 5: -1.0982 → magnitude 1.0982\n\nSo the largest to smallest magnitude would be:\n\nCandidate 4 (1.2531), Candidate 2 (1.2428), Candidate 3 (1.1891), Candidate 5 (1.0982), Candidate 1 (0.0). Wait, but candidate 2's magnitude is 1.2428, which is less than candidate 4's 1.2531. So the order is 4, 2, 3, 5, 1. But the predicted_delta_order_largest_to"
+      },
+      "finish_reason": "length",
+      "usage": {
+        "completion_tokens": 1024,
+        "prompt_tokens": 1788,
+        "total_tokens": 2812,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "e9119c21-eece-46d6-a1fc-230498b584f0"
+    },
+    {
+      "request_sha256": "2d9c84cf7690c0e6ed291dd1e32ca3556c005f8ab1bd1d53b1c4f581c1293e65",
+      "response_sha256": "4a96a90e483d7e722725c31813b4e3a679780dff163ad14756d91515a9e0f7a5",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"fall\", \"rise\", \"fall\", \"fall\", \"rise\"], \"predicted_delta_order_largest_to_smallest\": [1, 2, 3, 4, 5], \"predicted_post_intervention_order_highest_to_lowest\": [2, 5, 1, 3, 4], \"largest_rise_candidate_rank\": 2, \"largest_fall_candidate_rank\": 3}"
+            },
+            "id": "37N27vjjmnAnX4pb9n9kdoUIGvu3taC6"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1521,
+        "total_tokens": 1633,
+        "prompt_tokens_details": {
+          "cached_tokens": 55
+        }
+      },
+      "ledger_request_id": "148250d5-afa3-43fa-a7b0-4014a526c6f8"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

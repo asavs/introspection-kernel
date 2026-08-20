@@ -1,0 +1,71 @@
+{
+  "schema": "ik.rule-given-factorial-v5-prediction.v1",
+  "source_context_index": 17,
+  "condition": "rule1_think1_calc0",
+  "evidence_sha256": "d40d32d24eba18eeb813614ffe2984895f8ed495b18fb3a4e92b9421e518a5c0",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T08:13:24.089Z",
+  "factors": {
+    "rule_given": true,
+    "thinking_enabled": true,
+    "calculator_available": false
+  },
+  "transcript": {
+    "provenance": "verbatim_qwen_preceding_thinking_stage",
+    "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each of the five candidate logits. The directions need to be in candidate-rank order, and I shouldn't mention ranks or magnitudes. The rules are: rise if delta > 0.05, fall if delta < -0.05, otherwise stable. \n\nFirst, I need to understand the provided analysis rule. The local_logit_derivative is d(logit)/d(scale), centered near head scale 1. The intervention changes the scale from 1 to 0. Using a first-order approximation, delta_logit ≈ (0 - 1) * local_logit_derivative = -local_logit_derivative. So, if the derivative is positive, delta_logit is negative, which would mean a fall. If the derivative is negative, delta_logit is positive, meaning a rise. If the magnitude is less than 0.05, it's stable.\n\nNow, looking at the candidates:\n\n1. Candidate Rank 1: local_logit_derivative is -1.3458. So delta_logit ≈ -(-1.3458) = 1.3458. That's way above 0.05, so it should rise.\n\n2. Candidate Rank 2: derivative is -1.4528. Similarly, delta_logit is 1.4528, which is a rise.\n\n3. Candidate Rank 3: derivative is 0.9060. Delta_logit is -0.9060, which is less than -0.05, so fall.\n\n4. Candidate Rank 4: derivative is 0.000004768. Delta_logit is -0.000004768. The magnitude is way below 0.05, so stable.\n\n5. Candidate Rank 5: derivative is 0.9834. Delta_logit is -0.9834, which is a fall.\n\nWait, but the user said to use stable only when the predicted delta magnitude is at most 0.05. For candidate 4, the derivative is almost zero, so delta is negligible. So that's stable. \n\nSo the directions would be:\n\n1. Rise\n2. Rise\n3. Fall\n4. Stable\n5. Fall\n\nBut wait, the candidates are ordered by rank. So the output should list them in order 1 to 5. Let me double-check each calculation.\n\nYes, that seems correct. So the final answer should be the five directions in order: rise, rise, fall, stable, fall.\n",
+    "content": "[\"rise\", \"rise\", \"fall\", \"stable\", \"fall\"]",
+    "finish_reason": "stop"
+  },
+  "calculator": null,
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "rise",
+      "rise",
+      "fall",
+      "stable",
+      "fall"
+    ]
+  },
+  "invalid_output": null,
+  "exchanges": [
+    {
+      "stage": "thinking",
+      "request_sha256": "0dd932e5233125b1faf7f73cd32659a868cff50dbf737d37233f5fcb6e6a9a93",
+      "response_sha256": "71562f635e042c6429f89cd297a7c2effa3196d031c216c7982aacd3cf57697c",
+      "message": {
+        "role": "assistant",
+        "content": "[\"rise\", \"rise\", \"fall\", \"stable\", \"fall\"]",
+        "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each of the five candidate logits. The directions need to be in candidate-rank order, and I shouldn't mention ranks or magnitudes. The rules are: rise if delta > 0.05, fall if delta < -0.05, otherwise stable. \n\nFirst, I need to understand the provided analysis rule. The local_logit_derivative is d(logit)/d(scale), centered near head scale 1. The intervention changes the scale from 1 to 0. Using a first-order approximation, delta_logit ≈ (0 - 1) * local_logit_derivative = -local_logit_derivative. So, if the derivative is positive, delta_logit is negative, which would mean a fall. If the derivative is negative, delta_logit is positive, meaning a rise. If the magnitude is less than 0.05, it's stable.\n\nNow, looking at the candidates:\n\n1. Candidate Rank 1: local_logit_derivative is -1.3458. So delta_logit ≈ -(-1.3458) = 1.3458. That's way above 0.05, so it should rise.\n\n2. Candidate Rank 2: derivative is -1.4528. Similarly, delta_logit is 1.4528, which is a rise.\n\n3. Candidate Rank 3: derivative is 0.9060. Delta_logit is -0.9060, which is less than -0.05, so fall.\n\n4. Candidate Rank 4: derivative is 0.000004768. Delta_logit is -0.000004768. The magnitude is way below 0.05, so stable.\n\n5. Candidate Rank 5: derivative is 0.9834. Delta_logit is -0.9834, which is a fall.\n\nWait, but the user said to use stable only when the predicted delta magnitude is at most 0.05. For candidate 4, the derivative is almost zero, so delta is negligible. So that's stable. \n\nSo the directions would be:\n\n1. Rise\n2. Rise\n3. Fall\n4. Stable\n5. Fall\n\nBut wait, the candidates are ordered by rank. So the output should list them in order 1 to 5. Let me double-check each calculation.\n\nYes, that seems correct. So the final answer should be the five directions in order: rise, rise, fall, stable, fall.\n"
+      },
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 587,
+        "prompt_tokens": 624,
+        "total_tokens": 1211,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "e18ce836-d375-4c7c-bf9f-416000f45bae"
+    },
+    {
+      "stage": "recorder",
+      "request_sha256": "d09b195e60b2217381fbffa7cf012173e8afc4e928e5b90a45b282cd2b5039ad",
+      "response_sha256": "326362bf3b2281109855bcf648ca5342a7588c8d9ad3cc549517bf0e85729cbf",
+      "message": {
+        "role": "assistant",
+        "content": "{\"directions_by_candidate_rank\": [\"rise\", \"rise\", \"fall\", \"stable\", \"fall\"]}"
+      },
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 23,
+        "prompt_tokens": 1309,
+        "total_tokens": 1332,
+        "prompt_tokens_details": {
+          "cached_tokens": 624
+        }
+      },
+      "ledger_request_id": "85ce1d25-abc3-4633-b5a8-a8912856a189"
+    }
+  ]
+}

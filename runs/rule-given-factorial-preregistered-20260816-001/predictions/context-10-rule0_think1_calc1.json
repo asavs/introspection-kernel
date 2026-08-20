@@ -1,0 +1,89 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 9,
+  "condition": "rule0_think1_calc1",
+  "evidence_sha256": "73506664c5fe9ad86ff735b38f6d344c2cfb1d2711e2e7c4dfd76d0af9f29f3b",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T06:03:49.463Z",
+  "factors": {
+    "rule_given": false,
+    "thinking_enabled": true,
+    "calculator_available": true
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "rise",
+      "fall",
+      "stable",
+      "rise",
+      "fall"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      3,
+      2,
+      5,
+      4,
+      1
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      4,
+      5,
+      3,
+      2,
+      1
+    ],
+    "largest_rise_candidate_rank": 4,
+    "largest_fall_candidate_rank": 2
+  },
+  "exchanges": [
+    {
+      "request_sha256": "9d238a363efd83e9e96b1148faa74ee6c0fb7f7ca45c89842a9b6e593f9f5239",
+      "response_sha256": "546578334d4e78830c15a7b9be709824d649f7bca9a85bdfe1e515e165fe2ae3",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each held-out candidate logit. The tools provided include the 'record_directional_prediction' function, which I need to use once I have the necessary data.\n\nFirst, I need to understand the input data. The evidence provided includes the intervention details: targeting layer 35 head 25, starting at scale 1, requesting scale 0, with a direction epsilon of 0.05. The 'direction_rule' specifies that a rise occurs if the delta is greater than 0.05, a fall if less than -0.05, and stable otherwise.\n\nLooking at the 'jvp' section, there are five candidates with their baseline logits and local logit derivatives. The delta for each candidate is the local logit derivative. So, I need to calculate the delta for each candidate and apply the direction rule.\n\nLet's go through each candidate:\n\n1. Candidate 1: baseline_logit 3.4666, local_logit_derivative 1.3192. Delta is 1.3192. Since 1.3192 > 0.05, this should be a 'rise'.\n2. Candidate 2: baseline_logit 10.4079, local_logit_derivative -1.5246. Delta is -1.5246. This is less than -0.05, so 'fall'.\n3. Candidate 3: baseline_logit 2.3639, local_logit_derivative 0. Delta is 0. So, 'stable'.\n4. Candidate 4: baseline_logit 1.2197, local_logit_derivative 1.3435. Delta is 1.3435 > 0.05, 'rise'.\n5. Candidate 5: baseline_logit 4.3261, local_logit_derivative -1.4922. Delta is -1.4922 < -0.05, 'fall'.\n\nNow, I need to structure the prediction using the 'record_directional_prediction' function. The parameters required are:\n\n- directions_by_candidate_rank: an array of 5 elements, each being 'rise', 'fall', or 'stable' in the order of candidate ranks 1 to 5.\n- predicted_delta_order_largest_to_smallest: the order of candidates by delta magnitude from largest to smallest.\n- predicted_post_intervention_order_highest_to_lowest: the order after intervention, highest to lowest.\n- largest_rise_candidate_rank: the rank of the candidate with the largest rise.\n- largest_fall_candidate_rank: the rank of the candidate with the largest fall.\n\nFirst, directions_by_candidate_rank would be ['rise', 'fall', 'stable', 'rise', 'fall'].\n\nNext, predicted_delta_order_largest_to_smallest. The deltas are 1.3192, -1.5246, 0, 1.3435, -1.4922. The absolute values are 1.3192, 1.5246, 0, 1.3435, 1.4922. So sorted by magnitude from largest to smallest: 1.5246 (candidate 2), 1.4922 (candidate 5), 1.3435 (candidate 4), 1.3192 (candidate 1), 0 (candidate 3). So the order is [2,5,4,1,3].\n\nFor predicted_post_intervention_order_highest_to_lowest, we need the new values after intervention. The original baseline logits are modified by the delta. However, the problem states it's scale-zero-minus-baseline, so the new logit is baseline_logit + delta. Wait, but the delta here is the local logit derivative. Wait, the intervention is changing the scale from 1 to 0. The delta is the change in logit. So the new logit is baseline_logit + delta. But the direction rule is based on the delta (local_logit_derivative). However, the actual movement is the delta. So the post-intervention values would be baseline_logit + delta. But the user is asking for the movement, which is the delta. However, the 'predicted_post_intervention_order_highest_to_lowest' is the order of the new values (baseline + delta) from highest to lowest.\n\nWait, but the problem says \"scale-zero-minus-baseline movement\", which is the delta. So the movement is the delta. But the post-intervention order would be based on the new logit values. Let me clarify:\n\nOriginal baseline logit: let's say for candidate 1"
+      },
+      "finish_reason": "length",
+      "usage": {
+        "completion_tokens": 1024,
+        "prompt_tokens": 1694,
+        "total_tokens": 2718,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "d91af06a-5979-45dc-b33f-5cc0e81ae623"
+    },
+    {
+      "request_sha256": "6f6c4c36ce7fd23883bc1d4f51ef47528a85b1e6b0dd21acfc6815f92b7aa7ea",
+      "response_sha256": "208f9966e352754986238b1563003f1e86be3f77aa20aabdc0de2295591ed9e0",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"rise\", \"fall\", \"stable\", \"rise\", \"fall\"], \"predicted_delta_order_largest_to_smallest\": [3, 2, 5, 4, 1], \"predicted_post_intervention_order_highest_to_lowest\": [4, 5, 3, 2, 1], \"largest_rise_candidate_rank\": 4, \"largest_fall_candidate_rank\": 2}"
+            },
+            "id": "L3bgyPDrPrJSNSNubzovYtXoampfu6Gw"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1427,
+        "total_tokens": 1539,
+        "prompt_tokens_details": {
+          "cached_tokens": 55
+        }
+      },
+      "ledger_request_id": "f9c704bb-f356-4bbd-a52b-ac4a9a526b66"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

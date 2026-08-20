@@ -1,0 +1,70 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 10,
+  "condition": "rule0_think0_calc1",
+  "evidence_sha256": "6ddb2de1822e7dafeb9030b1b6847db207db47fe2ae6af7caa01f69cd5426c5b",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T06:24:56.867Z",
+  "factors": {
+    "rule_given": false,
+    "thinking_enabled": false,
+    "calculator_available": true
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "rise",
+      "stable",
+      "fall",
+      "fall",
+      "rise"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      1,
+      5,
+      3,
+      4,
+      2
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      5,
+      1,
+      2,
+      4,
+      3
+    ],
+    "largest_rise_candidate_rank": 5,
+    "largest_fall_candidate_rank": 3
+  },
+  "exchanges": [
+    {
+      "request_sha256": "fce511614e7dfb72fbc574eb146917ac6d94210188f2f4b12a2d87fb99fa9379",
+      "response_sha256": "4667793cb94ddb5481e98a778919b2986a42514a05b74d47a8558491c1c2317f",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"rise\", \"stable\", \"fall\", \"fall\", \"rise\"], \"predicted_delta_order_largest_to_smallest\": [1, 5, 3, 4, 2], \"predicted_post_intervention_order_highest_to_lowest\": [5, 1, 2, 4, 3], \"largest_rise_candidate_rank\": 5, \"largest_fall_candidate_rank\": 3}"
+            },
+            "id": "GsZeUaIhgQ2FLYEagoqqeYJq3XfFvZDx"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1694,
+        "total_tokens": 1806,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "773f50aa-5c83-4651-88bd-83dae2983dc9"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

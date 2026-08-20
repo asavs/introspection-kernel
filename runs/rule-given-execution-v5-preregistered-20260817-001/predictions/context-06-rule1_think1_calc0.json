@@ -1,0 +1,71 @@
+{
+  "schema": "ik.rule-given-factorial-v5-prediction.v1",
+  "source_context_index": 5,
+  "condition": "rule1_think1_calc0",
+  "evidence_sha256": "2ce367b5f1f743d23e784f4f134a656be4338c725357ba92c747593af55908df",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T07:58:47.714Z",
+  "factors": {
+    "rule_given": true,
+    "thinking_enabled": true,
+    "calculator_available": false
+  },
+  "transcript": {
+    "provenance": "verbatim_qwen_preceding_thinking_stage",
+    "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each of the five candidate logits. The directions need to be in candidate-rank order, and I have to follow the direction_rule provided. \n\nFirst, I need to understand the rules given. The direction_rule says that if the delta is greater than 0.05, it's a rise; if less than -0.05, it's a fall; otherwise, it's stable. The supplied_analysis_rule explains that the delta_logit is approximately -local_logit_derivative because the scale changes from 1 to 0. So, a positive derivative means the delta_logit is negative, leading to a fall. Conversely, a negative derivative would mean delta_logit is positive, leading to a rise. If the magnitude is less than or equal to 0.05, it's stable.\n\nNow, looking at the candidates:\n\n1. **Candidate Rank 1**: local_logit_derivative is 1.0924. Applying the formula, delta_logit ≈ -1.0924. The magnitude is 1.0924, which is way above 0.05. So, this should be a fall.\n\n2. **Candidate Rank 2**: local_logit_derivative is 0. Delta_logit is 0. The magnitude is 0, which is within the stable range. So, stable.\n\n3. **Candidate Rank 3**: local_logit_derivative is -1.4296. Delta_logit ≈ -(-1.4296) = 1.4296. The magnitude is 1.4296, which is greater than 0.05. So, this is a rise.\n\n4. **Candidate Rank 4**: local_logit_derivative is 1.0263. Delta_logit ≈ -1.0263. Magnitude is 1.0263, which is above 0.05. So, fall.\n\n5. **Candidate Rank 5**: local_logit_derivative is -1.5011. Delta_logit ≈ -(-1.5011) = 1.5011. Magnitude is 1.5011, which is above 0.05. So, rise.\n\nWait, let me double-check. For candidate 5, the derivative is negative, so delta_logit is positive. That means the logit increases, so the direction is rise. Yes. \n\nSo the directions are:\n\n1. Fall\n2. Stable\n3. Rise\n4. Fall\n5. Rise\n\nNow, arranging them in candidate-rank order (1 to 5), the directions should be:\n\n1. Fall\n2. Stable\n3. Rise\n4. Fall\n5. Rise\n\nI need to make sure I didn't mix up any of the candidates. Let me verify each one again:\n\n- Candidate 1: derivative positive → delta negative → fall.\n- Candidate 2: derivative zero → delta zero → stable.\n- Candidate 3: derivative negative → delta positive → rise.\n- Candidate 4: derivative positive → delta negative → fall.\n- Candidate 5: derivative negative → delta positive → rise.\n\nYes, that's correct. So the final answer should list these directions in order.\n",
+    "content": "[\"fall\", \"stable\", \"rise\", \"fall\", \"rise\"]",
+    "finish_reason": "stop"
+  },
+  "calculator": null,
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "fall",
+      "stable",
+      "rise",
+      "fall",
+      "rise"
+    ]
+  },
+  "invalid_output": null,
+  "exchanges": [
+    {
+      "stage": "thinking",
+      "request_sha256": "83271789d400c7fcee5895712544c1576760a581c7baf59fec7a3c7590077e98",
+      "response_sha256": "8f4667a4cad0f15fdc49b7077b92d2cc8dcd6b56785c4ef6bfe3f3bf3bb0a29e",
+      "message": {
+        "role": "assistant",
+        "content": "[\"fall\", \"stable\", \"rise\", \"fall\", \"rise\"]",
+        "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each of the five candidate logits. The directions need to be in candidate-rank order, and I have to follow the direction_rule provided. \n\nFirst, I need to understand the rules given. The direction_rule says that if the delta is greater than 0.05, it's a rise; if less than -0.05, it's a fall; otherwise, it's stable. The supplied_analysis_rule explains that the delta_logit is approximately -local_logit_derivative because the scale changes from 1 to 0. So, a positive derivative means the delta_logit is negative, leading to a fall. Conversely, a negative derivative would mean delta_logit is positive, leading to a rise. If the magnitude is less than or equal to 0.05, it's stable.\n\nNow, looking at the candidates:\n\n1. **Candidate Rank 1**: local_logit_derivative is 1.0924. Applying the formula, delta_logit ≈ -1.0924. The magnitude is 1.0924, which is way above 0.05. So, this should be a fall.\n\n2. **Candidate Rank 2**: local_logit_derivative is 0. Delta_logit is 0. The magnitude is 0, which is within the stable range. So, stable.\n\n3. **Candidate Rank 3**: local_logit_derivative is -1.4296. Delta_logit ≈ -(-1.4296) = 1.4296. The magnitude is 1.4296, which is greater than 0.05. So, this is a rise.\n\n4. **Candidate Rank 4**: local_logit_derivative is 1.0263. Delta_logit ≈ -1.0263. Magnitude is 1.0263, which is above 0.05. So, fall.\n\n5. **Candidate Rank 5**: local_logit_derivative is -1.5011. Delta_logit ≈ -(-1.5011) = 1.5011. Magnitude is 1.5011, which is above 0.05. So, rise.\n\nWait, let me double-check. For candidate 5, the derivative is negative, so delta_logit is positive. That means the logit increases, so the direction is rise. Yes. \n\nSo the directions are:\n\n1. Fall\n2. Stable\n3. Rise\n4. Fall\n5. Rise\n\nNow, arranging them in candidate-rank order (1 to 5), the directions should be:\n\n1. Fall\n2. Stable\n3. Rise\n4. Fall\n5. Rise\n\nI need to make sure I didn't mix up any of the candidates. Let me verify each one again:\n\n- Candidate 1: derivative positive → delta negative → fall.\n- Candidate 2: derivative zero → delta zero → stable.\n- Candidate 3: derivative negative → delta positive → rise.\n- Candidate 4: derivative positive → delta negative → fall.\n- Candidate 5: derivative negative → delta positive → rise.\n\nYes, that's correct. So the final answer should list these directions in order.\n"
+      },
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 730,
+        "prompt_tokens": 598,
+        "total_tokens": 1328,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "8b729413-c380-4cad-942f-0bf35313086b"
+    },
+    {
+      "stage": "recorder",
+      "request_sha256": "8fa0e1ebd645611fe37aa490f6ff8129513a5d7422ee08190668a72bccede126",
+      "response_sha256": "04fbb0b6260dce46be440acbd4eda3e37a864a5a5bbcbae4f56ad0712d186740",
+      "message": {
+        "role": "assistant",
+        "content": "{\"directions_by_candidate_rank\": [\"fall\", \"stable\", \"rise\", \"fall\", \"rise\"]}"
+      },
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 23,
+        "prompt_tokens": 1435,
+        "total_tokens": 1458,
+        "prompt_tokens_details": {
+          "cached_tokens": 598
+        }
+      },
+      "ledger_request_id": "840397c7-6a79-4279-999c-f7e320f06a28"
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "schema": "ik.rule-given-factorial-v5-prediction.v1",
+  "source_context_index": 6,
+  "condition": "rule1_think1_calc1",
+  "evidence_sha256": "b680d8a582d0ddd35d97f46f6f287eb95251f39e1589cb6b5d89ecfd067b25e9",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T08:15:53.848Z",
+  "factors": {
+    "rule_given": true,
+    "thinking_enabled": true,
+    "calculator_available": true
+  },
+  "transcript": {
+    "provenance": "verbatim_qwen_preceding_thinking_stage",
+    "reasoning_content": "Okay, let's see. The user wants me to predict the scale-zero-minus-baseline movement for each of the five candidate logits. The direction rule is to rise if delta > 0.05, fall if delta < -0.05, otherwise stable. The analysis rule mentions that the delta_logit is approximately -local_logit_derivative because the scale changes from 1 to 0. So a positive derivative means the delta_logit is negative, leading to a fall. Conversely, a negative derivative would mean delta_logit is positive, leading to a rise. If the derivative is near zero, then it's stable.\n\nLooking at the candidates:\n\n1. Candidate 1 has a local_logit_derivative of 1.14977. So delta_logit is -1.14977. That's less than -0.05, so direction is fall.\n2. Candidate 2 has 1.17231. Similarly, delta_logit is -1.17231, which is also fall.\n3. Candidate 3 has -1.65033. Delta_logit is 1.65033, which is greater than 0.05, so rise.\n4. Candidate 4 has -1.64519. Delta_logit is 1.64519, also rise.\n5. Candidate 5 has 0. Delta_logit is 0, so stable.\n\nThe user specified to output exactly five directions in candidate-rank order. The directions from the calculation are fall, fall, rise, rise, stable. So the final answer should list these in order.\n",
+    "content": "[\"fall\", \"fall\", \"rise\", \"rise\", \"stable\"]",
+    "finish_reason": "stop"
+  },
+  "calculator": {
+    "valid": true,
+    "call": {
+      "type": "function",
+      "function": {
+        "name": "calculate_vector",
+        "arguments": "{\"operation\": \"classify_threshold\", \"values\": [-1.149774034631419, -1.1723117514782222, 1.650325687014509, 1.6451865725891115, 0], \"threshold\": 0.05}"
+      },
+      "id": "wu5pGgJYBsep1Ga5YUUaec9sEtKOQjQR"
+    },
+    "args": {
+      "operation": "classify_threshold",
+      "values": [
+        -1.149774034631419,
+        -1.1723117514782222,
+        1.650325687014509,
+        1.6451865725891115,
+        0
+      ],
+      "threshold": 0.05
+    },
+    "result": {
+      "operation": "classify_threshold",
+      "directions": [
+        "fall",
+        "fall",
+        "rise",
+        "rise",
+        "stable"
+      ]
+    }
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "fall",
+      "fall",
+      "rise",
+      "rise",
+      "stable"
+    ]
+  },
+  "invalid_output": null,
+  "exchanges": [
+    {
+      "stage": "calculator",
+      "request_sha256": "a34b90d1c5119010b9b561f27342dadb140e349dd8ac38679931ca3d44a86237",
+      "response_sha256": "7f5cc37b6185aceba7c0342838aec4ab2400d2f91caf68fcf66a5b8c3ba4ec55",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "calculate_vector",
+              "arguments": "{\"operation\": \"classify_threshold\", \"values\": [-1.149774034631419, -1.1723117514782222, 1.650325687014509, 1.6451865725891115, 0], \"threshold\": 0.05}"
+            },
+            "id": "wu5pGgJYBsep1Ga5YUUaec9sEtKOQjQR"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 114,
+        "prompt_tokens": 865,
+        "total_tokens": 979,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "d0b223a6-1ff6-4db0-8b23-6c4858d60140"
+    },
+    {
+      "stage": "thinking",
+      "request_sha256": "35026cbde9b7ebf9859cd942ea96b0d69a6ae5bde90d6d22f74c4b6f57ba7c96",
+      "response_sha256": "d45ecd4715cc2ceb30476a75b298e34c9ff5720db7ccd7cd4daabd668b5f0960",
+      "message": {
+        "role": "assistant",
+        "content": "[\"fall\", \"fall\", \"rise\", \"rise\", \"stable\"]",
+        "reasoning_content": "Okay, let's see. The user wants me to predict the scale-zero-minus-baseline movement for each of the five candidate logits. The direction rule is to rise if delta > 0.05, fall if delta < -0.05, otherwise stable. The analysis rule mentions that the delta_logit is approximately -local_logit_derivative because the scale changes from 1 to 0. So a positive derivative means the delta_logit is negative, leading to a fall. Conversely, a negative derivative would mean delta_logit is positive, leading to a rise. If the derivative is near zero, then it's stable.\n\nLooking at the candidates:\n\n1. Candidate 1 has a local_logit_derivative of 1.14977. So delta_logit is -1.14977. That's less than -0.05, so direction is fall.\n2. Candidate 2 has 1.17231. Similarly, delta_logit is -1.17231, which is also fall.\n3. Candidate 3 has -1.65033. Delta_logit is 1.65033, which is greater than 0.05, so rise.\n4. Candidate 4 has -1.64519. Delta_logit is 1.64519, also rise.\n5. Candidate 5 has 0. Delta_logit is 0, so stable.\n\nThe user specified to output exactly five directions in candidate-rank order. The directions from the calculation are fall, fall, rise, rise, stable. So the final answer should list these in order.\n"
+      },
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 370,
+        "prompt_tokens": 705,
+        "total_tokens": 1075,
+        "prompt_tokens_details": {
+          "cached_tokens": 6
+        }
+      },
+      "ledger_request_id": "5af6a2a7-a971-4023-a7d7-3f3c39a0388f"
+    },
+    {
+      "stage": "recorder",
+      "request_sha256": "df5a18c9852c0aff0049d12f6c4680a951a5776553499f0bf660f9076a675d1e",
+      "response_sha256": "ad82d46c6a7cd12419f43cef7d5df908bdec7e99a0f9655b92851930d5fa4ea1",
+      "message": {
+        "role": "assistant",
+        "content": "{\"directions_by_candidate_rank\": [\"fall\", \"fall\", \"rise\", \"rise\", \"stable\"]}"
+      },
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 24,
+        "prompt_tokens": 1160,
+        "total_tokens": 1184,
+        "prompt_tokens_details": {
+          "cached_tokens": 705
+        }
+      },
+      "ledger_request_id": "e5f389ff-7a38-4faf-9c98-e1888b78c332"
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 10,
+  "condition": "rule0_think1_calc0",
+  "evidence_sha256": "6ddb2de1822e7dafeb9030b1b6847db207db47fe2ae6af7caa01f69cd5426c5b",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T06:25:28.699Z",
+  "factors": {
+    "rule_given": false,
+    "thinking_enabled": true,
+    "calculator_available": false
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "rise",
+      "stable",
+      "fall",
+      "fall",
+      "rise"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      5,
+      1,
+      2,
+      3,
+      4
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      5,
+      3,
+      2,
+      1,
+      4
+    ],
+    "largest_rise_candidate_rank": 5,
+    "largest_fall_candidate_rank": 4
+  },
+  "exchanges": [
+    {
+      "request_sha256": "6991629f2ea3c13c0841ec5ab0c3c78ce84e33b383ce37196cc187507b969b49",
+      "response_sha256": "c681f5562dffd511345b46323ca7b9056f5531ddc7651f9c801fc3d86ed93e20",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each held-out candidate logit. The tools provided include the 'inspect_heldout_causal_ladder' and 'record_directional_prediction' functions. \n\nFirst, I need to understand the data provided in the evidence. The intervention targets layer 35 head 25, reducing the scale from 1 to 0 with a direction epsilon of 0.05. The direction rule is that if the delta (change) is greater than 0.05, it's a rise; if less than -0.05, it's a fall; otherwise, stable.\n\nLooking at the 'jvp' section, there are five candidates with their baseline logits and local logit derivatives. The local logit derivative seems to be the delta here. For each candidate, I need to calculate the delta and apply the direction rule.\n\nLet's go through each candidate:\n\n1. Candidate_rank 1: baseline_logit 0.1891, local_logit_derivative 0.7537. Delta is 0.7537. Since 0.7537 > 0.05, direction is 'rise'.\n2. Candidate_rank 2: baseline_logit 1.387, local_logit_derivative 0. Delta is 0. So, 'stable'.\n3. Candidate_rank 3: baseline_logit 3.9424, local_logit_derivative -1.1225. Delta is -1.1225, which is < -0.05. So, 'fall'.\n4. Candidate_rank 4: baseline_logit -0.8696, local_logit_derivative -1.1885. Delta is -1.1885, which is a 'fall'.\n5. Candidate_rank 5: baseline_logit 5.5886, local_logit_derivative 0.7835. Delta is 0.7835, so 'rise'.\n\nNow, the parameters for 'record_directional_prediction' require directions_by_candidate_rank (array of 5 elements), predicted_delta_order_largest_to_smallest (array of 5 integers), predicted_post_intervention_order_highest_to_lowest (array of 5 integers), and the ranks for largest rise and fall.\n\nFor directions_by_candidate_rank, the order is based on candidate_rank 1 to 5. So the directions are ['rise', 'stable', 'fall', 'fall', 'rise'].\n\nNext, predicted_delta_order_largest_to_smallest: the deltas are 0.7537, 0, -1.1225, -1.1885, 0.7835. Sorting these from largest to smallest: 0.7835 (candidate 5), 0.7537 (candidate 1), 0 (candidate 2), -1.1225 (candidate 3), -1.1885 (candidate 4). So the order is [5,1,2,3,4].\n\nPredicted_post_intervention_order_highest_to_lowest: This would be the baseline logits after intervention. The baseline logits are 0.1891, 1.387, 3.9424, -0.8696, 5.5886. Sorting these from highest to lowest: 5.5886 (candidate 5), 3.9424 (candidate 3), 1.387 (candidate 2), 0.1891 (candidate 1), -0.8696 (candidate 4). So the order is [5,3,2,1,4].\n\nLargest_rise_candidate_rank: The largest rise is 0.7835 (candidate 5). Largest fall is -1.1885 (candidate 4).\n\nPutting it all together, the parameters for the function call should be structured accordingly. I need to ensure all required fields are included and correctly formatted.\n",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"rise\", \"stable\", \"fall\", \"fall\", \"rise\"], \"predicted_delta_order_largest_to_smallest\": [5, 1, 2, 3, 4], \"predicted_post_intervention_order_highest_to_lowest\": [5, 3, 2, 1, 4], \"largest_rise_candidate_rank\": 5, \"largest_fall_candidate_rank\": 4}"
+            },
+            "id": "QWnk64G8WrsafzQkJ3FgJHSBeQApABg9"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 998,
+        "prompt_tokens": 1479,
+        "total_tokens": 2477,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "212ab34e-73a3-46bc-9511-3c309af03c77"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

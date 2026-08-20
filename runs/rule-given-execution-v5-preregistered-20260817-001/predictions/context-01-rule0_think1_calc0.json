@@ -1,0 +1,71 @@
+{
+  "schema": "ik.rule-given-factorial-v5-prediction.v1",
+  "source_context_index": 0,
+  "condition": "rule0_think1_calc0",
+  "evidence_sha256": "71408dd94cd5d024ee2029a70625e81cf0332286096bed1dc3f3cc5c0a22ef8a",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T07:45:43.418Z",
+  "factors": {
+    "rule_given": false,
+    "thinking_enabled": true,
+    "calculator_available": false
+  },
+  "transcript": {
+    "provenance": "verbatim_qwen_preceding_thinking_stage",
+    "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each of the five candidate logits. The direction rules are: rise if delta > 0.05, fall if delta < -0.05, otherwise stable. \n\nFirst, I need to understand what exactly is being asked here. The term \"scale-zero-minus-baseline\" might refer to the change in logit values when the scale is adjusted from a starting scale (which is 1) to a requested scale of 0. The delta here would be the difference between the logit at scale 0 and the baseline logit at scale 1. \n\nBut wait, the candidates have a \"local_logit_derivative\" provided. That derivative probably represents how the logit changes with respect to the scale. So, if we're moving from scale 1 to scale 0, the change in logit (delta) would be the derivative multiplied by the change in scale. The change in scale here is from 1 to 0, which is a decrease of 1. So delta = derivative * (-1). \n\nLet me verify that. The derivative is the rate of change per unit scale. So if the scale is reduced by 1 (from 1 to 0), the total change would be derivative * (0 - 1) = -derivative. \n\nSo for each candidate, I need to calculate delta as -local_logit_derivative. Then check if delta is greater than 0.05 (rise), less than -0.05 (fall), or stable otherwise.\n\nLet's go through each candidate:\n\n1. Candidate Rank 1: Token \"罔\", baseline_logit = -0.5468, local_logit_derivative = 1.1343. Delta = -1.1343. That's -1.1343, which is less than -0.05, so it should fall.\n\n2. Candidate Rank 2: Token \" Z\", baseline_logit = 3.3485, local_logit_derivative = -1.1387. Delta = -(-1.1387) = 1.1387. That's greater than 0.05, so it should rise.\n\n3. Candidate Rank 3: Token \" Rate\", baseline_logit = -0.2910, local_logit_derivative = -1.1322. Delta = -(-1.1322) = 1.1322. Also greater than 0.05, so rise.\n\n4. Candidate Rank 4: Token \"刳\", baseline_logit = 3.6413, local_logit_derivative = 1.2903. Delta = -1.2903. Less than -0.05, so fall.\n\n5. Candidate Rank 5: Token \"┻\", baseline_logit = 2.5639, local_logit_derivative = 0. Delta = -0 = 0. Since 0 is between -0.05 and 0.05, it's stable.\n\nWait, but the fifth candidate's derivative is 0. So delta is 0, which is stable. \n\nSo the directions would be:\n\n1. Fall\n2. Rise\n3. Rise\n4. Fall\n5. Stable\n\nBut let me double-check the calculations. For candidate 1: derivative is 1.1343, so delta is -1.1343. Yes, that's a fall. Candidate 2: derivative is -1.1387, so delta is +1.1387, rise. Candidate 3: same as 2, derivative -1.1322, delta +1.1322, rise. Candidate 4: derivative 1.2903, delta -1.2903, fall. Candidate 5: derivative 0, delta 0, stable. \n\nSo the order of directions in candidate-rank order (1 to 5) is: Fall, Rise, Rise, Fall, Stable. \n\nBut the user wants exactly five directions in candidate-rank order, no ranks or magnitudes. So the answer should be the five directions in order. Let me make sure I didn't mix up any numbers. Yes, that seems correct.\n",
+    "content": "[\"fall\", \"rise\", \"rise\", \"fall\", \"stable\"]",
+    "finish_reason": "stop"
+  },
+  "calculator": null,
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "fall",
+      "rise",
+      "rise",
+      "fall",
+      "stable"
+    ]
+  },
+  "invalid_output": null,
+  "exchanges": [
+    {
+      "stage": "thinking",
+      "request_sha256": "2f27411f3d5a1a51a2af86269e77dd181366340d585b0a0ed4ab8c6f948a589e",
+      "response_sha256": "56fd722810d79f1911fbd189d334d5f6ffcbc9a6eeb7d5bef6ec784891e26b23",
+      "message": {
+        "role": "assistant",
+        "content": "[\"fall\", \"rise\", \"rise\", \"fall\", \"stable\"]",
+        "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each of the five candidate logits. The direction rules are: rise if delta > 0.05, fall if delta < -0.05, otherwise stable. \n\nFirst, I need to understand what exactly is being asked here. The term \"scale-zero-minus-baseline\" might refer to the change in logit values when the scale is adjusted from a starting scale (which is 1) to a requested scale of 0. The delta here would be the difference between the logit at scale 0 and the baseline logit at scale 1. \n\nBut wait, the candidates have a \"local_logit_derivative\" provided. That derivative probably represents how the logit changes with respect to the scale. So, if we're moving from scale 1 to scale 0, the change in logit (delta) would be the derivative multiplied by the change in scale. The change in scale here is from 1 to 0, which is a decrease of 1. So delta = derivative * (-1). \n\nLet me verify that. The derivative is the rate of change per unit scale. So if the scale is reduced by 1 (from 1 to 0), the total change would be derivative * (0 - 1) = -derivative. \n\nSo for each candidate, I need to calculate delta as -local_logit_derivative. Then check if delta is greater than 0.05 (rise), less than -0.05 (fall), or stable otherwise.\n\nLet's go through each candidate:\n\n1. Candidate Rank 1: Token \"罔\", baseline_logit = -0.5468, local_logit_derivative = 1.1343. Delta = -1.1343. That's -1.1343, which is less than -0.05, so it should fall.\n\n2. Candidate Rank 2: Token \" Z\", baseline_logit = 3.3485, local_logit_derivative = -1.1387. Delta = -(-1.1387) = 1.1387. That's greater than 0.05, so it should rise.\n\n3. Candidate Rank 3: Token \" Rate\", baseline_logit = -0.2910, local_logit_derivative = -1.1322. Delta = -(-1.1322) = 1.1322. Also greater than 0.05, so rise.\n\n4. Candidate Rank 4: Token \"刳\", baseline_logit = 3.6413, local_logit_derivative = 1.2903. Delta = -1.2903. Less than -0.05, so fall.\n\n5. Candidate Rank 5: Token \"┻\", baseline_logit = 2.5639, local_logit_derivative = 0. Delta = -0 = 0. Since 0 is between -0.05 and 0.05, it's stable.\n\nWait, but the fifth candidate's derivative is 0. So delta is 0, which is stable. \n\nSo the directions would be:\n\n1. Fall\n2. Rise\n3. Rise\n4. Fall\n5. Stable\n\nBut let me double-check the calculations. For candidate 1: derivative is 1.1343, so delta is -1.1343. Yes, that's a fall. Candidate 2: derivative is -1.1387, so delta is +1.1387, rise. Candidate 3: same as 2, derivative -1.1322, delta +1.1322, rise. Candidate 4: derivative 1.2903, delta -1.2903, fall. Candidate 5: derivative 0, delta 0, stable. \n\nSo the order of directions in candidate-rank order (1 to 5) is: Fall, Rise, Rise, Fall, Stable. \n\nBut the user wants exactly five directions in candidate-rank order, no ranks or magnitudes. So the answer should be the five directions in order. Let me make sure I didn't mix up any numbers. Yes, that seems correct.\n"
+      },
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 949,
+        "prompt_tokens": 506,
+        "total_tokens": 1455,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "71fe0da5-51ab-4a92-9e7a-b83a8f008761"
+    },
+    {
+      "stage": "recorder",
+      "request_sha256": "9def8ce42c1bab206e766527e52d58cf4b3f085b15c4236ebcca59dc1caf57fc",
+      "response_sha256": "12181421a437069f6b263d062cc9330321237dc898fb94120af34be1376279fa",
+      "message": {
+        "role": "assistant",
+        "content": "{\"directions_by_candidate_rank\": [\"fall\", \"rise\", \"rise\", \"fall\", \"stable\"]}"
+      },
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 23,
+        "prompt_tokens": 1561,
+        "total_tokens": 1584,
+        "prompt_tokens_details": {
+          "cached_tokens": 506
+        }
+      },
+      "ledger_request_id": "efdbfe71-0744-4c06-ac3a-4f2aca801575"
+    }
+  ]
+}

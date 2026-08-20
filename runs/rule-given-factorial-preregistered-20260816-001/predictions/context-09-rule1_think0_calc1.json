@@ -1,0 +1,69 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 8,
+  "condition": "rule1_think0_calc1",
+  "evidence_sha256": "ff89f64886e63d7d1546fa6e78436d986790977f621f1cb1d5842cfaa694c930",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T05:48:40.710Z",
+  "factors": {
+    "rule_given": true,
+    "thinking_enabled": false,
+    "calculator_available": true
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "fall",
+      "stable",
+      "rise",
+      "rise",
+      "fall"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      3,
+      4,
+      5,
+      1,
+      2
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      3,
+      4,
+      5,
+      1,
+      2
+    ],
+    "largest_rise_candidate_rank": 3,
+    "largest_fall_candidate_rank": 5
+  },
+  "exchanges": [
+    {
+      "request_sha256": "9e68d8473f13c0a0a18530864e585ee702149c31e1f39ec5f4d9129665a63a44",
+      "response_sha256": "06baee151a78984e04478ba7d3d268b18052865831b2c521777a5e851294b17a",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"fall\", \"stable\", \"rise\", \"rise\", \"fall\"], \"predicted_delta_order_largest_to_smallest\": [3, 4, 5, 1, 2], \"predicted_post_intervention_order_highest_to_lowest\": [3, 4, 5, 1, 2], \"largest_rise_candidate_rank\": 3, \"largest_fall_candidate_rank\": 5}"
+            },
+            "id": "LfEPYDoso3sKONhp9iaRMHgiVqq4CeiV"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1787,
+        "total_tokens": 1899,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "95b27956-bf69-468b-8efe-efd9679873db"
+    }
+  ],
+  "calculator_calls": 0
+}

@@ -1,0 +1,99 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 3,
+  "condition": "rule1_think1_calc0",
+  "evidence_sha256": "a6374ca62168337acbff7df0807a1d071f9c2feaf149ac9f6bf58b5371fc7650",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T06:35:24.084Z",
+  "factors": {
+    "rule_given": true,
+    "thinking_enabled": true,
+    "calculator_available": false
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "fall",
+      "fall",
+      "rise",
+      "stable",
+      "rise"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      5,
+      4,
+      3,
+      2,
+      1
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      5,
+      3,
+      4,
+      1,
+      2
+    ],
+    "largest_rise_candidate_rank": 5,
+    "largest_fall_candidate_rank": 2
+  },
+  "exchanges": [
+    {
+      "request_sha256": "2324393c7a419c6f65813a498b95975c5bcb25ebe260253cc90ff1aee6a08732",
+      "response_sha256": "4ba1edfb36a94ebb8ce099264c34d6421090f0abb61314e75eb4760d85aabbf1",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each held-out candidate logit. The tools provided include the 'inspect_heldout_causal_ladder' and 'record_directional_prediction' functions. \n\nFirst, I need to understand the given evidence. The intervention targets layer 35 head 25, changing the scale from 1 to 0. The direction rule is based on the delta logit: rise if delta > 0.05, fall if delta < -0.05, else stable. The supplied analysis rule explains that delta_logit is approximately -local_logit_derivative. So, a positive derivative leads to a fall, and a negative derivative leads to a rise.\n\nLooking at the evidence, the 'jvp' section has candidates with their baseline logits and local_logit_derivative. For each candidate, I need to calculate the delta_logit as -local_logit_derivative. Then, apply the direction rule to determine if it's a rise, fall, or stable.\n\nLet's process each candidate:\n\n1. Candidate_rank 1: local_logit_derivative is -1.4071. Delta_logit = 1.4071. This is greater than 0.05, so direction is 'rise'.\n2. Candidate_rank 2: local_logit_derivative is -1.4306. Delta_logit = 1.4306. Also a 'rise'.\n3. Candidate_rank 3: local_logit_derivative is 0.9284. Delta_logit = -0.9284. Less than -0.05, so 'fall'.\n4. Candidate_rank 4: local_logit_derivative is 0. Delta_logit = 0. Stable.\n5. Candidate_rank 5: local_logit_derivative is 0.9969. Delta_logit = -0.9969. 'Fall'.\n\nNext, I need to determine the predicted_delta_order_largest_to_smallest. The delta values are 1.4071, 1.4306, -0.9284, 0, -0.9969. The largest delta is 1.4306 (candidate 2), then 1.4071 (candidate 1), then 0 (candidate 4), then -0.9284 (candidate 3), and -0.9969 (candidate 5). Wait, but the order should be from largest to smallest. So the order would be candidate 2 (1.4306), candidate 1 (1.4071), candidate 4 (0), candidate 3 (-0.9284), candidate 5 (-0.9969). But wait, candidate 5's delta is -0.9969, which is smaller than -0.9284. So the order is 2,1,4,3,5.\n\nFor predicted_post_intervention_order_highest_to_lowest, we need the baseline logits. The baseline logits are 1.4689 (candidate 1), -4.5253 (candidate 2), -2.8422 (candidate 3), -0.0517 (candidate 4), 4.5364 (candidate 5). The highest is candidate 5 (4.5364), then candidate 1 (1.4689), then candidate 3 (-2.8422), candidate 4 (-0.0517), and candidate 2 (-4.5253). So the order is 5,1,3,4,2.\n\nThe largest rise is candidate 2 (delta 1.4306), and the largest fall is candidate 5 (delta -0.9969). \n\nNow, I need to structure the parameters for the 'record_directional_prediction' function. Directions_by_candidate_rank should be [\"rise\", \"rise\", \"fall\", \"stable\", \"fall\"]. Predicted_delta_order_largest_to_smallest is [2,1,4,3,5]. Predicted_post_intervention_order_highest_to_lowest is [5,1,3,4,2]. Largest_rise_candidate_rank is 2, largest_fall_candidate_rank is 5.\n\nI should double-check the calculations to ensure no mistakes. The delta_logit for each candidate is correctly calculated, and the orders are sorted properly. The directions are assigned based on the delta values. Everything seems to align with the given rules.\n",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"rise\", \"rise\", \"fall\", \"stable\", \""
+            },
+            "id": "jDuBg05UTaVyJttOCDTCvMzjUpISw3gX"
+          }
+        ]
+      },
+      "finish_reason": "length",
+      "usage": {
+        "completion_tokens": 1024,
+        "prompt_tokens": 1581,
+        "total_tokens": 2605,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "b7a13d8c-3b08-4655-9af7-4828709e50c8"
+    },
+    {
+      "request_sha256": "3a497a27ab956c3844c849865aa453a19cef21caa7ec6c4deb90efdbf68e5bef",
+      "response_sha256": "a5782b5f952ee04b98f17d9b0037000cf88c2d4a44b46c7706101797a2650f6b",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"fall\", \"fall\", \"rise\", \"stable\", \"rise\"], \"predicted_delta_order_largest_to_smallest\": [5, 4, 3, 2, 1], \"predicted_post_intervention_order_highest_to_lowest\": [5, 3, 4, 1, 2], \"largest_rise_candidate_rank\": 5, \"largest_fall_candidate_rank\": 2}"
+            },
+            "id": "dcGwdNYZ6vG1aotlOr5BbE7wF290soG1"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1525,
+        "total_tokens": 1637,
+        "prompt_tokens_details": {
+          "cached_tokens": 55
+        }
+      },
+      "ledger_request_id": "77c3ec5b-9b2d-4bda-aa5f-88197e01d7c9"
+    }
+  ],
+  "recorder_correction_count": 1,
+  "calculator_calls": 0
+}

@@ -1,0 +1,89 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 4,
+  "condition": "rule1_think1_calc0",
+  "evidence_sha256": "0d3575389b5e81ba83d8ba00e3835b3752c69b0b9a310896a854555e18f32807",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T05:58:22.177Z",
+  "factors": {
+    "rule_given": true,
+    "thinking_enabled": true,
+    "calculator_available": false
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "fall",
+      "stable",
+      "rise",
+      "fall",
+      "rise"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      3,
+      2,
+      5,
+      4,
+      1
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      5,
+      4,
+      3,
+      2,
+      1
+    ],
+    "largest_rise_candidate_rank": 3,
+    "largest_fall_candidate_rank": 4
+  },
+  "exchanges": [
+    {
+      "request_sha256": "e1d4a8e46eb85c09a79d803b4444700cb64a7722c06dcbc3fc5a1c716531bae5",
+      "response_sha256": "e3847de32e61789e65a447c10deb7fd1fe9185d21b6cc02678bd66b511d47baa",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each held-out candidate logit. The tools provided include the 'inspect_heldout_causal_ladder' and 'record_directional_prediction' functions. \n\nFirst, I need to understand the given evidence. The intervention targets layer 35 head 25, changing the scale from 1 to 0. The direction epsilon is 0.05. The key here is the local_logit_derivative, which is the derivative of the logit with respect to the scale. The delta_logit is approximated as -local_logit_derivative because the scale is changing from 1 to 0. \n\nThe rules state that if the delta is greater than 0.05, it's a rise; if less than -0.05, it's a fall; otherwise, stable. But the supplied analysis rule complicates things. It says that a positive derivative predicts a fall (since delta_logit is -local_derivative), and a negative derivative predicts a rise. So, if the local_logit_derivative is positive, delta_logit is negative, leading to a fall. Conversely, a negative derivative would mean delta_logit is positive, leading to a rise. \n\nLooking at the jvp candidates:\n\n1. Candidate_rank 1: local_logit_derivative is -1.2511. So delta_logit is 1.2511. Since this is greater than 0.05, it's a rise. But wait, according to the analysis rule, a positive derivative (which would be the case if the derivative was positive) would predict a fall. Wait, no. Wait, the derivative here is -1.2511. So delta_logit is -(-1.2511) = 1.2511. So delta is positive. According to the direction rule, if delta > 0.05, it's a rise. So this candidate would rise. But according to the analysis rule, a positive derivative (which would be the case if the derivative was positive) would predict a fall. Wait, there's a confusion here. Let me recheck.\n\nThe analysis rule says: delta_logit is approximately -local_logit_derivative. So if the local_logit_derivative is positive, delta_logit is negative (fall). If the derivative is negative, delta_logit is positive (rise). So for candidate_rank 1, derivative is -1.2511 (negative), so delta_logit is positive 1.2511, which is a rise. That's correct. \n\nCandidate_rank 2: derivative is 0. So delta_logit is 0. So it's stable. \n\nCandidate_rank 3: derivative is 1.3302 (positive). So delta_logit is -1.3302, which is less than -0.05, so fall. \n\nCandidate_rank 4: derivative is -1.2901 (negative). So delta_logit is 1.2901, which is a rise. \n\nCandidate_rank 5: derivative is 1.3383 (positive). So delta_logit is -1.3383, which is a fall. \n\nSo the directions_by_candidate_rank would be: [rise, stable, fall, rise, fall]. \n\nNext, the predicted_delta_order_largest_to_smallest. The delta values are:\n\n1. Candidate 1: 1.2511\n2. Candidate 4: 1.2901\n3. Candidate 5: -1.3383\n4. Candidate 3: -1.3302\n5. Candidate 2: 0\n\nWait, but the delta for candidate 5 is -1.3383, which is the largest in magnitude but negative. However, the delta_order is based on the actual delta values. So the largest delta (positive) is candidate 4 (1.2901), then candidate 1 (1.2511), then candidate 2 (0), then candidate 3 (-1.3302), then candidate 5 (-1.3383). Wait, but the order is largest to smallest. So positive deltas first, then negative. So the order would be 1.2901 (candidate4), 1.2511 (candidate1), 0 (candidate2), -1.3302 (candidate3), -1.3383 (candidate5). Wait, but the largest to smallest would be 1.2901, 1.2511, 0, -1.3302, -1.3383. But the predicted_delta_order_largest"
+      },
+      "finish_reason": "length",
+      "usage": {
+        "completion_tokens": 1024,
+        "prompt_tokens": 1568,
+        "total_tokens": 2592,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "1978a2ca-7112-41e0-bb67-e7bae6dd5b57"
+    },
+    {
+      "request_sha256": "b43e07d9620bebbefe4dfebaa9aa7bfcb9806e6bc3bd6dcddfdc4e35aa76e36e",
+      "response_sha256": "4ce4aed15c5127e6626adaad717abb309e6b333d9a7d866b315b36c13551319a",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"fall\", \"stable\", \"rise\", \"fall\", \"rise\"], \"predicted_delta_order_largest_to_smallest\": [3, 2, 5, 4, 1], \"predicted_post_intervention_order_highest_to_lowest\": [5, 4, 3, 2, 1], \"largest_rise_candidate_rank\": 3, \"largest_fall_candidate_rank\": 4}"
+            },
+            "id": "hSlxywpKX8wDAZiF2csr3avRgw8g3rW1"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1512,
+        "total_tokens": 1624,
+        "prompt_tokens_details": {
+          "cached_tokens": 55
+        }
+      },
+      "ledger_request_id": "846a0e22-3e86-426e-bb28-1d84628a5066"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

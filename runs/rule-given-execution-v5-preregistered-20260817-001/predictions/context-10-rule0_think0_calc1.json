@@ -1,0 +1,106 @@
+{
+  "schema": "ik.rule-given-factorial-v5-prediction.v1",
+  "source_context_index": 9,
+  "condition": "rule0_think0_calc1",
+  "evidence_sha256": "1ba08812d977eb23ef05bb8ff38129993359963d1e5ee2fbc4da736b922832a1",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T07:43:48.347Z",
+  "factors": {
+    "rule_given": false,
+    "thinking_enabled": false,
+    "calculator_available": true
+  },
+  "transcript": null,
+  "calculator": {
+    "valid": true,
+    "call": {
+      "type": "function",
+      "function": {
+        "name": "calculate_vector",
+        "arguments": "{\"operation\": \"classify_threshold\", \"values\": [3.466615676879883, 10.407888412475586, 2.363858222961426, 1.2197191715240479, 4.326120853424072], \"threshold\": 0.05}"
+      },
+      "id": "WG4Jvh3qZROe0p4lDAjvac6HPsnsUGZB"
+    },
+    "args": {
+      "operation": "classify_threshold",
+      "values": [
+        3.466615676879883,
+        10.407888412475586,
+        2.363858222961426,
+        1.2197191715240479,
+        4.326120853424072
+      ],
+      "threshold": 0.05
+    },
+    "result": {
+      "operation": "classify_threshold",
+      "directions": [
+        "rise",
+        "rise",
+        "rise",
+        "rise",
+        "rise"
+      ]
+    }
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "rise",
+      "rise",
+      "rise",
+      "rise",
+      "rise"
+    ]
+  },
+  "invalid_output": null,
+  "exchanges": [
+    {
+      "stage": "calculator",
+      "request_sha256": "357e90bee6f93cbc4224e75b7f9ce64de7d6423f0b47fe662c67ef144a2757be",
+      "response_sha256": "043dd4ab19a9ea8960e3b1071273648f97b2aaf08e3848c8a3d1152718617a2b",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "calculate_vector",
+              "arguments": "{\"operation\": \"classify_threshold\", \"values\": [3.466615676879883, 10.407888412475586, 2.363858222961426, 1.2197191715240479, 4.326120853424072], \"threshold\": 0.05}"
+            },
+            "id": "WG4Jvh3qZROe0p4lDAjvac6HPsnsUGZB"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 130,
+        "prompt_tokens": 787,
+        "total_tokens": 917,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "e85e9b3c-2924-470b-81b8-8356c69e5ff4"
+    },
+    {
+      "stage": "recorder",
+      "request_sha256": "5a769c8abf0ac6d6f68d7776fb39f6a493cefbd117d1d6ad9a0389ca40893029",
+      "response_sha256": "cdc896360064443e183302c7e3e049d2bd85f29c2f0dc7231bad877d1de39695",
+      "message": {
+        "role": "assistant",
+        "content": "{\"directions_by_candidate_rank\": [\"rise\", \"rise\", \"rise\", \"rise\", \"rise\"]}"
+      },
+      "finish_reason": "stop",
+      "usage": {
+        "completion_tokens": 23,
+        "prompt_tokens": 637,
+        "total_tokens": 660,
+        "prompt_tokens_details": {
+          "cached_tokens": 6
+        }
+      },
+      "ledger_request_id": "7bad2cee-d8c9-4308-9711-9fa32e557efb"
+    }
+  ]
+}

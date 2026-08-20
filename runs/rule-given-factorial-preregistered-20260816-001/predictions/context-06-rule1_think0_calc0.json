@@ -1,0 +1,70 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 5,
+  "condition": "rule1_think0_calc0",
+  "evidence_sha256": "533103cec3d850474ba251853d6cc64b6a3e46e62a55fe24b796151882cced8e",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T06:33:09.540Z",
+  "factors": {
+    "rule_given": true,
+    "thinking_enabled": false,
+    "calculator_available": false
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "fall",
+      "stable",
+      "rise",
+      "fall",
+      "rise"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      5,
+      4,
+      3,
+      2,
+      1
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      3,
+      1,
+      5,
+      2,
+      4
+    ],
+    "largest_rise_candidate_rank": 5,
+    "largest_fall_candidate_rank": 3
+  },
+  "exchanges": [
+    {
+      "request_sha256": "7a9fe15d22b56035b5531e22a4eb8011b081c6d0bfd64a7cce2adedff71862a3",
+      "response_sha256": "8d0b4deacc1b920e9fa18d9c77664f967d6150f7f7726f05badef4fed42bc57f",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"fall\", \"stable\", \"rise\", \"fall\", \"rise\"], \"predicted_delta_order_largest_to_smallest\": [5, 4, 3, 2, 1], \"predicted_post_intervention_order_highest_to_lowest\": [3, 1, 5, 2, 4], \"largest_rise_candidate_rank\": 5, \"largest_fall_candidate_rank\": 3}"
+            },
+            "id": "2z0YIwNad5SP8rsWsuEKMm0oaXGQi0t1"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1501,
+        "total_tokens": 1613,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "1d8326d2-4dd9-4d3e-b1c1-03ba4f0a3990"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

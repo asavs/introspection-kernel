@@ -1,0 +1,89 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 6,
+  "condition": "rule1_think1_calc0",
+  "evidence_sha256": "4532baccc6bcae9574bf827f2bf3440cf36dff0719bff1700dbdc04ff25fab10",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T05:56:05.837Z",
+  "factors": {
+    "rule_given": true,
+    "thinking_enabled": true,
+    "calculator_available": false
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "fall",
+      "fall",
+      "rise",
+      "rise",
+      "stable"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      3,
+      2,
+      4,
+      1,
+      5
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      2,
+      1,
+      4,
+      3,
+      5
+    ],
+    "largest_rise_candidate_rank": 3,
+    "largest_fall_candidate_rank": 1
+  },
+  "exchanges": [
+    {
+      "request_sha256": "1fd995e9d1a95cf3c379ad83baf3e5be5a9dfd92a360e85bdb3c944180119ca9",
+      "response_sha256": "75ef6473cb5e5813f8ce2ae0ea0a024e594d5dc702b7ea0633a02a8f88d7bf12",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each held-out candidate logit. The tools provided include the 'inspect_heldout_causal_ladder' and 'record_directional_prediction' functions. \n\nFirst, I need to understand the given evidence. The intervention targets layer 35 head 25, changing the scale from 1 to 0. The direction rule is based on the delta logit: rise if delta > 0.05, fall if delta < -0.05, else stable. The supplied analysis rule explains that delta_logit is approximately -local_logit_derivative. So, a positive derivative leads to a fall, and a negative derivative leads to a rise.\n\nLooking at the jvp section, there are five candidates with their local_logit_derivative values. Let's list them:\n\n1. Candidate 1: derivative 1.1498 (positive) → delta_logit = -1.1498 → fall\n2. Candidate 2: derivative 1.1723 (positive) → delta_logit = -1.1723 → fall\n3. Candidate 3: derivative -1.6503 (negative) → delta_logit = 1.6503 → rise\n4. Candidate 4: derivative -1.6452 (negative) → delta_logit = 1.6452 → rise\n5. Candidate 5: derivative 0 → delta_logit = 0 → stable\n\nNext, I need to determine the predicted delta order from largest to smallest. The delta values are:\n\n- Candidate 3: 1.6503\n- Candidate 4: 1.6452\n- Candidate 1: -1.1498\n- Candidate 2: -1.1723\n- Candidate 5: 0\n\nWait, the largest delta is Candidate 3 (1.6503), then Candidate 4 (1.6452), then Candidate 5 (0), then Candidate 1 (-1.1498), and finally Candidate 2 (-1.1723). But the problem states that the predicted_delta_order_largest_to_smallest should be integers 1-5. So, the order would be 3,4,5,1,2. But the user's example might have different numbers. Wait, the parameters require the predicted_delta_order_largest_to_smallest as an array of integers 1-5, unique. So, the largest delta is 1.6503 (Candidate 3), then 1.6452 (Candidate 4), then 0 (Candidate 5), then -1.1498 (Candidate 1), then -1.1723 (Candidate 2). So the order would be 3,4,5,1,2. But the numbers need to be 1-5. Wait, the candidates are ranked 1-5. Wait, the candidates are ranked 1 to 5 based on their candidate_rank. Wait, the candidate_rank in the jvp section is 1 to 5. So the actual candidate ranks are 1,2,3,4,5. So the predicted_delta_order_largest_to_smallest should be the ranks of the candidates ordered by their delta values. \n\nWait, the delta values are:\n\nCandidate 1: -1.1498 (delta_logit)\nCandidate 2: -1.1723\nCandidate 3: 1.6503\nCandidate 4: 1.6452\nCandidate 5: 0\n\nSo the largest delta is Candidate 3 (1.6503), then Candidate 4 (1.6452), then Candidate 5 (0), then Candidate 1 (-1.1498), then Candidate 2 (-1.1723). So the order from largest to smallest delta is 3,4,5,1,2. Therefore, the predicted_delta_order_largest_to_smallest would be [3,4,5,1,2]. \n\nNext, the predicted_post_intervention_order_highest_to_lowest. This is the order of the baseline logits after the intervention. Wait, the baseline_logit for each candidate is:\n\nCandidate 1: 5.2538\nCandidate 2: 1.8655\nCandidate 3: 1.5998\nCandidate 4: 2.4154\nCandidate 5: 4.239\n\nWait, but the intervention changes the scale, so the actual logit after intervention would be baseline_logit + delta_logit. But the problem says to predict"
+      },
+      "finish_reason": "length",
+      "usage": {
+        "completion_tokens": 1024,
+        "prompt_tokens": 1576,
+        "total_tokens": 2600,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "4c6e938e-cf27-495c-847e-617e4853e5b9"
+    },
+    {
+      "request_sha256": "f41e49a7538655a67045ea93a489f5f926451354b8828b113b1f65c3f3d4d399",
+      "response_sha256": "d3d906d4fca684a45a328cb9b59c59e62b2d5bd5a0f048e0a9d399026fd20f07",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"fall\", \"fall\", \"rise\", \"rise\", \"stable\"], \"predicted_delta_order_largest_to_smallest\": [3, 2, 4, 1, 5], \"predicted_post_intervention_order_highest_to_lowest\": [2, 1, 4, 3, 5], \"largest_rise_candidate_rank\": 3, \"largest_fall_candidate_rank\": 1}"
+            },
+            "id": "Fvl7nhcl1mXQWAWRSM1daFnb5WrbgihE"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1520,
+        "total_tokens": 1632,
+        "prompt_tokens_details": {
+          "cached_tokens": 55
+        }
+      },
+      "ledger_request_id": "4eca255a-fa6c-40f2-add7-5a0024e93cc0"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

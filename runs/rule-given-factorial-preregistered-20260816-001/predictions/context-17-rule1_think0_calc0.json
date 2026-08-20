@@ -1,0 +1,69 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 16,
+  "condition": "rule1_think0_calc0",
+  "evidence_sha256": "945ffb12c5dfa3ac67f396386472d5f33ab302688107e89746f082de36117e11",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T05:46:00.002Z",
+  "factors": {
+    "rule_given": true,
+    "thinking_enabled": false,
+    "calculator_available": false
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "fall",
+      "fall",
+      "rise",
+      "rise",
+      "stable"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      4,
+      3,
+      2,
+      1,
+      5
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      5,
+      1,
+      2,
+      3,
+      4
+    ],
+    "largest_rise_candidate_rank": 3,
+    "largest_fall_candidate_rank": 2
+  },
+  "exchanges": [
+    {
+      "request_sha256": "e927f323d23abb3d76776ab2870e294bab758196b60f17eeef21abd5524f3ade",
+      "response_sha256": "a9ab753e525016eca472eaaac43cdaba27803fd5cdd7c9363a35ced482577a71",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"fall\", \"fall\", \"rise\", \"rise\", \"stable\"], \"predicted_delta_order_largest_to_smallest\": [4, 3, 2, 1, 5], \"predicted_post_intervention_order_highest_to_lowest\": [5, 1, 2, 3, 4], \"largest_rise_candidate_rank\": 3, \"largest_fall_candidate_rank\": 2}"
+            },
+            "id": "4w6Dz8VuHWNRU6UihdiZNLDDkQNOwzON"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1530,
+        "total_tokens": 1642,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "0106eb7c-36a5-4199-9775-586ef94d844d"
+    }
+  ],
+  "calculator_calls": 0
+}

@@ -1,0 +1,70 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 6,
+  "condition": "rule1_think0_calc0",
+  "evidence_sha256": "4532baccc6bcae9574bf827f2bf3440cf36dff0719bff1700dbdc04ff25fab10",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T05:56:13.241Z",
+  "factors": {
+    "rule_given": true,
+    "thinking_enabled": false,
+    "calculator_available": false
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "fall",
+      "fall",
+      "rise",
+      "rise",
+      "stable"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      3,
+      2,
+      4,
+      1,
+      5
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      2,
+      1,
+      5,
+      4,
+      3
+    ],
+    "largest_rise_candidate_rank": 3,
+    "largest_fall_candidate_rank": 1
+  },
+  "exchanges": [
+    {
+      "request_sha256": "f41e49a7538655a67045ea93a489f5f926451354b8828b113b1f65c3f3d4d399",
+      "response_sha256": "1d73b058a358f6b4cd2d1488184d36540845a00132e5a5098470084c211fe860",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"fall\", \"fall\", \"rise\", \"rise\", \"stable\"], \"predicted_delta_order_largest_to_smallest\": [3, 2, 4, 1, 5], \"predicted_post_intervention_order_highest_to_lowest\": [2, 1, 5, 4, 3], \"largest_rise_candidate_rank\": 3, \"largest_fall_candidate_rank\": 1}"
+            },
+            "id": "CoapBh6874HSJV9WicRMG7EY6d9JTfao"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1520,
+        "total_tokens": 1632,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "7a196018-e758-4bcd-b031-4f1a015ab2cc"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

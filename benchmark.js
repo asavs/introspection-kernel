@@ -1,6 +1,6 @@
 import crypto from "node:crypto";
 
-export const SCHEMA_VERSION = "introspection-kernel-v1";
+export const SCHEMA_VERSION = "roboproprio-v1";
 
 function seededOrder(items, seed) {
   const hash = item => crypto.createHash("sha256").update(`${seed}:${item.pid}`).digest("hex");

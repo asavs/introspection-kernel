@@ -1,0 +1,89 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 0,
+  "condition": "rule0_think1_calc0",
+  "evidence_sha256": "a206215b8cc181d7ff963cd691826676f8429ccb7c8cd006cb66f280a39aecbb",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T06:28:35.236Z",
+  "factors": {
+    "rule_given": false,
+    "thinking_enabled": true,
+    "calculator_available": false
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "rise",
+      "fall",
+      "fall",
+      "rise",
+      "stable"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      4,
+      3,
+      2,
+      1,
+      5
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      4,
+      1,
+      5,
+      2,
+      3
+    ],
+    "largest_rise_candidate_rank": 4,
+    "largest_fall_candidate_rank": 2
+  },
+  "exchanges": [
+    {
+      "request_sha256": "4e95fef216f2cfac6bbd3c80b3926d8cb891e10baff11f218dc2880ce6e4e463",
+      "response_sha256": "6b4cf8712390ff7f5a243addde5cc1a5eb31d1f4f40c170a87d6a34c4719dc81",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each held-out candidate logit. The tools provided include the 'inspect_heldout_causal_ladder' and 'record_directional_prediction' functions. \n\nFirst, I need to understand the data provided in the evidence. The intervention targets \"layer 35 head 25\" with a start scale of 1 and requested scale of 0. The direction epsilon is 0.05. The direction rule is that if the delta is greater than 0.05, it's a rise; if less than -0.05, it's a fall; otherwise, stable.\n\nLooking at the evidence, there's a 'jvp' section with candidates. Each candidate has a baseline_logit, local_logit_derivative, and stratum. The local_logit_derivative seems to be the delta here. So for each candidate, I need to calculate the delta (local_logit_derivative) and apply the direction rule.\n\nLet's go through each candidate:\n\n1. Candidate_rank 1: local_logit_derivative is 1.1343. Since 1.1343 > 0.05, direction is 'rise'.\n2. Candidate_rank 2: local_logit_derivative is -1.1387. This is less than -0.05, so 'fall'.\n3. Candidate_rank 3: local_logit_derivative is -1.1322. Also less than -0.05, 'fall'.\n4. Candidate_rank 4: local_logit_derivative is 1.2903. Greater than 0.05, 'rise'.\n5. Candidate_rank 5: local_logit_derivative is 0.0. This is stable.\n\nNext, I need to determine the predicted_delta_order_largest_to_smallest. The deltas are 1.1343, -1.1387, -1.1322, 1.2903, 0.0. The largest delta is 1.2903 (candidate 4), then 1.1343 (candidate 1), then 0.0 (candidate 5), then the two falls. But since the order is largest to smallest, the deltas in order would be 1.2903, 1.1343, 0.0, -1.1322, -1.1387. However, the predicted_delta_order_largest_to_smallest should be the ranks of the candidates based on their delta magnitude. Wait, the parameters require an array of integers from 1 to 5, unique. So the largest delta is candidate 4 (1.2903), then candidate 1 (1.1343), then candidate 5 (0.0), then candidate 3 (-1.1322), then candidate 2 (-1.1387). So the predicted_delta_order_largest_to_smallest would be [4,1,5,3,2].\n\nFor the predicted_post_intervention_order_highest_to_lowest, this is the order of the candidates after the intervention. Since the intervention is scaling down, the baseline_logit might change. However, the problem states to use the local_logit_derivative as the delta. But the actual post-intervention order would depend on the baseline_logit plus the delta. Wait, the direction is based on the delta, but the order after intervention would be the baseline_logit plus the delta. However, the user's instruction says to use the provided analysis rule, which is not supplied. So maybe the order is based on the delta's effect. Alternatively, since the intervention is scaling, perhaps the order is determined by the baseline_logit plus the delta. But without the actual values, maybe the order is based on the delta's magnitude. However, the user's example might require using the baseline_logit and delta to compute the new logit. Let me check the baseline_logit and delta for each candidate:\n\nCandidate 1: baseline_logit -0.5468 + 1.1343 = 0.5875\nCandidate 2: 3.3485 + (-1.1387) = 2.2098\nCandidate 3: -0.291 + (-1.1322) = -1.4232\nCandidate 4: 3.6413 + 1.2903 = 4.9316\nCandidate 5: 2.5639 + 0 = 2.5639\n\nSo the post-intervention logits would be approximately 0.5875, 2.209"
+      },
+      "finish_reason": "length",
+      "usage": {
+        "completion_tokens": 1024,
+        "prompt_tokens": 1484,
+        "total_tokens": 2508,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "1e8538eb-a980-4863-b94f-4af8754c864b"
+    },
+    {
+      "request_sha256": "8ca6bb3e0bd14083be1026d369195383b55835a12b3de0fae3fa75c3bd125933",
+      "response_sha256": "79233b1d855899cd060c2d5f1ab7d6408610454d10f863b9b4691596d0ce99e9",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"rise\", \"fall\", \"fall\", \"rise\", \"stable\"], \"predicted_delta_order_largest_to_smallest\": [4, 3, 2, 1, 5], \"predicted_post_intervention_order_highest_to_lowest\": [4, 1, 5, 2, 3], \"largest_rise_candidate_rank\": 4, \"largest_fall_candidate_rank\": 2}"
+            },
+            "id": "De4dmcCeE9UK1fTvyKSBVQxDGXhzaWw6"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1428,
+        "total_tokens": 1540,
+        "prompt_tokens_details": {
+          "cached_tokens": 55
+        }
+      },
+      "ledger_request_id": "589b1a72-0aa2-416f-b5a0-7b71d0c279f6"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

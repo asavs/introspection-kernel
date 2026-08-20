@@ -1,0 +1,70 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 5,
+  "condition": "rule1_think0_calc1",
+  "evidence_sha256": "533103cec3d850474ba251853d6cc64b6a3e46e62a55fe24b796151882cced8e",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T06:32:32.066Z",
+  "factors": {
+    "rule_given": true,
+    "thinking_enabled": false,
+    "calculator_available": true
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "fall",
+      "stable",
+      "rise",
+      "fall",
+      "rise"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      3,
+      5,
+      4,
+      1,
+      2
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      4,
+      5,
+      3,
+      2,
+      1
+    ],
+    "largest_rise_candidate_rank": 5,
+    "largest_fall_candidate_rank": 3
+  },
+  "exchanges": [
+    {
+      "request_sha256": "d023513b0169aa9c7056ff7f075987814aaa79283173d979cbc1e61a416c3d7d",
+      "response_sha256": "85459481393b3d1ed040c6804bb82df15b076bd3f16ec746a612e39722c900e8",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"fall\", \"stable\", \"rise\", \"fall\", \"rise\"], \"predicted_delta_order_largest_to_smallest\": [3, 5, 4, 1, 2], \"predicted_post_intervention_order_highest_to_lowest\": [4, 5, 3, 2, 1], \"largest_rise_candidate_rank\": 5, \"largest_fall_candidate_rank\": 3}"
+            },
+            "id": "JWhvPHpwPrcfXdHJdsI8f4t7rnCtbCFT"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1772,
+        "total_tokens": 1884,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "0c5066e5-9a2d-4dc5-a8fa-e5b797edf215"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

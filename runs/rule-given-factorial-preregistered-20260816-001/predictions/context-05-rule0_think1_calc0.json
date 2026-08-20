@@ -1,0 +1,71 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 4,
+  "condition": "rule0_think1_calc0",
+  "evidence_sha256": "0d3575389b5e81ba83d8ba00e3835b3752c69b0b9a310896a854555e18f32807",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T05:58:50.539Z",
+  "factors": {
+    "rule_given": false,
+    "thinking_enabled": true,
+    "calculator_available": false
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "fall",
+      "stable",
+      "rise",
+      "fall",
+      "rise"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      5,
+      3,
+      2,
+      1,
+      4
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      5,
+      2,
+      3,
+      4,
+      1
+    ],
+    "largest_rise_candidate_rank": 5,
+    "largest_fall_candidate_rank": 4
+  },
+  "exchanges": [
+    {
+      "request_sha256": "575638dcf9efcce9b28bd6563f3c26a6a7397965640deb8d7d809648c035803f",
+      "response_sha256": "cd2aa63e0984d587ce95b573f602cf61c63e9235b4ed2c3412c648fc8a1166a8",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each held-out candidate logit. The tools provided include the 'inspect_heldout_causal_ladder' and 'record_directional_prediction' functions. \n\nFirst, I need to understand the data provided in the evidence. The intervention targets \"layer 35 head 25\" with a start scale of 1 and requested scale of 0. The direction epsilon is 0.05. The 'direction_rule' says to rise if delta > 0.05, fall if delta < -0.05, else stable. \n\nLooking at the 'jvp' section, there are five candidates with their baseline logits and local logit derivatives. The derivatives are the deltas here. Let's calculate each candidate's delta and apply the direction rule.\n\nCandidate 1: delta is -1.2511. Since this is less than -0.05, it should fall.\nCandidate 2: delta is 0. This is stable.\nCandidate 3: delta is 1.3302. Greater than 0.05, so rise.\nCandidate 4: delta is -1.2901. Falls.\nCandidate 5: delta is 1.3383. Rises.\n\nNext, I need to determine the predicted delta order from largest to smallest. The deltas are -1.2511, 0, 1.3302, -1.2901, 1.3383. Sorting them in descending order: 1.3383 (candidate5), 1.3302 (candidate3), 0 (candidate2), -1.2511 (candidate1), -1.2901 (candidate4). So the order is 5,3,2,1,4.\n\nFor the predicted post-intervention order highest to lowest, we need to adjust the baseline logits by the delta. Let's calculate new logits:\n\nCandidate1: 3.7183 -1.2511 = 2.4672\nCandidate2: 7.0624 + 0 = 7.0624\nCandidate3: 3.0676 +1.3302 = 4.3978\nCandidate4: 5.0319 -1.2901 = 3.7418\nCandidate5: 6.0837 +1.3383 = 7.422\n\nNow, sorting these new logits from highest to lowest: 7.422 (5), 7.0624 (2), 4.3978 (3), 3.7418 (4), 2.4672 (1). So the order is 5,2,3,4,1.\n\nThe largest rise is candidate5 (delta 1.3383), and the largest fall is candidate4 (delta -1.2901). \n\nNow, I need to structure the 'record_directional_prediction' function with these parameters. Directions by candidate rank: [fall, stable, rise, fall, rise]. Predicted delta order: [5,3,2,1,4]. Predicted post-intervention order: [5,2,3,4,1]. Largest rise candidate rank: 5, largest fall:4.\n\nI should double-check the calculations to ensure no mistakes. Everything seems to align with the given rules. Now, I can call the 'record_directional_prediction' function with these parameters.\n",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"fall\", \"stable\", \"rise\", \"fall\", \"rise\"], \"predicted_delta_order_largest_to_smallest\": [5, 3, 2, 1, 4], \"predicted_post_intervention_order_highest_to_lowest\": [5, 2, 3, 4, 1], \"largest_rise_candidate_rank\": 5, \"largest_fall_candidate_rank\": 4}"
+            },
+            "id": "JgK1h2eV3mo3MARAN8Y6xuOiJLqkEeJc"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 901,
+        "prompt_tokens": 1472,
+        "total_tokens": 2373,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "a8fafcc1-b92b-4484-8e51-8e92259587fd"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

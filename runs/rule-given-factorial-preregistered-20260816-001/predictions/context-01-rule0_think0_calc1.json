@@ -1,0 +1,70 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 0,
+  "condition": "rule0_think0_calc1",
+  "evidence_sha256": "a206215b8cc181d7ff963cd691826676f8429ccb7c8cd006cb66f280a39aecbb",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T06:27:58.921Z",
+  "factors": {
+    "rule_given": false,
+    "thinking_enabled": false,
+    "calculator_available": true
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "rise",
+      "fall",
+      "fall",
+      "rise",
+      "stable"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      4,
+      1,
+      5,
+      2,
+      3
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      4,
+      1,
+      5,
+      2,
+      3
+    ],
+    "largest_rise_candidate_rank": 4,
+    "largest_fall_candidate_rank": 2
+  },
+  "exchanges": [
+    {
+      "request_sha256": "dd8214371c9fa460a37cd9d8eb8c1f19f5bd0260c164553743072e186d575f1d",
+      "response_sha256": "0a48a0a499fe6c23cb6b0908197715d965887e5ee8e8613045d5a5ecf3f1b0cc",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"rise\", \"fall\", \"fall\", \"rise\", \"stable\"], \"predicted_delta_order_largest_to_smallest\": [4, 1, 5, 2, 3], \"predicted_post_intervention_order_highest_to_lowest\": [4, 1, 5, 2, 3], \"largest_rise_candidate_rank\": 4, \"largest_fall_candidate_rank\": 2}"
+            },
+            "id": "4Wez7OVScrKWZ5TzZQvgoPblbjUhGzrO"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1699,
+        "total_tokens": 1811,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "4926baef-dee4-458b-80ca-336da95f791d"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

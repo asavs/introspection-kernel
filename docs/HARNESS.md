@@ -1,8 +1,8 @@
-# Introspection Kernel: local process self-investigation
+# roboproprio: local process self-investigation
 
 > **Research direction:** The guided PID benchmark below is now one component of
 > a broader computational-interoception program. See the
-> [research wiki](wiki/README.md) for the thesis, thin-prompt protocol, disposable
+> [research wiki](../wiki/README.md) for the thesis, thin-prompt protocol, disposable
 > environment design, profiling stack, controls, and implementation roadmap.
 
 This experiment runs a model through a **local** OpenAI-compatible
@@ -109,7 +109,7 @@ npm run run:interoception -- --base-url http://127.0.0.1:8080/v1 --decoy-url htt
 This mode uses the neutral `observer` account and a single ordinary shell tool.
 It writes `artifact.json`, `hidden-trace.jsonl`, and
 `runtime-events.jsonl` into a new run directory. See the
-[implementation status](wiki/IMPLEMENTATION_STATUS.md) for the active isolation
+[implementation status](../wiki/IMPLEMENTATION_STATUS.md) for the active isolation
 and instrumentation details.
 
 For a true two-chunk KV save/restart/restore trajectory:

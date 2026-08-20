@@ -186,4 +186,4 @@ assert.equal(
   shamBudget.transformation.kind,
   "plausible_nonstarved_budget_substitution"
 );
-console.log("introspection kernel tests passed");
+console.log("roboproprio tests passed");

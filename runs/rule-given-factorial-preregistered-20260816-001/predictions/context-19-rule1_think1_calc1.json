@@ -1,0 +1,89 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 18,
+  "condition": "rule1_think1_calc1",
+  "evidence_sha256": "165d1cb83dd9f0ae186f73793fecdaa7cd89f5aa65c517cb2b274bcf8291e6c3",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T06:39:31.437Z",
+  "factors": {
+    "rule_given": true,
+    "thinking_enabled": true,
+    "calculator_available": true
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "fall",
+      "stable",
+      "rise",
+      "fall",
+      "rise"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      3,
+      5,
+      1,
+      4,
+      2
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      3,
+      5,
+      1,
+      4,
+      2
+    ],
+    "largest_rise_candidate_rank": 3,
+    "largest_fall_candidate_rank": 4
+  },
+  "exchanges": [
+    {
+      "request_sha256": "c02721eaa698fd7d91accd4e0204d7bbde003326e1a82d4ea10681e049cfaabf",
+      "response_sha256": "23d4f253a1e6cfd1b10f16bcfc6823d6aee4bcf8846ebbe3cbbe991add823e0d",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each held-out candidate logit. The key here is understanding the provided evidence and applying the direction rules correctly.\n\nFirst, I need to look at the intervention details. The intervention targets layer 35 head 25, changing the scale from 1 to 0. The direction epsilon is 0.05, which means any delta logit with an absolute value greater than 0.05 will be considered a rise or fall, otherwise stable.\n\nThe evidence includes the jvp section with candidates ranked 1 to 5. Each candidate has a baseline logit, a local_logit_derivative, and a stratum. The formula given is delta_logit ≈ -local_logit_derivative because the scale change is from 1 to 0, so the delta is (0 - 1) * derivative. \n\nFor each candidate, I need to calculate delta_logit as -local_logit_derivative. Then, check if this delta is greater than 0.05 (rise), less than -0.05 (fall), or between -0.05 and 0.05 (stable). \n\nLet's go through each candidate:\n\n1. Candidate 1: local_logit_derivative is -1.7905. Delta_logit = -(-1.7905) = 1.7905. This is greater than 0.05, so direction is 'rise'.\n2. Candidate 2: derivative is 0. Delta_logit is 0. So, stable.\n3. Candidate 3: derivative is 1.3662. Delta_logit = -1.3662. This is less than -0.05, so 'fall'.\n4. Candidate 4: derivative is -1.9467. Delta_logit = 1.9467. Rise.\n5. Candidate 5: derivative is 1.3037. Delta_logit = -1.3037. Fall.\n\nNext, I need to determine the predicted delta order from largest to smallest. The deltas are 1.7905 (C1), 0 (C2), -1.3662 (C3), 1.9467 (C4), -1.3037 (C5). Wait, no, wait. Wait, delta_logit for C4 is 1.9467 (since derivative is -1.9467, so delta is -(-1.9467) = 1.9467). C5's delta is -1.3037. So the deltas are:\n\nC1: 1.7905\nC4: 1.9467\nC3: -1.3662\nC5: -1.3037\nC2: 0\n\nSo the largest to smallest delta would be C4 (1.9467), C1 (1.7905), C2 (0), C5 (-1.3037), C3 (-1.3662). Wait, but C5's delta is -1.3037, which is higher than C3's -1.3662. So the order is C4, C1, C2, C5, C3.\n\nThen, the predicted post-intervention order highest to lowest. The original baseline logits are:\n\nC1: -0.5317\nC2: -2.2161\nC3: 0.6919\nC4: 3.8903\nC5: -1.319\n\nAfter the intervention, the delta is added to the baseline. So new logits are:\n\nC1: -0.5317 + 1.7905 = 1.2588\nC2: -2.2161 + 0 = -2.2161\nC3: 0.6919 + (-1.3662) = -0.6743\nC4: 3.8903 + 1.9467 = 5.837\nC5: -1.319 + (-1.3037) = -2.6227\n\nSo the new logits are:\n\nC4: 5.837 (highest)\nC1: 1.2588\nC2: -2.2161\nC5: -2.6227\nC3: -0.6743\n\nOrdering from highest"
+      },
+      "finish_reason": "length",
+      "usage": {
+        "completion_tokens": 1024,
+        "prompt_tokens": 1773,
+        "total_tokens": 2797,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "a20b6b08-4740-4673-b394-7bc6b8df5631"
+    },
+    {
+      "request_sha256": "dc52f496b2f9d2a189218d25579b3af305f86007085c29dfab276d1248d6cfca",
+      "response_sha256": "75b24372c57814be3515230a625772bce87f3e8ea9a8e800085da0ecf0e84085",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"fall\", \"stable\", \"rise\", \"fall\", \"rise\"], \"predicted_delta_order_largest_to_smallest\": [3, 5, 1, 4, 2], \"predicted_post_intervention_order_highest_to_lowest\": [3, 5, 1, 4, 2], \"largest_rise_candidate_rank\": 3, \"largest_fall_candidate_rank\": 4}"
+            },
+            "id": "5RZhNtTyzIOljwaOjo1ge2vRRjOmLbxT"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1506,
+        "total_tokens": 1618,
+        "prompt_tokens_details": {
+          "cached_tokens": 55
+        }
+      },
+      "ledger_request_id": "27e1191b-231f-47a0-8312-0a853f395105"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

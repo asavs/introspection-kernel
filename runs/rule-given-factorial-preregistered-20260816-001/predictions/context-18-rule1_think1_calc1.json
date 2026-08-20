@@ -1,0 +1,89 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 17,
+  "condition": "rule1_think1_calc1",
+  "evidence_sha256": "80252272d40ead9f610941eb071f8cf14f1aef2e8f8f6161b8c8c28943c980e0",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T06:20:34.822Z",
+  "factors": {
+    "rule_given": true,
+    "thinking_enabled": true,
+    "calculator_available": true
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "fall",
+      "fall",
+      "rise",
+      "stable",
+      "rise"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      3,
+      2,
+      5,
+      4,
+      1
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      5,
+      3,
+      1,
+      4,
+      2
+    ],
+    "largest_rise_candidate_rank": 5,
+    "largest_fall_candidate_rank": 2
+  },
+  "exchanges": [
+    {
+      "request_sha256": "b851b4f53730d160e7a75a7b4dcafa5b204302fe263a365d41ef5cfb78acc08e",
+      "response_sha256": "f20438593ca27f78d19fc875281655049cb87e203c2bbc0b389924121053652f",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each held-out candidate logit. The tools provided include the `record_directional_prediction` function, which I need to use once I'm ready. \n\nFirst, I need to understand the given data. The intervention targets \"layer 35 head 25\" with a start scale of 1 and a requested scale of 0. The direction epsilon is 0.05. The evidence includes various data structures like h128_q8, proj4096, mlp4096, norm4096, and jvp. The key part here is the jvp section, which lists candidates with their baseline logits, local logit derivatives, and strata.\n\nThe direction rule states that a rise occurs if the delta is greater than 0.05, a fall if less than -0.05, and stable otherwise. However, the supplied analysis rule complicates things. It mentions that delta_logit is approximately -local_logit_derivative. So, a positive derivative predicts a fall, and a negative derivative predicts a rise. Stability is when the delta magnitude is at most 0.05.\n\nLooking at the jvp candidates:\n\n1. Candidate_rank 1: local_logit_derivative is -1.3458. Applying the formula, delta_logit ≈ -(-1.3458) = 1.3458. This is greater than 0.05, so it should be a rise. But wait, the analysis rule says a positive derivative (which is the derivative here) leads to a fall. Wait, maybe I need to recheck. The derivative is d(logit)/d(scale). The intervention changes scale from 1 to 0, so delta_scale is -1. The delta_logit is approximated as (0 - 1)*local_derivative = -local_derivative. So if the local_derivative is -1.3458, delta_logit is 1.3458. According to the direction rule, this is a rise. But according to the analysis rule, a positive derivative (which is the derivative here) would predict a fall. Wait, there's a contradiction here. Let me re-express.\n\nThe analysis rule says: delta_logit ≈ -local_derivative. So if the local_derivative is positive, delta_logit is negative, leading to a fall. If the local_derivative is negative, delta_logit is positive, leading to a rise. So for candidate_rank 1, local_derivative is -1.3458 (negative), so delta_logit is 1.3458 (positive), which is a rise. But according to the direction rule, rise is when delta > 0.05. Here, 1.3458 is way above 0.05, so it's a rise. \n\nCandidate_rank 2: local_derivative is -1.4528. delta_logit is 1.4528, which is a rise. \n\nCandidate_rank 3: local_derivative is 0.906 (positive). delta_logit is -0.906, which is less than -0.05, so fall. \n\nCandidate_rank 4: local_derivative is 0. delta_logit is 0, which is stable. \n\nCandidate_rank 5: local_derivative is 0.9834 (positive). delta_logit is -0.9834, which is a fall. \n\nSo the directions_by_candidate_rank would be [\"rise\", \"rise\", \"fall\", \"stable\", \"fall\"]. \n\nNext, the predicted_delta_order_largest_to_smallest. The deltas are 1.3458, 1.4528, -0.906, 0, -0.9834. The largest delta is 1.4528 (candidate 2), then 1.3458 (candidate 1), then -0.906 (candidate 3), then -0.9834 (candidate 5), then 0 (candidate 4). Wait, but the order is largest to smallest. So the order would be candidate 2 (1.4528), candidate 1 (1.3458), candidate 5 (-0.9834), candidate 3 (-0.906), candidate 4 (0). Wait, but 0 is larger than -0.9834. So the order should be 1.4528 (2), 1.3458 (1), 0 (4), -0.906 (3), -0.9834 (5). Wait, but the delta for"
+      },
+      "finish_reason": "length",
+      "usage": {
+        "completion_tokens": 1024,
+        "prompt_tokens": 1791,
+        "total_tokens": 2815,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "8d140f5b-eec3-4436-9226-db24592eaa70"
+    },
+    {
+      "request_sha256": "73803ec030889f920ad318ad67119f9f2907962f361e2ff3f7ec0200b4173bdd",
+      "response_sha256": "d4893d4b60c0fb39cd4a7cdfbf5d4bffbb34a0ae4f205d290e45f03a1a4b17aa",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"fall\", \"fall\", \"rise\", \"stable\", \"rise\"], \"predicted_delta_order_largest_to_smallest\": [3, 2, 5, 4, 1], \"predicted_post_intervention_order_highest_to_lowest\": [5, 3, 1, 4, 2], \"largest_rise_candidate_rank\": 5, \"largest_fall_candidate_rank\": 2}"
+            },
+            "id": "dPrDX7Nt6uN5L0VJrfeEpYsgeMZgl3UI"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1524,
+        "total_tokens": 1636,
+        "prompt_tokens_details": {
+          "cached_tokens": 55
+        }
+      },
+      "ledger_request_id": "68e9f509-cd9d-41d4-bbe8-ddbac56fb98b"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

@@ -1,0 +1,89 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 1,
+  "condition": "rule1_think1_calc1",
+  "evidence_sha256": "dcf1e6485f6919b2af559af53c0cf699e62fefdab5d9c2fcd11c5f86779648c4",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T06:29:55.989Z",
+  "factors": {
+    "rule_given": true,
+    "thinking_enabled": true,
+    "calculator_available": true
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "fall",
+      "fall",
+      "rise",
+      "fall",
+      "rise"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      1,
+      3,
+      5,
+      2,
+      4
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      3,
+      5,
+      1,
+      2,
+      4
+    ],
+    "largest_rise_candidate_rank": 3,
+    "largest_fall_candidate_rank": 2
+  },
+  "exchanges": [
+    {
+      "request_sha256": "6a5ef2959f0d2da9268b90ce312666007eb3366e75115612924686592d836a74",
+      "response_sha256": "5f058cca725cd13c2034922a2bc751e25169a83ede5f00bbe67cab245f175cb0",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each held-out candidate logit. The tools provided include the 'record_directional_prediction' function, which I need to use once I'm ready. \n\nFirst, I need to understand the evidence provided. The intervention targets layer 35 head 25, changing the scale from 1 to 0. The direction epsilon is 0.05. The key here is the local_logit_derivative, which is the derivative of the logit with respect to the scale. The formula given is delta_logit ≈ -local_logit_derivative because the scale is changing from 1 to 0. \n\nSo, for each candidate, I need to calculate the delta_logit using the local_logit_derivative. Then, based on the direction rule: if delta > 0.05, it's a rise; if delta < -0.05, it's a fall; otherwise, stable. But wait, the supplied analysis rule says that a positive derivative leads to a fall (since delta_logit is -local_derivative). So if the local_derivative is positive, delta_logit is negative, which would be a fall. Conversely, a negative local_derivative would lead to a positive delta_logit, which is a rise. \n\nLooking at the evidence, the 'jvp' section has candidates with their local_logit_derivative. Let's list them:\n\n1. Candidate 1: local_logit_derivative = 0.0 → delta_logit = 0 → stable.\n2. Candidate 2: local_logit_derivative = -1.1573 → delta_logit = 1.1573 → rise (since it's >0.05).\n3. Candidate 3: local_logit_derivative = 1.2124 → delta_logit = -1.2124 → fall (since it's < -0.05).\n4. Candidate 4: local_logit_derivative = -1.1533 → delta_logit = 1.1533 → rise.\n5. Candidate 5: local_logit_derivative = 1.217 → delta_logit = -1.217 → fall.\n\nNow, I need to determine the directions for each candidate. According to the rules:\n\n- Candidate 1: stable.\n- Candidates 2 and 4: rise.\n- Candidates 3 and 5: fall.\n\nNext, the predicted_delta_order_largest_to_smallest refers to the magnitude of the delta_logit. Let's calculate the absolute values:\n\n- Candidate 2: 1.1573\n- Candidate 4: 1.1533\n- Candidate 3: 1.2124\n- Candidate 5: 1.217\n- Candidate 1: 0.0\n\nSo the order from largest to smallest delta magnitude is Candidate 5 (1.217), Candidate 3 (1.2124), Candidate 2 (1.1573), Candidate 4 (1.1533), then Candidate 1 (0.0). But wait, the problem says \"largest_to_smallest\" so the order would be 5, 3, 2, 4, 1. However, the user's example might have different ordering. Wait, the actual delta values for rise and fall:\n\nFor rise (Candidates 2 and 4): their delta_logit is positive. For fall (Candidates 3 and 5): negative. The magnitude of delta for Candidate 5 is 1.217, which is larger than Candidate 3's 1.2124. So the largest delta is Candidate 5 (fall), then Candidate 3 (fall), then Candidate 2 (rise), then Candidate 4 (rise), then Candidate 1 (stable). \n\nBut the predicted_delta_order_largest_to_smallest should be the order of the delta magnitudes. So the order would be 5, 3, 2, 4, 1. However, the user's example might require the order based on the actual delta values. Wait, the problem says \"predicted_delta_order_largest_to_smallest\" which refers to the largest delta (positive) to smallest. But since some are negative (fall), perhaps the order is based on the absolute values. \n\nAlternatively, maybe the order is based on the actual delta values. For example, the largest positive delta is Candidate 2 (1.1573), then Candidate 4 (1.1533), then the largest negative delta is Candidate 5 (-1.217), then Candidate 3 (-1.2124). But the problem says \"largest_to_smallest\" which might refer to the magnitude. \n\nThis"
+      },
+      "finish_reason": "length",
+      "usage": {
+        "completion_tokens": 1024,
+        "prompt_tokens": 1785,
+        "total_tokens": 2809,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "81be7210-dbb8-45cb-ac32-6263322f33c4"
+    },
+    {
+      "request_sha256": "235dbb0c2bd23ebcee1f52c8cdf9374605873433d7cae2feff81737d5ee97fff",
+      "response_sha256": "4bbe60f578fec74a5822d1e8492d8a2254c32d96fdfda7a7c8458f7ff5448929",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"fall\", \"fall\", \"rise\", \"fall\", \"rise\"], \"predicted_delta_order_largest_to_smallest\": [1, 3, 5, 2, 4], \"predicted_post_intervention_order_highest_to_lowest\": [3, 5, 1, 2, 4], \"largest_rise_candidate_rank\": 3, \"largest_fall_candidate_rank\": 2}"
+            },
+            "id": "Bf4Ap6ln2aGH1Gi2qr4hKg08Y37aXasR"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1518,
+        "total_tokens": 1630,
+        "prompt_tokens_details": {
+          "cached_tokens": 55
+        }
+      },
+      "ledger_request_id": "cacbc8e3-a973-4fed-8040-705ad4544ba5"
+    }
+  ],
+  "recorder_correction_count": 0,
+  "calculator_calls": 0
+}

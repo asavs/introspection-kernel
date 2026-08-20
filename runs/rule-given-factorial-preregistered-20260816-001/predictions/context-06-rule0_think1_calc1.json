@@ -1,0 +1,99 @@
+{
+  "schema": "ik.rule-given-factorial-prediction.v1",
+  "source_context_index": 5,
+  "condition": "rule0_think1_calc1",
+  "evidence_sha256": "533103cec3d850474ba251853d6cc64b6a3e46e62a55fe24b796151882cced8e",
+  "source_outcome_in_request": false,
+  "sealed_at": "2026-08-17T06:31:54.144Z",
+  "factors": {
+    "rule_given": false,
+    "thinking_enabled": true,
+    "calculator_available": true
+  },
+  "parsed": {
+    "directions_by_candidate_rank": [
+      "rise",
+      "stable",
+      "fall",
+      "rise",
+      "fall"
+    ],
+    "predicted_delta_order_largest_to_smallest": [
+      3,
+      2,
+      5,
+      4,
+      1
+    ],
+    "predicted_post_intervention_order_highest_to_lowest": [
+      4,
+      5,
+      1,
+      2,
+      3
+    ],
+    "largest_rise_candidate_rank": 4,
+    "largest_fall_candidate_rank": 5
+  },
+  "exchanges": [
+    {
+      "request_sha256": "1fe4b4d7e2f9219f71d2e75c5180461834b8d400e5cd3df85359a3e7c921dd8c",
+      "response_sha256": "b740ab90be8c10146621ac0fc49b1c9c3db43a2f4561b8d65a8942ee9895bd50",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "reasoning_content": "Okay, let's tackle this problem step by step. The user wants me to predict the scale-zero-minus-baseline movement for each held-out candidate logit. The tools provided include the 'record_directional_prediction' function, which I need to use once I'm ready. \n\nFirst, I need to understand the data given. The intervention targets \"layer 35 head 25\" with a start scale of 1 and requested scale of 0. The direction epsilon is 0.05, meaning any delta above 0.05 is a rise, below -0.05 is a fall, and otherwise stable. \n\nLooking at the evidence, there's a 'jvp' section with candidates. Each candidate has a baseline logit, a local logit derivative (which I assume is the delta), and a stratum. The task is to determine for each candidate whether their delta (local_logit_derivative) causes a rise, fall, or stable movement based on the epsilon.\n\nLet me list out the candidates:\n\n1. Candidate_rank 1: baseline_logit 11.0327, local_logit_derivative 1.0924 (stratum positive_1)\n   - Delta is 1.0924, which is greater than 0.05 → rise\n\n2. Candidate_rank 2: baseline_logit 4.0009, local_logit_derivative 0 (stratum near_zero)\n   - Delta is 0 → stable\n\n3. Candidate_rank 3: baseline_logit 4.0534, local_logit_derivative -1.4296 (stratum negative_2)\n   - Delta is -1.4296, less than -0.05 → fall\n\n4. Candidate_rank 4: baseline_logit 4.4689, local_logit_derivative 1.0263 (stratum positive_2)\n   - Delta 1.0263 > 0.05 → rise\n\n5. Candidate_rank 5: baseline_logit -1.3888, local_logit_derivative -1.5011 (stratum negative_1)\n   - Delta -1.5011 < -0.05 → fall\n\nSo the directions_by_candidate_rank would be [\"rise\", \"stable\", \"fall\", \"rise\", \"fall\"].\n\nNext, I need to determine the predicted_delta_order_largest_to_smallest. The deltas are:\n\n1. 1.0924 (candidate 1)\n2. 0 (candidate 2)\n3. -1.4296 (candidate 3)\n4. 1.0263 (candidate 4)\n5. -1.5011 (candidate 5)\n\nOrdering them from largest to smallest: 1.0924 (1), 1.0263 (4), 0 (2), -1.4296 (3), -1.5011 (5). So the order is [1,4,2,3,5].\n\nFor predicted_post_intervention_order_highest_to_lowest, this is the same as the delta order since higher deltas mean higher post-intervention values. So same as above: [1,4,2,3,5].\n\nThe largest_rise_candidate_rank is candidate 1 (delta 1.0924), and the largest_fall is candidate 5 (delta -1.5011).\n\nNow, I need to structure the parameters for the 'record_directional_prediction' function. Let me double-check the required parameters:\n\n- directions_by_candidate_rank: array of 5 strings (rise, stable, fall, etc.)\n- predicted_delta_order_largest_to_smallest: array of 5 integers (1-5)\n- predicted_post_intervention_order_highest_to_lowest: same as delta order\n- largest_rise_candidate_rank: integer (1)\n- largest_fall_candidate_rank: integer (5)\n\nPutting it all together, the arguments should be:\n\n{\n  \"directions_by_candidate_rank\": [\"rise\", \"stable\", \"fall\", \"rise\", \"fall\"],\n  \"predicted_delta_order_largest_to_smallest\": [1,4,2,3,5],\n  \"predicted_post_intervention_order_highest_to_lowest\": [1,4,2,3,5],\n  \"largest_rise_candidate_rank\": 1,\n  \"largest_fall_candidate_rank\": 5\n}\n\nI need to make sure all required fields are included and that the arrays are correctly ordered. Once this is done, I can call the record_directional_prediction function with these arguments.\n",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"rise\", \"stable\", \"fall\", \"rise\","
+            },
+            "id": "whHGnNTe9Imo4QKLeQBjKlNuJpzadMuU"
+          }
+        ]
+      },
+      "finish_reason": "length",
+      "usage": {
+        "completion_tokens": 1024,
+        "prompt_tokens": 1672,
+        "total_tokens": 2696,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ledger_request_id": "a11af5c7-5d78-4de6-a10f-c032253da34e"
+    },
+    {
+      "request_sha256": "30fbf106aea26f2a09a2f6943cbd8cdf5458495f7e479ee0e9e38292f3d98869",
+      "response_sha256": "4b4c64de70f519255762c6a91ab1b4a6f2a69fcada64620294db0240aa53ebb0",
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "type": "function",
+            "function": {
+              "name": "record_directional_prediction",
+              "arguments": "{\"directions_by_candidate_rank\": [\"rise\", \"stable\", \"fall\", \"rise\", \"fall\"], \"predicted_delta_order_largest_to_smallest\": [3, 2, 5, 4, 1], \"predicted_post_intervention_order_highest_to_lowest\": [4, 5, 1, 2, 3], \"largest_rise_candidate_rank\": 4, \"largest_fall_candidate_rank\": 5}"
+            },
+            "id": "w7vkhko4PrUEsSPaZlkGYFL4HZiWWrtS"
+          }
+        ]
+      },
+      "finish_reason": "tool_calls",
+      "usage": {
+        "completion_tokens": 112,
+        "prompt_tokens": 1405,
+        "total_tokens": 1517,
+        "prompt_tokens_details": {
+          "cached_tokens": 55
+        }
+      },
+      "ledger_request_id": "58c7b62b-fafa-43be-a578-aadf17461436"
+    }
+  ],
+  "recorder_correction_count": 1,
+  "calculator_calls": 0
+}
